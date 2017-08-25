@@ -9,6 +9,8 @@
   <%= stylesheet_link_tag 'application', media: 'all' %>
 </head>
 <body>
+<%= render 'shared/navbar' %>
+<%= render 'shared/flashes' %>
   <p class="notice"><%= notice %></p>
   <p class="alert"><%= alert %></p>
   <%= yield %>
