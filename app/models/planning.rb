@@ -1,0 +1,2 @@
+class Planning < ApplicationRecord
+end
