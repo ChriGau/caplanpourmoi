@@ -5,4 +5,5 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :trackable, :validatable
   has_many :constraints
   has_many :plannings, foreign_key: :owner_id
+  has_many :members
 end
