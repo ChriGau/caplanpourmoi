@@ -2,9 +2,16 @@
 
 <div class="skeleton">
   <h2>Planning skeleton</h2>
+  <h3>slots</h3>
+
+  <%  @planning.slots.last(5).each do |slot| %>
+    <p># <%= slot.id %>, début : <%= slot.start_at %> / fin :<%= slot.end_at  %></p>
+  <% end %>
+
+  <h3>create new slot</h3>
 
 
-<%= simple_form_for [@planning,@roles,slot] do |f| %>
+<%= simple_form_for [@planning, Slot.new] do |f| %>
   <%= f.error_notification %>
   <%= f.input :start_at, placeholder: "Début", label: false %>
   <%= f.input :end_at, placeholder: "Fin", label: false %>
