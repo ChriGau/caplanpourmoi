@@ -1,0 +1,36 @@
+<div class="planning-list">
+<h2>plannings</h2>
+
+  <% @plannings.each do |planning| %>
+    <%= planning.week_number %>
+    <%= link_to 'link', planning_path(planning)  %>
+  <% end %>
+
+</div>
+
+
+<div class="user-list">
+<h2>users</h2>
+
+<%= link_to 'create_user', new_user_registration_path  %>
+<br>
+<% @users.each do |user| %>
+    <%= user.email %>
+  <% end %>
+
+</div>
+
+
+<div class="role-list">
+<h2>roles</h2>
+
+<%= link_to 'create new role', new_role_path %>
+<br>
+<ul>
+<% @roles.each do |role| %>
+    <li> <%= role.name %> couleur : <%= role.role_color %> </li>
+  <% end %>
+  </ul>
+
+</div>
+

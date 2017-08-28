@@ -1,0 +1,27 @@
+<h1>Planning : <%= @planning.id %></h1>
+
+<div class="skeleton">
+  <h2>Planning skeleton</h2>
+
+
+<%= simple_form_for [@planning,@roles,slot] do |f| %>
+  <%= f.error_notification %>
+  <%= f.input :start_at, placeholder: "Début", label: false %>
+  <%= f.input :end_at, placeholder: "Fin", label: false %>
+  <%= f.input :role_id, placeholder: "Role", label: false, collection: @roles  %>
+  <%= f.submit "Valider", class: "btn btn-success" %>
+<% end %>
+
+
+</div>
+
+<div class="assign-users">
+  <h2>Assign users</h2>
+
+</div>
+
+<div class="ajust-planning">
+  <h2>Adjust planning</h2>
+
+
+</div>
