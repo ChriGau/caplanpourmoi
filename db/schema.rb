@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170828104623) do
+ActiveRecord::Schema.define(version: 20170828105436) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -61,6 +61,15 @@ ActiveRecord::Schema.define(version: 20170828104623) do
     t.index ["user_id"], name: "index_slots_on_user_id", using: :btree
   end
 
+  create_table "teams", force: :cascade do |t|
+    t.integer  "planning_id"
+    t.integer  "user_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.index ["planning_id"], name: "index_teams_on_planning_id", using: :btree
+    t.index ["user_id"], name: "index_teams_on_user_id", using: :btree
+  end
+
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
     t.string   "encrypted_password",     default: "", null: false
@@ -88,4 +97,6 @@ ActiveRecord::Schema.define(version: 20170828104623) do
   add_foreign_key "slots", "plannings"
   add_foreign_key "slots", "roles"
   add_foreign_key "slots", "users"
+  add_foreign_key "teams", "plannings"
+  add_foreign_key "teams", "users"
 end
