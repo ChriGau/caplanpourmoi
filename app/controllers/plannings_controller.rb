@@ -1,4 +1,5 @@
 class PlanningsController < ApplicationController
+
   def index
     @plannings = Planning.all
     @roles = Role.all
@@ -9,5 +10,8 @@ class PlanningsController < ApplicationController
     @planning = Planning.find(params[:id])
     @roles = Role.all
     @slot = Slot.new
+    @users = User.all
   end
+
+
 end

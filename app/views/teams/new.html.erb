@@ -1,0 +1,13 @@
+<h1>Teams#new</h1>
+<p>Find me in app/views/teams/new.html.erb</p>
+
+
+  <h2>Assign users</h2>
+  <% @users.each do |user| %>
+  <%= user.first_name %>
+  <br>
+  <%= user.email %>
+  <br>
+  <%= link_to "Add to team", planning_teams_path(@team.id, planning_id: @planning_id, user_id: user.id), method: :post %>
+
+  <% end %>
