@@ -20,6 +20,8 @@ gem 'uglifier'
 gem 'fullcalendar-rails'
 gem 'momentjs-rails'
 
+gem 'faker'
+
 #Authentification Devise
 gem 'devise'
 
