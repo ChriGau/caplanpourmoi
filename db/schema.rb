@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170827143319) do
+ActiveRecord::Schema.define(version: 20170828104623) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,23 +24,12 @@ ActiveRecord::Schema.define(version: 20170827143319) do
     t.index ["user_id"], name: "index_constraints_on_user_id", using: :btree
   end
 
-  create_table "members", force: :cascade do |t|
-    t.integer  "team_id"
-    t.integer  "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["team_id"], name: "index_members_on_team_id", using: :btree
-    t.index ["user_id"], name: "index_members_on_user_id", using: :btree
-  end
-
   create_table "plannings", force: :cascade do |t|
     t.integer  "week_number"
     t.integer  "year"
     t.integer  "status"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
-    t.integer  "team_id"
-    t.index ["team_id"], name: "index_plannings_on_team_id", using: :btree
   end
 
   create_table "role_users", force: :cascade do |t|
@@ -72,14 +61,6 @@ ActiveRecord::Schema.define(version: 20170827143319) do
     t.index ["user_id"], name: "index_slots_on_user_id", using: :btree
   end
 
-  create_table "teams", force: :cascade do |t|
-    t.string   "name"
-    t.integer  "owner_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["owner_id"], name: "index_teams_on_owner_id", using: :btree
-  end
-
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
     t.string   "encrypted_password",     default: "", null: false
@@ -102,13 +83,9 @@ ActiveRecord::Schema.define(version: 20170827143319) do
   end
 
   add_foreign_key "constraints", "users"
-  add_foreign_key "members", "teams"
-  add_foreign_key "members", "users"
-  add_foreign_key "plannings", "teams"
   add_foreign_key "role_users", "roles"
   add_foreign_key "role_users", "users"
   add_foreign_key "slots", "plannings"
   add_foreign_key "slots", "roles"
   add_foreign_key "slots", "users"
-  add_foreign_key "teams", "users", column: "owner_id"
 end
