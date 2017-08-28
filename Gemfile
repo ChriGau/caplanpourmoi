@@ -16,6 +16,10 @@ gem 'sass-rails'
 gem 'simple_form'
 gem 'uglifier'
 
+# fullcalendar
+gem 'fullcalendar-rails'
+gem 'momentjs-rails'
+
 #Authentification Devise
 gem 'devise'
 
