@@ -15,7 +15,7 @@
       start: '07:00', // TODO : hide non business hours
       end: '22:00', // an end time (6pm in this example)
                   },
-    // alow things to get dropped on the calendar
+    json: "<%= raw j(render partial: "constraints", format: :json) %>",
     events:
     // '/shifts.json',
     [
