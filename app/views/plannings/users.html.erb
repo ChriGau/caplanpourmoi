@@ -1,3 +1,5 @@
+  <%= render 'shared/planningsteps', locals: {planning: @planning} %>
+
   <div class="row">
     <%= simple_form_for (@planning) do |f| %>
     <% @users.each do |user| %>
@@ -21,7 +23,3 @@
     </div>
     <% end %>
   </div>
-
-
-<%= f.button :submit %>
-<% end %>
