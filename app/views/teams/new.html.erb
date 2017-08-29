@@ -8,6 +8,6 @@
   <br>
   <%= user.email %>
   <br>
-  <%= link_to "Add to team", planning_teams_path(@team.id, planning_id: @planning_id, user_id: user.id), method: :post %>
+  <%= link_to "Add to team", planning_teams_path(planning_id: @planning_id, user_id: user.id), method: :post %>
 
   <% end %>
