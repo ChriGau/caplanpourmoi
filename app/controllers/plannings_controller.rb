@@ -7,7 +7,8 @@ class PlanningsController < ApplicationController
 
   def show
     @planning = Planning.find(params[:id])
-    @roles = Role.all
+    @slots = @planning.slots
     @slot = Slot.new
+    @slot_templates = Slot.slot_templates
   end
 end

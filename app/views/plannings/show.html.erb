@@ -4,18 +4,25 @@
   <h2>Planning skeleton</h2>
   <h3>slots</h3>
 
-  <%  @planning.slots.last(5).each do |slot| %>
+  <%  @slots.last(5).each do |slot| %>
     <p># <%= slot.id %>, début : <%= slot.start_at %> / fin :<%= slot.end_at  %></p>
   <% end %>
 
   <h3>create new slot</h3>
 
+<p>Slot templates</p>
 
-<%= simple_form_for [@planning, Slot.new] do |f| %>
+<%  @slot_templates.each do |slot| %>
+  <button class="btn"> <%= slot.role.name %> </button>
+<% end %>
+
+
+<p>Slot create</p>
+<%= simple_form_for [@planning, @slot] do |f| %>
   <%= f.error_notification %>
   <%= f.input :start_at, placeholder: "Début", label: false %>
   <%= f.input :end_at, placeholder: "Fin", label: false %>
-  <%= f.input :role_id, placeholder: "Role", label: false, collection: @roles  %>
+  <%= f.input :role_id, placeholder: "Role", label: false, collection: fetch_roles  %>
   <%= f.submit "Valider", class: "btn btn-success" %>
 <% end %>
 

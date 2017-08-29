@@ -4,8 +4,6 @@ class SlotsController < ApplicationController
     @slot = Slot.new(slot_params)
     @planning = Planning.find(params[:planning_id])
     @slot.planning = @planning
-    @slot.user = current_user
-
 
     if @slot.save
       redirect_to planning_path(@planning), notice: "nouveau slot ajouté"
