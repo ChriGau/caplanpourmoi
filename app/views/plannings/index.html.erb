@@ -3,7 +3,8 @@
 
   <% @plannings.each do |planning| %>
     <%= planning.week_number %>
-    <%= link_to 'link', planning_path(planning)  %>
+    <%= planning.id %>
+    <%= link_to 'link', planning_skeleton_path(planning)  %>
   <% end %>
 
 </div>
