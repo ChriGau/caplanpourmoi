@@ -8,9 +8,10 @@ class PlanningsController < ApplicationController
 
   def show
     @planning = Planning.find(params[:id])
-    @roles = Role.all
+    @slots = @planning.slots
     @slot = Slot.new
-    @users = User.all
+    @slot_templates = Slot.slot_templates
+
   end
 
   def edit
@@ -23,6 +24,7 @@ class PlanningsController < ApplicationController
     @planning.update(planning_params)
     @planning.save!
     redirect_to edit_planning_path(@planning)
+
   end
 
   private
