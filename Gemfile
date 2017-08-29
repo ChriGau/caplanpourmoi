@@ -25,6 +25,8 @@ gem 'faker'
 #Authentification Devise
 gem 'devise'
 
+#Gem Form
+gem "simple_form"
 group :development, :test do
   gem 'pry-byebug'
   gem 'pry-rails'

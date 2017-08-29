@@ -8,6 +8,7 @@
     <p># <%= slot.id %>, début : <%= slot.start_at %> / fin :<%= slot.end_at  %></p>
   <% end %>
 
+
   <h3>create new slot</h3>
 
 <p>Slot templates</p>
@@ -26,7 +27,7 @@
   <%= f.submit "Valider", class: "btn btn-success" %>
 <% end %>
 
-
+<%= link_to "Next", edit_planning_path(@planning) %>
 </div>
 
 <div class="assign-users">
@@ -34,8 +35,3 @@
 
 </div>
 
-<div class="ajust-planning">
-  <h2>Adjust planning</h2>
-
-
-</div>

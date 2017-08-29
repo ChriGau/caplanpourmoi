@@ -1,0 +1,4 @@
+  <%= simple_form_for (@planning) do |f| %>
+  <%= f.association :users, collection: @users, label_method: :first_name, as: :check_boxes %>
+  <%= f.button :submit %>
+  <% end %>
