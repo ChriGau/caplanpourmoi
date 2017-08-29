@@ -782,14 +782,6 @@ User.create!(email: "wtf@boutique.com",
             last_name: "Last name",
             password: "password"
   )
-# cree user "unknown" pour initialiser les slots (niveau skeleton)
-User.create!(email: "unknown@boutique.com",
-            working_hours: 32,
-            is_owner: false,
-            first_name: "unknow",
-            last_name: "Last name",
-            password: "password"
-  )
 
 #pas de user_id
 # UNATTRIBUTED SLOT --> PROBLEM OF RESSOURCES
