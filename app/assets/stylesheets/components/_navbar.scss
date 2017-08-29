@@ -30,12 +30,17 @@
 }
 
 /* Basic navbar item */
+.navbar-wagon-logo {
+  margin: 0;
+  line-height: 50px;
+  padding: 0 ;
+}
+
 .navbar-wagon-item {
   text-align: center;
   cursor: pointer;
   padding: 0 20px;
 }
-
 /* Navbar link */
 .navbar-wagon-link {
   color: white;
