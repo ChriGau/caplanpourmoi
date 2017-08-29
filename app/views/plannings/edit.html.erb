@@ -1,4 +1,27 @@
-  <%= simple_form_for (@planning) do |f| %>
-  <%= f.association :users, collection: @users, label_method: :first_name, as: :check_boxes %>
-  <%= f.button :submit %>
-  <% end %>
+  <div class="row">
+    <%= simple_form_for (@planning) do |f| %>
+    <% @users.each do |user| %>
+
+    <div class="col-xs-12 col-sm-4">
+
+      <div class="card" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.2)), url('https://kitt.lewagon.com/placeholder/cities/shanghai');">
+
+        <label >
+          <input
+          type="checkbox"
+          name="planning[user_ids][]"
+          value="<%= user.id %>"
+          <%= @planning.users.include?(user) ? "checked" : "" %>
+          />
+          <%= user.first_name %>
+          <br>
+          <%= user.email %>
+        </label>
+      </div>
+    </div>
+    <% end %>
+  </div>
+
+
+<%= f.button :submit %>
+<% end %>

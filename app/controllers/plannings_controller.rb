@@ -30,7 +30,7 @@ class PlanningsController < ApplicationController
   private
 
   def planning_params
-    params.require(:planning).permit(user_ids: [])
+    params.require(:planning).permit("user_ids" => [])
   end
 
 
