@@ -13,5 +13,23 @@ class PlanningsController < ApplicationController
     @users = User.all
   end
 
+  def edit
+    @users = User.all
+    @planning = Planning.find(params[:id])
+  end
+
+  def update
+    @planning = Planning.find(params[:id])
+    @planning.update(planning_params)
+    @planning.save!
+    redirect_to edit_planning_path(@planning)
+  end
+
+  private
+
+  def planning_params
+    params.require(:planning).permit(user_ids: [])
+  end
+
 
 end
