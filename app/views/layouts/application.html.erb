@@ -17,8 +17,12 @@
 <div class="container" id="general-container">
   <%= yield %>
 </div>
-<%= render 'shared/footer' %>
+
   <%= javascript_include_tag 'application' %>
+
+  <%= render 'shared/footer' %>
+
+  <%= cloudinary_js_config %>
   <%= yield :after_js %>
 
 </body>
