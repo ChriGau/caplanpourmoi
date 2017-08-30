@@ -45,6 +45,7 @@ i = 1
   i += 1
 end
 
+p = Planning.first
 
 puts "4 - Creating team + assign owner to team"
 puts ""
