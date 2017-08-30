@@ -19,6 +19,7 @@ gem 'uglifier'
 # fullcalendar
 gem 'fullcalendar-rails'
 gem 'momentjs-rails'
+gem 'bootstrap3-datetimepicker-rails', '~> 4.17.47'
 
 gem 'faker'
 

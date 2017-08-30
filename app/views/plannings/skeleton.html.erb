@@ -1,33 +1,60 @@
 <%= render 'shared/planningsteps', locals: {planning: @planning} %>
 
 <div class="skeleton">
-<br>
-<div class="row">
-  <div class="col-xs-4">
-    <%  @slot_templates.each do |slot| %>
-    <button class="btn" style="background-color: <%= Role.find_by_id(slot.role_id).role_color %>; border-radius: 6px;"> <%= slot.role.name %> </button><br><br>
-    <% end %>
+  <div class="row">
+    <div class="col-xs-8-offset-4">
+      <%  @slot_templates.each do |slot| %>
+      <button class="btn" style="margin: 5px; border-color: grey; background-color: <%= Role.find_by_id(slot.role_id).role_color %>; border-radius: 6px;"> <%= slot.role.name %> </button>
+      <% end %>
+    </div>
   </div>
-  <div class="col-xs-8">
-    <p>Slot create</p>
+  <br>
+  <div class="row">
+    <div class="col-xs-12">
+      <div id = "calendar">
+      </div>
+    </div>
+  </div>
 
-    <%= simple_form_for [@planning, @slot] do |f| %>
-    <%= f.error_notification %>
-    <%= f.input :start_at, placeholder: "Début", label: false%>
-    <%= f.input :end_at, placeholder: "Fin", label: false %>
-    <%= f.input :role_id, placeholder: "Role", label: false, collection: fetch_roles  %>
-    <%= f.submit "Valider", class: "btn btn-success" %>
-    <% end %>
+  <div class="row">
+    <div class="col-xs-5">
+      <p>Create a slot</p>
+      <!-- intégrer du date picker bootstrap dans simple form via gem https://github.com/Eonasdan/bootstrap-datetimepicker -->
+      <%= simple_form_for [@planning, @slot] do |f| %>
+      <%= f.error_notification %>
+      <div class="form-group">
+        <div class='input-group date' id='datetimepicker1'>
+          <input name="slot[start_at]" type='text' value="<%= @slot.start_at %>" class="form-control" />
+          <span class="input-group-addon">
+            <span class="glyphicon glyphicon-calendar">
+            </span>
+          </span>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class='input-group date' id='datetimepicker2'>
+          <input name="slot[end_at]" type='text' value="<%= @slot.end_at %>" class="form-control" />
+          <span class="input-group-addon">
+            <span class="glyphicon glyphicon-calendar">
+            </span>
+          </span>
+        </div>
+      </div>
+      <%= f.input :role_id, placeholder: "Role", label: false, collection: fetch_roles  %>
+      <%= f.submit "Valider", class: "btn btn-success" %>
+      <% end %>
+    </div>
   </div>
-</div>
-<div class="row">
-  <div class="col-xs-12">
-    <div id = "calendar">
-  </div>
-</div>
-</div>
 
-<%= content_for(:after_js) do %>
+
+
+  <%= content_for(:after_js) do %>
+  <script type="text/javascript">
+    $(function () {
+      $('#datetimepicker1').datetimepicker();
+      $('#datetimepicker2').datetimepicker();
+    });
+  </script>
   <script>
     $('#calendar').fullCalendar({
       //calendar attributes
@@ -63,7 +90,8 @@
         var id_slot = calEvent.id
         // 1 Requête Ajax: shift/:id/edit
         // TODO > pb pour injecter event id dans la requete ajax
-        }
+      }
     });
   </script>
-<% end %>
+  <% end %>
+
