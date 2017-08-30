@@ -36,6 +36,16 @@ p.week_number = 37
 p.year = 2017
 p.save!
 
+i = 1
+10.times do
+  p = Planning.new
+  p.week_number = 37 + i
+  p.year = 2017
+  p.save!
+  i += 1
+end
+
+
 puts "4 - Creating team + assign owner to team"
 puts ""
 Team.create!(planning_id: p.id,
@@ -156,6 +166,15 @@ User.create!(email: "nick@boutique.com",
             working_hours: 32,
             is_owner: false,
             first_name: "nick",
+            last_name: "Last name",
+            password: "password"
+  )
+
+# cree user "no solution" pour le cas où pas de solution pour le slot
+User.create!(email: "wtf@boutique.com",
+            working_hours: 32,
+            is_owner: false,
+            first_name: "no solution",
             last_name: "Last name",
             password: "password"
   )
@@ -354,6 +373,14 @@ Team.create!(planning_id: p.id,
 
 puts "9 - adding SLOTS to planning + solution"
 puts ""
+
+p = Planning.first
+p38 = Planning.find_by_week_number(38)
+p39 = Planning.find_by_week_number(39)
+p40 = Planning.find_by_week_number(40)
+p41 = Planning.find_by_week_number(41)
+p42 = Planning.find_by_week_number(42)
+
 
 # 1
 Slot.create!(
@@ -777,14 +804,7 @@ Slot.create!(
   user_id: User.find_by_first_name("nick").id
   )
 
-# cree user "no solution" pour le cas où pas de solution pour le slot
-User.create!(email: "wtf@boutique.com",
-            working_hours: 32,
-            is_owner: false,
-            first_name: "no solution",
-            last_name: "Last name",
-            password: "password"
-  )
+
 
 #pas de user_id
 # UNATTRIBUTED SLOT --> PROBLEM OF RESSOURCES
@@ -805,6 +825,30 @@ Slot.create!(
   role_id: Role.find_by_name("magasinier").id,
   user_id: User.find_by_first_name("magalie").id
   )
+
+Slot.create!(
+  planning_id: p38.id,
+  start_at: "2017-09-11 07:00",
+  end_at: "2017-09-11 15:00",
+  role_id: Role.find_by_name("mécano").id,
+  user_id: User.find_by_first_name("magalie").id
+  )
+
+Slot.create!(
+  planning_id: p39.id,
+  start_at: "2017-09-11 07:00",
+  end_at: "2017-09-11 15:00",
+  role_id: Role.find_by_name("mécano").id,
+  user_id: User.find_by_first_name("magalie").id
+  )
+
+Slot.create!(
+  planning_id: p40.id,
+  start_at: "2017-09-11 07:00",
+  end_at: "2017-09-11 15:00",
+  role_id: Role.find_by_name("mécano").id,
+  )
+
 
 
 puts ""
