@@ -2,21 +2,12 @@
 
 <div class="skeleton">
 
-  <h3>slots</h3>
-
-  <%  @slots.last(5).each do |slot| %>
-    <p># <%= slot.id %>, début : <%= slot.start_at %> / fin :<%= slot.end_at  %></p>
-  <% end %>
-
-
-  <h3>create new slot</h3>
 
 <p>Slot templates</p>
 
 <%  @slot_templates.each do |slot| %>
   <button class="btn"> <%= slot.role.name %> </button>
 <% end %>
-
 
 <p>Slot create</p>
 <%= simple_form_for [@planning, @slot] do |f| %>
