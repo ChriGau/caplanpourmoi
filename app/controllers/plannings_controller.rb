@@ -5,6 +5,7 @@ class PlanningsController < ApplicationController
     @plannings = Planning.all.order(:week_number)
     @roles = Role.all
     @users = User.all
+    @slot_templates = Slot.slot_templates # liste des roles
   end
 
   def show
