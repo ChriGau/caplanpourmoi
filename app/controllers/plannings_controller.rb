@@ -2,7 +2,7 @@ class PlanningsController < ApplicationController
   before_action :set_planning, only: [:skeleton, :users, :conflicts]
 
   def index
-    @plannings = Planning.all
+    @plannings = Planning.all.order(:week_number)
     @roles = Role.all
     @users = User.all
   end
