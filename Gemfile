@@ -27,6 +27,9 @@ gem 'devise'
 
 #Gem Form
 gem "simple_form"
+
+#Gem pundit
+gem "pundit"
 group :development, :test do
   gem 'pry-byebug'
   gem 'pry-rails'

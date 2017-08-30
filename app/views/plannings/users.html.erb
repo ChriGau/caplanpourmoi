@@ -1,27 +1,60 @@
-  <%= render 'shared/planningsteps', locals: {planning: @planning} %>
 
-  <div class="row">
+<%= render 'shared/planningsteps', locals: {planning: @planning} %>
+
+
+<div class="row">
+  <div class="roles-decrement">
+    <h1> Roles </h1>
+
+  </div>
+</div>
+
+<div class="row">
+  <div class="users">
+
     <%= simple_form_for (@planning) do |f| %>
     <% @users.each do |user| %>
 
-    <div class="col-xs-12 col-sm-4">
-
-      <div class="card" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.2)), url('https://kitt.lewagon.com/placeholder/cities/shanghai');">
-        <label >
-          <input
-          type="checkbox"
-          name="planning[user_ids][]"
-          value="<%= user.id %>"
-          <%= @planning.users.include?(user) ? "checked" : "" %>
-          />
-          <%= user.first_name %>
-          <br>
-          <%= user.email %>
-        </label>
-      </div>
+    <div class="col-xs-12 col-sm-4 col-md-6 col-lg-4">
+      <div
+      class="card choice <%= @planning.users.include?(user) ? "active" : "" %> "
+      >
+      <label >
+        <input
+        class="checkbox"
+        type="checkbox"
+        name="planning[user_ids][]"
+        value="<%= user.id %>"
+        <%= @planning.users.include?(user) ? "checked" : "" %>
+        />
+        <div class="first-name">
+          <%= user.first_name.capitalize! %>
+        </div>
+        <div class="roles">
+          <p class="role">Roles</p>
+          <p class="user-role">
+            <% user.roles.each do |role|  %>
+            <span class="role-name" style=" background-color: <%= role.role_color %>" >
+              <%= role.name.capitalize! %>
+            </span>
+            <% end %>
+          </p>
+        </div>
+      </label>
     </div>
-    <% end %>
-    <%= f.submit %>
-    <% end %>
-
   </div>
+  <% end %>
+</div>
+  <%= f.submit "Next", class: "btn btn-primary" %>
+<% end %>
+
+<script>
+  $(document).ready(function(){
+    $(".checkbox").change(function(){
+      $(this).parent().parent().toggleClass("active");
+    });
+  });
+</script>
+</div>
+
+
