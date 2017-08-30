@@ -2,21 +2,12 @@
 
 <div class="skeleton">
 
-  <h3>slots</h3>
-
-  <%  @slots.last(5).each do |slot| %>
-    <p># <%= slot.id %>, début : <%= slot.start_at %> / fin :<%= slot.end_at  %></p>
-  <% end %>
-
-
-  <h3>create new slot</h3>
 
 <p>Slot templates</p>
 
 <%  @slot_templates.each do |slot| %>
   <button class="btn"> <%= slot.role.name %> </button>
 <% end %>
-
 
 <p>Slot create</p>
 <%= simple_form_for [@planning, @slot] do |f| %>
@@ -27,5 +18,50 @@
   <%= f.submit "Valider", class: "btn btn-success" %>
 <% end %>
 
-
+<div class="row">
+  <div class="col-xs-12">
+    <div id = "calendar">
+  </div>
 </div>
+</div>
+
+<%= content_for(:after_js) do %>
+  <script>
+    $('#calendar').fullCalendar({
+      //calendar attributes
+      header: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'agendaWeek,agendaDay'
+      },
+      locale: "fr",
+      editable: true, // events on the calendar can be modified
+      droppable: true, // allows things to be dropped onto the calendar
+      minTime: "07:00:00", // starting time, even when scrolled all the way up
+      maxTime: "22:00:00",
+      defaultView: "agendaWeek",
+      defaultDate: "2017-09-10", // s'ouvre sur le 10/09/2017
+      hiddenDays: [ 0] , // hider dimanche
+      height: "auto", // implique pas de scroll à l'intérieur du calendrier
+      events: <%= raw @slots_array.to_json %>,
+
+      // 2. cas où on drag-drop un event déjà existant dans le calendar
+      eventDrop: function(event, delta, revertFunc, jsEvent, ui, view ) {
+        // récupérer l'id de l'event que l'on droppe
+        console.log("event title= " + event.title + "start= " + event.start.format() + "end= " + event.end.format());
+        // modified start => event.start.format()
+        // modified end  => event.end.format()
+        // lors du display du form, il doit préremplir avec ces 2 dates VS les anciennes
+      },
+      // cas où on clique sur un évènement déjà existant dans le calendar
+      eventClick: function(calEvent, jsEvent, view) {
+        // récupérer l'id de l'event que l'on clique
+        console.log(calEvent);
+        console.log(calEvent.id) // contient id de la slot cliquée
+        var id_slot = calEvent.id
+        // 1 Requête Ajax: shift/:id/edit
+        // TODO > pb pour injecter event id dans la requete ajax
+        }
+    });
+  </script>
+<% end %>
