@@ -1,12 +1,14 @@
-<div class="planning-list">
-<h2>plannings</h2>
-
-  <% @plannings.each do |planning| %>
-    <%= planning.week_number %>
-    <%= planning.id %>
-    <%= link_to 'link', planning_skeleton_path(planning)  %>
-  <% end %>
-
+<div id="planning-list" class="frame">
+  <ul class="slidee">
+    <% @plannings.each do |planning| %>
+      <li class="<%= planning_slide_class(planning)%>">
+         <%= link_to planning_skeleton_path(planning) do %>
+          <%= planning_slide_label(planning) %>
+        <% end %>
+        <p> <%= planning.status %> </p>
+      </li>
+    <% end %>
+  </ul>
 </div>
 
 
@@ -15,11 +17,9 @@
 
 <%= link_to 'create_user', new_user_registration_path  %>
 <br>
-<ul>
 <% @users.each do |user| %>
-  <li><%= user.email %></li>
+  <p><%= user.email %></p>
   <% end %>
-</ul>
 </div>
 
 

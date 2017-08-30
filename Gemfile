@@ -33,6 +33,10 @@ gem 'devise'
 
 #Gem Form
 gem "simple_form"
+
+#Sly for sliders
+gem 'rails-assets-sly', source: 'https://rails-assets.org'
+
 group :development, :test do
   gem 'pry-byebug'
   gem 'pry-rails'
