@@ -1,38 +1,44 @@
-<div class="planning-list">
-<h2>plannings</h2>
 
-  <% @plannings.each do |planning| %>
-    <%= planning.week_number %>
-    <%= planning.id %>
-    <%= link_to 'link', planning_skeleton_path(planning)  %>
-  <% end %>
-
-</div>
-
-
-<div class="user-list">
-<h2>users</h2>
-
-<%= link_to 'create_user', new_user_registration_path  %>
-<br>
-<ul>
-<% @users.each do |user| %>
-  <li><%= user.email %></li>
-  <% end %>
-</ul>
-</div>
-
-
-<div class="role-list">
-<h2>roles</h2>
-
-<%= link_to 'create new role', new_role_path %>
-<br>
-<ul>
-<% @roles.each do |role| %>
-    <li> <%= role.name %> couleur : <%= role.role_color %> </li>
-  <% end %>
+<div id="planning-list" class="frame">
+  <ul class="slidee">
+    <% @plannings.each do |planning| %>
+      <li class="<%= planning_slide_class(planning)%>">
+         <%= link_to planning_skeleton_path(planning) do %>
+          <%= planning_slide_label(planning) %>
+        <% end %>
+        <p> <%= planning.status %> </p>
+      </li>
+    <% end %>
   </ul>
-
 </div>
+
+<div class="row">
+  <div class="col-xs-9">
+    <div class="user-list">
+      <h2>My Resources</h2>
+      <%= link_to 'create_user', new_user_registration_path  %>
+      <br>
+      <ul>
+        <% @users.each do |user| %>
+       <p><%= user.email %></p>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+  <div class="col-xs-3">
+    <div class="role-list">
+      <h2>My Roles</h2>
+      <br>
+      <ul>
+      <%= link_to 'Create new role', new_role_path , :class=> "btn btn-info" %>
+        <br><br>
+        <%  @slot_templates.each do |slot| %>
+        <button class="btn" style="margin: 5px; border-color: grey; background-color: <%= Role.find_by_id(slot.role_id).role_color %>; border-radius: 6px;"> <%= slot.role.name %> </button>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+
+
+
 

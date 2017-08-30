@@ -1,10 +1,10 @@
 Rails.application.routes.draw do
-
+  mount Attachinary::Engine => "/attachinary"
   devise_for :users
   root to: 'plannings#index'
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   resources :plannings, only: [:show, :index, :update] do
-    resources :slots, only: [:create]
+    resources :slots, only: [:create, :edit, :show]
   end
 
   get 'plannings/:id/users', to: 'plannings#users', as: 'planning_users'

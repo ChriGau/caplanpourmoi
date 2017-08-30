@@ -1,7 +1,45 @@
-<h1>Planning for week : <%= @planning.week_number %></h1>
+<br>
+<div class="row">
+  <div class="col-xs-3">
+    <div class="card" style="background-color: #FD9692; ">
+      <div class="card-category" >
+        <h1>Week : <%= @planning.week_number %></h1>
+        <p><%= Date.commercial(@planning.year, @planning.week_number, 1).beginning_of_week.strftime('%d/%m/%Y') %> -
+        <%  a = Date.commercial(@planning.year, @planning.week_number, 1).beginning_of_week.to_date %>
+          <%= (a + 5.days).strftime('%d/%m/%Y') %>
 
-<div class="planning-steps">
-  <%= link_to "skelton", planning_skeleton_path(@planning) %>
-  <%= link_to "users", planning_users_path(@planning) %>
-  <%= link_to "conflicts", planning_conflicts_path(@planning) %>
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-9">
+    <div class="planning-steps">
+      <ul class="nav nav-tabs nav-justified">
+        <li class="nav-item">
+          <a class="nav-link active" href="#">
+            <div  style="color: light_grey; text-align: center; border-color: grey; border-radius:50%;">1 <br> <%= link_to "Skeleton", planning_skeleton_path(@planning) %>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a class="nav-link active" href="#">
+            <div  style="color: light_grey; text-align: center;"">2 <br> <%= link_to "Users", planning_users_path(@planning) %>
+            </div>
+
+          </a>
+        </li>
+        <li>
+          <a class="nav-link active" href="#">
+            <div  style="color: light_grey; text-align: center";">3 <br> <%= link_to "Conflicts", planning_conflicts_path(@planning) %>
+            </div>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
 </div>
+<br>
+
+
+
+
