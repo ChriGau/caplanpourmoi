@@ -1,0 +1,28 @@
+<!-- TODO : display de la meme manière que 'planning steps' -->
+<br>
+<div class="row">
+  <div class="col-xs-12">
+    <div class="planning-steps">
+      <ul class="nav nav-tabs nav-justified">
+        <li class="nav-item">
+          <a class="nav-link active" href="#">
+          <div  style="color: light_grey; text-align: center; border-color: grey; border-radius:50%;"><br> <%= link_to "General Information", user_infos_path(@user) %>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a class="nav-link active" href="#">
+            <div  style="color: light_grey; text-align: center;""><br> <%= link_to "Availabilities", user_dispos_path(@user) %>
+            </div>
+
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+<br>
+
+
+
+

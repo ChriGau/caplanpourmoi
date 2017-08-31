@@ -1,19 +1,12 @@
+<%= render 'shared/usersteps', locals: {user: @user} %>
 <h1>User key information</h1>
 
 <ul>
-  <li>
     <%= @user.email %>
-  </li>
-  <li>
     Contract: <%= @user.working_hours %>h/week
-  </li>
-  <li>
     Total days off (2017): 12 <br>
     Remaing: 25
-  </li>
-  <li>
     <% @user.roles.each do |role| %>
     <button class="btn" style="margin: 5px; border-color: grey; background-color: <%= role.role_color %>; border-radius: 6px;"> <%= role.name %> </button>
     <% end %>
-  </li>
 </ul>
