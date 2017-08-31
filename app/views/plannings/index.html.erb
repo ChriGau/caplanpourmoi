@@ -3,7 +3,7 @@
   <ul class="slidee">
     <% @plannings.each do |planning| %>
       <li class="<%= planning_slide_class(planning)%>">
-         <%= link_to planning_skeleton_path(planning) do %>
+         <%= planning_link(planning) do %>
           <%= planning_slide_label(planning) %>
         <% end %>
         <p> <%= planning.status %> </p>
