@@ -2,13 +2,15 @@
 
 <div class="skeleton">
   <div class="row">
-    <div class="col-xs-8-offset-4">
+    <div class="col-xs-4">
       <%  @slot_templates.each do |slot| %>
-      <button class="btn" style="margin: 5px; border-color: grey; background-color: <%= Role.find_by_id(slot.role_id).role_color %>; border-radius: 6px;"> <%= slot.role.name %> </button>
+      <div class="btn" id="my-draggable" style="margin: 5px; border-color: grey; background-color: <%= Role.find_by_id(slot.role_id).role_color %>; border-radius: 6px;"> <%= slot.role.name %> </div>
       <% end %>
     </div>
+    <div class="col-xs-8" id="slot_form" style="height: 200px;"></div>
   </div>
   <br>
+
   <div class="row">
     <div class="col-xs-12">
       <div id = "calendar">
@@ -16,37 +18,61 @@
     </div>
   </div>
 
-  <div class="row">
-    <div class="col-xs-5">
-      <p>Create a slot</p>
-      <!-- intégrer du date picker bootstrap dans simple form via gem https://github.com/Eonasdan/bootstrap-datetimepicker -->
-      <%= simple_form_for [@planning, @slot] do |f| %>
-      <%= f.error_notification %>
-      <div class="form-group">
-        <div class='input-group date' id='datetimepicker1'>
-          <input name="slot[start_at]" type='text' value="<%= @slot.start_at %>" class="form-control" />
-          <span class="input-group-addon">
-            <span class="glyphicon glyphicon-calendar">
-            </span>
-          </span>
-        </div>
-      </div>
-      <div class="form-group">
-        <div class='input-group date' id='datetimepicker2'>
-          <input name="slot[end_at]" type='text' value="<%= @slot.end_at %>" class="form-control" />
-          <span class="input-group-addon">
-            <span class="glyphicon glyphicon-calendar">
-            </span>
-          </span>
-        </div>
-      </div>
-      <%= f.input :role_id, placeholder: "Role", label: false, collection: fetch_roles  %>
-      <%= f.submit "Valider", class: "btn btn-success" %>
-      <% end %>
-    </div>
-  </div>
+  <style>
+    /*override le theme par defaut*/
+    /*noms des jours*/
+    .fc-day-header {
+      color: #516568;
+      font-family: "Raleway";
+      font-size: 28px;
+    }
+    /* contenu des colonnes*/
+    .fc th, .fc td  {
+      border-style: none;
+      padding: 2px;
+      border-width: 3px;
+    }
+    /* axe y*/
+    .fc-axis .fc-time .fc-widget-content {
+      color: #516568;
+      font-family: "Raleway";
+    }
+    /*nom du role dans l'event*/
+    .fc-title{
+     font-family: "Raleway";
+     font-size: 12px;
+   }
+  /* active week/day button*/
+  .fc-toolbar .fc-state-active, .fc-toolbar .ui-state-active{
+    color: white;
+    font-family: "Raleway";
+    background-color: #516568;
+  }
+  .fc-button-group {
+    font-family: "Raleway";
+  }
 
-  <%= content_for(:after_js) do %>
+   .fc-button-group .active {
+    background-color: #516568;
+  }
+
+</style>
+
+<!-- ___________________________ JS __________________________________ -->
+
+<%= content_for(:after_js) do %>
+<script>
+    // hide slot form
+    $("#slot_form").hide();
+    // make roles draggable
+    $('#my-draggable').draggable({
+      revert: true,      // immediately snap back to original position
+      revertDuration: 0  //
+    });
+    // assign default event data to draggable elements
+    $('.draggable').data('duration', '03:00');
+  </script>
+  <!-- enable bootstrap in simple form -->
   <script type="text/javascript">
     $(function () {
       $('#datetimepicker1').datetimepicker();
@@ -57,20 +83,30 @@
     $('#calendar').fullCalendar({
       //calendar attributes
       header: {
-        left: 'prev,next today',
-        center: 'title',
-        right: 'agendaWeek,agendaDay'
+        left: '',
+        center: '', //title
+        right: 'agendaWeek,agendaDay',
       },
+      themeSystem: 'bootstrap3',
+      allDaySlot: false,
       locale: "fr",
       editable: true, // events on the calendar can be modified
       droppable: true, // allows things to be dropped onto the calendar
+      selectable: true,
+      drop: function(date) {
+        alert("Dropped on " + date.format());
+        console.log("DROPPED!!!!!!!!!!")
+      },
       minTime: "07:00:00", // starting time, even when scrolled all the way up
       maxTime: "22:00:00",
       defaultView: "agendaWeek",
-      defaultDate: "2017-09-10", // s'ouvre sur le 10/09/2017
-      hiddenDays: [ 0] , // hider dimanche
+      defaultDate: '<%= Date.commercial(@planning.year, @planning.week_number, 1).beginning_of_week %>', // s'ouvre sur le 1e lundi de la semaine sélectionnée
+      hiddenDays: [ 0], // hider dimanche
       height: "auto", // implique pas de scroll à l'intérieur du calendrier
-      events: <%= raw @slots_array.to_json %>,
+      // events: <%= raw @slots_array.to_json %>,
+      eventSources: {
+        events: <%= raw @slots_array.to_json %>
+      },
 
       // 2. cas où on drag-drop un event déjà existant dans le calendar
       eventDrop: function(event, delta, revertFunc, jsEvent, ui, view ) {
@@ -80,16 +116,45 @@
         // modified end  => event.end.format()
         // lors du display du form, il doit préremplir avec ces 2 dates VS les anciennes
       },
+      eventResizeStop: function( event, jsEvent, ui, view ) {
+        var id_slot = event.id // contient id du slot cliqué
+        var planning_id = event.planning_id
+        $.ajax({
+          type: "GET",
+          url: Routes.edit_planning_slot_path(planning_id, id_slot,  { format: 'js' } ),
+          success: function(data) {
+            console.log("ok");
+            console.log(calEvent);
+          },
+          error: function(jqXHR) {
+            console.log(jqXHR.responseText);
+            console.log("nok");
+          }
+        });
+      },
       // cas où on clique sur un évènement déjà existant dans le calendar
       eventClick: function(calEvent, jsEvent, view) {
-        // récupérer l'id de l'event que l'on clique
-        console.log(calEvent);
-        console.log(calEvent.id) // contient id de la slot cliquée
-        var id_slot = calEvent.id
-        // 1 Requête Ajax: shift/:id/edit
-        // TODO > pb pour injecter event id dans la requete ajax
+        // récupérer l'id de l'event que l'on clique + planning id
+        var id_slot = calEvent.id // contient id du slot cliqué
+        var planning_id = calEvent.planning_id // contient planning_id du slot cliqué
+        // 1 Requête Ajax: plannings/:id/slots/:id/edit.  > pour injecter event id + planning id dans la requete ajax ==> use react, cf https://karr.lewagon.com/lectures/rails/react#/4/2
+        $.ajax({
+          type: "GET",
+          url: Routes.edit_planning_slot_path(planning_id, id_slot,  { format: 'js' } ),
+          success: function(data) {
+            console.log("ok");
+            console.log(calEvent);
+          },
+          error: function(jqXHR) {
+            console.log(jqXHR.responseText);
+            console.log("nok");
+          }
+        });
+        console.log("calEvent2 = "+ calEvent);
+      },
+      eventReceive: function( event ) {
+        alert('drop received');
       }
     });
   </script>
   <% end %>
-
