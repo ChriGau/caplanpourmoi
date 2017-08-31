@@ -9,4 +9,7 @@
 //= require cloudinary/jquery.cloudinary
 //= require attachinary
 //= require sly
+//= require react
+//= require react_ujs
+//= require components
 //= require_tree .
