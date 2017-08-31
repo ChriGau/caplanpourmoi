@@ -5,7 +5,11 @@ class UsersController < ApplicationController
     @users = User.all
   end
 
-  def show
+  def infos
+    @user = User.find(params[:id])
+  end
+
+  def dispos
     @user = User.find(params[:id])
     @planning = Planning.first
     @constraints = @user.constraints
