@@ -1,13 +1,24 @@
-<%= simple_form_for(@slot, remote: true) do |f| %>
+<%= simple_form_for([@planning, @slot], remote: true) do |f| %>
   <%= f.error_notification %>
 
   <div class="form-inputs">
     <%= f.input :start_at %>
     <%= f.input :end_at %>
-    <%= f.input :title %>
+    <%= f.input :role_id %>
   </div>
 
   <div class="form-actions">
     <%= f.button :submit %>
   </div>
+<% end %>
+
+
+
+<%= content_for(:after_js) do %>
+<script type="text/javascript">
+  $(function () {
+    $('#datetimepicker1').datetimepicker();
+    $('#datetimepicker2').datetimepicker();
+  });
+</script>
 <% end %>

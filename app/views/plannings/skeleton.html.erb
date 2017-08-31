@@ -2,16 +2,14 @@
 
 <div class="skeleton">
   <div class="row">
-    <div class="col-xs-8-offset-4">
+    <div class="col-xs-4">
       <%  @slot_templates.each do |slot| %>
       <button class="btn" style="margin: 5px; border-color: grey; background-color: <%= Role.find_by_id(slot.role_id).role_color %>; border-radius: 6px;"> <%= slot.role.name %> </button>
       <% end %>
     </div>
+    <div class="col-xs-8" id="slot_form" style="height: 400px;"></div>
   </div>
   <br>
-  <div class="row">
-    <div class="col-xs-4" id="slot_form" style="background-color: orange;"></div>
-  </div>
   <div class="row">
     <div class="col-xs-12">
       <div id = "calendar">
@@ -43,13 +41,16 @@
           </span>
         </div>
       </div>
-      <%= f.input :role_id, placeholder: "Role", label: false, collection: fetch_roles  %>
+
       <%= f.submit "Valider", class: "btn btn-success" %>
       <% end %>
     </div>
   </div>
 
   <%= content_for(:after_js) do %>
+  <script>
+    $("#slot_form").hide();
+  </script>
   <script type="text/javascript">
     $(function () {
       $('#datetimepicker1').datetimepicker();
@@ -60,10 +61,12 @@
     $('#calendar').fullCalendar({
       //calendar attributes
       header: {
-        left: 'prev,next today',
-        center: 'title',
-        right: 'agendaWeek,agendaDay'
+        left: '',
+        center: '', //title
+        right: 'agendaWeek,agendaDay',
       },
+      themeSystem: 'bootstrap3',
+      allDaySlot: false,
       locale: "fr",
       editable: true, // events on the calendar can be modified
       droppable: true, // allows things to be dropped onto the calendar
@@ -73,7 +76,10 @@
       defaultDate: '<%= Date.commercial(@planning.year, @planning.week_number, 1).beginning_of_week %>', // s'ouvre sur le 1e lundi de la semaine sélectionnée
       hiddenDays: [ 0] , // hider dimanche
       height: "auto", // implique pas de scroll à l'intérieur du calendrier
-      events: <%= raw @slots_array.to_json %>,
+      // events: <%= raw @slots_array.to_json %>,
+      eventSources: {
+        events: <%= raw @slots_array.to_json %>
+      },
 
       // 2. cas où on drag-drop un event déjà existant dans le calendar
       eventDrop: function(event, delta, revertFunc, jsEvent, ui, view ) {
@@ -83,6 +89,22 @@
         // modified end  => event.end.format()
         // lors du display du form, il doit préremplir avec ces 2 dates VS les anciennes
       },
+      eventResizeStop: function( event, jsEvent, ui, view ) {
+        var id_slot = event.id // contient id du slot cliqué
+        var planning_id = event.planning_id
+        $.ajax({
+          type: "GET",
+          url: Routes.edit_planning_slot_path(planning_id, id_slot,  { format: 'js' } ),
+          success: function(data) {
+              console.log("ok");
+              console.log(calEvent);
+                                  },
+          error: function(jqXHR) {
+            console.log(jqXHR.responseText);
+            console.log("nok");
+                                  }
+        });
+      },
       // cas où on clique sur un évènement déjà existant dans le calendar
       eventClick: function(calEvent, jsEvent, view) {
         // récupérer l'id de l'event que l'on clique + planning id
@@ -91,19 +113,25 @@
         // 1 Requête Ajax: plannings/:id/slots/:id/edit.  > pour injecter event id + planning id dans la requete ajax ==> use react, cf https://karr.lewagon.com/lectures/rails/react#/4/2
         $.ajax({
           type: "GET",
-          url: Routes.edit_planning_slot_path(planning_id, id_slot, { format: 'json' }),
+          url: Routes.edit_planning_slot_path(planning_id, id_slot,  { format: 'js' } ),
           success: function(data) {
-          // data = ce que le server renvoie = le JS du form du slot mais sans layout (le contenu du partial form pour ce slot) => '_form.html.erb'
-          // on execute aussi le edit.js = l'instruction JS qui affiche ce form au bon endroit sur ta page => via 'edit.js'
               console.log("ok");
+              console.log(calEvent);
                                   },
           error: function(jqXHR) {
             console.log(jqXHR.responseText);
             console.log("nok");
                                   }
         });
+        console.log("calEvent2 = "+ calEvent);
       }
+
     });
   </script>
   <% end %>
 
+  <style>
+    .h2 {
+      color: red;
+    }
+  </style>

@@ -1,0 +1,3 @@
+// hide form in #slot_form when submitting form
+$("#slot_form").hide();
+$('#calendar').fullCalendar( 'refetchEventSources', { events:  <%= raw @slots_array.to_json %> } );
