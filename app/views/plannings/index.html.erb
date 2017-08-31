@@ -3,9 +3,8 @@
   <ul class="slidee">
     <% @plannings.each do |planning| %>
       <li class="<%= planning_slide_class(planning)%>">
-         <%= link_to planning_skeleton_path(planning) do %>
-          <%= planning_slide_label(planning) %>
-        <% end %>
+         <%= planning_link(planning) %>
+         <br>
         <p> <%= planning.status %> </p>
       </li>
     <% end %>
