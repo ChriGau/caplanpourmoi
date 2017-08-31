@@ -4,8 +4,15 @@
   border-radius: 50%;
 }
 
-.user-avatar-border {
-  border: solid 3px blue;
+.add-user-card {
+  background-color: #909090;
+  color: #F2F2F2;
+  align-items: center;
+  font-size: 40px;
+  font-weight: lighter;
+  display:flex;
+  justify-content: space-around;
+  cursor: pointer;
 }
 
 .user-list {
