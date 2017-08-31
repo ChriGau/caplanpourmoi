@@ -6,11 +6,12 @@
       <%  @slot_templates.each do |slot| %>
       <div id="my-draggable" style="margin: 5px; border-color: grey; background-color: <%= Role.find_by_id(slot.role_id).role_color %>; border-radius: 6px;"> <%= slot.role.name %> </div>
       <% end %>
-      <div id="my-draggable" class='draggable' data-event='1' data-duration='03:00'><img src="https://unsplash.it/80/90" alt=""></div>
+      <div id="external-events my-draggable" class='draggable fc-event' data-event='1' data-duration='03:00'><img src="https://unsplash.it/80/90" alt=""></div>
     </div>
     <div class="col-xs-8" id="slot_form" style="height: 300px;"></div>
   </div>
   <br>
+
   <div class="row">
     <div class="col-xs-12">
       <div id = "calendar">
@@ -52,19 +53,17 @@
 
   <%= content_for(:after_js) do %>
   <script>
+    // hide slot form
     $("#slot_form").hide();
+    // make roles draggable
     $('#my-draggable').draggable({
       revert: true,      // immediately snap back to original position
       revertDuration: 0  //
-    });
-    $('.draggable').data('event', { title: 'my event', start: '2017-09-12 08:00' });
-    $('#calendar').fullCalendar({
-      droppable: true,
-      drop: function(date) {
-        alert("Dropped on " + date.format());
-                            }
-    });
+      });
+    // assign default event data to draggable elements
+    $('.draggable').data('duration', '03:00');
   </script>
+  <!-- enable bootstrap in simple form -->
   <script type="text/javascript">
     $(function () {
       $('#datetimepicker1').datetimepicker();
@@ -84,14 +83,15 @@
       locale: "fr",
       editable: true, // events on the calendar can be modified
       droppable: true, // allows things to be dropped onto the calendar
-       drop: function(date) {
+      drop: function(date) {
         alert("Dropped on " + date.format());
+        console.log("DROPPED!!!!!!!!!!")
     },
       minTime: "07:00:00", // starting time, even when scrolled all the way up
       maxTime: "22:00:00",
       defaultView: "agendaWeek",
       defaultDate: '<%= Date.commercial(@planning.year, @planning.week_number, 1).beginning_of_week %>', // s'ouvre sur le 1e lundi de la semaine sélectionnée
-      hiddenDays: [ 0] , // hider dimanche
+      hiddenDays: [ 0], // hider dimanche
       height: "auto", // implique pas de scroll à l'intérieur du calendrier
       // events: <%= raw @slots_array.to_json %>,
       eventSources: {
