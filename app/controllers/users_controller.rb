@@ -7,6 +7,24 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
+    @planning = Planning.first
+    @constraints = @user.constraints
+    @constraints_array = []
+    @constraints.each do |constraint|
+    title = set_title
+      a= {
+        id:  constraint.id,
+        start:  constraint.start_at,
+        end: constraint.end_at,
+        title: title,
+        created_at: constraint.created_at,
+        updated_at: constraint.updated_at,
+        color: set_constraint_color(title),
+        user_id: constraint.user_id
+        }
+      # construire le BASIC hashs
+        @constraints_array << a
+    end
   end
 
   def new
@@ -32,6 +50,20 @@ class UsersController < ApplicationController
 
   def user_params
     params.require(:user).permit(:first_name, :profile_picture)
+  end
+
+  def set_title
+    ["Day Off", "Sick Day", "Preference"].sample
+  end
+
+  def set_constraint_color(title)
+    if title == "Day Off"
+      "red"
+    elsif title == "Sick Day"
+      "blue"
+    else
+      "orange"
+    end
   end
 
 end

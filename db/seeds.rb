@@ -341,6 +341,56 @@ Constraint.create!(start_at: "2017-09-15 08:00",
                   end_at: "2017-09-15 12:00",
                   user_id: User.find_by_first_name('pierre').id
                   )
+# emma lundi matin
+Constraint.create!(start_at: "2017-09-11 08:00",
+                  end_at: "2017-09-11 12:00",
+                  user_id: User.find_by_first_name('emma').id
+                  )
+# emma jeudi matin
+Constraint.create!(start_at: "2017-09-14 08:00",
+                  end_at: "2017-09-14 12:00",
+                  user_id: User.find_by_first_name('emma').id
+                  )
+
+# emmavendredi matin
+Constraint.create!(start_at: "2017-09-15 08:00",
+                  end_at: "2017-09-15 12:00",
+                  user_id: User.find_by_first_name('emma').id
+                  )
+# bob lundi matin
+Constraint.create!(start_at: "2017-09-11 08:00",
+                  end_at: "2017-09-11 12:00",
+                  user_id: User.find_by_first_name('bob').id
+                  )
+# bob jeudi matin
+Constraint.create!(start_at: "2017-09-14 08:00",
+                  end_at: "2017-09-14 12:00",
+                  user_id: User.find_by_first_name('bob').id
+                  )
+
+# bobvendredi matin
+Constraint.create!(start_at: "2017-09-15 08:00",
+                  end_at: "2017-09-15 12:00",
+                  user_id: User.find_by_first_name('bob').id
+                  )
+Constraint.create!(start_at: "2017-09-03 08:00",
+                  end_at: "2017-09-03 12:00",
+                  user_id: User.find_by_first_name('bob').id
+                  )
+Constraint.create!(start_at: "2017-09-05 08:00",
+                  end_at: "2017-09-05 12:00",
+                  user_id: User.find_by_first_name('bob').id
+                  )
+
+Constraint.create!(start_at: "2017-09-05 08:00",
+                  end_at: "2017-09-05 12:00",
+                  user_id: User.find_by_first_name('bob').id
+                  )
+Constraint.create!(start_at: "2017-09-01 08:00",
+                  end_at: "2017-09-01 12:00",
+                  user_id: User.find_by_first_name('bob').id
+                  )
+
 
 
 puts "8 - assigning teams to members"

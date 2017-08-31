@@ -1,12 +1,15 @@
-<h1>Infos générales</h1>
-
+<h1>User key information</h1>
 
 <ul>
   <li>
     <%= @user.email %>
   </li>
   <li>
-    <%= @user.working_hours %>h/week
+    Contract: <%= @user.working_hours %>h/week
+  </li>
+  <li>
+    Total days off (2017): 12 <br>
+    Remaing: 25
   </li>
   <li>
     <% @user.roles.each do |role| %>
