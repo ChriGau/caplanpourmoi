@@ -1,0 +1,16 @@
+<h1>Infos générales</h1>
+
+
+<ul>
+  <li>
+    <%= @user.email %>
+  </li>
+  <li>
+    <%= @user.working_hours %>h/week
+  </li>
+  <li>
+    <% @user.roles.each do |role| %>
+    <button class="btn" style="margin: 5px; border-color: grey; background-color: <%= role.role_color %>; border-radius: 6px;"> <%= role.name %> </button>
+    <% end %>
+  </li>
+</ul>
