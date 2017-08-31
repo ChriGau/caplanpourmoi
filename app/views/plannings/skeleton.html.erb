@@ -4,11 +4,10 @@
   <div class="row">
     <div class="col-xs-4">
       <%  @slot_templates.each do |slot| %>
-      <div id="my-draggable" style="margin: 5px; border-color: grey; background-color: <%= Role.find_by_id(slot.role_id).role_color %>; border-radius: 6px;"> <%= slot.role.name %> </div>
+      <div class="btn" id="my-draggable" style="margin: 5px; border-color: grey; background-color: <%= Role.find_by_id(slot.role_id).role_color %>; border-radius: 6px;"> <%= slot.role.name %> </div>
       <% end %>
-      <div id="external-events my-draggable" class='draggable fc-event' data-event='1' data-duration='03:00'><img src="https://unsplash.it/80/90" alt=""></div>
     </div>
-    <div class="col-xs-8" id="slot_form" style="height: 300px;"></div>
+    <div class="col-xs-8" id="slot_form" style="height: 200px;"></div>
   </div>
   <br>
 
@@ -19,62 +18,32 @@
     </div>
   </div>
 
-  <div class="row">
-    <div class="col-xs-5">
-      <p>Create a slot</p>
-      <!-- intégrer du date picker bootstrap dans simple form via gem https://github.com/Eonasdan/bootstrap-datetimepicker -->
-      <%= simple_form_for [@planning, @slot] do |f| %>
-      <%= f.error_notification %>
-      <div class="form-group">
-        <div class='input-group date' id='datetimepicker1'>
-          <input name="slot[start_at]" type='text' value="<%= @slot.start_at %>" class="form-control" />
-          <span class="input-group-addon">
-            <span class="glyphicon glyphicon-calendar">
-            </span>
-          </span>
-        </div>
-      </div>
-      <div class="form-group">
-        <div class='input-group date' id='datetimepicker2'>
-          <input name="slot[end_at]" type='text' value="<%= @slot.end_at %>" class="form-control" />
-          <span class="input-group-addon">
-            <span class="glyphicon glyphicon-calendar">
-            </span>
-          </span>
-        </div>
-      </div>
-
-      <%= f.submit "Valider", class: "btn btn-success" %>
-      <% end %>
-    </div>
-  </div>
-
   <style>
-  /*override le theme par defaut*/
-  /*noms des jours*/
-  .fc-day-header {
-    color: #516568;
-    font-family: "Raleway";
-    font-size: 28px;
+    /*override le theme par defaut*/
+    /*noms des jours*/
+    .fc-day-header {
+      color: #516568;
+      font-family: "Raleway";
+      font-size: 28px;
     }
-  /* contenu des colonnes*/
-  .fc th, .fc td  {
-    border-style: none;
-    padding: 2px;
-    border-width: 3px;
+    /* contenu des colonnes*/
+    .fc th, .fc td  {
+      border-style: none;
+      padding: 2px;
+      border-width: 3px;
     }
-  /* axe y*/
-  .fc-axis .fc-time .fc-widget-content {
-    color: #516568;
-    font-family: "Raleway";
-}
-  /*nom du role dans l'event*/
-  .fc-title{
+    /* axe y*/
+    .fc-axis .fc-time .fc-widget-content {
+      color: #516568;
+      font-family: "Raleway";
+    }
+    /*nom du role dans l'event*/
+    .fc-title{
      font-family: "Raleway";
      font-size: 12px;
-  }
-  /*bouton week/day*/
-  .fc-agendaWeek-button .fc-button .fc-state-default .fc-corner-left .fc-state-active {
+   }
+   /*bouton week/day*/
+   .fc-agendaWeek-button .fc-button .fc-state-default .fc-corner-left .fc-state-active {
     color: white;
     font-family: "Raleway";
     background-color: #516568;
@@ -82,19 +51,19 @@
 
   }
 
-  </style>
+</style>
 
-  <!-- ___________________________ JS __________________________________ -->
+<!-- ___________________________ JS __________________________________ -->
 
-  <%= content_for(:after_js) do %>
-  <script>
+<%= content_for(:after_js) do %>
+<script>
     // hide slot form
     $("#slot_form").hide();
     // make roles draggable
     $('#my-draggable').draggable({
       revert: true,      // immediately snap back to original position
       revertDuration: 0  //
-      });
+    });
     // assign default event data to draggable elements
     $('.draggable').data('duration', '03:00');
   </script>
@@ -112,7 +81,7 @@
         left: '',
         center: '', //title
         right: 'agendaWeek,agendaDay',
-              },
+      },
       themeSystem: 'bootstrap3',
       allDaySlot: false,
       locale: "fr",
@@ -122,7 +91,7 @@
       drop: function(date) {
         alert("Dropped on " + date.format());
         console.log("DROPPED!!!!!!!!!!")
-    },
+      },
       minTime: "07:00:00", // starting time, even when scrolled all the way up
       maxTime: "22:00:00",
       defaultView: "agendaWeek",
@@ -184,9 +153,3 @@
     });
   </script>
   <% end %>
-
-  <style>
-    .h2 {
-      color: red;
-    }
-  </style>
