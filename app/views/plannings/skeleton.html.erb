@@ -4,10 +4,11 @@
   <div class="row">
     <div class="col-xs-4">
       <%  @slot_templates.each do |slot| %>
-      <button class="btn" style="margin: 5px; border-color: grey; background-color: <%= Role.find_by_id(slot.role_id).role_color %>; border-radius: 6px;"> <%= slot.role.name %> </button>
+      <div id="my-draggable" style="margin: 5px; border-color: grey; background-color: <%= Role.find_by_id(slot.role_id).role_color %>; border-radius: 6px;"> <%= slot.role.name %> </div>
       <% end %>
+      <div id="my-draggable" class='draggable' data-event='1' data-duration='03:00'><img src="https://unsplash.it/80/90" alt=""></div>
     </div>
-    <div class="col-xs-8" id="slot_form" style="height: 400px;"></div>
+    <div class="col-xs-8" id="slot_form" style="height: 300px;"></div>
   </div>
   <br>
   <div class="row">
@@ -47,9 +48,22 @@
     </div>
   </div>
 
+  <!-- ___________________________ JS __________________________________ -->
+
   <%= content_for(:after_js) do %>
   <script>
     $("#slot_form").hide();
+    $('#my-draggable').draggable({
+      revert: true,      // immediately snap back to original position
+      revertDuration: 0  //
+    });
+    $('.draggable').data('event', { title: 'my event', start: '2017-09-12 08:00' });
+    $('#calendar').fullCalendar({
+      droppable: true,
+      drop: function(date) {
+        alert("Dropped on " + date.format());
+                            }
+    });
   </script>
   <script type="text/javascript">
     $(function () {
@@ -64,12 +78,15 @@
         left: '',
         center: '', //title
         right: 'agendaWeek,agendaDay',
-      },
+              },
       themeSystem: 'bootstrap3',
       allDaySlot: false,
       locale: "fr",
       editable: true, // events on the calendar can be modified
       droppable: true, // allows things to be dropped onto the calendar
+       drop: function(date) {
+        alert("Dropped on " + date.format());
+    },
       minTime: "07:00:00", // starting time, even when scrolled all the way up
       maxTime: "22:00:00",
       defaultView: "agendaWeek",
@@ -96,13 +113,13 @@
           type: "GET",
           url: Routes.edit_planning_slot_path(planning_id, id_slot,  { format: 'js' } ),
           success: function(data) {
-              console.log("ok");
-              console.log(calEvent);
-                                  },
+            console.log("ok");
+            console.log(calEvent);
+          },
           error: function(jqXHR) {
             console.log(jqXHR.responseText);
             console.log("nok");
-                                  }
+          }
         });
       },
       // cas où on clique sur un évènement déjà existant dans le calendar
@@ -115,15 +132,18 @@
           type: "GET",
           url: Routes.edit_planning_slot_path(planning_id, id_slot,  { format: 'js' } ),
           success: function(data) {
-              console.log("ok");
-              console.log(calEvent);
-                                  },
+            console.log("ok");
+            console.log(calEvent);
+          },
           error: function(jqXHR) {
             console.log(jqXHR.responseText);
             console.log("nok");
-                                  }
+          }
         });
         console.log("calEvent2 = "+ calEvent);
+      },
+      eventReceive: function( event ) {
+      alert('drop received');
       }
 
     });

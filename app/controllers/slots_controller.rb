@@ -40,7 +40,7 @@ class SlotsController < ApplicationController
 
     respond_to do |format|
       if @slot.update(slot_params)
-        format.html { redirect_to @slot }
+        format.html { redirect_to planning_skeleton_path(@planning) } #@slot
         format.js { set_slots_json }
         format.json { render json: @slot }
 
