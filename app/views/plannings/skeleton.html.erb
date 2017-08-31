@@ -10,6 +10,9 @@
   </div>
   <br>
   <div class="row">
+    <div class="col-xs-4" id="slot_form" style="background-color: orange;"></div>
+  </div>
+  <div class="row">
     <div class="col-xs-12">
       <div id = "calendar">
       </div>
@@ -67,7 +70,7 @@
       minTime: "07:00:00", // starting time, even when scrolled all the way up
       maxTime: "22:00:00",
       defaultView: "agendaWeek",
-      defaultDate: "2017-09-10", // s'ouvre sur le 10/09/2017
+      defaultDate: '<%= Date.commercial(@planning.year, @planning.week_number, 1).beginning_of_week %>', // s'ouvre sur le 1e lundi de la semaine sélectionnée
       hiddenDays: [ 0] , // hider dimanche
       height: "auto", // implique pas de scroll à l'intérieur du calendrier
       events: <%= raw @slots_array.to_json %>,
@@ -82,12 +85,23 @@
       },
       // cas où on clique sur un évènement déjà existant dans le calendar
       eventClick: function(calEvent, jsEvent, view) {
-        // récupérer l'id de l'event que l'on clique
-        console.log(calEvent);
-        console.log(calEvent.id) // contient id de la slot cliquée
-        var id_slot = calEvent.id
-        // 1 Requête Ajax: shift/:id/edit
-        // TODO > pb pour injecter event id dans la requete ajax
+        // récupérer l'id de l'event que l'on clique + planning id
+        var id_slot = calEvent.id // contient id du slot cliqué
+        var planning_id = calEvent.planning_id // contient planning_id du slot cliqué
+        // 1 Requête Ajax: plannings/:id/slots/:id/edit.  > pour injecter event id + planning id dans la requete ajax ==> use react, cf https://karr.lewagon.com/lectures/rails/react#/4/2
+        $.ajax({
+          type: "GET",
+          url: Routes.edit_planning_slot_path(planning_id, id_slot, { format: 'json' }),
+          success: function(data) {
+          // data = ce que le server renvoie = le JS du form du slot mais sans layout (le contenu du partial form pour ce slot) => '_form.html.erb'
+          // on execute aussi le edit.js = l'instruction JS qui affiche ce form au bon endroit sur ta page => via 'edit.js'
+              console.log("ok");
+                                  },
+          error: function(jqXHR) {
+            console.log(jqXHR.responseText);
+            console.log("nok");
+                                  }
+        });
       }
     });
   </script>

@@ -18,11 +18,10 @@ class SlotsController < ApplicationController
   def edit
     @planning = Planning.find(params[:planning_id])
     @slot = Slot.find(params[:id])
-    # @slot.planning = 21
     if @slot.save
       respond_to do |format|
       format.html { redirect_to planning_skeleton_path(@planning.id) }
-      format.js  # <-- will render `app/views/shifts/edit.js.erb`
+      format.js  # <-- will render `app/views/slots/edit.js.erb`
       end
     else
       respond_to do |format|
