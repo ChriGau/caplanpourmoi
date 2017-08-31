@@ -20,12 +20,17 @@ User.destroy_all
 puts "2 - Creating owner"
 puts ""
 
+def open_image(path)
+  File.open(Rails.root.join("db", path), "r")
+end
+
 User.create!(email: "boss@boutique.com",
             working_hours: 50,
             is_owner: true,
-            first_name: "Jean-Michel",
+            first_name: "Jean",
             last_name: "Patron",
-            password: "password"
+            password: "password",
+            profile_picture: open_image("./images_seeds/avatar_1m.jpg")
   )
 
 puts "3 - Creating Planning"
@@ -78,97 +83,111 @@ User.create!(email: "pierre@boutique.com",
             first_name: "pierre",
             last_name: "Last name",
             password: "password",
+            profile_picture: open_image("./images_seeds/avatar_2m.jpg")
   )
 User.create!(email: "paul@boutique.com",
             working_hours: 37,
             is_owner: false,
             first_name: "paul",
             last_name: "Last name",
-            password: "password"
+            password: "password",
+            profile_picture: open_image("./images_seeds/avatar_3m.jpg")
   )
 User.create!(email: "jacques@boutique.com",
             working_hours: 32,
             is_owner: false,
             first_name: "jacques",
             last_name: "Last name",
-            password: "password"
+            password: "password",
+            profile_picture: open_image("./images_seeds/avatar_7m.jpg")
   )
 User.create!(email: "jeannie@boutique.com",
             working_hours: 32,
             is_owner: false,
             first_name: "jeannie",
             last_name: "Last name",
-            password: "password"
+            password: "password",
+            profile_picture: open_image("./images_seeds/avatar_4f.jpg")
   )
 User.create!(email: "nelson@boutique.com",
             working_hours: 32,
             is_owner: false,
             first_name: "nelson",
             last_name: "Last name",
-            password: "password"
+            password: "password",
+            profile_picture: open_image("./images_seeds/avatar_10m.jpeg")
   )
 User.create!(email: "bob@boutique.com",
             working_hours: 32,
             is_owner: false,
             first_name: "bob",
             last_name: "Last name",
-            password: "password"
+            password: "password",
+            profile_picture: open_image("./images_seeds/avatar_11m.jpg")
   )
 User.create!(email: "michel@boutique.com",
             working_hours: 32,
             is_owner: false,
             first_name: "michel",
             last_name: "Last name",
-            password: "password"
+            password: "password",
+            profile_picture: open_image("./images_seeds/avatar_13m.jpg")
   )
 User.create!(email: "axel@boutique.com",
             working_hours: 32,
             is_owner: false,
             first_name: "axel",
             last_name: "Last name",
-            password: "password"
+            password: "password",
+            profile_picture: open_image("./images_seeds/avatar_15m.jpg")
   )
-User.create!(email: "valentin@boutique.com",
+User.create!(email: "valentine@boutique.com",
             working_hours: 32,
             is_owner: false,
-            first_name: "valentin",
+            first_name: "valentine",
             last_name: "Last name",
-            password: "password"
+            password: "password",
+            profile_picture: open_image("./images_seeds/avatar_5f.jpg")
   )
 User.create!(email: "emma@boutique.com",
             working_hours: 32,
             is_owner: false,
             first_name: "emma",
             last_name: "Last name",
-            password: "password"
+            password: "password",
+            profile_picture: open_image("./images_seeds/avatar_6f.jpg")
   )
-User.create!(email: "max@boutique.com",
+User.create!(email: "hortense@boutique.com",
             working_hours: 32,
             is_owner: false,
-            first_name: "max",
+            first_name: "hortense",
             last_name: "Last name",
-            password: "password"
+            password: "password",
+            profile_picture: open_image("./images_seeds/avatar_8f.jpg")
   )
-User.create!(email: "quentin@boutique.com",
+User.create!(email: "joseth@boutique.com",
             working_hours: 32,
             is_owner: false,
-            first_name: "quentin",
+            first_name: "joseth",
             last_name: "Last name",
-            password: "password"
+            password: "password",
+            profile_picture: open_image("./images_seeds/avatar_9f.jpg")
   )
 User.create!(email: "magalie@boutique.com",
             working_hours: 32,
             is_owner: false,
             first_name: "magalie",
             last_name: "Last name",
-            password: "password"
+            password: "password",
+            profile_picture: open_image("./images_seeds/avatar_12f.jpeg")
   )
-User.create!(email: "nick@boutique.com",
+User.create!(email: "arielle@boutique.com",
             working_hours: 32,
             is_owner: false,
-            first_name: "nick",
+            first_name: "arielle",
             last_name: "Last name",
-            password: "password"
+            password: "password",
+            profile_picture: open_image("./images_seeds/avatar_14f.jpg")
   )
 
 # cree user "no solution" pour le cas où pas de solution pour le slot
@@ -177,7 +196,7 @@ User.create!(email: "wtf@boutique.com",
             is_owner: false,
             first_name: "no solution",
             last_name: "Last name",
-            password: "password"
+            password: "password",
   )
 
 puts "6 - assigning roles to members"
@@ -243,7 +262,7 @@ b.role_id = Role.find_by_name("vendeur").id
 b.user_id = a.id
 b.save!
 
-a = User.find_by_first_name('valentin')
+a = User.find_by_first_name('valentine')
 b = RoleUser.new
 b.role_id = Role.find_by_name("vendeur").id
 b.user_id = a.id
@@ -255,25 +274,25 @@ b.role_id = Role.find_by_name("vendeur").id
 b.user_id = a.id
 b.save!
 
-a = User.find_by_first_name('max')
+a = User.find_by_first_name('hortense')
 b = RoleUser.new
 b.role_id = Role.find_by_name("vendeur").id
 b.user_id = a.id
 b.save!
 
-a = User.find_by_first_name('quentin')
+a = User.find_by_first_name('joseth')
 b = RoleUser.new
 b.role_id = Role.find_by_name("vendeur").id
 b.user_id = a.id
 b.save!
 
-a = User.find_by_first_name('nick')
+a = User.find_by_first_name('arielle')
 b = RoleUser.new
 b.role_id = Role.find_by_name("vendeur").id
 b.user_id = a.id
 b.save!
 
-a = User.find_by_first_name('nick')
+a = User.find_by_first_name('arielle')
 b = RoleUser.new
 b.role_id = Role.find_by_name("mécano").id
 b.user_id = a.id
@@ -291,7 +310,7 @@ b.role_id = Role.find_by_name("magasinier").id
 b.user_id = a.id
 b.save!
 
-a = User.find_by_first_name('max')
+a = User.find_by_first_name('hortense')
 b = RoleUser.new
 b.role_id = Role.find_by_name("magasinier").id
 b.user_id = a.id
@@ -354,22 +373,22 @@ Team.create!(planning_id: p.id,
             user_id: User.find_by_first_name("axel").id
   )
 Team.create!(planning_id: p.id,
-            user_id: User.find_by_first_name("valentin").id
+            user_id: User.find_by_first_name("valentine").id
   )
 Team.create!(planning_id: p.id,
             user_id: User.find_by_first_name("emma").id
   )
 Team.create!(planning_id: p.id,
-            user_id: User.find_by_first_name("max").id
+            user_id: User.find_by_first_name("hortense").id
   )
 Team.create!(planning_id: p.id,
-            user_id: User.find_by_first_name("quentin").id
+            user_id: User.find_by_first_name("joseth").id
   )
 Team.create!(planning_id: p.id,
             user_id: User.find_by_first_name("magalie").id
   )
 Team.create!(planning_id: p.id,
-            user_id: User.find_by_first_name("nick").id
+            user_id: User.find_by_first_name("arielle").id
   )
 
 puts "9 - adding SLOTS to planning + solution"
@@ -430,7 +449,7 @@ Slot.create!(
   start_at: "2017-09-11 10:00",
   end_at: "2017-09-11 15:00",
   role_id: Role.find_by_name("vendeur").id,
-  user_id: User.find_by_first_name("valentin").id
+  user_id: User.find_by_first_name("valentine").id
   )
 
 #4
@@ -447,7 +466,7 @@ Slot.create!(
   start_at: "2017-09-11 15:00",
   end_at: "2017-09-11 20:00",
   role_id: Role.find_by_name("vendeur").id,
-  user_id: User.find_by_first_name("max").id
+  user_id: User.find_by_first_name("hortense").id
   )
 
 Slot.create!(
@@ -455,7 +474,7 @@ Slot.create!(
   start_at: "2017-09-11 15:00",
   end_at: "2017-09-11 20:00",
   role_id: Role.find_by_name("vendeur").id,
-  user_id: User.find_by_first_name("quentin").id
+  user_id: User.find_by_first_name("joseth").id
   )
 
 #5
@@ -513,7 +532,7 @@ Slot.create!(
   start_at: "2017-09-12 10:00",
   end_at: "2017-09-12 15:00",
   role_id: Role.find_by_name("vendeur").id,
-  user_id: User.find_by_first_name("max").id
+  user_id: User.find_by_first_name("hortense").id
   )
 #9
 Slot.create!(
@@ -528,7 +547,7 @@ Slot.create!(
   start_at: "2017-09-12 15:00",
   end_at: "2017-09-12 20:00",
   role_id: Role.find_by_name("vendeur").id,
-  user_id: User.find_by_first_name("max").id
+  user_id: User.find_by_first_name("hortense").id
   )
 
 #10
@@ -587,7 +606,7 @@ Slot.create!(
   start_at: "2017-09-13 15:00",
   end_at: "2017-09-13 20:00",
   role_id: Role.find_by_name("vendeur").id,
-  user_id: User.find_by_first_name("valentin").id
+  user_id: User.find_by_first_name("valentine").id
   )
 Slot.create!(
   planning_id: p.id,
@@ -659,7 +678,7 @@ Slot.create!(
   start_at: "2017-09-14 15:00",
   end_at: "2017-09-14 20:00",
   role_id: Role.find_by_name("vendeur").id,
-  user_id: User.find_by_first_name("max").id
+  user_id: User.find_by_first_name("hortense").id
   )
 #20
 Slot.create!(
@@ -712,7 +731,7 @@ Slot.create!(
   start_at: "2017-09-15 10:00",
   end_at: "2017-09-15 15:00",
   role_id: Role.find_by_name("vendeur").id,
-  user_id: User.find_by_first_name("nick").id
+  user_id: User.find_by_first_name("arielle").id
   )
 #24
 Slot.create!(
@@ -720,14 +739,14 @@ Slot.create!(
   start_at: "2017-09-15 15:00",
   end_at: "2017-09-15 20:00",
   role_id: Role.find_by_name("vendeur").id,
-  user_id: User.find_by_first_name("valentin").id
+  user_id: User.find_by_first_name("valentine").id
   )
 Slot.create!(
   planning_id: p.id,
   start_at: "2017-09-15 15:00",
   end_at: "2017-09-15 20:00",
   role_id: Role.find_by_name("vendeur").id,
-  user_id: User.find_by_first_name("nick").id
+  user_id: User.find_by_first_name("arielle").id
   )
 #25
 Slot.create!(
@@ -780,14 +799,14 @@ Slot.create!(
   start_at: "2017-09-16 10:00",
   end_at: "2017-09-16 15:00",
   role_id: Role.find_by_name("vendeur").id,
-  user_id: User.find_by_first_name("valentin").id
+  user_id: User.find_by_first_name("valentine").id
   )
 Slot.create!(
   planning_id: p.id,
   start_at: "2017-09-16 10:00",
   end_at: "2017-09-16 15:00",
   role_id: Role.find_by_name("vendeur").id,
-  user_id: User.find_by_first_name("max").id
+  user_id: User.find_by_first_name("hortense").id
   )
 #29
 Slot.create!(
@@ -795,14 +814,14 @@ Slot.create!(
   start_at: "2017-09-16 15:00",
   end_at: "2017-09-16 20:00",
   role_id: Role.find_by_name("vendeur").id,
-  user_id: User.find_by_first_name("max").id
+  user_id: User.find_by_first_name("hortense").id
   )
 Slot.create!(
   planning_id: p.id,
   start_at: "2017-09-16 15:00",
   end_at: "2017-09-16 20:00",
   role_id: Role.find_by_name("vendeur").id,
-  user_id: User.find_by_first_name("nick").id
+  user_id: User.find_by_first_name("arielle").id
   )
 
 

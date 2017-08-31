@@ -4,7 +4,7 @@ class PlanningsController < ApplicationController
   def index
     @plannings = Planning.all.order(:week_number)
     @roles = Role.all
-    @users = User.all
+    @users = User.where.not(first_name: "no solution")
     @slot_templates = Slot.slot_templates # liste des roles
   end
 
