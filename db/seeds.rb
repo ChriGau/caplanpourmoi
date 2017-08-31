@@ -62,13 +62,13 @@ puts "4 - Creating roles"
 puts ""
 
 Role.create!(name: "vendeur",
-            role_color: "red"
+            role_color: "#936A78"
             )
 Role.create!(name: "mécano",
-            role_color: "yellow"
+            role_color: "#3D3D3D"
             )
 Role.create!(name: "magasinier",
-            role_color: "green"
+            role_color: "#5C573E"
             )
 
 # un-assigned value : color_role
