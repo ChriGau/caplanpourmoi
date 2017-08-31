@@ -14,20 +14,21 @@
 
 <div class="row">
   <div class="col-xs-9">
+    <h2>
+      <i class="fa fa-users" aria-hidden="true"></i> Mes Ressources
+    </h2>
     <div class="user-list">
-      <h2>My Resources</h2>
-      <%= link_to 'create_user', new_user_registration_path  %>
-      <br>
-      <ul>
-        <% @users.each do |user| %>
-       <p><%= user.email %></p>
-        <% end %>
-      </ul>
+      <% @users.each do |user| %>
+        <div class="col-xs-2">
+         <%= avatar_with_border_color(user) %>
+          <p><%= user.first_name.capitalize %></p>
+        </div>
+      <% end %>
     </div>
   </div>
   <div class="col-xs-3">
     <div class="role-list">
-      <h2>My Roles</h2>
+      <h2>Mes Roles</h2>
       <br>
       <ul>
       <%= link_to 'Create new role', new_role_path , :class=> "btn btn-info" %>
@@ -38,6 +39,7 @@
       </ul>
     </div>
   </div>
+</div>
 
 
 
