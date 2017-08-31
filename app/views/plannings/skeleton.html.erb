@@ -49,6 +49,41 @@
     </div>
   </div>
 
+  <style>
+  /*override le theme par defaut*/
+  /*noms des jours*/
+  .fc-day-header {
+    color: #516568;
+    font-family: "Raleway";
+    font-size: 28px;
+    }
+  /* contenu des colonnes*/
+  .fc th, .fc td  {
+    border-style: none;
+    padding: 2px;
+    border-width: 3px;
+    }
+  /* axe y*/
+  .fc-axis .fc-time .fc-widget-content {
+    color: #516568;
+    font-family: "Raleway";
+}
+  /*nom du role dans l'event*/
+  .fc-title{
+     font-family: "Raleway";
+     font-size: 12px;
+  }
+  /*bouton week/day*/
+  .fc-agendaWeek-button .fc-button .fc-state-default .fc-corner-left .fc-state-active {
+    color: white;
+    font-family: "Raleway";
+    background-color: #516568;
+    border-color: #516568;
+
+  }
+
+  </style>
+
   <!-- ___________________________ JS __________________________________ -->
 
   <%= content_for(:after_js) do %>
@@ -83,6 +118,7 @@
       locale: "fr",
       editable: true, // events on the calendar can be modified
       droppable: true, // allows things to be dropped onto the calendar
+      selectable: true,
       drop: function(date) {
         alert("Dropped on " + date.format());
         console.log("DROPPED!!!!!!!!!!")
