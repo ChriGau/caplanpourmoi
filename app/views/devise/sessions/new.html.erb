@@ -1,47 +1,121 @@
 <div class="container-fluid banner-container">
-  <h1 class="text">Créez votre
-  <br>Planning !</h1>
-  <a href="" class="btn btn-primary btn-home">Connexion</a>
-</div>
-
-<div class="container">
   <div class="row">
-    <div class="col-xs-12 col-md-4">
-      <img src="" alt="">
-      <h2>blabla</h2>
-      <p>kjsdh sdfh sdkfjhs dkfjhsdk fksdf </p>
+    <div class="col-xs-12 col-md-6">
+       <header class="intro-header">
+      <div class="container">
+        <div class="intro-message">
+          <h1 class = "text">Gerez vos plannings.</h1>
+          <h2>Définissez vos besoins, on s'occupe du reste.</h2>
+          <hr class="intro-divider">
+
+            <a href="#sign_in_container" class="form-actions btn-primary btn">Connexion</a>
+        </div>
+      </div>
+    </header>
+     </div>
+   </div>
+ </div>
+
+ <section class="content-section-a">
+
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-5 ml-auto">
+        <hr class="section-heading-spacer">
+        <div class="clearfix"></div>
+        <h2 class="section-heading">Etape 1</h2>
+        <p class="lead">Créez la structure de votre planning</p>
+      </div>
+      <div class="col-lg-5 mr-auto">
+
+      </div>
     </div>
-    <div class="col-xs-12 col-md-4">
-      <img src="" alt="">
-      <h2>blabla</h2>
-      <p>kjsdh sdfh sdkfjhs dkfjhsdk fksdf </p>
-    </div>
-    <div class="col-xs-12 col-md-4">
-      <img src="" alt="">
-      <h2>blabla</h2>
-      <p>kjsdh sdfh sdkfjhs dkfjhsdk fksdf </p>
-    </div>
+
   </div>
-</div>
-<div class="container">
-  <div class="row">
-    <div class="col">
-      <h2>Log in</h2>
+</section>
 
-      <%= simple_form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+<section class="content-section-b">
+
+  <div class="container">
+
+    <div class="row">
+      <div class="col-lg-5 mr-auto order-lg-2">
+        <hr class="section-heading-spacer">
+        <div class="clearfix"></div>
+        <h2 class="section-heading">Etape 2</h2>
+        <p class="lead">Assignez les collaborateurs dont vous avez besoins.</p>
+      </div>
+      <div class="col-lg-5 ml-auto order-lg-1">
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="content-section-a">
+
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-5 ml-auto">
+        <hr class="section-heading-spacer">
+        <div class="clearfix"></div>
+        <h2 class="section-heading">Etape 3</h2>
+        <p class="lead">Vos collaborateurs rentrent leurs disponibiltés.</p>
+      </div>
+      <div class="col-lg-5 mr-auto">
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="content-section-b">
+
+  <div class="container">
+
+    <div class="row">
+      <div class="col-lg-5 mr-auto order-lg-2">
+        <hr class="section-heading-spacer">
+        <div class="clearfix"></div>
+        <h2 class="section-heading">Etape 4</h2>
+        <p class="lead">Ca plan pour moi s’occupe de créer votre planning </p>
+      </div>
+      <div class="col-lg-5 ml-auto order-lg-1">
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="container" id="sign_in_container">
+
+  <div class="row">
+    <div class="col-xs-12 col-md-4">
+      <div class="form-background">
+        <%= simple_form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
         <div class="form-inputs">
-          <%= f.input :email, required: false, autofocus: true %>
-          <%= f.input :password, required: false %>
-          <%= f.input :remember_me, as: :boolean if devise_mapping.rememberable? %>
+          <p>Se connecter</p>
+          <%= f.input :email, label: false, required: false, placeholder: "Email" %>
+          <%= f.input :password, label: false, required: false, placeholder: "Mot de passe" %>
+          <%= f.input :remember_me, label: "Se souvenir de moi", as: :boolean if devise_mapping.rememberable? %>
         </div>
+        <%= f.button :submit, "Connexion", class: "form-actions btn-primary btn-home btn-block " %>
+        <% end %>
 
-        <div class="form-actions">
-          <%= f.button :submit, "Log in" %>
-        </div>
-      <% end %>
-
-      <%= render "devise/shared/links" %>
+        <%= render "devise/shared/links" %>
+      </div>
     </div>
   </div>
+
 </div>
 
+
+
+
+<!-- Bootstrap core JavaScript -->
+<script src="vendor/jquery/jquery.min.js"></script>
+<script src="vendor/popper/popper.min.js"></script>
+<script src="vendor/bootstrap/js/bootstrap.min.js"></script>
