@@ -25,6 +25,13 @@ module PlanningHelper
     week_start = Date.commercial(2017, planning.week_number, 1).strftime('%d/%m/%y')
     week_end = Date.commercial(2017, planning.week_number, 7).strftime('%d/%m/%y')
     "Du #{week_start} au #{week_end}"
+  end
 
+  def planning_count_people_on_similar_slot(planning, slot)
+    planning.slots.count { |s|
+      s.start_at == slot.start_at &&
+        s.end_at == slot.end_at &&
+        s.role_id == slot.role_id
+    }
   end
 end
