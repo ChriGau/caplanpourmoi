@@ -2,15 +2,14 @@
 <div class="infos">
   <ul>
     <%= @user.email %> <br>
-    Contract: <%= @user.working_hours %>h/week <br>
-    Total days off (2017): 12 <br>
-    Remaing: 25 <br>
+    Contrat: <%= @user.working_hours %>h/semaine <br>
+    Nombre de jours non travaillés (2017): 12 <br>
+    Nombre de jours de congés restants: 25 <br>
     <% @user.roles.each do |role| %>
-    <button class="btn" style="margin: 5px; border-color: grey; background-color: <%= role.role_color %>; border-radius: 6px;"> <%= role.name %> </button>
+    <button class="btn" style="margin: 5px; border-color: grey; background-color: <%= role.role_color %>; border-radius: 6px; width: 120px;"> <%= role.name %> </button>
     <% end %>
   </ul>
 </div>
-
 
 <!-- dispos user -->
 <div class="dispos">
@@ -22,16 +21,33 @@
 <style>
   /*override le theme par defaut*/
   /*noms des jours*/
+  .fc-view-container *, .fc-view-container *::before, .fc-view-container {
+    color: #516568;
+    font-family: "Raleway";
+  }
   .fc-day-header {
     color: #516568;
     font-family: "Raleway";
     font-size: 14px;
+  }
+  /* container fleches prev et next*/
+  .fc-left {
+     color: #516568;
+  }
+  .fc-button {
+    width: 40px;
+  }
+    .fc-icon {
+    color: #516568;
   }
   /* contenu des colonnes*/
   .fc th, .fc td  {
     border-style: none;
     padding: 2px;
     border-width: 3px;
+  }
+  .fc-time-grid-event {
+    border-radius: 10px;
   }
   /* axe y*/
   .fc-axis .fc-time .fc-widget-content {
@@ -42,6 +58,7 @@
   .fc-title{
    font-family: "Raleway";
    font-size: 12px;
+   color: white;
  }
  /* active week/day button*/
  .fc-toolbar .fc-state-active, .fc-toolbar .ui-state-active{
@@ -49,13 +66,26 @@
   font-family: "Raleway";
   background-color: #516568;
 }
+  /* container bouton month/week*/
+  .fc-right {
+  width: 200px;
+  }
 .fc-button-group {
   font-family: "Raleway";
+  width: 300px;
 }
-
 .fc-button-group .active {
   background-color: #516568;
 }
+/*bouton month*/
+.fc-month-button {
+  width: 70px;
+}
+/*bouton week*/
+.fc-agendaWeek-button {
+  width: 70px;
+}
+
 
 </style>
 
@@ -67,7 +97,7 @@
 $('#calendar').fullCalendar({
       //calendar attributes
       header: {
-        left: '',
+        left: 'prev, next',
         center: '',
         right: 'month, agendaWeek',
       },
@@ -75,11 +105,12 @@ $('#calendar').fullCalendar({
       droppable: true, // allows things to be dropped onto the calendar
       minTime: "07:00:00", // starting time, even when scrolled all the way up
       maxTime: "22:00:00",
-      height: 'parent',
+      height: "parent",
       duration: "02:00:00",
       defaultView: 'month',
-      defaultDate: "<%= Date.commercial(@planning.year, @planning.week_number, 1).beginning_of_week.beginning_of_month %>", // s'ouvre sur le 1e jour du mois par defaut
-      height: "auto", // implique pas de scroll à l'intérieur du calendrier
+      hiddenDays: [0], // hider dimanche
+      defaultDate: "<%= Date.commercial(Planning.first.year, Planning.first.week_number, 1).beginning_of_week.beginning_of_month %>", // s'ouvre sur le 1e jour du mois par defaut
+      height: "parent", // implique pas de scroll à l'intérieur du calendrier
       events: <%= raw @constraints_array.to_json %>,
     });
   </script>

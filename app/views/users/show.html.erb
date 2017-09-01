@@ -17,7 +17,7 @@ aria-labelledby="myModalLabel" aria-hidden="true" id="myModal">
       <span class="sr-only">Close</span>
     </button>
     <h4 class="modal-title" id="myModalLabel">
-      <%= @user.first_name.capitalize + " " + @user.last_name%>'s details
+      Les infos de <%= @user.first_name.capitalize %>
     </h4>
   </div>
 
@@ -42,8 +42,15 @@ function showmodal() {
 
 <!-- CSS FORM ///////////////////////////////////////////////////////////////////////// -->
 <style>
-.dispos {
-  height: 500px;
+.modal-content {
+  height: 800px;
+  width: 1200px;
+}
+.dispos{
+  height: 550px;
+  width: 1200px;
+  padding: 20px;
+  color: #516568;;
 }
 .myModal{
   font-family: "Raleway";
