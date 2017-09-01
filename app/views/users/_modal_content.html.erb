@@ -1,0 +1,143 @@
+<!-- infos user -->
+<div class="infos">
+  <div class="row">
+    <div class="col-xs-6">
+      <ul class="list-group">
+        <li class="list-group-item justify-content-between">
+          <%= @user.email %> <br>
+        </li>
+        <li class="list-group-item justify-content-between">
+          +33 6 89 90 95 26<br>
+        </li>
+        <li class="list-group-item justify-content-between">
+          Contrat :
+          <span class="badge badge-default badge-pill"><%= @user.working_hours %>h/semaine</span>
+        </li>
+      </ul>
+      <% @user.roles.each do |role| %>
+        <button class="btn" style="width: 130px; margin: 5px; border-color: grey; background-color: <%=  role.role_color %>; border-radius: 6px; color: #516568;"> <%= role.name %> </button>
+        <% end %>
+    </div>
+    <div class="col-xs-6">
+      <li class="list-group-item justify-content-between">
+          Jours non travaillés (2017) :
+          <span class="badge badge-default badge-pill">12</span>
+        </li>
+        <li class="list-group-item justify-content-between">
+          Jours de congés restants :
+          <span class="badge badge-default badge-pill">25</span>
+        </li>
+        <li class="list-group-item justify-content-between">
+          Préférences
+          <span class="badge badge-default badge-pill">pas mercredi matin</span>
+        </li>
+    </div>
+  </div>
+</div>
+
+<!-- dispos user -->
+<div class="dispos">
+  <div id = "calendar">
+  </div>
+</div>
+
+<!-- style calendar dispos -->
+<style>
+  /*override le theme par defaut*/
+  /*noms des jours*/
+  .fc-view-container *, .fc-view-container *::before, .fc-view-container {
+    color: #516568;
+    font-family: "Raleway";
+  }
+  .fc-day-header {
+    color: #516568;
+    font-family: "Raleway";
+    font-size: 20px;
+  }
+  /* container fleches prev et next*/
+  .fc-left {
+   color: #516568;
+ }
+ .fc-button {
+  width: 40px;
+}
+.fc-icon {
+  color: #516568;
+}
+/* contenu des colonnes*/
+.fc th, .fc td  {
+  border-style: none;
+  padding: 2px;
+  border-width: 3px;
+}
+.fc-time-grid-event {
+  border-radius: 10px;
+}
+/* axe y*/
+.fc-axis .fc-time .fc-widget-content {
+  color: #516568;
+  font-family: "Raleway";
+}
+/*nom du role dans l'event*/
+.fc-title{
+ font-family: "Raleway";
+ font-size: 17px;
+ color: white;
+}
+/* active week/day button*/
+.fc-toolbar .fc-state-active, .fc-toolbar .ui-state-active{
+  color: white;
+  font-family: "Raleway";
+  background-color: #516568;
+}
+/* container bouton month/week*/
+.fc-right {
+  width: 200px;
+}
+.fc-button-group {
+  font-family: "Raleway";
+  width: 300px;
+}
+.fc-button-group .active {
+  background-color: #516568;
+}
+/*bouton month*/
+.fc-month-button {
+  width: 70px;
+}
+/*bouton week*/
+.fc-agendaWeek-button {
+  width: 70px;
+}
+
+
+</style>
+
+<!--  _________________________ JS _____________________________ -->
+
+<%= content_for(:after_js) do %>
+<script>
+//setup calendar
+$('#calendar').fullCalendar({
+      //calendar attributes
+      header: {
+        left: 'prev, next',
+        center: '',
+        right: 'month, agendaWeek',
+      },
+      editable: true, // events on the calendar can be modified
+      droppable: true, // allows things to be dropped onto the calendar
+      minTime: "07:00:00", // starting time, even when scrolled all the way up
+      maxTime: "22:00:00",
+      height: "parent",
+      duration: "02:00:00",
+      defaultView: 'month',
+      dayNames: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
+      hiddenDays: [0], // hider dimanche
+      defaultDate: "<%= Date.commercial(Planning.first.year, Planning.first.week_number, 1).beginning_of_week.beginning_of_month %>", // s'ouvre sur le 1e jour du mois par defaut
+      height: "parent", // implique pas de scroll à l'intérieur du calendrier
+      events: <%= raw @constraints_array.to_json %>,
+    });
+  </script>
+  <% end %>
+

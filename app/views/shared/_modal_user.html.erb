@@ -1,8 +1,4 @@
-
-<%= render :file => 'plannings/index' %>
-
- <!-- ___________________________________________________________ -->
-
+<div class="btn btn-success" id="drag1" draggable="true" ondragstart="drag(event)" ondrop="showmodal()"   style = "width: 336px; height: 69px;" label="CLICK!" data-toggle="modal" data-target="#myModalHorizontal" onclick="showmodal" ></div>
 
 <!-- Modal -->
 <div class="modal fade" id="myModalHorizontal" tabindex="-1" role="dialog"
@@ -17,7 +13,7 @@ aria-labelledby="myModalLabel" aria-hidden="true" id="myModal">
       <span class="sr-only">Close</span>
     </button>
     <h4 class="modal-title" id="myModalLabel">
-      <strong>Les infos de <%= @user.first_name.capitalize %></strong>
+      Les infos de <%= @user.first_name.capitalize %>
     </h4>
   </div>
 
@@ -42,39 +38,15 @@ function showmodal() {
 
 <!-- CSS FORM ///////////////////////////////////////////////////////////////////////// -->
 <style>
-.modal-header{
-  text-align: center;
-}
-.list-group {
-  width: 350px;
-  flex: 0 100px 100px;
-  border-radius: 10px;
-}
-
-.ul {
-  font-family: "Raleway";
-color: #516568;
-flex: 0 0 200px;
-}
-.modal-title {
-  padding: 10px;
-}
 .modal-content {
-  height: 850px;
-  width: 1200px;
+  height: 900px;
+  width: 1300px;
 }
 .dispos{
-  height: 550px;
+  height: 200px;
   width: 1200px;
-  padding: 10px;
-  color: #516568;
-}
-.infos {
-  padding: 10px;
-    background-color: #D2D7D3;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
+  padding: 20px;
+  color: #516568;;
 }
 .myModal{
   font-family: "Raleway";
@@ -97,6 +69,12 @@ flex: 0 0 200px;
     background-color:#313131;
     overflow:auto
   }
+  img#close {
+    position:absolute;
+    right:-14px;
+    top:-14px;
+    cursor:pointer
+  }
   div#popupContact {
     position:absolute;
     left:50%;
@@ -112,6 +90,16 @@ flex: 0 0 200px;
     border-radius:10px;
     font-family:raleway;
     background-color:#fff
+  }
+  p {
+    margin-top:30px
+  }
+  h2 {
+    background-color:#FEFFED;
+    padding:20px 35px;
+    margin:-10px -50px;
+    text-align:center;
+    border-radius:10px 10px 0 0
   }
   hr {
     margin:10px -50px;
@@ -169,5 +157,14 @@ flex: 0 0 200px;
     color:red;
     font-weight:700
   }
+  button {
+    width:10%;
+    height:45px;
+    border-radius:3px;
+    background-color:#cd853f;
+    color:#fff;
+    font-family:'Raleway',sans-serif;
+    font-size:18px;
+    cursor:pointer
+  }
 </style>
-
