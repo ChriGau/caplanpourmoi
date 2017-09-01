@@ -1,9 +1,9 @@
 <br>
 <div class="row">
   <div class="col-xs-4">
-    <div class="card" style="background-color: #FD8851; text-align: center; width: 250px; border-radius: 10px;">
+    <div class="card <%= planning_slide_class(@planning)%>" style="text-align: center; width: 250px; border-radius: 10px; color: #516568; ">
       <div class="card-category" >
-        <h2>S <%= @planning.week_number %></h2>
+        <h2><strong>S <%= @planning.week_number %></strong></h2>
         <p><%= Date.commercial(@planning.year, @planning.week_number, 1).beginning_of_week.strftime('%d/%m/%Y') %> -
         <%  a = Date.commercial(@planning.year, @planning.week_number, 1).beginning_of_week.to_date %>
           <%= (a + 5.days).strftime('%d/%m/%Y') %>
@@ -42,3 +42,20 @@
 
 
 
+<style>
+
+.not_started {
+  background-color: #D9D9D9;
+}
+
+.in_progress {
+  background-color: #D0FEA8;
+}
+.with_conflicts {
+  background-color: #FD8851;
+}
+.complete {
+  background-color: #9BF171;
+}
+
+</style>
