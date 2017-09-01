@@ -1,27 +1,39 @@
 <!-- TODO : display de la meme manière que 'planning steps' -->
-<br>
 <div class="row">
   <div class="col-xs-12">
     <div class="planning-steps">
       <ul class="nav nav-tabs nav-justified">
-        <li class="nav-item">
+        <li class="nav-item" onclick="showinfos">
           <a class="nav-link active" href="#">
-          <div  style="color: light_grey; text-align: center; border-color: grey; border-radius:50%;"><br> <%= link_to "General Information", user_infos_path(@user) %>
+          <div  style="color: light_grey; text-align: center; border-color: grey; border-radius:50%;"><br>
             </div>
           </a>
         </li>
         <li>
-          <a class="nav-link active" href="#">
-            <div  style="color: light_grey; text-align: center;""><br> <%= link_to "Availabilities", user_dispos_path(@user) %>
+          <a class="nav-link active" onclick="showdispos" href="#">
+            <div  style="color: light_grey; text-align: center;""><br>
             </div>
-
           </a>
         </li>
       </ul>
     </div>
   </div>
 </div>
-<br>
+
+<%= content_for(:after_js) do %>
+<script>
+function showinfos() {
+  $('.infos').show();
+  $('.dispos').hide();
+};
+function showdispos() {
+  $('.dispos').show();
+  $('.infos').hide();
+};
+</script>
+<% end %>
+
+
 
 
 

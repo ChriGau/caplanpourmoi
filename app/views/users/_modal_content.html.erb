@@ -1,0 +1,87 @@
+<!-- infos user -->
+<div class="infos">
+  <ul>
+    <%= @user.email %> <br>
+    Contract: <%= @user.working_hours %>h/week <br>
+    Total days off (2017): 12 <br>
+    Remaing: 25 <br>
+    <% @user.roles.each do |role| %>
+    <button class="btn" style="margin: 5px; border-color: grey; background-color: <%= role.role_color %>; border-radius: 6px;"> <%= role.name %> </button>
+    <% end %>
+  </ul>
+</div>
+
+
+<!-- dispos user -->
+<div class="dispos">
+  <div id = "calendar">
+  </div>
+</div>
+
+<!-- style calendar dispos -->
+<style>
+  /*override le theme par defaut*/
+  /*noms des jours*/
+  .fc-day-header {
+    color: #516568;
+    font-family: "Raleway";
+    font-size: 14px;
+  }
+  /* contenu des colonnes*/
+  .fc th, .fc td  {
+    border-style: none;
+    padding: 2px;
+    border-width: 3px;
+  }
+  /* axe y*/
+  .fc-axis .fc-time .fc-widget-content {
+    color: #516568;
+    font-family: "Raleway";
+  }
+  /*nom du role dans l'event*/
+  .fc-title{
+   font-family: "Raleway";
+   font-size: 12px;
+ }
+ /* active week/day button*/
+ .fc-toolbar .fc-state-active, .fc-toolbar .ui-state-active{
+  color: white;
+  font-family: "Raleway";
+  background-color: #516568;
+}
+.fc-button-group {
+  font-family: "Raleway";
+}
+
+.fc-button-group .active {
+  background-color: #516568;
+}
+
+</style>
+
+<!--  _________________________ JS _____________________________ -->
+
+<%= content_for(:after_js) do %>
+<script>
+//setup calendar
+$('#calendar').fullCalendar({
+      //calendar attributes
+      header: {
+        left: '',
+        center: '',
+        right: 'month, agendaWeek',
+      },
+      editable: true, // events on the calendar can be modified
+      droppable: true, // allows things to be dropped onto the calendar
+      minTime: "07:00:00", // starting time, even when scrolled all the way up
+      maxTime: "22:00:00",
+      height: 'parent',
+      duration: "02:00:00",
+      defaultView: 'month',
+      defaultDate: "<%= Date.commercial(@planning.year, @planning.week_number, 1).beginning_of_week.beginning_of_month %>", // s'ouvre sur le 1e jour du mois par defaut
+      height: "auto", // implique pas de scroll à l'intérieur du calendrier
+      events: <%= raw @constraints_array.to_json %>,
+    });
+  </script>
+  <% end %>
+
