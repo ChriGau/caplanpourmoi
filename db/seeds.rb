@@ -325,6 +325,48 @@ b.save!
 puts "7 - assigning constraints to members"
 puts ""
 
+# pierre mercredi matin septembre octobre
+Constraint.create!(start_at: "2017-09-06 08:00",
+                  end_at: "2017-09-06 12:00",
+                  user_id: User.find_by_first_name('pierre').id
+                  )
+# pierre mercredi matin septembre octobre
+Constraint.create!(start_at: "2017-09-13 08:00",
+                  end_at: "2017-09-13 12:00",
+                  user_id: User.find_by_first_name('pierre').id
+                  )
+# pierre mercredi matin septembre octobre
+Constraint.create!(start_at: "2017-09-20 08:00",
+                  end_at: "2017-09-20 12:00",
+                  user_id: User.find_by_first_name('pierre').id
+                  )
+# pierre mercredi matin septembre octobre
+Constraint.create!(start_at: "2017-09-27 08:00",
+                  end_at: "2017-09-27 12:00",
+                  user_id: User.find_by_first_name('pierre').id
+                  )
+# pierre mercredi matin septembre octobre
+Constraint.create!(start_at: "2017-10-04 08:00",
+                  end_at: "2017-10-04 12:00",
+                  user_id: User.find_by_first_name('pierre').id
+                  )
+# pierre mercredi matin septembre octobre
+Constraint.create!(start_at: "2017-10-11 08:00",
+                  end_at: "2017-10-11 12:00",
+                  user_id: User.find_by_first_name('pierre').id
+                  )
+# pierre mercredi matin septembre octobre
+Constraint.create!(start_at: "2017-10-18 08:00",
+                  end_at: "2017-10-18 12:00",
+                  user_id: User.find_by_first_name('pierre').id
+                  )
+# pierre mercredi matin septembre octobre
+Constraint.create!(start_at: "2017-10-24 08:00",
+                  end_at: "2017-10-24 12:00",
+                  user_id: User.find_by_first_name('pierre').id
+                  )
+
+
 # pierre lundi matin
 Constraint.create!(start_at: "2017-09-11 08:00",
                   end_at: "2017-09-11 12:00",

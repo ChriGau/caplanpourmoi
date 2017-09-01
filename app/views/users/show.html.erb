@@ -17,7 +17,7 @@ aria-labelledby="myModalLabel" aria-hidden="true" id="myModal">
       <span class="sr-only">Close</span>
     </button>
     <h4 class="modal-title" id="myModalLabel">
-      Les infos de <%= @user.first_name.capitalize %>
+      <strong>Les infos de <%= @user.first_name.capitalize %></strong>
     </h4>
   </div>
 
@@ -42,15 +42,39 @@ function showmodal() {
 
 <!-- CSS FORM ///////////////////////////////////////////////////////////////////////// -->
 <style>
+.modal-header{
+  text-align: center;
+}
+.list-group {
+  width: 350px;
+  flex: 0 100px 100px;
+  border-radius: 10px;
+}
+
+.ul {
+  font-family: "Raleway";
+color: #516568;
+flex: 0 0 200px;
+}
+.modal-title {
+  padding: 10px;
+}
 .modal-content {
-  height: 800px;
+  height: 850px;
   width: 1200px;
 }
 .dispos{
   height: 550px;
   width: 1200px;
-  padding: 20px;
-  color: #516568;;
+  padding: 10px;
+  color: #516568;
+}
+.infos {
+  padding: 10px;
+    background-color: #D2D7D3;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
 }
 .myModal{
   font-family: "Raleway";
