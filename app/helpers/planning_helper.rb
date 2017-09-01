@@ -6,9 +6,9 @@ module PlanningHelper
   def planning_slide_label(planning)
     case planning.status.to_sym
     when :not_started
-      "No Planning for Week : #{planning.week_number}"
+      "S#{planning.week_number}"
     else
-      "Week : #{planning.week_number}"
+      "S#{planning.week_number}"
     end
   end
 
@@ -21,5 +21,12 @@ module PlanningHelper
     else
       link_to planning_slide_label(planning), planning_conflicts_path(planning)
     end
+  end
+
+  def parse_week_number(planning)
+    week_start = Date.commercial(2017, planning.week_number, 1).strftime('%d/%m/%y')
+    week_end = Date.commercial(2017, planning.week_number, 7).strftime('%d/%m/%y')
+    "Du #{week_start} au #{week_end}"
+
   end
 end

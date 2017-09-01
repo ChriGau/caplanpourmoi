@@ -7,9 +7,15 @@
     <ul class="slidee">
       <% @plannings.each do |planning| %>
         <li class="<%= planning_slide_class(planning)%>">
+          <div class="date_range">
+            <%= parse_week_number(planning) %>
+          </div>
+          <div>
            <%= planning_link(planning) %>
-           <br>
+          </div>
+          <div>
           <p> <%= planning.status %> </p>
+          </div>
         </li>
       <% end %>
     </ul>
