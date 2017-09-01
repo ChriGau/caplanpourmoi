@@ -1,55 +1,4 @@
-<!-- code ci-dessous à remplacer par ce render une fois le design de la page planning/index figée
-render :template => 'plannings/index' %>
--->
-
-
-
-<div id="planning-list" class="frame">
-  <ul class="slidee">
-    <% @plannings.each do |planning| %>
-      <li class="<%= planning_slide_class(planning)%>">
-         <%= planning_link(planning) %>
-         <br>
-        <p> <%= planning.status %> </p>
-      </li>
-    <% end %>
-  </ul>
-</div>
-
-<div class="row">
-  <div class="col-xs-9">
-    <h2>
-      <i class="fa fa-users" aria-hidden="true"></i>   Mes Ressources
-    </h2>
-    <div class="user-list">
-      <div class="col-xs-2">
-        <i class="fa fa-plus add-user-card user-avatar-index" aria-hidden="true"></i>
-      </div>
-      <% @users.each do |user| %>
-        <div class="col-xs-2" id="drag1" draggable="true" ondragstart="drag(event)" ondrop="showmodal()" data-toggle="modal" data-target="#myModalHorizontal" onclick="showmodal" " >
-         <%= avatar_with_border_color(user) %>
-          <p><%= link_to user.first_name.capitalize, user_path(user) %></p>
-        </div>
-      <% end %>
-    </div>
-  </div>
-  <div class="col-xs-3">
-    <div class="role-list">
-      <h2>Mes Roles</h2>
-      <br>
-      <ul>
-      <%= link_to 'Create new role', new_role_path , :class=> "btn btn-info" %>
-        <br><br>
-        <%  @slot_templates.each do |slot| %>
-        <button class="btn" style="margin: 5px; border-color: grey; background-color: <%= Role.find_by_id(slot.role_id).role_color %>; border-radius: 6px;"> <%= slot.role.name %> </button>
-        <% end %>
-      </ul>
-    </div>
-  </div>
-</div>
-
- <!-- ___________________________________________________________ -->
-
+<div class="btn btn-success" id="drag1" draggable="true" ondragstart="drag(event)" ondrop="showmodal()"   style = "width: 336px; height: 69px;" label="CLICK!" data-toggle="modal" data-target="#myModalHorizontal" onclick="showmodal" ></div>
 
 <!-- Modal -->
 <div class="modal fade" id="myModalHorizontal" tabindex="-1" role="dialog"
@@ -219,4 +168,3 @@ function showmodal() {
     cursor:pointer
   }
 </style>
-
