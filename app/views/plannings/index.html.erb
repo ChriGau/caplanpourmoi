@@ -6,16 +6,22 @@
     <ul class="slidee">
       <% @plannings.each do |planning| %>
         <li class="<%= planning_slide_class(planning)%>">
+          <div class="date_range">
+            <%= parse_week_number(planning) %>
+          </div>
+          <div>
            <%= planning_link(planning) %>
-           <br>
+          </div>
+          <div>
           <p> <%= planning.status %> </p>
+          </div>
         </li>
       <% end %>
     </ul>
   </div>
 
   <div class="row">
-    <div class="col-xs-9">
+    <div class="col-xs-8">
       <h2>
         <i class="fa fa-users" aria-hidden="true"></i>  Ressources
       </h2>
