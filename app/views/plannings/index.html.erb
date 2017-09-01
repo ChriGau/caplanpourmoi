@@ -1,37 +1,20 @@
 
 <div class="wraper">
-  <div class="slider">
-    <div id="planning-list" class="frame">
-      <ul class="slidee">
-        <% @plannings.each do |planning| %>
-          <li class="<%= planning_slide_class(planning)%>">
-             <%= planning_link(planning) %>
-             <br>
-            <p> <%= planning.status %> </p>
-          </li>
-        <% end %>
-      </ul>
-    </div>
+  <h2>
+    <i class="fa fa-calendar" aria-hidden="true"></i>  Plannings
+  </h2>
+  <div id="planning-list" class="frame">
+    <ul class="slidee">
+      <% @plannings.each do |planning| %>
+        <li class="<%= planning_slide_class(planning)%>">
+           <%= planning_link(planning) %>
+           <br>
+          <p> <%= planning.status %> </p>
+        </li>
+      <% end %>
+    </ul>
   </div>
- 
 
-<div class="row">
-  <div class="col-xs-9">
-    <h2>
-      <i class="fa fa-calendar" aria-hidden="true"></i>  Plannings
-    </h2>
-    <div id="planning-list" class="frame">
-      <ul class="slidee">
-        <% @plannings.each do |planning| %>
-          <li class="<%= planning_slide_class(planning)%>">
-             <%= planning_link(planning) %>
-             <br>
-            <p> <%= planning.status %> </p>
-          </li>
-        <% end %>
-      </ul>
-    </div>
-  </div>
 
   <div class="row">
     <div class="col-xs-9">
