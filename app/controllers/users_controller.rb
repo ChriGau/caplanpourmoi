@@ -84,13 +84,13 @@ class UsersController < ApplicationController
   end
 
   def set_title
-    ["Day Off", "Sick Day", "Preference"].sample
+    ["Congé  annuel", "Congé maladie", "Préférence"].sample
   end
 
   def set_constraint_color(title)
-    if title == "Day Off"
+    if title == "Congé annuel"
       "red"
-    elsif title == "Sick Day"
+    elsif title == "Congé maladie"
       "blue"
     else
       "orange"

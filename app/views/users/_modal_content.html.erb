@@ -6,7 +6,7 @@
     Nombre de jours non travaillés (2017): 12 <br>
     Nombre de jours de congés restants: 25 <br>
     <% @user.roles.each do |role| %>
-    <button class="btn" style="margin: 5px; border-color: grey; background-color: <%= role.role_color %>; border-radius: 6px; width: 120px;"> <%= role.name %> </button>
+    <button class="btn" style="width: 60px; margin: 5px; border-color: grey; background-color: <%=  role.role_color %>; border-radius: 6px;"> <%= role.name %> </button>
     <% end %>
   </ul>
 </div>
