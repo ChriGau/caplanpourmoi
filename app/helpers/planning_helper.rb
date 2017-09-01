@@ -14,9 +14,7 @@ module PlanningHelper
 
   def planning_link(planning)
     case planning.status.to_sym
-    when :not_started
-      link_to planning_slide_label(planning), planning_skeleton_path(planning)
-    when :in_progress
+    when :not_started, :in_progress
       link_to planning_slide_label(planning), planning_skeleton_path(planning)
     else
       link_to planning_slide_label(planning), planning_conflicts_path(planning)
