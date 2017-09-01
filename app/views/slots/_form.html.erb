@@ -1,5 +1,5 @@
 
-<%= simple_form_for [@planning, @slot] do |f| %>
+<%= simple_form_for [@planning, @slot], remote: true do |f| %>
 <%= f.error_notification %>
 <div class="form-group">
   <div class='input-group date' id='datetimepicker1'>

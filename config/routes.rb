@@ -5,6 +5,9 @@ Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   resources :plannings, only: [:show, :index, :update] do
     resources :slots, only: [:create, :edit, :show, :update]
+    member do
+      get :events, format: :json
+    end
   end
 
   get 'plannings/:id/users', to: 'plannings#users', as: 'planning_users'

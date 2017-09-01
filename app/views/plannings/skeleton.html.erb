@@ -103,10 +103,7 @@
       defaultDate: '<%= Date.commercial(@planning.year, @planning.week_number, 1).beginning_of_week %>', // s'ouvre sur le 1e lundi de la semaine sélectionnée
       hiddenDays: [ 0], // hider dimanche
       height: "auto", // implique pas de scroll à l'intérieur du calendrier
-      // events: <%= raw @slots_array.to_json %>,
-      eventSources: {
-        events: <%= raw @slots_array.to_json %>
-      },
+      events: '<%= events_planning_path(@planning.id, format: :json) %>',
 
       // 2. cas où on drag-drop un event déjà existant dans le calendar
       eventDrop: function(event, delta, revertFunc, jsEvent, ui, view ) {
