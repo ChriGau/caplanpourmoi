@@ -5,7 +5,7 @@ module UserHelper
 
     options = {
       class: "user-avatar-index",
-      style: "border: solid 3px #{color}",
+      style: "border: solid 6px #{color}",
     }
 
     if user.profile_picture?
