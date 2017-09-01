@@ -22,4 +22,12 @@ module PlanningHelper
       link_to planning_slide_label(planning), planning_conflicts_path(planning)
     end
   end
+
+  def planning_count_people_on_similar_slot(planning, slot)
+    planning.slots.count { |s|
+      s.start_at == slot.start_at &&
+        s.end_at == slot.end_at &&
+        s.role_id == slot.role_id
+    }
+  end
 end
