@@ -1,18 +1,17 @@
 <br>
 <div class="row">
-  <div class="col-xs-3">
-    <div class="card" style="background-color: #FD8851; ">
+  <div class="col-xs-4">
+    <div class="card" style="background-color: #FD8851; text-align: center; width: 250px; border-radius: 10px;">
       <div class="card-category" >
-        <h1>Week : <%= @planning.week_number %></h1>
+        <h2>S <%= @planning.week_number %></h2>
         <p><%= Date.commercial(@planning.year, @planning.week_number, 1).beginning_of_week.strftime('%d/%m/%Y') %> -
         <%  a = Date.commercial(@planning.year, @planning.week_number, 1).beginning_of_week.to_date %>
           <%= (a + 5.days).strftime('%d/%m/%Y') %>
-
         </p>
       </div>
     </div>
   </div>
-  <div class="col-xs-9">
+  <div class="col-xs-8">
     <div class="planning-steps">
       <ul class="nav nav-tabs nav-justified">
         <li class="nav-item">

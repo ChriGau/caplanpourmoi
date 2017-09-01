@@ -9,6 +9,7 @@
 //= require cloudinary/jquery.cloudinary
 //= require attachinary
 //= require sly
+//= require jquery-ui
 //= require react
 //= require react_ujs
 //= require components

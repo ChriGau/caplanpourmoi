@@ -42,6 +42,9 @@ gem 'rails-assets-sly', source: 'https://rails-assets.org'
 gem 'js-routes', '~> 1.3'
 gem 'react-rails', '~> 1.8'
 
+# jquery ui pour drag slot on calendar from outside
+gem 'jquery-ui-rails'
+
 source 'https://rails-assets.org' do
   gem 'rails-assets-classnames'
 end
