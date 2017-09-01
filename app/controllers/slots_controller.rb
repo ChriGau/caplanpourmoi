@@ -60,6 +60,8 @@ class SlotsController < ApplicationController
    @slots.each do |slot|
     nombre = count_people_on_slot(@slots, slot) # nb people sur le slot = slots avec même heure de début et de fin et role
     cpt = count_presence_in_array(@slots, slot) # si >0, le slot est déjà présent dans l'array
+    @user = current_user
+    picture = avatar_with_border_color(@user)
     a= {
       id:  slot.id,
       start:  slot.start_at,
@@ -71,6 +73,7 @@ class SlotsController < ApplicationController
       updated_at: slot.updated_at,
       color: Role.find_by_id(slot.role_id).role_color,
       planning_id: slot.planning_id
+      picture: picture
        }
       if cpt == 0
         # construire le NICE hash

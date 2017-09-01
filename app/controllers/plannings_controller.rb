@@ -18,12 +18,17 @@ class PlanningsController < ApplicationController
     @slot_templates = Slot.slot_templates # liste des roles
   end
 
-  def users
-    @users = User.all
+  def conflicts
+    @planning = Planning.find(params[:id])
+    @slots = @planning.slots.order(:id)
+    @slot = Slot.new
+    @slot_templates = Slot.slot_templates # liste des roles
+    # modifier 1 slot mécano du  mercredi 13/9 en "no solution"
+    Slot.find(887).user_id = "no solution"
   end
 
-  def conflicts
-
+  def users
+    @users = User.all
   end
 
   def update
