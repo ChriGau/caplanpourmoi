@@ -16,6 +16,7 @@ class PlanningsController < ApplicationController
     @slots = @planning.slots.order(:id)
     @slot = Slot.new
     @slot_templates = Slot.slot_templates # liste des roles
+    @url = "skeleton"
   end
 
   def conflicts
@@ -26,10 +27,12 @@ class PlanningsController < ApplicationController
     # modifier 1 slot mécano du  mercredi 13/9 en "no solution"
     # guersbru : le dit slot n'a pas toujours l'id 887... ça crash je commente la ligne
     # Slot.find(887).user_id = "no solution"
+    @url = "conflicts"
   end
 
   def users
     @users = User.all
+    @url = "users"
   end
 
   def update
