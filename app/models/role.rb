@@ -3,58 +3,58 @@ class Role < ApplicationRecord
   has_many :role_users
 
   def self.color_list
-    [
+    {
       slotcolor1: {
         name_fr: "Bleu ciel couvert",
         name_en: "Dark sky blue",
-        code: $myslot1,
+        code: "#87BCDE",
       },
       slotcolor2: {
         name_fr: "Rose framboise",
         name_en: "Pink rasberry",
-        code: $myslot2,
+        code: "#89043D",
       },
       slotcolor3: {
         name_fr: "Or las-vegas",
         name_en: "Vegas gold",
-        code: $myslot3,
+        code: "#C6B849",
       },
       slotcolor4: {
         name_fr: "Mauve lavande",
         name_en: "English lavender",
-        code: $myslot4,
+        code: "#8D816F",
       },
       slotcolor5: {
         name_fr: "Brun castor",
         name_en: "Beaver",
-        code: $myslot5,
+        code: "#AD7A99",
       },
       slotcolor6: {
         name_fr: "Gris indépendance",
         name_en: "Independance",
-        code: $myslot6,
+        code: "#3E5665",
       },
       slotcolor7: {
       name_fr: "Bleu nuit",
       name_en: "Midnight blue",
-      code: $myslot7,
+      code: "#1D1D75",
       },
       slotcolor8: {
         name_fr: "Jaune maïs",
         name_en: "Maize",
-        code: $myslot8,
+        code: "#FFED6E" ,
       },
       slotcolor9: {
         name_fr: "Violet Aubergine",
         name_en: "Eggplant",
-        code: $myslot9,
+        code: "#5F4354",
       },
       slotcolor10: {
         name_fr: "Jaune ambre",
         name_en: "Ambre",
-        code: $myslot10,
+        code: "#CF9700",
       }
-    ]
+    }
   end
 
 end
