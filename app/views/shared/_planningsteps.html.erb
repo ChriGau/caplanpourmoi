@@ -1,26 +1,26 @@
 <div class="week-tag <%= planning_slide_class(@planning) %>" >
-    <p>Week : <%= @planning.week_number %></p>
-    <p><%= parse_week_number(@planning) %></p>
+    <p>S<%= @planning.week_number %></p>
 </div>
 
-<div class="col-xs-offset-1 col-xs-10">
+<div class="col-xs-12">
   <div class="row steps">
     <div class="col-xs-4 step completed">
         <div class="step-num text-center">Etape 1</div>
         <div class="progress"><div class="progress-bar"></div></div>
         <%= link_to "", planning_skeleton_path(@planning), class: "dot" %>
-        <div class="comment text-center">Vos besoins de la semaine</div>
+        <div class="comment text-center">Organisation de la semaine</div>
+
     </div>
     <div class="col-xs-4 step active">
         <div class="step-num text-center">Etape 2</div>
         <div class="progress"><div class="progress-bar"></div></div>
-        <%= link_to "", planning_skeleton_path(@planning), class: "dot" %>
+        <%= link_to "", planning_users_path(@planning), class: "dot" %>
         <div class="comment text-center">Votre équipe pour la semaine</div>
     </div>
     <div class="col-xs-4 step disabled">
         <div class="step-num text-center">Etape 3</div>
         <div class="progress"><div class="progress-bar"></div></div>
-        <%= link_to "", planning_skeleton_path(@planning), class: "dot" %>
+        <%= link_to "", planning_conflicts_path(@planning), class: "dot" %>
         <div class="comment text-center">Votre planning</div>
     </div>
   </div>

@@ -1,15 +1,18 @@
 .week-tag {
   height: 50px;
-  width: 170px;
+  width: 80px;
   color: white;
   position: absolute;
-  top:70px;
-  font-weight: 500;
-  border-radius: 2px;
-  box-shadow: -0.5px 0.7px #C4C4C4;
+  top: 10px;
+  box-shadow: 0px -1px 1px 2px $myblue inset;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+
 }
 
 .week-tag p {
-  font-size: 14px;
+  font-size: 30px;
   margin:2px;
+  font-weight: bold;
 }
