@@ -27,8 +27,8 @@ end
 User.create!(email: "boss@boutique.com",
             working_hours: 50,
             is_owner: true,
-            first_name: "Jean",
-            last_name: "Patron",
+            first_name: "jean",
+            last_name: "patron",
             password: "password",
             profile_picture: open_image("./images_seeds/avatar_1m.jpg")
   )
@@ -62,13 +62,16 @@ puts "4 - Creating roles"
 puts ""
 
 Role.create!(name: "vendeur",
-            role_color: "#87BCDE"
+            role_color: Role.color_list[:slotcolor1][:code]
             )
 Role.create!(name: "mécano",
-            role_color: "#3F8EFC"
+            role_color: Role.color_list[:slotcolor2][:code]
             )
 Role.create!(name: "magasinier",
-            role_color: "#33658A"
+            role_color: Role.color_list[:slotcolor3][:code]
+            )
+Role.create!(name: "patron",
+            role_color: "black"
             )
 
 # un-assigned value : color_role
@@ -319,6 +322,12 @@ b.save!
 a = User.find_by_first_name('magalie')
 b = RoleUser.new
 b.role_id = Role.find_by_name("magasinier").id
+b.user_id = a.id
+b.save!
+
+a = User.find_by_first_name('jean')
+b = RoleUser.new
+b.role_id = Role.find_by_name("patron").id
 b.user_id = a.id
 b.save!
 

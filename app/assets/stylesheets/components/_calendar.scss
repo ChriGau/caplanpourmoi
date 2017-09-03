@@ -1,0 +1,50 @@
+.conflicts {
+  height:100px;
+}
+
+.conflicts .row #calendar {
+
+
+  /*override le theme par defaut*/
+  /*noms des jours*/
+  .fc-day-header {
+    color: #516568;
+    font-family: "Raleway";
+    font-size: 18px;
+  }
+  /* contenu des colonnes*/
+  .fc th, .fc td  {
+    border-style: none;
+    padding: 2px;
+    border-width: 3px;
+  }
+  /* border des events*/
+  .fc-time-grid-event {
+    border-radius: 10px;
+  }
+  /* axe y*/
+  .fc-axis .fc-time .fc-widget-content {
+    color: #516568;
+    font-family: "Raleway";
+    font-size : 18px;
+  }
+  /*nom du role dans l'event*/
+  .fc-title{
+   font-family: "Raleway";
+   font-size: 12px;
+  }
+  /* active week/day button*/
+  .fc-toolbar .fc-state-active, .fc-toolbar .ui-state-active{
+  color: white;
+  font-family: "Raleway";
+  background-color: #516568;
+  }
+  .fc-button-group {
+    font-family: "Raleway";
+  }
+
+  .fc-button-group .active {
+    background-color: #516568;
+  }
+
+  }

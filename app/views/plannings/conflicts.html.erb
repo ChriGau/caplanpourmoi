@@ -1,71 +1,12 @@
-<%= render 'shared/planningsteps', locals: {planning: @planning} %>
+<%= render 'shared/planningsteps', locals: {planning: @planning, url: @url} %>
 
 <div class="conflicts">
   <div class="row">
-    <div class="col-xs-4">
-      <%  @slot_templates.each do |slot| %>
-      <div class="btn" id="my-draggable" style="margin: 5px; border-color: grey; background-color: <%= Role.find_by_id(slot.role_id).role_color %>; border-radius: 6px; "> <%= slot.role.name %> </div>
-      <% end %>
-    </div>
-    <div class="col-xs-8" id="slot_form" style="height: 200px;"></div>
-  </div>
-
-  <div class="row">
-    <div class="col-xs-12">
-      <div id = "calendar">
-      </div>
+    <div id = "calendar">
     </div>
   </div>
 </div>
 
-<!--  _______________________ CSS Calendar ___________________________ -->
-
-<style>
-  .skeleton {
-    height: 800px;
-  }
-  /*override le theme par defaut*/
-  /*noms des jours*/
-  .fc-day-header {
-    color: #516568;
-    font-family: "Raleway";
-    font-size: 28px;
-  }
-  /* contenu des colonnes*/
-  .fc th, .fc td  {
-    border-style: none;
-    padding: 2px;
-    border-width: 3px;
-  }
-  /* border des events*/
-  .fc-time-grid-event {
-    border-radius: 10px;
-  }
-  /* axe y*/
-  .fc-axis .fc-time .fc-widget-content {
-    color: #516568;
-    font-family: "Raleway";
-  }
-  /*nom du role dans l'event*/
-  .fc-title{
-   font-family: "Raleway";
-   font-size: 12px;
- }
- /* active week/day button*/
- .fc-toolbar .fc-state-active, .fc-toolbar .ui-state-active{
-  color: white;
-  font-family: "Raleway";
-  background-color: #516568;
-}
-.fc-button-group {
-  font-family: "Raleway";
-}
-
-.fc-button-group .active {
-  background-color: #516568;
-}
-
-</style>
 
 <!-- ___________________________ JS __________________________________ -->
 

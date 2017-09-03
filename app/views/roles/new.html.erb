@@ -3,7 +3,7 @@
 <%= simple_form_for @role do |f| %>
   <%= f.error_notification %>
   <%= f.input :name, placeholder: "Nom", label: false %>
-  <%= f.input :role_color, placeholder: "#2F9716", label: false %>
+  <%= f.input :role_color, placeholder: "#2F9716", label: false, collection: @color_collection%>
   <%= f.submit "Valider", class: "btn btn-success" %>
 <% end %>
 <br>
