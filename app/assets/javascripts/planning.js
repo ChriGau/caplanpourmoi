@@ -12,6 +12,7 @@ $(document).ready(function() {
     scrollBar: $('.scrollbar'),
     dragHandle: true,
     clickBar: true,
+    // dynamicHandle: true,
 
 
   };
