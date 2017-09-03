@@ -24,10 +24,12 @@
       </h2>
       <ul class="user-list list-inline">
         <li >
-          <div class="plus-avatar">
-            <div class="plus-disc"></div>
-            <i class="fa fa-plus" aria-hidden="true"></i>
-          </div>
+          <%= link_to root_path do  %>
+            <div class="plus-avatar">
+              <div class="plus-disc"></div>
+              <i class="fa fa-plus" aria-hidden="true"></i>
+            </div>
+          <% end %>
 
         </li>
           <% @users.each do |user| %>
@@ -45,10 +47,11 @@
         <i class="fa fa-suitcase" aria-hidden="true"></i> Métiers
       </h2>
       <div class="list-metiers">
-        <div class="metier">
-            <%= link_to '', new_role_path %>
-            <i class="fa fa-plus" aria-hidden="true"></i>
-        </div>
+        <%= link_to new_role_path do %>
+          <div class="metier">
+              <i class="fa fa-plus" aria-hidden="true"></i>
+          </div>
+        <% end %>
         <%  @slot_templates.each do |slot| %>
           <div class="metier" style="background-color: <%= slot.role.role_color %>; <%= background_text_color(slot) %>"> <%= slot.role.name.capitalize %>
           </div>

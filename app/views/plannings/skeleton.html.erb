@@ -2,12 +2,12 @@
 
 <div class="skeleton">
   <div class="row">
-    <div class="col-xs-4">
-      <%  @slot_templates.each do |slot| %>
-      <div class="btn" id="my-draggable" style="margin: 5px; border-color: grey; background-color: <%= Role.find_by_id(slot.role_id).role_color %>; border-radius: 6px; "> <%= slot.role.name %> </div>
+    <ul class="list-inline dragndrop-metiers">
+      <% @slot_templates.each do |slot| %>
+        <li style="background-color: <%= slot.role.role_color %>; <%= background_text_color(slot) %>"> <%= slot.role.name.capitalize %></li>
       <% end %>
-    </div>
-    <div class="col-xs-8" id="slot_form" style="height: 200px;"></div>
+    </ul>
+
   </div>
 
   <div class="row">
