@@ -9,6 +9,7 @@
           <div class="date_range">
             <%= parse_week_number(planning) %>
           </div>
+          <p></p>
           <div><%= planning_link(planning) %></div>
           <div><p> <%= planning.status %> </p></div>
         </li>
@@ -23,10 +24,12 @@
       </h2>
       <ul class="user-list list-inline">
         <li >
-          <div class="plus-avatar">
-            <div class="plus-disc"></div>
-            <i class="fa fa-plus" aria-hidden="true"></i>
-          </div>
+          <%= link_to root_path do  %>
+            <div class="plus-avatar">
+              <div class="plus-disc"></div>
+              <i class="fa fa-plus" aria-hidden="true"></i>
+            </div>
+          <% end %>
 
         </li>
           <% @users.each do |user| %>
@@ -43,11 +46,15 @@
       <h2>
         <i class="fa fa-suitcase" aria-hidden="true"></i> Métiers
       </h2>
-      <div class="col-xs-12">
-
-        <%= link_to 'Ajouter un nouveau métier', new_role_path , :class=> "btn btn-info" %>
+      <div class="list-metiers">
+        <%= link_to new_role_path do %>
+          <div class="metier">
+              <i class="fa fa-plus" aria-hidden="true"></i>
+          </div>
+        <% end %>
         <%  @slot_templates.each do |slot| %>
-        <button class="btn" style="margin: 5px; border-color: grey; background-color: <%= Role.find_by_id(slot.role_id).role_color %>; border-radius: 6px;"> <%= slot.role.name %> </button>
+          <div class="metier" style="background-color: <%= slot.role.role_color %>; <%= background_text_color(slot) %>"> <%= slot.role.name.capitalize %>
+          </div>
         <% end %>
       </div>
     </div>

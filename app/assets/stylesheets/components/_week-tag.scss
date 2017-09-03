@@ -1,9 +1,9 @@
 .week-tag {
   height: 50px;
-  width: 80px;
+  width: 100px;
   color: white;
   position: absolute;
-  top: 10px;
+  top: 8px;
   box-shadow: 0px -1px 1px 2px $myblue inset;
   display: flex;
   justify-content: space-around;
@@ -12,7 +12,7 @@
 }
 
 .week-tag p {
-  font-size: 30px;
+  font-size: 40px;
   margin:2px;
-  font-weight: bold;
+  color: $mygrey;
 }

@@ -1,14 +1,15 @@
 .step .step-num {
-  color: #595959;
+  color: $mygrey;
   font-size: 16px;
   margin-bottom: 5px;
   font-weight:lighter;
 }
 
 .step .comment {
-  color: #999;
+  color: $mygrey;
   font-size: 14px;
   font-weight:lighter;
+  opacity: 0.8;
 }
 
 .step .progress {
@@ -47,7 +48,7 @@
   }
 }
 .step.disabled .dot {
-  background-color: #f5f5f5;
+  background-color: $mylightgrey;
   &:after {
     opacity: 0;
   }
@@ -61,12 +62,6 @@
   width: 50%;
   }
 }
-
-
-// .step.disabled a.dot {
-//   pointer-events: none;
-// }
-
 
 .step .dot {
   width: 40px;

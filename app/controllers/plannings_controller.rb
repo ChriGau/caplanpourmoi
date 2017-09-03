@@ -31,7 +31,7 @@ class PlanningsController < ApplicationController
   end
 
   def users
-    @users = User.all
+    @users = User.where.not(first_name: "no solution")
     @url = "users"
   end
 

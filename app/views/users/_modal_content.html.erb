@@ -15,7 +15,7 @@
         </li>
       </ul>
       <% @user.roles.each do |role| %>
-        <button class="btn" style="width: 130px; margin: 5px; border-color: grey; background-color: <%=  role.role_color %>; border-radius: 6px; color: #516568;"> <%= role.name %> </button>
+        <button class="btn" style="width: 130px; margin: 5px; border-color: $mygrey; background-color: <%=  role.role_color %>; border-radius: 6px; color: #516568;"> <%= role.name %> </button>
         <% end %>
     </div>
     <div class="col-xs-6">
@@ -47,11 +47,11 @@
   /*noms des jours*/
   .fc-view-container *, .fc-view-container *::before, .fc-view-container {
     color: #516568;
-    font-family: "Raleway";
+    font-family: "Oswald";
   }
   .fc-day-header {
     color: #516568;
-    font-family: "Raleway";
+    font-family: "Oswald";
     font-size: 20px;
   }
   /* container fleches prev et next*/
@@ -76,18 +76,18 @@
 /* axe y*/
 .fc-axis .fc-time .fc-widget-content {
   color: #516568;
-  font-family: "Raleway";
+  font-family: "Oswald";
 }
 /*nom du role dans l'event*/
 .fc-title{
- font-family: "Raleway";
+ font-family: "Oswald";
  font-size: 17px;
  color: white;
 }
 /* active week/day button*/
 .fc-toolbar .fc-state-active, .fc-toolbar .ui-state-active{
   color: white;
-  font-family: "Raleway";
+  font-family: "Oswald";
   background-color: #516568;
 }
 /* container bouton month/week*/
@@ -95,7 +95,7 @@
   width: 200px;
 }
 .fc-button-group {
-  font-family: "Raleway";
+  font-family: "Oswald";
   width: 300px;
 }
 .fc-button-group .active {

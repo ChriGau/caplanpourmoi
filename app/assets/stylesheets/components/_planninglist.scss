@@ -18,7 +18,7 @@
   padding: 0;
   width: calc(( 100vw - 150px) / 5);
   height: 100%;
-  color:#838383;
+  color:$mygrey;
   text-decoration: none;
   box-shadow: 2px 2px 2px 2px white inset;
   display: flex;
@@ -29,7 +29,7 @@
 
 .frame .slidee li a {
   text-decoration:none;
-  color:#5B5B5B;
+  color:$mygrey;
   font-size: 50px;
 
 }
@@ -43,23 +43,32 @@
 }
 
 .date_range {
-  color:white;
+  color: $mylightgrey;
   font-size:16px;
   position:absolute;
   text-align: center;
   top: 10px;
+  p {
+    color :$mylightgrey
+  }
 }
 
 .not_started {
-  background-color: #D9D9D9;
+  background-color: $mylightgrey;
+  .date_range {
+    color: $mygrey;
+    p {
+      color: mygrey;
+    }
+  }
 }
 
 .in_progress {
-  background-color: #D0FEA8;
+  background-color: $mylightgreen;
 }
 .with_conflicts {
-  background-color: #FD8851;
+  background-color: $myorange;
 }
 .complete {
-  background-color: #9BF171;
+  background-color: $mygreen;
 }
