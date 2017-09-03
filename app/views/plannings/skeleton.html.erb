@@ -1,22 +1,23 @@
 <%= render 'shared/planningsteps', locals: {planning: @planning, url: @url} %>
 
+<div class="wrap-plan" >
+  <div class="triangle" style= "left:<%= @triangle_position %>" ></div>
+  <div class="row spacing">
+    <ul class="list-inline dragndrop-metiers">
+      <% @slot_templates.each do |slot| %>
+        <li style="background-color: <%= slot.role.role_color %>; <%= background_text_color(slot) %>"> <%= slot.role.name.capitalize %></li>
+      <% end %>
+    </ul>
 
-<div class="row spacing">
-  <ul class="list-inline dragndrop-metiers">
-    <% @slot_templates.each do |slot| %>
-      <li style="background-color: <%= slot.role.role_color %>; <%= background_text_color(slot) %>"> <%= slot.role.name.capitalize %></li>
-    <% end %>
-  </ul>
+  </div>
 
-</div>
-
-<div class="row">
-  <div class="col-xs-12 le_calendrier">
-    <div id = "calendar">
+  <div class="row">
+    <div class="col-xs-12 le_calendrier">
+      <div id = "calendar">
+      </div>
     </div>
   </div>
 </div>
-
 <!--  _______________________ CSS Calendar ___________________________ -->
 
 <style>
@@ -42,7 +43,6 @@
     border-width:0px;
     box-shadow: 0px 0px 3.5px -1px white inset;
     padding:2px;
-    text-align: center;
     padding-top: 7px;
     padding: 3px;
   }
