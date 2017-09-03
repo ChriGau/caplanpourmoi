@@ -1,12 +1,13 @@
 <%= render 'shared/planningsteps', locals: {planning: @planning, url: @url} %>
-
-<div class="conflicts">
+<div class="wrap-plan" >
+  <div class="triangle" style= "left:<%= @triangle_position %>" ></div>
   <div class="row">
-    <div id = "calendar">
+    <div class="col-xs-12 le_calendrier">
+      <div id = "calendar">
+      </div>
     </div>
   </div>
 </div>
-
 
 <!-- ___________________________ JS __________________________________ -->
 

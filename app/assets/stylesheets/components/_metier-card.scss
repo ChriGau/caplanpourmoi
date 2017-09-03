@@ -5,12 +5,17 @@
 .metier {
   width:100%;
   background-color: $mylightgrey;
+  opacity:0.9;
   i {
   position: absolute;
   left:45%;
   color: white;
   font-size: 38px;
   top:4px;
+  }
+  &:hover {
+    opacity: 1;
+    background: $mygrey;
   }
 }
 
@@ -19,17 +24,28 @@
   padding: 10px;
   border-radius: 6px;
   margin-bottom: 10px;
+
+}
+
+.spacing {
+  position:relative;
 }
 
 .dragndrop-metiers {
+  position:absolute;
+  text-align:center;
+  left:17%;
+  top:5px;
   li {
   width: 200px;
-  height : 35px;
+  height : 30px;
   padding:5px;
   border-radius: 6px;
-  margin-top: 20px;
-  margin-right: 20px;
   text-align: center;
   margin-bottom: -10px;
+  opacity: 0.9;
+  font-size: 15px;
+  margin-right:15px;
+
   }
 }
