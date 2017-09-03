@@ -5,12 +5,17 @@
 .metier {
   width:100%;
   background-color: $mylightgrey;
+  opacity:0.9;
   i {
   position: absolute;
   left:45%;
   color: white;
   font-size: 38px;
   top:4px;
+  }
+  &:hover {
+    opacity: 1;
+    background: $mygrey;
   }
 }
 

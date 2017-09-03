@@ -4,7 +4,16 @@ $(document).ready(function() {
     itemNav: 'basic',
     speed: 300,
     mouseDragging: 1,
-    touchDragging: 1
+    touchDragging: 1,
+    forward: $('.forward'),
+    backward: $('.backward'),
+    clickBar: true,
+    moveBy: 1300,
+    scrollBar: $('.scrollbar'),
+    dragHandle: true,
+    clickBar: true,
+
+
   };
   $('#planning-list').sly(options);
 });
