@@ -1,0 +1,24 @@
+.list-metiers {
+  position: relative
+}
+
+.metier {
+  width:100%;
+  background-color: $mylightgrey;
+  i {
+  position: absolute;
+  left:45%;
+  color: white;
+  font-size: 38px;
+  top:4px;
+  }
+}
+
+.metier {
+  height : 45px;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+
