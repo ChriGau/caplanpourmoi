@@ -28,6 +28,8 @@ class PlanningsController < ApplicationController
     # guersbru : le dit slot n'a pas toujours l'id 887... ça crash je commente la ligne
     # Slot.find(887).user_id = "no solution"
     @url = "conflicts"
+    demo_method(@planning) if @planning.week_number == 37
+
   end
 
   def users
@@ -49,6 +51,23 @@ class PlanningsController < ApplicationController
   end
 
   private
+
+  def demo_method(planning)
+      vendeur = Role.find_by_name("vendeur")
+      barista = Role.find_by_name("barista")
+
+      s1 = planning.slots.where(user_id: nil).find_by_role_id(vendeur.id)
+      if (s1 != nil && s1.user.nil?)
+        s1.user = User.find_by_first_name("valentine")
+        s1.save
+      end
+
+      s2 = planning.slots.where(user_id: nil).find_by_role_id(barista.id)
+      if (s2 != nil && s2.user.nil?)
+        s2.user = User.find_by_first_name("paul")
+        s2.save
+      end
+  end
 
   def planning_params
     params.require(:planning).permit("user_ids" => [])

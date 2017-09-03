@@ -36,8 +36,20 @@ User.create!(email: "boss@boutique.com",
 puts "3 - Creating Planning"
 puts ""
 
+
+
 p = Planning.new
 p.week_number = 37
+p.year = 2017
+p.save!
+
+p = Planning.new
+p.week_number = 35
+p.year = 2017
+p.save!
+
+p = Planning.new
+p.week_number = 36
 p.year = 2017
 p.save!
 
@@ -52,11 +64,6 @@ end
 
 p = Planning.first
 
-puts "4 - Creating team + assign owner to team"
-puts ""
-Team.create!(planning_id: p.id,
-            user_id: User.find_by_email("boss@boutique.com").id
-  )
 
 puts "4 - Creating roles"
 puts ""
@@ -67,7 +74,7 @@ Role.create!(name: "vendeur",
 Role.create!(name: "mécano",
             role_color: Role.color_list[:slotcolor2][:code]
             )
-Role.create!(name: "magasinier",
+Role.create!(name: "barista",
             role_color: Role.color_list[:slotcolor3][:code]
             )
 Role.create!(name: "patron",
@@ -211,18 +218,6 @@ b.role_id = Role.find_by_name("mécano").id
 b.user_id = a.id
 b.save!
 
-a = User.find_by_first_name('paul')
-b = RoleUser.new
-b.role_id = Role.find_by_name("mécano").id
-b.user_id = a.id
-b.save!
-
-a = User.find_by_first_name('paul')
-b = RoleUser.new
-b.role_id = Role.find_by_name("magasinier").id
-b.user_id = a.id
-b.save!
-
 a = User.find_by_first_name('jacques')
 b = RoleUser.new
 b.role_id = Role.find_by_name("mécano").id
@@ -237,25 +232,13 @@ b.save!
 
 a = User.find_by_first_name('nelson')
 b = RoleUser.new
-b.role_id = Role.find_by_name("mécano").id
+b.role_id = Role.find_by_name("vendeur").id
 b.user_id = a.id
 b.save!
 
 a = User.find_by_first_name('bob')
 b = RoleUser.new
 b.role_id = Role.find_by_name("mécano").id
-b.user_id = a.id
-b.save!
-
-a = User.find_by_first_name('michel')
-b = RoleUser.new
-b.role_id = Role.find_by_name("mécano").id
-b.user_id = a.id
-b.save!
-
-a = User.find_by_first_name('michel')
-b = RoleUser.new
-b.role_id = Role.find_by_name("vendeur").id
 b.user_id = a.id
 b.save!
 
@@ -279,7 +262,7 @@ b.save!
 
 a = User.find_by_first_name('hortense')
 b = RoleUser.new
-b.role_id = Role.find_by_name("vendeur").id
+b.role_id = Role.find_by_name("mécano").id
 b.user_id = a.id
 b.save!
 
@@ -295,33 +278,21 @@ b.role_id = Role.find_by_name("vendeur").id
 b.user_id = a.id
 b.save!
 
-a = User.find_by_first_name('arielle')
-b = RoleUser.new
-b.role_id = Role.find_by_name("mécano").id
-b.user_id = a.id
-b.save!
-
 a = User.find_by_first_name('paul')
 b = RoleUser.new
-b.role_id = Role.find_by_name("magasinier").id
+b.role_id = Role.find_by_name("barista").id
 b.user_id = a.id
 b.save!
 
 a = User.find_by_first_name('michel')
 b = RoleUser.new
-b.role_id = Role.find_by_name("magasinier").id
-b.user_id = a.id
-b.save!
-
-a = User.find_by_first_name('hortense')
-b = RoleUser.new
-b.role_id = Role.find_by_name("magasinier").id
+b.role_id = Role.find_by_name("barista").id
 b.user_id = a.id
 b.save!
 
 a = User.find_by_first_name('magalie')
 b = RoleUser.new
-b.role_id = Role.find_by_name("magasinier").id
+b.role_id = Role.find_by_name("barista").id
 b.user_id = a.id
 b.save!
 
@@ -340,13 +311,28 @@ Constraint.create!(start_at: "2017-09-06 08:00",
                   user_id: User.find_by_first_name('pierre').id
                   )
 # pierre mercredi matin septembre octobre
-Constraint.create!(start_at: "2017-09-13 08:00",
-                  end_at: "2017-09-13 12:00",
+Constraint.create!(start_at: "2017-09-11 16:00",
+                  end_at: "2017-09-11 22:00",
                   user_id: User.find_by_first_name('pierre').id
                   )
 # pierre mercredi matin septembre octobre
-Constraint.create!(start_at: "2017-09-20 08:00",
-                  end_at: "2017-09-20 12:00",
+Constraint.create!(start_at: "2017-09-12 16:00",
+                  end_at: "2017-09-12 22:00",
+                  user_id: User.find_by_first_name('pierre').id
+                  )
+# pierre mercredi matin septembre octobre
+Constraint.create!(start_at: "2017-09-13 16:00",
+                  end_at: "2017-09-13 22:00",
+                  user_id: User.find_by_first_name('pierre').id
+                  )
+# pierre mercredi matin septembre octobre
+Constraint.create!(start_at: "2017-09-14 16:00",
+                  end_at: "2017-09-14 22:00",
+                  user_id: User.find_by_first_name('pierre').id
+                  )
+# pierre mercredi matin septembre octobre
+Constraint.create!(start_at: "2017-09-15 16:00",
+                  end_at: "2017-09-15 22:00",
                   user_id: User.find_by_first_name('pierre').id
                   )
 # pierre mercredi matin septembre octobre
@@ -377,8 +363,8 @@ Constraint.create!(start_at: "2017-10-24 08:00",
 
 
 # pierre lundi matin
-Constraint.create!(start_at: "2017-09-11 08:00",
-                  end_at: "2017-09-11 12:00",
+Constraint.create!(start_at: "2017-09-11 16:00",
+                  end_at: "2017-09-11 22:00",
                   user_id: User.find_by_first_name('pierre').id
                   )
 # pierre jeudi matin
@@ -393,19 +379,13 @@ Constraint.create!(start_at: "2017-09-15 08:00",
                   user_id: User.find_by_first_name('pierre').id
                   )
 # emma lundi matin
-Constraint.create!(start_at: "2017-09-11 08:00",
-                  end_at: "2017-09-11 12:00",
+Constraint.create!(start_at: "2017-09-12 08:00",
+                  end_at: "2017-09-12 12:00",
                   user_id: User.find_by_first_name('emma').id
                   )
 # emma jeudi matin
-Constraint.create!(start_at: "2017-09-14 08:00",
-                  end_at: "2017-09-14 12:00",
-                  user_id: User.find_by_first_name('emma').id
-                  )
-
-# emmavendredi matin
-Constraint.create!(start_at: "2017-09-15 08:00",
-                  end_at: "2017-09-15 12:00",
+Constraint.create!(start_at: "2017-09-13 08:00",
+                  end_at: "2017-09-13 12:00",
                   user_id: User.find_by_first_name('emma').id
                   )
 # bob lundi matin
@@ -432,11 +412,6 @@ Constraint.create!(start_at: "2017-09-05 08:00",
                   end_at: "2017-09-05 12:00",
                   user_id: User.find_by_first_name('bob').id
                   )
-
-Constraint.create!(start_at: "2017-09-05 08:00",
-                  end_at: "2017-09-05 12:00",
-                  user_id: User.find_by_first_name('bob').id
-                  )
 Constraint.create!(start_at: "2017-09-01 08:00",
                   end_at: "2017-09-01 12:00",
                   user_id: User.find_by_first_name('bob').id
@@ -450,7 +425,6 @@ puts ""
 Team.create!(planning_id: p.id,
             user_id: User.find_by_first_name("pierre").id
   )
-
 Team.create!(planning_id: p.id,
             user_id: User.find_by_first_name("paul").id
   )
@@ -460,15 +434,8 @@ Team.create!(planning_id: p.id,
 Team.create!(planning_id: p.id,
             user_id: User.find_by_first_name("jeannie").id
   )
-
-Team.create!(planning_id: p.id,
-            user_id: User.find_by_first_name("nelson").id
-  )
 Team.create!(planning_id: p.id,
             user_id: User.find_by_first_name("bob").id
-  )
-Team.create!(planning_id: p.id,
-            user_id: User.find_by_first_name("michel").id
   )
 Team.create!(planning_id: p.id,
             user_id: User.find_by_first_name("axel").id
@@ -479,43 +446,32 @@ Team.create!(planning_id: p.id,
 Team.create!(planning_id: p.id,
             user_id: User.find_by_first_name("emma").id
   )
-Team.create!(planning_id: p.id,
-            user_id: User.find_by_first_name("hortense").id
-  )
-Team.create!(planning_id: p.id,
-            user_id: User.find_by_first_name("joseth").id
-  )
-Team.create!(planning_id: p.id,
-            user_id: User.find_by_first_name("magalie").id
-  )
-Team.create!(planning_id: p.id,
-            user_id: User.find_by_first_name("arielle").id
-  )
 
 puts "9 - adding SLOTS to planning + solution"
 puts ""
 
 p = Planning.first
+p35 = Planning.find_by_week_number(35)
+p36 = Planning.find_by_week_number(36)
 p38 = Planning.find_by_week_number(38)
 p39 = Planning.find_by_week_number(39)
 p40 = Planning.find_by_week_number(40)
-p41 = Planning.find_by_week_number(41)
-p42 = Planning.find_by_week_number(42)
 
 
-# 1
+##11/09
+
 Slot.create!(
   planning_id: p.id,
-  start_at: "2017-09-11 07:00",
-  end_at: "2017-09-11 15:00",
+  start_at: "2017-09-11 08:00",
+  end_at: "2017-09-11 14:00",
   role_id: Role.find_by_name("mécano").id,
   user_id: User.find_by_first_name("pierre").id
   )
 
 Slot.create!(
   planning_id: p.id,
-  start_at: "2017-09-11 07:00",
-  end_at: "2017-09-11 15:00",
+  start_at: "2017-09-11 08:00",
+  end_at: "2017-09-11 14:00",
   role_id: Role.find_by_name("mécano").id,
   user_id: User.find_by_first_name("jeannie").id
   )
@@ -523,16 +479,16 @@ Slot.create!(
 # 2
 Slot.create!(
   planning_id: p.id,
-  start_at: "2017-09-11 15:00",
-  end_at: "2017-09-11 22:00",
+  start_at: "2017-09-11 14:00",
+  end_at: "2017-09-11 20:00",
   role_id: Role.find_by_name("mécano").id,
   user_id: User.find_by_first_name("jacques").id
   )
 
 Slot.create!(
   planning_id: p.id,
-  start_at: "2017-09-11 15:00",
-  end_at: "2017-09-11 22:00",
+  start_at: "2017-09-11 14:00",
+  end_at: "2017-09-11 20:00",
   role_id: Role.find_by_name("mécano").id,
   user_id: User.find_by_first_name("bob").id
   )
@@ -540,7 +496,7 @@ Slot.create!(
 Slot.create!(
   planning_id: p.id,
   start_at: "2017-09-11 10:00",
-  end_at: "2017-09-11 15:00",
+  end_at: "2017-09-11 14:00",
   role_id: Role.find_by_name("vendeur").id,
   user_id: User.find_by_first_name("axel").id
   )
@@ -548,130 +504,140 @@ Slot.create!(
 Slot.create!(
   planning_id: p.id,
   start_at: "2017-09-11 10:00",
-  end_at: "2017-09-11 15:00",
+  end_at: "2017-09-11 13:00",
   role_id: Role.find_by_name("vendeur").id,
   user_id: User.find_by_first_name("valentine").id
+  )
+
+Slot.create!(
+  planning_id: p.id,
+  start_at: "2017-09-11 10:00",
+  end_at: "2017-09-11 13:00",
+  role_id: Role.find_by_name("vendeur").id,
+  user_id: User.find_by_first_name("emma").id
   )
 
 #4
 Slot.create!(
   planning_id: p.id,
   start_at: "2017-09-11 15:00",
-  end_at: "2017-09-11 20:00",
+  end_at: "2017-09-11 18:00",
+  role_id: Role.find_by_name("vendeur").id,
+  user_id: User.find_by_first_name("axel").id
+  )
+
+Slot.create!(
+  planning_id: p.id,
+  start_at: "2017-09-11 14:00",
+  end_at: "2017-09-11 18:00",
+  role_id: Role.find_by_name("vendeur").id,
+  user_id: User.find_by_first_name("valentine").id
+  )
+
+Slot.create!(
+  planning_id: p.id,
+  start_at: "2017-09-11 14:00",
+  end_at: "2017-09-11 18:00",
   role_id: Role.find_by_name("vendeur").id,
   user_id: User.find_by_first_name("emma").id
-  )
-
-Slot.create!(
-  planning_id: p.id,
-  start_at: "2017-09-11 15:00",
-  end_at: "2017-09-11 20:00",
-  role_id: Role.find_by_name("vendeur").id,
-  user_id: User.find_by_first_name("hortense").id
-  )
-
-Slot.create!(
-  planning_id: p.id,
-  start_at: "2017-09-11 15:00",
-  end_at: "2017-09-11 20:00",
-  role_id: Role.find_by_name("vendeur").id,
-  user_id: User.find_by_first_name("joseth").id
   )
 
 #5
 Slot.create!(
   planning_id: p.id,
-  start_at: "2017-09-11 07:00",
-  end_at: "2017-09-11 12:00",
-  role_id: Role.find_by_name("magasinier").id,
-  user_id: User.find_by_first_name("magalie").id
+  start_at: "2017-09-11 08:00",
+  end_at: "2017-09-11 15:30",
+  role_id: Role.find_by_name("barista").id,
+  user_id: User.find_by_first_name("paul").id
   )
 
-#6
+##############12/09
+
 Slot.create!(
   planning_id: p.id,
-  start_at: "2017-09-12 07:00",
-  end_at: "2017-09-12 15:00",
+  start_at: "2017-09-12 08:00",
+  end_at: "2017-09-12 14:00",
   role_id: Role.find_by_name("mécano").id,
   user_id: User.find_by_first_name("pierre").id
   )
 
 Slot.create!(
   planning_id: p.id,
-  start_at: "2017-09-12 07:00",
-  end_at: "2017-09-12 15:00",
+  start_at: "2017-09-12 08:00",
+  end_at: "2017-09-12 14:00",
   role_id: Role.find_by_name("mécano").id,
-  user_id: User.find_by_first_name("michel").id
+  user_id: User.find_by_first_name("jeannie").id
   )
 
 #7
 Slot.create!(
   planning_id: p.id,
-  start_at: "2017-09-12 15:00",
-  end_at: "2017-09-12 22:00",
+  start_at: "2017-09-12 14:00",
+  end_at: "2017-09-12 20:00",
   role_id: Role.find_by_name("mécano").id,
-  user_id: User.find_by_first_name("paul").id
+  user_id: User.find_by_first_name("jacques").id
   )
 Slot.create!(
   planning_id: p.id,
-  start_at: "2017-09-12 15:00",
-  end_at: "2017-09-12 22:00",
+  start_at: "2017-09-12 14:00",
+  end_at: "2017-09-12 20:00",
   role_id: Role.find_by_name("mécano").id,
-  user_id: User.find_by_first_name("jacques").id
+  user_id: User.find_by_first_name("bob").id
   )
 
 #8
 Slot.create!(
   planning_id: p.id,
   start_at: "2017-09-12 10:00",
-  end_at: "2017-09-12 15:00",
+  end_at: "2017-09-12 13:00",
   role_id: Role.find_by_name("vendeur").id,
   user_id: User.find_by_first_name("axel").id
   )
 Slot.create!(
   planning_id: p.id,
   start_at: "2017-09-12 10:00",
-  end_at: "2017-09-12 15:00",
+  end_at: "2017-09-12 14:00",
   role_id: Role.find_by_name("vendeur").id,
-  user_id: User.find_by_first_name("hortense").id
+  user_id: User.find_by_first_name("valentine").id
   )
 #9
 Slot.create!(
   planning_id: p.id,
-  start_at: "2017-09-12 15:00",
-  end_at: "2017-09-12 20:00",
+  start_at: "2017-09-12 14:00",
+  end_at: "2017-09-12 18:00",
   role_id: Role.find_by_name("vendeur").id,
-  user_id: User.find_by_first_name("emma").id
+  user_id: User.find_by_first_name("axel").id
   )
 Slot.create!(
   planning_id: p.id,
   start_at: "2017-09-12 15:00",
-  end_at: "2017-09-12 20:00",
+  end_at: "2017-09-12 18:00",
   role_id: Role.find_by_name("vendeur").id,
-  user_id: User.find_by_first_name("hortense").id
+  user_id: User.find_by_first_name("valentine").id
   )
 
 #10
 Slot.create!(
   planning_id: p.id,
-  start_at: "2017-09-12 10:00",
-  end_at: "2017-09-12 17:00",
-  role_id: Role.find_by_name("magasinier").id,
-  user_id: User.find_by_first_name("magalie").id
+  start_at: "2017-09-12 8:00",
+  end_at: "2017-09-12 15:30",
+  role_id: Role.find_by_name("barista").id,
+  user_id: User.find_by_first_name("paul").id
   )
-#11
+#### 13/09
+
 Slot.create!(
   planning_id: p.id,
-  start_at: "2017-09-13 07:00",
-  end_at: "2017-09-13 15:00",
+  start_at: "2017-09-13 08:00",
+  end_at: "2017-09-13 14:00",
   role_id: Role.find_by_name("mécano").id,
   user_id: User.find_by_first_name("pierre").id
   )
 
 Slot.create!(
   planning_id: p.id,
-  start_at: "2017-09-13 07:00",
-  end_at: "2017-09-13 15:00",
+  start_at: "2017-09-13 08:00",
+  end_at: "2017-09-13 14:00",
   role_id: Role.find_by_name("mécano").id,
   user_id: User.find_by_first_name("jeannie").id
   )
@@ -679,89 +645,77 @@ Slot.create!(
 #12
 Slot.create!(
   planning_id: p.id,
-  start_at: "2017-09-13 15:00",
-  end_at: "2017-09-13 22:00",
-  role_id: Role.find_by_name("mécano").id,
-  user_id: User.find_by_first_name("michel").id
-  )
-Slot.create!(
-  planning_id: p.id,
-  start_at: "2017-09-13 15:00",
-  end_at: "2017-09-13 22:00",
-  role_id: Role.find_by_name("mécano").id,
-  user_id: User.find_by_first_name("nelson").id
-  )
-
-#13
-Slot.create!(
-  planning_id: p.id,
-  start_at: "2017-09-11 10:00",
-  end_at: "2017-09-11 15:00",
-  role_id: Role.find_by_name("vendeur").id,
-  user_id: User.find_by_first_name("axel").id
-  )
-
-#14
-Slot.create!(
-  planning_id: p.id,
-  start_at: "2017-09-13 15:00",
+  start_at: "2017-09-13 14:00",
   end_at: "2017-09-13 20:00",
-  role_id: Role.find_by_name("vendeur").id,
-  user_id: User.find_by_first_name("valentine").id
-  )
-Slot.create!(
-  planning_id: p.id,
-  start_at: "2017-09-13 15:00",
-  end_at: "2017-09-13 20:00",
-  role_id: Role.find_by_name("vendeur").id,
-  user_id: User.find_by_first_name("emma").id
-  )
-
-#15
-Slot.create!(
-  planning_id: p.id,
-  start_at: "2017-09-13 10:00",
-  end_at: "2017-09-13 17:00",
-  role_id: Role.find_by_name("magasinier").id,
-  user_id: User.find_by_first_name("michel").id
-  )
-#16
-Slot.create!(
-  planning_id: p.id,
-  start_at: "2017-09-14 07:00",
-  end_at: "2017-09-14 15:00",
-  role_id: Role.find_by_name("mécano").id,
-  user_id: User.find_by_first_name("paul").id
-  )
-Slot.create!(
-  planning_id: p.id,
-  start_at: "2017-09-14 07:00",
-  end_at: "2017-09-14 15:00",
-  role_id: Role.find_by_name("mécano").id,
-  user_id: User.find_by_first_name("bob").id
-  )
-
-#
-Slot.create!(
-  planning_id: p.id,
-  start_at: "2017-09-14 15:00",
-  end_at: "2017-09-14 22:00",
   role_id: Role.find_by_name("mécano").id,
   user_id: User.find_by_first_name("jacques").id
   )
 Slot.create!(
   planning_id: p.id,
-  start_at: "2017-09-14 15:00",
-  end_at: "2017-09-14 22:00",
+  start_at: "2017-09-13 14:00",
+  end_at: "2017-09-13 20:00",
   role_id: Role.find_by_name("mécano").id,
-  user_id: User.find_by_first_name("michel").id
+  user_id: User.find_by_first_name("bob").id
+  )
+
+
+# TO BE CRETED DURING DEMO
+# Slot.create!(
+#   planning_id: p.id,
+#   start_at: "2017-09-13 10:00",
+#   end_at: "2017-09-13 18:00",
+#   role_id: Role.find_by_name("vendeur").id,
+#   user_id: User.find_by_first_name("valentine").id
+#   )
+
+# #15
+# Slot.create!(
+#   planning_id: p.id,
+#   start_at: "2017-09-13 10:00",
+#   end_at: "2017-09-13 15:30",
+#   role_id: Role.find_by_name("barista").id,
+#   user_id: User.find_by_first_name("paul").id
+#   )
+
+#######14/09
+
+#16
+Slot.create!(
+  planning_id: p.id,
+  start_at: "2017-09-14 08:00",
+  end_at: "2017-09-14 14:00",
+  role_id: Role.find_by_name("mécano").id,
+  user_id: User.find_by_first_name("pierre").id
+  )
+Slot.create!(
+  planning_id: p.id,
+  start_at: "2017-09-14 08:00",
+  end_at: "2017-09-14 14:00",
+  role_id: Role.find_by_name("mécano").id,
+  user_id: User.find_by_first_name("jeannie").id
+  )
+
+#
+Slot.create!(
+  planning_id: p.id,
+  start_at: "2017-09-14 14:00",
+  end_at: "2017-09-14 20:00",
+  role_id: Role.find_by_name("mécano").id,
+  user_id: User.find_by_first_name("jacques").id
+  )
+Slot.create!(
+  planning_id: p.id,
+  start_at: "2017-09-14 14:00",
+  end_at: "2017-09-14 20:00",
+  role_id: Role.find_by_name("mécano").id,
+  user_id: User.find_by_first_name("bob").id
   )
 
 #18
 Slot.create!(
   planning_id: p.id,
   start_at: "2017-09-14 10:00",
-  end_at: "2017-09-14 15:00",
+  end_at: "2017-09-14 13:00",
   role_id: Role.find_by_name("vendeur").id,
   user_id: User.find_by_first_name("axel").id
   )
@@ -769,121 +723,132 @@ Slot.create!(
 #19
 Slot.create!(
   planning_id: p.id,
-  start_at: "2017-09-14 15:00",
-  end_at: "2017-09-14 20:00",
+  start_at: "2017-09-14 10:00",
+  end_at: "2017-09-14 14:00",
   role_id: Role.find_by_name("vendeur").id,
   user_id: User.find_by_first_name("emma").id
   )
 Slot.create!(
   planning_id: p.id,
-  start_at: "2017-09-14 15:00",
-  end_at: "2017-09-14 20:00",
+  start_at: "2017-09-14 14:00",
+  end_at: "2017-09-14 18:00",
   role_id: Role.find_by_name("vendeur").id,
-  user_id: User.find_by_first_name("hortense").id
+  user_id: User.find_by_first_name("axel").id
+  )
+Slot.create!(
+  planning_id: p.id,
+  start_at: "2017-09-14 15:00",
+  end_at: "2017-09-14 18:00",
+  role_id: Role.find_by_name("vendeur").id,
+  user_id: User.find_by_first_name("emma").id
   )
 #20
 Slot.create!(
   planning_id: p.id,
-  start_at: "2017-09-14 07:00",
-  end_at: "2017-09-14 12:00",
-  role_id: Role.find_by_name("magasinier").id,
-  user_id: User.find_by_first_name("magalie").id
-  )
-#21
-Slot.create!(
-  planning_id: p.id,
-  start_at: "2017-09-15 07:00",
-  end_at: "2017-09-15 15:00",
-  role_id: Role.find_by_name("mécano").id,
+  start_at: "2017-09-14 08:00",
+  end_at: "2017-09-14 15:30",
+  role_id: Role.find_by_name("barista").id,
   user_id: User.find_by_first_name("paul").id
   )
+
+#### 15/09
+
 Slot.create!(
   planning_id: p.id,
-  start_at: "2017-09-15 07:00",
-  end_at: "2017-09-15 15:00",
+  start_at: "2017-09-15 08:00",
+  end_at: "2017-09-15 14:00",
   role_id: Role.find_by_name("mécano").id,
-  user_id: User.find_by_first_name("bob").id
+  user_id: User.find_by_first_name("pierre").id
+  )
+Slot.create!(
+  planning_id: p.id,
+  start_at: "2017-09-15 08:00",
+  end_at: "2017-09-15 14:00",
+  role_id: Role.find_by_name("mécano").id,
+  user_id: User.find_by_first_name("jeannie").id
   )
 #22
 Slot.create!(
   planning_id: p.id,
-  start_at: "2017-09-15 15:00",
-  end_at: "2017-09-15 22:00",
+  start_at: "2017-09-15 14:00",
+  end_at: "2017-09-15 20:00",
   role_id: Role.find_by_name("mécano").id,
   user_id: User.find_by_first_name("jacques").id
   )
 Slot.create!(
   planning_id: p.id,
-  start_at: "2017-09-15 15:00",
-  end_at: "2017-09-15 22:00",
+  start_at: "2017-09-15 14:00",
+  end_at: "2017-09-15 20:00",
   role_id: Role.find_by_name("mécano").id,
-  user_id: User.find_by_first_name("jeannie").id
+  user_id: User.find_by_first_name("bob").id
   )
 #23
 Slot.create!(
   planning_id: p.id,
   start_at: "2017-09-15 10:00",
-  end_at: "2017-09-15 15:00",
+  end_at: "2017-09-15 14:00",
   role_id: Role.find_by_name("vendeur").id,
   user_id: User.find_by_first_name("axel").id
   )
 Slot.create!(
   planning_id: p.id,
   start_at: "2017-09-15 10:00",
-  end_at: "2017-09-15 15:00",
+  end_at: "2017-09-15 13:00",
   role_id: Role.find_by_name("vendeur").id,
-  user_id: User.find_by_first_name("arielle").id
+  user_id: User.find_by_first_name("emma").id
   )
 #24
 Slot.create!(
   planning_id: p.id,
   start_at: "2017-09-15 15:00",
-  end_at: "2017-09-15 20:00",
+  end_at: "2017-09-15 18:00",
   role_id: Role.find_by_name("vendeur").id,
-  user_id: User.find_by_first_name("valentine").id
+  user_id: User.find_by_first_name("axel").id
   )
 Slot.create!(
   planning_id: p.id,
-  start_at: "2017-09-15 15:00",
-  end_at: "2017-09-15 20:00",
+  start_at: "2017-09-15 14:00",
+  end_at: "2017-09-15 18:00",
   role_id: Role.find_by_name("vendeur").id,
-  user_id: User.find_by_first_name("arielle").id
+  user_id: User.find_by_first_name("emma").id
   )
-#25
+
 Slot.create!(
   planning_id: p.id,
-  start_at: "2017-09-15 10:00",
-  end_at: "2017-09-15 17:00",
-  role_id: Role.find_by_name("magasinier").id,
-  user_id: User.find_by_first_name("magalie").id
+  start_at: "2017-09-15 8:00",
+  end_at: "2017-09-15 15:30",
+  role_id: Role.find_by_name("barista").id,
+  user_id: User.find_by_first_name("paul").id
   )
-#26
+
+#### 16/09 Samedi Grosse journée
+
 Slot.create!(
   planning_id: p.id,
-  start_at: "2017-09-16 07:00",
-  end_at: "2017-09-16 15:00",
+  start_at: "2017-09-16 08:00",
+  end_at: "2017-09-16 14:00",
   role_id: Role.find_by_name("mécano").id,
   user_id: User.find_by_first_name("pierre").id
   )
 Slot.create!(
   planning_id: p.id,
-  start_at: "2017-09-16 07:00",
-  end_at: "2017-09-16 15:00",
+  start_at: "2017-09-16 08:00",
+  end_at: "2017-09-16 14:00",
   role_id: Role.find_by_name("mécano").id,
-  user_id: User.find_by_first_name("paul").id
+  user_id: User.find_by_first_name("jeannie").id
   )
 #27
 Slot.create!(
   planning_id: p.id,
-  start_at: "2017-09-16 15:00",
-  end_at: "2017-09-16 22:00",
+  start_at: "2017-09-16 14:00",
+  end_at: "2017-09-16 20:00",
   role_id: Role.find_by_name("mécano").id,
-  user_id: User.find_by_first_name("jeannie").id
+  user_id: User.find_by_first_name("jacques").id
   )
 Slot.create!(
   planning_id: p.id,
-  start_at: "2017-09-16 15:00",
-  end_at: "2017-09-16 22:00",
+  start_at: "2017-09-16 14:00",
+  end_at: "2017-09-16 20:00",
   role_id: Role.find_by_name("mécano").id,
   user_id: User.find_by_first_name("bob").id
   )
@@ -891,86 +856,94 @@ Slot.create!(
 Slot.create!(
   planning_id: p.id,
   start_at: "2017-09-16 10:00",
-  end_at: "2017-09-16 15:00",
+  end_at: "2017-09-16 13:00",
   role_id: Role.find_by_name("vendeur").id,
   user_id: User.find_by_first_name("axel").id
   )
 Slot.create!(
   planning_id: p.id,
   start_at: "2017-09-16 10:00",
-  end_at: "2017-09-16 15:00",
+  end_at: "2017-09-16 13:00",
   role_id: Role.find_by_name("vendeur").id,
   user_id: User.find_by_first_name("valentine").id
   )
 Slot.create!(
   planning_id: p.id,
   start_at: "2017-09-16 10:00",
-  end_at: "2017-09-16 15:00",
+  end_at: "2017-09-16 14:00",
   role_id: Role.find_by_name("vendeur").id,
-  user_id: User.find_by_first_name("hortense").id
+  user_id: User.find_by_first_name("emma").id
   )
 #29
 Slot.create!(
   planning_id: p.id,
-  start_at: "2017-09-16 15:00",
-  end_at: "2017-09-16 20:00",
+  start_at: "2017-09-16 14:00",
+  end_at: "2017-09-16 18:00",
   role_id: Role.find_by_name("vendeur").id,
-  user_id: User.find_by_first_name("hortense").id
+  user_id: User.find_by_first_name("axel").id
   )
 Slot.create!(
   planning_id: p.id,
-  start_at: "2017-09-16 15:00",
-  end_at: "2017-09-16 20:00",
+  start_at: "2017-09-16 14:00",
+  end_at: "2017-09-16 18:00",
   role_id: Role.find_by_name("vendeur").id,
-  user_id: User.find_by_first_name("arielle").id
+  user_id: User.find_by_first_name("valentine").id
   )
 
-
-
-#pas de user_id
-# UNATTRIBUTED SLOT --> PROBLEM OF RESSOURCES
 Slot.create!(
   planning_id: p.id,
   start_at: "2017-09-16 15:00",
-  end_at: "2017-09-16 20:00",
+  end_at: "2017-09-16 18:00",
   role_id: Role.find_by_name("vendeur").id,
+  user_id: User.find_by_first_name("emma").id
+  )
+
+
+### Barista a trop travaillé
+
+Slot.create!(
+  planning_id: p.id,
+  start_at: "2017-09-16 8:00",
+  end_at: "2017-09-16 15:30",
+  role_id: Role.find_by_name("barista").id,
   user_id: User.find_by_first_name("no solution").id
   )
 
-
-#30
 Slot.create!(
-  planning_id: p.id,
-  start_at: "2017-09-16 10:00",
-  end_at: "2017-09-16 15:00",
-  role_id: Role.find_by_name("magasinier").id,
+  planning_id: p35.id,
+  start_at: "2017-08-28 07:00",
+  end_at: "2017-08-28 15:00",
+  role_id: Role.find_by_name("mécano").id,
+  user_id: User.find_by_first_name("magalie").id
+  )
+
+Slot.create!(
+  planning_id: p36.id,
+  start_at: "2017-09-4 07:00",
+  end_at: "2017-09-4 15:00",
+  role_id: Role.find_by_name("mécano").id,
   user_id: User.find_by_first_name("magalie").id
   )
 
 Slot.create!(
   planning_id: p38.id,
-  start_at: "2017-09-11 07:00",
-  end_at: "2017-09-11 15:00",
+  start_at: "2017-09-18 07:00",
+  end_at: "2017-09-18 15:00",
   role_id: Role.find_by_name("mécano").id,
-  user_id: User.find_by_first_name("magalie").id
   )
 
 Slot.create!(
   planning_id: p39.id,
-  start_at: "2017-09-11 07:00",
-  end_at: "2017-09-11 15:00",
-  role_id: Role.find_by_name("mécano").id,
-  user_id: User.find_by_first_name("magalie").id
+  start_at: "2017-09-25 07:00",
+  end_at: "2017-09-25 15:00",
+  role_id: Role.find_by_name("barista").id,
+  user_id: User.find_by_first_name("no solution").id
   )
 
-Slot.create!(
-  planning_id: p40.id,
-  start_at: "2017-09-11 07:00",
-  end_at: "2017-09-11 15:00",
-  role_id: Role.find_by_name("mécano").id,
-  )
+puts "10 - Fake status planning 37 for demo"
+puts ""
 
-
+Planning.first.not_started!
 
 puts ""
 puts  "  >> #{User.count} users created"
