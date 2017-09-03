@@ -28,6 +28,25 @@ class PlanningsController < ApplicationController
     # guersbru : le dit slot n'a pas toujours l'id 887... ça crash je commente la ligne
     # Slot.find(887).user_id = "no solution"
     @url = "conflicts"
+    # variables pour fullcalendar
+    @slots_array = []
+    @slots.each do |slot|
+    @user = current_user
+    a= {
+      id:  slot.id,
+      start:  slot.start_at,
+      end: slot.end_at,
+      title: Role.find_by_id(slot.role_id).name, # nom du role
+      role_id: slot.role_id, # nom du role
+      created_at: slot.created_at,
+      updated_at: slot.updated_at,
+      color: Role.find_by_id(slot.role_id).role_color,
+      planning_id: slot.planning_id,
+      user_id: User.find(slot.user_id).id,
+      picture: User.find(slot.user_id).profile_picture
+       }
+      @slots_array << a
+    end
   end
 
   def users
