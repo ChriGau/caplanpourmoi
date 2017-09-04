@@ -18,7 +18,7 @@
           </div>
           <p></p>
           <div class="premier-plan"><%= planning_link(planning) %></div>
-          <div><p> <%= planning.status %> </p></div>
+          <div><p> <%= planning_status_label(planning) %> </p></div>
         </li>
       <% end %>
     </ul>

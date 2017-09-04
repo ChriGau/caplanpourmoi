@@ -3,8 +3,8 @@ module ApplicationHelper
     Role.all.order(:name)
   end
 
-  def get_step_status(url_prop)
-    case url_prop
+  def set_step_status
+    case action_name
     when "skeleton"
       @set_status1 = "active"
       @set_status2 = "disabled"
@@ -22,5 +22,4 @@ module ApplicationHelper
       @triangle_position = "calc(84% - 70px)"
     end
   end
-
 end
