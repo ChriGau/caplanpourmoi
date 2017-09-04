@@ -72,8 +72,7 @@ class SlotsController < ApplicationController
       created_at: slot.created_at,
       updated_at: slot.updated_at,
       color: Role.find_by_id(slot.role_id).role_color,
-      planning_id: slot.planning_id
-      picture: picture
+      planning_id: slot.planning_id,
        }
       if cpt == 0
         # construire le NICE hash
