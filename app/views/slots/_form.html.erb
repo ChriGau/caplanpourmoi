@@ -1,4 +1,3 @@
-
 <%= simple_form_for [@planning, @slot], remote: true do |f| %>
 <%= f.error_notification %>
 <div class="form-group">
@@ -20,7 +19,9 @@
   </div>
 </div>
 <%= f.input :role_id, placeholder: "Role", label: false, collection: fetch_roles  %>
+<%= f.input :user_id, as: :hidden  %>
 <%= f.submit "Valider", class: "btn btn-success" %>
+<%= link_to "Annuler", :back, {:class=>"btn btn-default"} %>
 <% end %>
 
 

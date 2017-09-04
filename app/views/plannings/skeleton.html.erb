@@ -2,19 +2,17 @@
 
 <div class="wrap-plan" >
   <div class="triangle" style= "left:<%= @triangle_position %>" ></div>
+  <div class="row">
+  <div id="slot_form" class="col-xs-4" style="height=400px;"></div>
+  </div>
   <div class="row spacing">
     <ul class="list-inline dragndrop-metiers">
       <% @slot_templates.each do |slot| %>
         <li style="background-color: <%= slot.role.role_color %>; <%= background_text_color(slot) %>"> <%= slot.role.name.capitalize %></li>
       <% end %>
     </ul>
-
   </div>
-
   <div class="row">
-    <div class="row">
-  <div id="slot_form" style="height=400px;"></div>
-  </div>
     <div class="col-xs-12 le_calendrier">
       <div id = "calendar">
       </div>
@@ -34,7 +32,6 @@
     font-family: "Oswald";
     font-size: 20px;
   }
-  /* contenu des colonnes*/
   .fc th, .fc td  {
     border-style: none;
     padding: 2px;
@@ -134,54 +131,22 @@
       aspectRatio: 4,
       events: '<%= events_planning_path(@planning.id, format: :json) %>',
 
-      // 2. cas où on drag-drop un event déjà existant dans le calendar
-      eventDrop: function(event, delta, revertFunc, jsEvent, ui, view ) {
-        // récupérer l'id de l'event que l'on droppe
-        console.log("event title= " + event.title + "start= " + event.start.format() + "end= " + event.end.format());
-        alert("DROOOOPPPPPPEEEEEDDDD !!!!!!!!");
-        // modified start => event.start.format()
-        // modified end  => event.end.format()
-        // lors du display du form, il doit préremplir avec ces 2 dates VS les anciennes
-      },
-
-      // au resizing d'un event
-      eventResizeStop: function( event, jsEvent, ui, view ) {
-        // TODO => envoyer au form la end modifiée.
-        var id_slot = event.id // contient id du slot cliqué
-        var planning_id = event.planning_id
-        var start_at = event.start.format(); // valeur modifiée du start
-        var end_at = event.end.format(); // valeur modifiée du end
+      // clic on a day
+      dayClick: function(date, jsEvent, view) {
+        var planning_id = <%= @planning.id %>;
+        // affiche le new de slots --> form
         $.ajax({
           type: "GET",
-          url: Routes.edit_planning_slot_path(planning_id, id_slot,  { format: 'js' } ),
-          success: function(data) {
-          },
-          error: function(jqXHR) {
-            console.log(jqXHR.responseText);
-          }
-        });
-      },
-
-      // cas où on clique sur un évènement déjà existant dans le calendar
-      eventClick: function(calEvent, jsEvent, view) {
-        // récupérer l'id de l'event que l'on clique + planning id
-        var id_slot = calEvent.id // contient id du slot cliqué
-        var planning_id = calEvent.planning_id // contient planning_id du slot cliqué
-        // 1 Requête Ajax: plannings/:id/slots/:id/edit.  > pour injecter event id + planning id dans la requete ajax ==> use react, cf https://karr.lewagon.com/lectures/rails/react#/4/2
-        $.ajax({
-          type: "GET",
-          url: Routes.edit_planning_slot_path(planning_id, id_slot,  { format: 'js' } ),
+          url: Routes.new_planning_slot_path( planning_id, { format: 'js' } ),
           success: function(data) {
             console.log("ok");
-            console.log(calEvent);
           },
           error: function(jqXHR) {
             console.log(jqXHR.responseText);
-            console.log("nok");
           }
         });
-        console.log("calEvent2 = "+ calEvent);
       },
+
       eventReceive: function( event ) {
         alert('drop received');
       }
