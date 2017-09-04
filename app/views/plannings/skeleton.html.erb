@@ -136,12 +136,9 @@
           type: "GET",
           url: Routes.edit_planning_slot_path(planning_id, id_slot,  { format: 'js' } ),
           success: function(data) {
-            console.log("ok");
-            console.log(calEvent);
           },
           error: function(jqXHR) {
             console.log(jqXHR.responseText);
-            console.log("nok");
           }
         });
       },
