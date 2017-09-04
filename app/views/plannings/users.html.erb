@@ -1,6 +1,59 @@
-  <%= render 'shared/planningsteps', locals: {planning: @planning} %>
 
-  <%= simple_form_for (@planning) do |f| %>
-  <%= f.association :users, collection: @users, label_method: :first_name, as: :check_boxes %>
-  <%= f.button :submit %>
-  <% end %>
+<%= render 'shared/planningsteps', locals: {planning: @planning, url: @url} %>
+
+<div class="wrap-plan" >
+  <div class="triangle" style= "left:<%= @triangle_position %>" ></div>
+  <div class="row">
+    <div class="roles-decrement">
+    </div>
+  </div>
+
+  <div class="row users">
+    <%= simple_form_for (@planning) do |f| %>
+      <% @users.each do |user| %>
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+          <div
+          class="card choice <%= @planning.users.include?(user) ? "active" : "" %> "
+          >
+            <label>
+              <input
+              class="checkbox"
+              type="checkbox"
+              name="planning[user_ids][]"
+              value="<%= user.id %>"
+              <%= @planning.users.include?(user) ? "checked" : "" %>
+              />
+              <div class="picture circle">
+                .
+              </div>
+              <div class="first-name">
+                <%= user.first_name.capitalize! %>
+              </div>
+              <div class="roles">
+                <p class="role">Roles</p>
+                <p class="user-role">
+                  <% user.roles.each do |role|  %>
+                    <span class="role-name" style=" background-color: <%= role.role_color %>" >
+                      <%= role.name.capitalize! %>
+                    </span>
+                  <% end %>
+                </p>
+              </div>
+            </label>
+          </div>
+        </div>
+      <% end %>
+      <%= f.submit "Next", class: "btn btn-primary" %>
+    <% end %>
+  </div>
+</div>
+    <script>
+      $(document).ready(function(){
+        $(".checkbox").change(function(){
+          $(this).parent().parent().toggleClass("active");
+        });
+      });
+    </script>
+
+
+

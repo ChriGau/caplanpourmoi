@@ -1,0 +1,99 @@
+.step .step-num {
+  color: $mygrey;
+  font-size: 16px;
+  margin-bottom: 5px;
+  font-weight:lighter;
+}
+
+.step .comment {
+  color: $mygrey;
+  font-size: 14px;
+  font-weight:lighter;
+  opacity: 0.8;
+}
+
+.step .progress {
+  position: relative;
+  border-radius: 0px;
+  height: 8px;
+  box-shadow: none;
+  margin: 25px 0;
+}
+
+.step .progress .progress-bar {
+  width:0px;
+  box-shadow: none;
+  background: $myyellow;
+}
+.step.completed .progress .progress-bar {
+  width: 100%;
+}
+.step.active {
+  .progress .progress-bar {
+    width: 50%;
+  }
+  .step-num {
+    font-weight: bold;
+  }
+  .comment {
+   font-weight: bold;
+  }
+}
+.step {
+  &:first-child.active .progress .progress-bar {
+    width: 0%;
+  }
+  &:last-child.active .progress .progress-bar {
+    width: 100%
+  }
+}
+.step.disabled .dot {
+  background-color: $mylightgrey;
+  &:after {
+    opacity: 0;
+  }
+}
+.step {
+  &:first-child .progress {
+    left: 50%;
+    width: 50%;
+  }
+  &:last-child .progress {
+  width: 50%;
+  }
+}
+
+.step .dot {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: $myblue;
+  display: block;
+  position: absolute;
+  top: 32px;
+  left: 45%;
+
+  &:after {
+    content:'';
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: $myyellow;
+    display: block;
+    position: absolute;
+    top: 12px;
+    left: 12px;
+  }
+
+}
+
+.steps {
+  padding: 0 0 10px 0;
+  margin-top:20px;
+}
+
+.step {
+  padding: 0;
+  position: relative;
+}
+

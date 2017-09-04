@@ -3,21 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>TODO</title>
+  <title>Ca Plan Pour Moi</title>
   <%= csrf_meta_tags %>
   <%= action_cable_meta_tag %>
   <%= stylesheet_link_tag 'application', media: 'all' %>
 </head>
 
+
 <body id="<%= controller.controller_name %>-<%= controller.action_name %>">
+
 
 <%= render 'shared/navbar' %>
 <%= render 'shared/flashes' %>
-<div class="container" id="general-container">
+<div class="container-fluid" id="general-container">
   <%= yield %>
 </div>
-<%= render 'shared/footer' %>
+
   <%= javascript_include_tag 'application' %>
+
+  <%= render 'shared/footer' %>
+
+  <%= cloudinary_js_config %>
   <%= yield :after_js %>
 
 </body>

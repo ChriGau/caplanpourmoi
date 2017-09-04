@@ -1,0 +1,84 @@
+
+.users {
+  padding: 15px;
+}
+
+
+
+.card {
+  height: 90px;
+  background-color: $mylightgrey;
+  color: $mygrey;
+  position: relative;
+  margin: 10px;
+  font-family: "Oswald";
+  font-weight: 500;
+  line-height: 1.1;
+  border-radius: 3px;
+  box-shadow: 1px 1px #mylightgrey;
+  position: relative;
+  opacity:0.6;
+}
+
+
+.choice{
+  &:hover {
+    cursor: pointer;
+  }
+  &.active {
+    background-color: $mylightgrey;
+    opacity: 0.9;
+  }
+}
+
+label {
+  width: 100%;
+  height: 100%;
+  .checkbox{
+    display: none;
+  }
+}
+
+.picture{
+  width: 75px;
+  height: 75px;
+  border-radius: 50%;
+  background-color: blue;
+  position: absolute;
+  right: -18px;
+  top: -15px;
+}
+
+.first-name {
+  color: $mygrey;
+  padding-left: 10px;
+  padding-top: 5px;
+}
+
+
+.roles {
+  position: absolute;
+  bottom: 0px;
+  margin-left: 10px;
+  .role {
+    font-weight: 200;
+    color: $mygrey;
+  }
+  .user-role {
+    font-weight: 200;
+    color: $mygrey;
+    font-size: 16px;
+    .role-name{
+      display: inline-block;
+      border-radius: 25px;
+      margin-right: 3px;
+      padding: 4px 6px;
+    }
+  }
+}
+
+
+
+
+
+

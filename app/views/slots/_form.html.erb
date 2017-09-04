@@ -1,0 +1,42 @@
+
+<%= simple_form_for [@planning, @slot], remote: true do |f| %>
+<%= f.error_notification %>
+<div class="form-group">
+  <div class='input-group date' id='datetimepicker1'>
+    <input name="slot[start_at]" type='text' value="<%= @slot.start_at %>" class="form-control" />
+    <span class="input-group-addon">
+      <span class="glyphicon glyphicon-calendar">
+      </span>
+    </span>
+  </div>
+</div>
+<div class="form-group">
+  <div class='input-group date' id='datetimepicker2'>
+    <input name="slot[end_at]" type='text' value="<%= @slot.end_at %>" class="form-control" />
+    <span class="input-group-addon">
+      <span class="glyphicon glyphicon-calendar">
+      </span>
+    </span>
+  </div>
+</div>
+<%= f.input :role_id, placeholder: "Role", label: false, collection: fetch_roles  %>
+<%= f.submit "Valider", class: "btn btn-success" %>
+<% end %>
+
+
+<%= content_for(:after_js) do %>
+<script type="text/javascript">
+  $(function () {
+    $('#datetimepicker1').datetimepicker();
+    $('#datetimepicker2').datetimepicker();
+  });
+</script>
+<% end %>
+
+<style>
+  .annuler {
+    background-color: white;
+    color: #566568;
+    border-color: #566568;
+  }
+</style>

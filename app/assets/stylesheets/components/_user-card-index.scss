@@ -1,0 +1,61 @@
+.user-avatar-index {
+  height: 100px;
+  width: 100px;
+  border-radius: 50%;
+  opacity:0.9;
+  &:hover {
+    opacity: 1;
+  }
+}
+
+
+.plus-avatar {
+  width: 100px;
+  i {
+    position: absolute;
+    top:113px;
+    left:42px;
+    font-size: 60px;
+    font-weight: lighter;
+    color: white;
+  }
+  &:hover {
+    .plus-disc {
+      opacity: 1;
+      background: $mygrey;
+    }
+  }
+}
+
+.plus-disc {
+  content: '';
+  width: 100px;
+  height: 100px;
+  position: absolute;
+  top:90px;
+  border-radius: 50%;
+  background: $mylightgrey;
+  opacity: 0.9;
+  &:hover {
+    opacity: 1;
+    background: $mygrey;
+  }
+}
+
+
+.user-list {
+  li {
+    padding-right: 10px;
+    margin-bottom: 10px;
+  }
+  p {
+    text-decoration : none;
+    font-size: 16px;
+    padding-top: 5px;
+    color: $mygrey;
+    text-align: center;
+  }
+  a {
+    text-decoration : none;
+  }
+}

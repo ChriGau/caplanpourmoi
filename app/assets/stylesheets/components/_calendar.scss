@@ -1,0 +1,47 @@
+
+.conflicts .row #calendar {
+
+
+  /*override le theme par defaut*/
+  /*noms des jours*/
+  .fc-day-header {
+    color: $mygrey;
+    font-family: "Oswald";
+    font-size: 18px;
+  }
+  /* contenu des colonnes*/
+  .fc th, .fc td  {
+    border-style: none;
+    padding: 2px;
+    border-width: 3px;
+  }
+  /* border des events*/
+  .fc-time-grid-event {
+    border-radius: 10px;
+  }
+  /* axe y*/
+  .fc-axis .fc-time .fc-widget-content {
+    color: $mygrey;
+    font-family: "Oswald";
+    font-size : 18px;
+  }
+  /*nom du role dans l'event*/
+  .fc-title{
+   font-family: "Oswald";
+   font-size: 12px;
+  }
+  /* active week/day button*/
+  .fc-toolbar .fc-state-active, .fc-toolbar .ui-state-active{
+  color: white;
+  font-family: "Oswald";
+  background-color: $mygrey;
+  }
+  .fc-button-group {
+    font-family: "Oswald";
+  }
+
+  .fc-button-group .active {
+    background-color: $mygrey;
+  }
+
+  }

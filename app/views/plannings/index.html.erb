@@ -1,38 +1,69 @@
-<div class="planning-list">
-<h2>plannings</h2>
+<div class="wraper">
+  <h2>
+    <i class="fa fa-calendar" aria-hidden="true"></i>  Plannings
+  </h2>
+  <div class="scrollbar">
+    <div class="handle">
+      <div class="mousearea"></div>
+    </div>
+  </div>
+  <button class="backward"><i class="fa fa-chevron-left" aria-hidden="true"></i> </button>
+  <button class="forward"><i class="fa fa-chevron-right" aria-hidden="true"></i> </button>
+  <div id="planning-list" class="frame">
+    <ul class="slidee">
+      <% @plannings.each do |planning| %>
+        <li class="<%= planning_slide_class(planning)%>">
+          <div class="date_range">
+            <%= parse_week_number(planning) %>
+          </div>
+          <p></p>
+          <div class="premier-plan"><%= planning_link(planning) %></div>
+          <div><p> <%= planning.status %> </p></div>
+        </li>
+      <% end %>
+    </ul>
+  </div>
 
-  <% @plannings.each do |planning| %>
-    <%= planning.week_number %>
-    <%= planning.id %>
-    <%= link_to 'link', planning_skeleton_path(planning)  %>
-  <% end %>
+  <div class="row">
+    <div class="col-xs-9">
+      <h2>
+        <i class="fa fa-users" aria-hidden="true"></i>  Ressources
+      </h2>
+      <ul class="user-list list-inline">
+        <li >
+          <%= link_to root_path do  %>
+            <div class="plus-avatar">
+              <div class="plus-disc"></div>
+              <i class="fa fa-plus" aria-hidden="true"></i>
+            </div>
+          <% end %>
 
+        </li>
+          <% @users.each do |user| %>
+          <li id="drag1" draggable="true" ondragstart="drag(event)" ondrop="showmodal()" data-toggle="modal" data-target="#myModalHorizontal" onclick="showmodal">
+            <%= link_to user_path(user) do %>
+            <%= avatar_with_border_color(user) %>
+            <p><%= user.first_name.capitalize%></p>
+            <% end %>
+          </li>
+        <% end %>
+      </div>
+
+    <div class="col-xs-3">
+      <h2>
+        <i class="fa fa-suitcase" aria-hidden="true"></i> Métiers
+      </h2>
+      <div class="list-metiers">
+        <%= link_to new_role_path do %>
+          <div class="metier">
+              <i class="fa fa-plus" aria-hidden="true"></i>
+          </div>
+        <% end %>
+        <%  @slot_templates.each do |slot| %>
+          <div class="metier" style="background-color: <%= slot.role.role_color %>; <%= background_text_color(slot) %>"> <%= slot.role.name.capitalize %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
 </div>
-
-
-<div class="user-list">
-<h2>users</h2>
-
-<%= link_to 'create_user', new_user_registration_path  %>
-<br>
-<ul>
-<% @users.each do |user| %>
-  <li><%= user.email %></li>
-  <% end %>
-</ul>
-</div>
-
-
-<div class="role-list">
-<h2>roles</h2>
-
-<%= link_to 'create new role', new_role_path %>
-<br>
-<ul>
-<% @roles.each do |role| %>
-    <li> <%= role.name %> couleur : <%= role.role_color %> </li>
-  <% end %>
-  </ul>
-
-</div>
-
