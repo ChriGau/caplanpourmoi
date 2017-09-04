@@ -33,9 +33,9 @@ class PlanningsController < ApplicationController
     @slots.each do |slot|
     @user = current_user
     if User.find(slot.user_id).profile_picture != nil
-      picture = "http://res.cloudinary.com/dksqsr3pd/image/upload/" + User.find(slot.user_id).profile_picture.path
+      picture = "http://res.cloudinary.com/dksqsr3pd/image/upload/c_fill,r_60,w_60/" + User.find(slot.user_id).profile_picture.path
     else
-      picture = "http://a398.idata.over-blog.com/232x300/3/91/14/12/novembre-2010/point-d-interrogation-bleu-ciel.jpg"
+      picture = "http://a398.idata.over-blog.com/60x60/3/91/14/12/novembre-2010/point-d-interrogation-bleu-ciel.jpg"
     end
     a= {
       id:  slot.id,

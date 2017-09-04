@@ -51,11 +51,9 @@
       aspectRatio: 4,
       events: <%= raw @slots_array.to_json %>,
 
-
-
       eventRender: function(event, element) {
-    element.find('.fc-title').append("<br/>" + event.picture );
-
+        console.log(event.picture);
+    element.find('.fc-title').append("<br/>" + "<img src= "+event.picture+" alt='' style='border-radius:60px;' >");
                                             }
     });
 
