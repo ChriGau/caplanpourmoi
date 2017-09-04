@@ -32,6 +32,25 @@ class SlotsController < ApplicationController
     end
   end
 
+  def resolve
+    # idem que edit
+    @planning = Planning.find(params[:planning_id])
+    @slot = Slot.find(params[:id])
+    if @slot.save
+      respond_to do |format|
+        format.html { redirect_to planning_skeleton_path(@planning) }
+        format.js
+        format.json { render json: @slot }
+      end
+    else
+      respond_to do |format|
+        format.html { render :edit }
+        format.js
+        format.json { render json: @slot.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
   def update
     @planning = Planning.find(params[:planning_id])
     @slot = Slot.find(params[:id])
