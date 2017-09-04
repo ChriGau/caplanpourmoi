@@ -6,18 +6,7 @@ class SlotsController < ApplicationController
     @slot.planning = @planning
     @slots = @planning.slots
     @slot_templates = Slot.slot_templates
-
-    if @slot.save
-      redirect_to planning_skeleton_path(@planning), notice: "nouveau slot ajouté"
-    else
-      render 'plannings/skeleton'
-    end
-  end
-
-  def edit
-    @planning = Planning.find(params[:planning_id])
-    @slot = Slot.find(params[:id])
-    if @slot.save
+      if @slot.save
       respond_to do |format|
         format.html { redirect_to planning_skeleton_path(@planning) }
         format.js
@@ -30,6 +19,18 @@ class SlotsController < ApplicationController
         format.json { render json: @slot.errors, status: :unprocessable_entity }
       end
     end
+
+  end
+
+  def new
+    @slot = Slot.new
+    @planning = Planning.find(params[:planning_id])
+    @slot.user_id = User.find_by_first_name("pierre").id
+  end
+
+  def edit
+    @planning = Planning.find(params[:planning_id])
+    @slot = Slot.find(params[:id])
     @user = User.find_by_first_name("jean")
   end
 
