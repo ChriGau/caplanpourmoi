@@ -12,6 +12,19 @@ module PlanningHelper
     end
   end
 
+  def planning_status_label(planning)
+    case planning.status.to_sym
+    when :not_started
+      "(Aucun Planning)"
+    when :in_progress
+      "(En cours)"
+    when :complete
+      "(Validé)"
+    else
+      "(Incomplet)"
+    end
+  end
+
   def planning_link(planning)
     case planning.status.to_sym
     when :not_started, :in_progress
