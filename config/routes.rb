@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   get 'plannings/:id/users', to: 'plannings#users', as: 'planning_users'
   get 'plannings/:id/skeleton', to: 'plannings#skeleton', as: 'planning_skeleton'
   get 'plannings/:id/conflicts', to: 'plannings#conflicts', as: 'planning_conflicts'
+  get 'plannings/:id/conflicts/resolve', to: "plannings#resolution", as: 'planning_resolution'
   resources :users, only: [:index, :show]
   resources :roles, only: [:index, :new, :create]
   get 'users/:id/infos', to: 'users#infos', as: 'user_infos'
