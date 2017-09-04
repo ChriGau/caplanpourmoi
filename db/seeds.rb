@@ -207,6 +207,7 @@ User.create!(email: "wtf@boutique.com",
             first_name: "no solution",
             last_name: "Last name",
             password: "password",
+            profile_picture: open_image("./images_seeds/avatar_no.jpg")
   )
 
 puts "6 - assigning roles to members"

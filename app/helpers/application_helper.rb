@@ -22,4 +22,8 @@ module ApplicationHelper
       @triangle_position = "calc(84% - 70px)"
     end
   end
+
+  def fetch_user_solution
+    User.where(first_name: "jean")
+  end
 end

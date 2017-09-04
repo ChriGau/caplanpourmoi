@@ -1,6 +1,10 @@
 <%= render 'shared/planningsteps', locals: {planning: @planning, url: @url} %>
+
 <div class="wrap-plan" >
   <div class="triangle" style= "left:<%= @triangle_position %>" ></div>
+  <div class="row">
+  <div class="col-xs-6" id="slot_form" style="height=400px;"></div>
+  </div>
   <div class="row">
     <div class="col-xs-12 le_calendrier">
       <div id = "calendar">
@@ -44,10 +48,6 @@
       editable: true, // events on the calendar can be modified
       droppable: true, // allows things to be dropped onto the calendar
       selectable: true,
-      drop: function(date) {
-        alert("Dropped on " + date.format());
-        console.log("DROPPED!!!!!!!!!!")
-      },
       minTime: "07:00:00", // starting time, even when scrolled all the way up
       maxTime: "22:00:00",
       defaultView: "agendaWeek",
@@ -57,38 +57,7 @@
       aspectRatio: 4,
       events: '<%= events_planning_path(@planning.id, format: :json) %>',
 
-      // 2. cas où on drag-drop un event déjà existant dans le calendar
-      eventDrop: function(event, delta, revertFunc, jsEvent, ui, view ) {
-        // récupérer l'id de l'event que l'on droppe
-        console.log("event title= " + event.title + "start= " + event.start.format() + "end= " + event.end.format());
-        alert("DROOOOPPPPPPEEEEEDDDD !!!!!!!!");
-        // modified start => event.start.format()
-        // modified end  => event.end.format()
-        // lors du display du form, il doit préremplir avec ces 2 dates VS les anciennes
-      },
-
-      // au resizing d'un event
-      eventResizeStop: function( event, jsEvent, ui, view ) {
-        // TODO => envoyer au form la end modifiée.
-        var id_slot = event.id // contient id du slot cliqué
-        var planning_id = event.planning_id
-        var start_at = event.start.format(); // valeur modifiée du start
-        var end_at = event.end.format(); // valeur modifiée du end
-        $.ajax({
-          type: "GET",
-          url: Routes.edit_planning_slot_path(planning_id, id_slot,  { format: 'js' } ),
-          success: function(data) {
-            console.log("ok");
-            console.log(calEvent);
-          },
-          error: function(jqXHR) {
-            console.log(jqXHR.responseText);
-            console.log("nok");
-          }
-        });
-      },
-
-      // cas où on clique sur un évènement déjà existant dans le calendar
+      // simulation résolution conflit
       eventClick: function(calEvent, jsEvent, view) {
         // récupérer l'id de l'event que l'on clique + planning id
         var id_slot = calEvent.id // contient id du slot cliqué
@@ -106,11 +75,71 @@
             console.log("nok");
           }
         });
-        console.log("calEvent2 = "+ calEvent);
+        console.log(calevent);
+
       },
-      eventReceive: function( event ) {
-        alert('drop received');
+
+      eventRender: function(event, element) {
+        console.log(event);
+        element.find('.fc-title').append("<br/>" + "<img src= "+event.picture+" alt='' style='border-radius:60px;' >");
       }
     });
+
+    function show_image(src, width, height, alt) {
+      var img = document.createElement("img");
+      img.src = src;
+      img.width = width;
+      img.height = height;
+      img.alt = alt;
+    }
+
   </script>
   <% end %>
+
+
+  <style>
+/*  .skeleton {
+    height: 800px;
+  }*/
+  /*override le theme par defaut*/
+  /*noms des jours*/
+  .fc-day-header {
+    color: #516568;
+    font-family: "Raleway";
+    font-size: 28px;
+  }
+  /* contenu des colonnes*/
+  .fc th, .fc td  {
+    border-style: none;
+    padding: 2px;
+    border-width: 3px;
+  }
+  /* border des events*/
+  .fc-time-grid-event {
+    border-radius: 10px;
+  }
+  /* axe y*/
+  .fc-axis .fc-time .fc-widget-content {
+    color: #516568;
+    font-family: "Raleway";
+  }
+  /*nom du role dans l'event*/
+  .fc-title{
+   font-family: "Raleway";
+   font-size: 12px;
+ }
+ /* active week/day button*/
+ .fc-toolbar .fc-state-active, .fc-toolbar .ui-state-active{
+  color: white;
+  font-family: "Raleway";
+  background-color: #516568;
+}
+.fc-button-group {
+  font-family: "Raleway";
+}
+
+.fc-button-group .active {
+  background-color: #516568;
+}
+
+</style>

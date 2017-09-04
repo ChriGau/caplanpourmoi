@@ -39,13 +39,13 @@
           <% end %>
 
         </li>
-          <% @users.each do |user| %>
-          <li id="drag1" draggable="true" ondragstart="drag(event)" ondrop="showmodal()" data-toggle="modal" data-target="#myModalHorizontal" onclick="showmodal">
-            <%= link_to user_path(user) do %>
-            <%= avatar_with_border_color(user) %>
-            <p><%= user.first_name.capitalize%></p>
-            <% end %>
-          </li>
+        <% @users.each do |user| %>
+        <li id="drag1" draggable="true" ondragstart="drag(event)" ondrop="showmodal()" data-toggle="modal" data-target="#myModalHorizontal" onclick="showmodal">
+          <%= link_to user_path(user) do %>
+          <%= avatar_with_border_color(user) %>
+          <p><%= user.first_name.capitalize%></p>
+          <% end %>
+        </li>
         <% end %>
       </div>
 
@@ -63,7 +63,7 @@
           <div class="metier" style="background-color: <%= slot.role.role_color %>; <%= background_text_color(slot) %>"> <%= slot.role.name.capitalize %>
           </div>
         <% end %>
+>>>>>>> master
       </div>
     </div>
   </div>
-</div>

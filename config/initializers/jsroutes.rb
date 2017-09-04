@@ -5,6 +5,5 @@ JsRoutes.setup do |config|
   #       rake tmp:cache:clear
   #       before restarting your `rails s`.
   config.include = [ /^edit_planning_slot$/
-
   ]
 end
