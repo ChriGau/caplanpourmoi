@@ -7,11 +7,11 @@
   <%= csrf_meta_tags %>
   <%= action_cable_meta_tag %>
   <%= stylesheet_link_tag 'application', media: 'all' %>
-
 </head>
 
 
-<body>
+<body id="<%= controller.controller_name %>-<%= controller.action_name %>">
+
 
 <%= render 'shared/navbar' %>
 <%= render 'shared/flashes' %>

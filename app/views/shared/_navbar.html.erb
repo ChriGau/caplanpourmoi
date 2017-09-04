@@ -1,61 +1,60 @@
 <div class="navbar-wagon">
   <!-- Logo -->
-   <div class="navbar-item-center">
-    <%= link_to root_path, class: 'navbar-wagon-logo navbar-wagon-link' do %>
-      Ça <span class="color-word">Plan </span> Pour Moi
-    <% end %>
-    <%= link_to root_path, class: "navbar-wagon-brand" do %>
-      <%= image_tag "logo.png" %>
-     <% end %>
-  </div>
 
-  <!-- Right Navigation -->
-  <div class="navbar-wagon-right hidden-xs hidden-sm">
+ <a href="/" class="navbar-wagon-brand navbar-wagon-item">
+   <%= image_tag "logo.png", alt: "Logo Ca Plane Pour Moi"%>
+ </a>
+
+
+ <!-- Right Navigation -->
+ <div class="navbar-wagon-right hidden-xs hidden-sm">
    <% if user_signed_in? %>
-    <!-- Avatar with dropdown menu -->
-    <div class="navbar-wagon-item">
-      <div class="dropdown">
-        <% if current_user.profile_picture? %>
-          <%= cl_image_tag current_user.profile_picture.path, class: "avatar dropdown-toggle", id: "navbar-wagon-menu", "data-toggle" => "dropdown" %>
-        <% else %>
-          <%= image_tag "http://placehold.it/30x30", class: "avatar dropdown-toggle", id: "navbar-wagon-menu", "data-toggle" => "dropdown" %>
-        <% end %>
-          <ul class="dropdown-menu dropdown-menu-right navbar-wagon-dropdown-menu">
-          <li>
-            <%= link_to  edit_user_registration_path  do %>
-              <i class="fa fa-user"></i> <%= t(".profile", default: "Profil") %>
-            <% end %>
-          </li>
-          <li>
-            <%= link_to root_path do %>
-              <i class="fa fa-home"></i>  <%= t(".profile", default: "Home") %>
-            <% end %>
-          </li>
-          <li>
-            <%= link_to destroy_user_session_path, method: :delete do %>
-              <i class="fa fa-sign-out"></i>  <%= t(".sign_out", default: "Log out") %>
-            <% end %>
-          </li>
-        </ul>
-      </div>
-    </div>
-    <% else %>
-      <!-- Login link (when logged out) -->
-      <%= link_to t(".sign_in", default: "Login"), new_user_session_path, class: "navbar-wagon-item navbar-wagon-link" %>
-    <% end %>
-  </div>
 
-  <!-- Dropdown list appearing on mobile only -->
-  <div class="navbar-wagon-item hidden-md hidden-lg">
+   <!-- Avatar with dropdown menu -->
+   <div class="navbar-wagon-item">
+
     <div class="dropdown">
-      <i class="fa fa-bars dropdown-toggle" data-toggle="dropdown"></i>
+      <%= image_tag "http://placehold.it/30x30", class: "avatar dropdown-toggle", id: "navbar-wagon-menu", "data-toggle" => "dropdown" %>
       <ul class="dropdown-menu dropdown-menu-right navbar-wagon-dropdown-menu">
-        <li><a href="#">Profil</a></li>
-        <li><a href="#">Home</a></li>
-        <li><a href="#">Log out</a></li>
+        <li>
+          <%= link_to  edit_user_registration_path  do %>
+          <i class="fa fa-user"></i> <%= t(".profile", default: "Profil") %>
+          <% end %>
+        </li>
+        <li>
+          <%= link_to root_path do %>
+          <i class="fa fa-home"></i>  <%= t(".profile", default: "Home") %>
+          <% end %>
+        </li>
+        <li>
+          <%= link_to destroy_user_session_path, method: :delete do %>
+          <i class="fa fa-sign-out"></i>  <%= t(".sign_out", default: "Log out") %>
+          <% end %>
+        </li>
       </ul>
     </div>
   </div>
+  <% else %>
+  <!-- Login link (when logged out) -->
+
+  <div>
+    <%= link_to t(".sign_up", default: "S'inscrire"), new_user_registration_path, class: "form-actions btn-primary btn-nav btn-block" %>
+  </div>
+
+  <% end %>
+</div>
+
+<!-- Dropdown list appearing on mobile only -->
+<div class="navbar-wagon-item hidden-md hidden-lg">
+  <div class="dropdown">
+    <i class="fa fa-bars dropdown-toggle" data-toggle="dropdown"></i>
+    <ul class="dropdown-menu dropdown-menu-right navbar-wagon-dropdown-menu">
+      <li><a href="#">Profil</a></li>
+      <li><a href="#">Home</a></li>
+      <li><a href="#">Log out</a></li>
+    </ul>
+  </div>
+</div>
 </div>
 
 
