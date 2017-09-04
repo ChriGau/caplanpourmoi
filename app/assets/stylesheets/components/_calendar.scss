@@ -1,6 +1,3 @@
-.conflicts {
-  height:100px;
-}
 
 .conflicts .row #calendar {
 
@@ -8,8 +5,8 @@
   /*override le theme par defaut*/
   /*noms des jours*/
   .fc-day-header {
-    color: #516568;
-    font-family: "Raleway";
+    color: $mygrey;
+    font-family: "Oswald";
     font-size: 18px;
   }
   /* contenu des colonnes*/
@@ -24,27 +21,27 @@
   }
   /* axe y*/
   .fc-axis .fc-time .fc-widget-content {
-    color: #516568;
-    font-family: "Raleway";
+    color: $mygrey;
+    font-family: "Oswald";
     font-size : 18px;
   }
   /*nom du role dans l'event*/
   .fc-title{
-   font-family: "Raleway";
+   font-family: "Oswald";
    font-size: 12px;
   }
   /* active week/day button*/
   .fc-toolbar .fc-state-active, .fc-toolbar .ui-state-active{
   color: white;
-  font-family: "Raleway";
-  background-color: #516568;
+  font-family: "Oswald";
+  background-color: $mygrey;
   }
   .fc-button-group {
-    font-family: "Raleway";
+    font-family: "Oswald";
   }
 
   .fc-button-group .active {
-    background-color: #516568;
+    background-color: $mygrey;
   }
 
   }

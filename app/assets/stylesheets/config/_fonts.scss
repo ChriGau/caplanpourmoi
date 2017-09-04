@@ -1,9 +1,11 @@
 // Import Google fonts
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:400,300,700|Raleway:400,100,300,700,500");
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i|Oswald:200,300,400,500,600,700|Roboto:300,400,500,700');
 
 // Define fonts for body and headers
-$body-font: "Open Sans", "Helvetica", "sans-serif";
-$headers-font: "Raleway", "Helvetica", "sans-serif";
+$body-font: "Roboto", "Helvetica", "sans-serif";
+$headers-font: "Oswald", "Helvetica", "sans-serif";
+
 
 // To use a font file (.woff) uncomment following lines
 // @font-face {
@@ -14,3 +16,7 @@ $headers-font: "Raleway", "Helvetica", "sans-serif";
 //        font-url('FontFile.ttf') format('truetype')
 // }
 // $my-font: "Font Name";
+
+// font-family: 'Open Sans', sans-serif;
+// font-family: 'Oswald', sans-serif;
+// font-family: 'Roboto', sans-serif;

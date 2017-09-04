@@ -1,37 +1,33 @@
 
 .users {
-  background-color: #F5F5F5;
-  height: 800px;
-  padding: 50px;
+  padding: 15px;
 }
 
 
 
 .card {
-  height: 140px;
-  background-color: white;
-  color: #EAE9E9;
+  height: 90px;
+  background-color: $mylightgrey;
+  color: $mygrey;
   position: relative;
   margin: 10px;
-  font-family: "Raleway", "Helvetica", "sans-serif";
+  font-family: "Oswald";
   font-weight: 500;
   line-height: 1.1;
-  border: 0.8px solid #A7A7A7;
   border-radius: 3px;
-  box-shadow: -0.5px 0.7px #C4C4C4;
+  box-shadow: 1px 1px #mylightgrey;
   position: relative;
+  opacity:0.6;
 }
 
 
 .choice{
-  opacity: 1;
   &:hover {
-    opacity: 0.8;
     cursor: pointer;
   }
   &.active {
-    opacity: 0.8;
-    background-color: #FFC700;
+    background-color: $mylightgrey;
+    opacity: 0.9;
   }
 }
 
@@ -54,7 +50,7 @@ label {
 }
 
 .first-name {
-  color: #A7A7A7;
+  color: $mygrey;
   padding-left: 10px;
   padding-top: 5px;
 }
@@ -66,18 +62,17 @@ label {
   margin-left: 10px;
   .role {
     font-weight: 200;
-    color: #4E4E4E;
+    color: $mygrey;
   }
   .user-role {
     font-weight: 200;
-    color: #333339;
+    color: $mygrey;
     font-size: 16px;
     .role-name{
       display: inline-block;
-      border: 0.5px solid black;
       border-radius: 25px;
       margin-right: 3px;
-      padding: 4px 5px;
+      padding: 4px 6px;
     }
   }
 }

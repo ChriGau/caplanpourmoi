@@ -4,7 +4,11 @@ class PlanningsController < ApplicationController
   def index
     @plannings = Planning.all.order(:week_number)
     @roles = Role.all
-    @users = User.where.not(first_name: "no solution")
+
+    @users = User.where.not(first_name: "no solution").includes(:roles).sort do |a,b|
+      a.roles.first.name <=> b.roles.first.name
+    end
+
     @slot_templates = Slot.slot_templates # liste des roles
   end
 
@@ -16,7 +20,6 @@ class PlanningsController < ApplicationController
     @slots = @planning.slots.order(:id)
     @slot = Slot.new
     @slot_templates = Slot.slot_templates # liste des roles
-    @url = "skeleton"
   end
 
   def conflicts
@@ -87,11 +90,11 @@ class PlanningsController < ApplicationController
       end
       # Fake solution => le boss remplacera le no solution
       @user_solution = User.find_by_first_name("jean")
+    demo_method(@planning) if @planning.week_number == 37
   end
 
   def users
-    @users = User.all
-    @url = "users"
+    @users = User.where.not(first_name: "no solution")
   end
 
   def update
@@ -108,6 +111,23 @@ class PlanningsController < ApplicationController
   end
 
   private
+
+  def demo_method(planning)
+      vendeur = Role.find_by_name("vendeur")
+      barista = Role.find_by_name("barista")
+
+      s1 = planning.slots.where(user_id: nil).find_by_role_id(vendeur.id)
+      if (s1 != nil && s1.user.nil?)
+        s1.user = User.find_by_first_name("valentine")
+        s1.save
+      end
+
+      s2 = planning.slots.where(user_id: nil).find_by_role_id(barista.id)
+      if (s2 != nil && s2.user.nil?)
+        s2.user = User.find_by_first_name("paul")
+        s2.save
+      end
+  end
 
   def planning_params
     params.require(:planning).permit("user_ids" => [])
