@@ -7,7 +7,7 @@
 
 .card {
   height: 90px;
-  background-color: $mylightgrey;
+  background-color: $mywhite;
   color: $mygrey;
   position: relative;
   margin: 10px;
@@ -15,9 +15,8 @@
   font-weight: 500;
   line-height: 1.1;
   border-radius: 3px;
-  box-shadow: 1px 1px #mylightgrey;
+  box-shadow: -0.4px 0.7px $mygreycards;
   position: relative;
-  opacity:0.6;
 }
 
 
@@ -26,8 +25,9 @@
     cursor: pointer;
   }
   &.active {
-    background-color: $mylightgrey;
+    background-color: $mylightgreen;
     opacity: 0.9;
+    box-shadow: -0.7px 1px $mygreycards;
   }
 }
 
@@ -43,7 +43,6 @@ label {
   width: 75px;
   height: 75px;
   border-radius: 50%;
-  background-color: blue;
   position: absolute;
   right: -18px;
   top: -15px;
@@ -60,19 +59,15 @@ label {
   position: absolute;
   bottom: 0px;
   margin-left: 10px;
-  .role {
-    font-weight: 200;
-    color: $mygrey;
-  }
   .user-role {
     font-weight: 200;
     color: $mygrey;
-    font-size: 16px;
+    font-size: 20px;
     .role-name{
       display: inline-block;
       border-radius: 25px;
       margin-right: 3px;
-      padding: 4px 6px;
+      padding: 5px 16px;
     }
   }
 }
