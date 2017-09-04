@@ -1,7 +1,7 @@
-
 <%= simple_form_for [@planning, @slot], remote: true do |f| %>
 <%= f.error_notification %>
-<%= f.input :user_id %>
+<%= f.input :user_id, placeholder: "User", label: false, collection: fetch_user_solution, prompt: "Choisir le backup" %>
 <%= f.input :role_id, placeholder: "Role", label: false, collection: fetch_roles  %>
 <%= f.submit "Valider", class: "btn btn-success" %>
+<%= link_to "Cancel", :back, {:class=>"btn btn-default"} %>
 <% end %>
