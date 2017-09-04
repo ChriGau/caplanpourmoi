@@ -40,10 +40,8 @@
         </li>
         <% @users.each do |user| %>
         <li id="drag1" draggable="true" ondragstart="drag(event)" ondrop="showmodal()" data-toggle="modal" data-target="#myModalHorizontal" onclick="showmodal">
-          <%= link_to user_path(user) do %>
-            <%= avatar_with_border_color(user) %>
-            <p><%= user.first_name.capitalize%></p>
-          <% end %>
+          <%= avatar_with_border_color(user) %>
+          <p><%= user.first_name.capitalize%></p>
         </li>
         <% end %>
       </ul>
