@@ -94,7 +94,15 @@ class PlanningsController < ApplicationController
   end
 
   def users
-    @users = User.where.not(first_name: "no solution")
+    @users = User.where.not(first_name: "no solution").includes(:roles, :plannings, :teams).sort do |a,b|
+      if a.plannings.include?(@planning) == b.plannings.include?(@planning)
+        a.roles.first.name <=> b.roles.first.name
+      elsif a.plannings.include?(@planning)
+        -1
+      else
+        1
+      end
+    end
   end
 
   def update
