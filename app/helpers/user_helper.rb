@@ -11,7 +11,7 @@ module UserHelper
     if user.profile_picture?
       cl_image_tag user.profile_picture.path, options
     else
-      image_tag "http://placehold.it/30x30", options
+      image_tag "https://placehold.it/30x30", options
     end
   end
 end

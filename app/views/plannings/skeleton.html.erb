@@ -12,6 +12,9 @@
   </div>
 
   <div class="row">
+    <div class="row">
+  <div id="slot_form" style="height=400px;"></div>
+  </div>
     <div class="col-xs-12 le_calendrier">
       <div id = "calendar">
       </div>
@@ -152,12 +155,9 @@
           type: "GET",
           url: Routes.edit_planning_slot_path(planning_id, id_slot,  { format: 'js' } ),
           success: function(data) {
-            console.log("ok");
-            console.log(calEvent);
           },
           error: function(jqXHR) {
             console.log(jqXHR.responseText);
-            console.log("nok");
           }
         });
       },
