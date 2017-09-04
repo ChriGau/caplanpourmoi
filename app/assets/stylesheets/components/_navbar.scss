@@ -37,9 +37,8 @@
 }
 
 .navbar-wagon-item {
-  text-align: center;
   cursor: pointer;
-  padding: 0 20px;
+  padding: 0 10vh;
 }
 /* Navbar link */
 .navbar-wagon-link {
@@ -90,4 +89,28 @@
 .navbar-item-center {
   margin: 0 auto;
 }
+
+.btn-primary.btn-nav {
+  background-color: #FFC80A;
+  border-radius: 50px;
+  border: none;
+  width: 120px;
+  height: 27px;
+  text-align: center;
+  margin-left: 30px;
+  text-decoration: none;
+}
+
+.btn-primary.btn-nav2 {
+  background-color: white;
+  color: #FFC80A;
+  border-radius: 50px;
+  border: none;
+  width: 120px;
+  height: 27px;
+  text-align: center;
+  margin-left: 30px;
+  text-decoration: none;
+}
+
 
