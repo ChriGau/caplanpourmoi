@@ -23,9 +23,9 @@
               value="<%= user.id %>"
               <%= @planning.users.include?(user) ? "checked" : "" %>
               />
-              <div class="picture circle">
-                .
-              </div>
+
+                <%= cl_image_tag user.profile_picture.path, class: "picture circle" %>
+
               <div class="first-name">
                 <%= user.first_name.capitalize! %>
               </div>
