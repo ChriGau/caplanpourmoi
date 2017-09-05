@@ -1,8 +1,21 @@
-<h4>Problème! pas de disponibilités de l'équipe</h4>
-<h4>Autres personnes disponibles :</h4>
+<h4><strong>Problème!</strong> Pas de disponibilités de l'équipe</h4>
+<h5 style="color: $mygreen;"><strong>Solution proposée : </strong>1 autre ressource disponible :</h5>
 <%= simple_form_for [@planning, @slot], remote: true do |f| %>
 <%= f.error_notification %>
-<%= f.input :user_id, placeholder: "User", label: false, collection: fetch_user_solution, prompt: "Choisir le backup", label_method: lambda { |guy| "#{guy.first_name.capitalize}"}  %>
+<%= f.input :user_id, placeholder: "User", label: false, collection: fetch_user_solution, prompt: "Choisir le backup", label_method: lambda { |guy| "#{guy.first_name.capitalize} - #{guy.roles.first.name} "}  %>
 <%= f.submit "Affecter", class: "btn btn-success" %>
 <%= link_to "Annuler", :back, {:class=>"btn btn-default"} %>
 <% end %>
+
+<style>
+  .btn-success {
+  background-color: #759CE7;
+  border-radius: 50px;
+  border: none;
+}
+  .btn-default {
+  background-color: $mylightgrey;
+  border-radius: 50px;
+  border: none;
+}
+</style>
