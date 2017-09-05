@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   mount Attachinary::Engine => "/attachinary"
   devise_for :users
-  root to: 'plannings#index'
+  root to: 'pages#home'
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   resources :plannings, only: [:show, :index, :update] do
     resources :slots, only: [:create, :edit, :show, :update, :resolve]
