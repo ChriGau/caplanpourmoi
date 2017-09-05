@@ -3,6 +3,7 @@
   font-size: 16px;
   margin-bottom: 5px;
   font-weight:lighter;
+
 }
 
 .step .comment {
@@ -38,6 +39,7 @@
   .comment {
    font-weight: bold;
   }
+
 }
 .step {
   &:first-child.active .progress .progress-bar {
@@ -96,4 +98,48 @@
   padding: 0;
   position: relative;
 }
+
+
+.button {
+  display: block;
+  position: absolute;
+  top: 16px;
+  left: 34%;
+  outline:none;
+  text-align: center;
+  width: 200px;
+  padding: 10px 9px 10px 9px;
+  border-radius:40px;
+  background: #fff;
+  border: 2px solid $myyellow;
+  color:$myyellow;
+  letter-spacing:1px;
+  font:{
+    size:15px;
+    weight:bold;
+  }
+  cursor: pointer;
+  transition: all 0.25s ease;
+  &:hover {
+    color:white;
+    background: $myyellow;
+    text-decoration: none;
+  }
+}
+.onclic {
+  border-color:$myyellow;
+  border-width:3px;
+  font-size:0;
+  border-left-color:$myyellow;
+}
+.validate {
+  font-size:13px;
+  color: white;
+  background: $green;
+}
+
+.button-center {
+  position: center;
+}
+
 
