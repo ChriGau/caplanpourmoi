@@ -5,6 +5,13 @@
   <div class="row">
   <div class="col-xs-6" id="slot_form" style="height=400px;"></div>
   </div>
+    <div class="row spacing">
+    <ul class="list-inline dragndrop-metiers">
+      <% @slot_templates.each do |slot| %>
+        <li style="background-color: <%= slot.role.role_color %>; <%= background_text_color(slot) %>"> <%= slot.role.name.capitalize %></li>
+      <% end %>
+    </ul>
+  </div>
   <div class="row">
     <div class="col-xs-12 le_calendrier">
       <div id = "calendar">
@@ -38,7 +45,7 @@
     $('#calendar').fullCalendar({
       //calendar attributes
       header: {
-        left: '',
+        left: 'prev, next',
         center: '', //title
         right: 'agendaWeek,agendaDay',
       },
@@ -79,7 +86,7 @@
 
       eventRender: function(event, element) {
         console.log(event);
-        element.find('.fc-title').append("<br/>" + "<img src= "+event.picture+" alt='' style='border-radius:60px;' >");
+        element.find('.fc-title').html("<br/>" + "<img src= "+event.picture+" alt='' style='border-radius:60px;' >");
       }
     });
 
@@ -96,17 +103,16 @@
 
 
   <style>
-/*  .skeleton {
+  .skeleton {
     height: 800px;
-  }*/
+  }
   /*override le theme par defaut*/
   /*noms des jours*/
   .fc-day-header {
-    color: #516568;
-    font-family: "Raleway";
-    font-size: 28px;
+    color: $mygrey;
+    font-family: "Oswald";
+    font-size: 20px;
   }
-  /* contenu des colonnes*/
   .fc th, .fc td  {
     border-style: none;
     padding: 2px;
@@ -115,29 +121,45 @@
   /* border des events*/
   .fc-time-grid-event {
     border-radius: 10px;
+    border-width:0px;
+    box-shadow: 0px 0px 3.5px -1px white inset;
+    padding:2px;
+    padding-top: 7px;
+    padding: 3px;
   }
   /* axe y*/
   .fc-axis .fc-time .fc-widget-content {
-    color: #516568;
-    font-family: "Raleway";
+    color: $mygrey;
+    font-family: "Oswald";
+    font-weight: 400;
   }
   /*nom du role dans l'event*/
   .fc-title{
-   font-family: "Raleway";
+   font-family: "Robot";
    font-size: 12px;
+   font-weight: 300;
  }
  /* active week/day button*/
  .fc-toolbar .fc-state-active, .fc-toolbar .ui-state-active{
   color: white;
-  font-family: "Raleway";
-  background-color: #516568;
+  font-family: "Robot";
+}
+
+.fc-button {
+  box-shadow: none;
+  font-weight: 400;
+  letter-spacing: 1.2px ;
+  text-shadow:none;
+  background-image: none;
+  width:70px;
+
 }
 .fc-button-group {
-  font-family: "Raleway";
+  font-family: "Robot";
 }
 
 .fc-button-group .active {
-  background-color: #516568;
+  background-color: $mygrey;
 }
 
 </style>
