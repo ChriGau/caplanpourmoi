@@ -80,7 +80,10 @@
 .fc-button-group .active {
   background-color: $mygrey;
 }
-
+/* ne pas montrer le title de l'event*/
+.fc-title {
+  display: none;
+}
 </style>
 
 <!-- ___________________________ JS __________________________________ -->
@@ -108,7 +111,7 @@
     $('#calendar').fullCalendar({
       //calendar attributes
       header: {
-        left: '',
+        left: 'prev, next',
         center: '', //title
         right: 'agendaWeek,agendaDay',
       },
