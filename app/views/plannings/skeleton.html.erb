@@ -1,11 +1,21 @@
-<%= render 'shared/planningsteps', locals: {planning: @planning, url: @url} %>
 
+<div class="row">
+
+  <div class="col-xs-12 col-sm-10">
+    <%= render 'shared/planningsteps', locals: {planning: @planning, url: @url} %>
+  </div>
+  <div class="col-xs-12 col-sm-2">
+  <div id="button-center">
+    <%= link_to "Choix de l'équipe", planning_users_path, class: "button" %>
+    </div>
+  </div>
+</div>
 <div class="wrap-plan" >
   <div class="triangle" style= "left:<%= @triangle_position %>" ></div>
   <div class="row spacing">
     <ul class="list-inline dragndrop-metiers">
       <% @slot_templates.each do |slot| %>
-        <li style="background-color: <%= slot.role.role_color %>; <%= background_text_color(slot) %>"> <%= slot.role.name.capitalize %></li>
+      <li style="background-color: <%= slot.role.role_color %>; <%= background_text_color(slot) %>"> <%= slot.role.name.capitalize %></li>
       <% end %>
     </ul>
 
@@ -13,8 +23,8 @@
 
   <div class="row">
     <div class="row">
-  <div id="slot_form" style="height=400px;"></div>
-  </div>
+      <div id="slot_form" style="height=400px;"></div>
+    </div>
     <div class="col-xs-12 le_calendrier">
       <div id = "calendar">
       </div>
@@ -188,3 +198,4 @@
     });
   </script>
   <% end %>
+
