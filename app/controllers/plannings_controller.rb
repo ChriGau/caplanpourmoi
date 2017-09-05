@@ -109,7 +109,7 @@ class PlanningsController < ApplicationController
     @planning = Planning.find(params[:id])
     @planning.update(planning_params)
     @planning.save!
-    redirect_to planning_users_path(@planning)
+    redirect_to planning_conflicts_path(@planning)
   end
 
 

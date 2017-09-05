@@ -33,7 +33,7 @@
                 <p class="user-role">
                   <% user.roles.each do |role|  %>
                     <span class="role-name" style=" background-color:<%= role.role_color %>; <%= background_text_color_role(role) %> " >
-                      <%= role.name.capitalize! %>
+                      <%= role.name.capitalize %>
                     </span>
                   <% end %>
                 </p>
@@ -46,6 +46,8 @@
     <% end %>
   </div>
 </div>
+
+<%= content_for(:after_js) do %>
     <script>
       $(document).ready(function(){
         $(".checkbox").change(function(){
@@ -54,5 +56,6 @@
       });
     </script>
 
+<% end %>
 
 
