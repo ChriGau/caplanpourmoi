@@ -10,4 +10,11 @@ class ApplicationController < ActionController::Base
     # For additional in app/views/devise/registrations/edit.html.erb
     devise_parameter_sanitizer.permit(:account_update, keys: [:username, :profile_picture])
   end
+
+  # setup your host to generate the absolute url needed to load your images from the external world
+  # https://www.lewagon.com/blog/setup-meta-tags-rails
+  def default_url_options
+  { host: ENV["HOST"] || "localhost:3000" }
+end
+
 end
