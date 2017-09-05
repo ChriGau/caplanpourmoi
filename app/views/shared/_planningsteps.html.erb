@@ -5,24 +5,41 @@
 </div>
 
 <% set_step_status %>
-<div class="row steps">
-  <div class="col-xs-4 step <%= @set_status1 %>">
-      <div class="step-num text-center">Etape 1</div>
-      <div class="progress"><div class="progress-bar"></div></div>
-      <%= link_to "", planning_skeleton_path(@planning), class: "dot" %>
-      <div class="comment text-center">Organisation de la semaine</div>
+<div class="row">
+  <div class="steps">
+    <div class="col-xs-3 step <%= @set_status1 %>">
+        <div class="step-num text-center">Etape 1</div>
+        <div class="progress"><div class="progress-bar"></div></div>
+        <%= link_to "", planning_skeleton_path(@planning), class: "dot" %>
+        <div class="comment text-center">Organisation de la semaine</div>
 
+    </div>
+    <div class="col-xs-3 step <%= @set_status2 %>">
+        <div class="step-num text-center">Etape 2</div>
+        <div class="progress"><div class="progress-bar"></div></div>
+        <%= link_to "", planning_users_path(@planning), class: "dot" %>
+        <div class="comment text-center">Votre équipe pour la semaine</div>
+    </div>
+    <div class="col-xs-3 step <%= @set_status3 %>">
+        <div class="step-num text-center">Etape 3</div>
+        <div class="progress"><div class="progress-bar"></div></div>
+        <%= link_to "", planning_conflicts_path(@planning), class: "dot" %>
+        <div class="comment text-center">Votre planning</div>
+    </div>
   </div>
-  <div class="col-xs-4 step <%= @set_status2 %>">
-      <div class="step-num text-center">Etape 2</div>
-      <div class="progress"><div class="progress-bar"></div></div>
-      <%= link_to "", planning_users_path(@planning), class: "dot" %>
-      <div class="comment text-center">Votre équipe pour la semaine</div>
+  <div class="col-xs-3">
+      <%= @button_link %>
   </div>
-  <div class="col-xs-4 step <%= @set_status3 %>">
-      <div class="step-num text-center">Etape 3</div>
-      <div class="progress"><div class="progress-bar"></div></div>
-      <%= link_to "", planning_conflicts_path(@planning), class: "dot" %>
-      <div class="comment text-center">Votre planning</div>
-  </div>
+
 </div>
+
+
+<%= content_for(:after_js) do %>
+    <script>
+      // $(document).ready(function(){
+      //   $("#user-submit-btn").click(function(){
+      //     $("#user-submit-form").submit();
+      //   });
+      // });
+    </script>
+<% end %>
