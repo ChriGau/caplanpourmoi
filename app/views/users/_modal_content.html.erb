@@ -15,7 +15,7 @@
         </li>
       </ul>
       <% @user.roles.each do |role| %>
-        <button class="btn" style="width: 130px; margin: 5px; border-color: $mygrey; background-color: <%=  role.role_color %>; border-radius: 6px; color: #516568;"> <%= role.name %> </button>
+        <button class="btn" style="width: 130px; margin: 5px; border-color: $mygrey; background-color: <%=  role.role_color %>; border-radius: 6px; <%= background_text_color_role(role)%>"> <%= role.name.capitalize %> </button>
         <% end %>
     </div>
     <div class="col-xs-6">
@@ -115,7 +115,6 @@
 
 <!--  _________________________ JS _____________________________ -->
 
-<%= content_for(:after_js) do %>
 <script>
 //setup calendar
 $('#calendar').fullCalendar({
@@ -129,6 +128,7 @@ $('#calendar').fullCalendar({
       droppable: true, // allows things to be dropped onto the calendar
       minTime: "07:00:00", // starting time, even when scrolled all the way up
       maxTime: "22:00:00",
+      locale: "fr",
       height: "parent",
       duration: "02:00:00",
       defaultView: 'month',
@@ -139,5 +139,4 @@ $('#calendar').fullCalendar({
       events: <%= raw @constraints_array.to_json %>,
     });
   </script>
-  <% end %>
 

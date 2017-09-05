@@ -31,7 +31,7 @@
       </h2>
       <ul class="user-list list-inline">
         <li >
-          <%= link_to root_path do  %>
+          <%= link_to plannings_path do  %>
             <div class="plus-avatar">
               <div class="plus-disc"></div>
               <i class="fa fa-plus" aria-hidden="true"></i>
@@ -39,9 +39,11 @@
           <% end %>
         </li>
         <% @users.each do |user| %>
-        <li id="drag1" draggable="true" ondragstart="drag(event)" ondrop="showmodal()" data-toggle="modal" data-target="#myModalHorizontal" onclick="showmodal">
-          <%= avatar_with_border_color(user) %>
-          <p><%= user.first_name.capitalize%></p>
+        <li id="drag1" draggable="true" ondragstart="drag(event)" ondrop="" data-toggle="modal" data-target="#myModalHorizontal">
+          <%= link_to(user_path(user), class: "show-user-link") do %>
+            <%= avatar_with_border_color(user) %>
+            <p><%= user.first_name.capitalize%></p>
+          <% end %>
         </li>
         <% end %>
       </ul>
@@ -64,3 +66,17 @@
     </div>
   </div>
 </div>
+<div id="modalUserContainer"></div>
+
+<%= content_for(:after_js) do %>
+  <script>
+  $(".show-user-link").on("click", function(event) {
+    event.preventDefault();
+
+    $.ajax({
+      type: "GET",
+      url: this.href
+    });
+  });
+  </script>
+<% end %>

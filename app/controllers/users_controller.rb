@@ -29,6 +29,12 @@ class UsersController < ApplicationController
         }
       # construire le BASIC hashs
         @constraints_array << a
+
+    end
+
+    respond_to do |format|
+      format.js
+      format.html
     end
   end
 
@@ -70,7 +76,7 @@ class UsersController < ApplicationController
   #   @user = User.find(params[:id])
 
   #   if @user.update(user_params)
-  #     redirect_to root_path
+  #     redirect_to plannings_path
   #   else
   #     render :edit
   #   end

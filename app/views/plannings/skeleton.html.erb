@@ -1,31 +1,37 @@
-<%= render 'shared/planningsteps', locals: {planning: @planning} %>
-<div class="wrap-plan" >
-  <div class="triangle" style= "left:<%= @triangle_position %>" ></div>
-  <div class="row">
-    <div id="slot_form" class="col-xs-4" style="height=400px; margin: 30px; margin: 30px;"></div>
-  </div>
-  <div class="row spacing">
-    <ul class="list-inline dragndrop-metiers">
-      <% @slot_templates.each do |slot| %>
-      <li style="background-color: <%= slot.role.role_color %>; <%= background_text_color(slot) %>"> <%= slot.role.name.capitalize %></li>
-      <% end %>
-    </ul>
-  </div>
-  <div class="row">
-    <div class="col-xs-12 le_calendrier">
-      <div id = "calendar">
+  <%= render 'shared/planningsteps', locals: {planning: @planning, url: @url} %>
+
+  <div class="wrap-plan" >
+    <div class="triangle" style= "left:<%= @triangle_position %>" ></div>
+    <div class="row spacing">
+      <ul class="list-inline dragndrop-metiers">
+        <% @slot_templates.each do |slot| %>
+        <li style="background-color: <%= slot.role.role_color %>; <%= background_text_color(slot) %>"> <%= slot.role.name.capitalize %></li>
+        <% end %>
+      </ul>
+
+    </div>
+
+    <div class="row">
+      <div class="row">
+        <div id="slot_form" style="height=400px;"></div>
+      </div>
+      <div class="col-xs-12 le_calendrier">
+        <div id = "calendar">
+        </div>
       </div>
     </div>
   </div>
-</div>
+
 <!--  _______________________ CSS Calendar ___________________________ -->
 
 <style>
+
   .skeleton {
-    height: 800px;
-  }
-  /*override le theme par defaut*/
-  /*noms des jours*/
+
+    width:inherit;
+    height:inherit;
+    margin: 0 auto;
+}
   .fc-day-header {
     color: $mygrey;
     font-family: "Oswald";
