@@ -1,6 +1,6 @@
 
 .footer {
-  background: $mylightgrey;
+  background: #D6D6D6;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -17,12 +17,13 @@
   align-items: center;
 }
 .footer-links a {
-  color: white;
-  opacity: 0.6;
+  color: black;
+  opacity: 0.15;
   text-decoration: none;
   font-size: 20px;
   padding: 0px 10px;
 }
+
 .footer-links a:hover {
   opacity: 1;
 }
@@ -41,8 +42,8 @@
 .footer-wagon-link {
   color: white;
   font-size: 20px;
-  font-family: Oswald;
 }
+
 .footer-wagon-link:hover {
   color: white;
   text-decoration: none;
