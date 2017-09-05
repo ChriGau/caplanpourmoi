@@ -9,7 +9,7 @@
   </div>
 
   <div class="row users">
-    <%= simple_form_for (@planning) do |f| %>
+    <%= simple_form_for(@planning, html: { id: "user-submit-form"}) do |f| %>
       <% @users.each do |user| %>
         <div class="col-xs-12 col-sm-6 col-md-2 col-lg-2">
           <div
@@ -33,7 +33,7 @@
                 <p class="user-role">
                   <% user.roles.each do |role|  %>
                     <span class="role-name" style=" background-color:<%= role.role_color %>; <%= background_text_color_role(role) %> " >
-                      <%= role.name.capitalize! %>
+                      <%= role.name.capitalize %>
                     </span>
                   <% end %>
                 </p>
@@ -42,17 +42,25 @@
           </div>
         </div>
       <% end %>
-      <%= f.submit "Next", class: "btn btn-primary" %>
     <% end %>
   </div>
 </div>
+
+<%= content_for(:after_js) do %>
     <script>
       $(document).ready(function(){
         $(".checkbox").change(function(){
           $(this).parent().parent().toggleClass("active");
         });
+
+        $("#user-submit-btn").click(function(event){
+          event.preventDefault();
+
+          document.getElementById("user-submit-form").submit();
+        });
       });
     </script>
 
+<% end %>
 
 

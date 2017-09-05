@@ -1,4 +1,3 @@
-
 <%= simple_form_for [@planning, @slot], remote: true do |f| %>
 <%= f.error_notification %>
 <div class="form-group">
@@ -19,19 +18,31 @@
     </span>
   </div>
 </div>
-<%= f.input :role_id, placeholder: "Role", label: false, collection: fetch_roles  %>
+<%= f.input :role_id, placeholder: "Role", label: false, collection: fetch_roles, label_method: lambda { |role| "#{role.name.capitalize} "}  %>
+<%= f.input :user_id, as: :hidden  %>
 <%= f.submit "Valider", class: "btn btn-success" %>
+<%= link_to "Annuler", :back, {:class=>"btn btn-default"} %>
 <% end %>
 
 
-<%= content_for(:after_js) do %>
+
 <script type="text/javascript">
   $(function () {
-    $('#datetimepicker1').datetimepicker();
-    $('#datetimepicker2').datetimepicker();
+    $('#datetimepicker1').datetimepicker({
+      format: 'YYYY-MM-DD HH:mm',
+       locale: 'fr',
+        defaultDate: "2017-09-13 09:00",
+    });
+    $('#datetimepicker2').datetimepicker({
+      format: 'YYYY-MM-DD HH:mm',
+      locale: 'fr',
+      defaultDate: "2017-09-13 09:00",
+    });
   });
 </script>
-<% end %>
+
+
+
 
 <style>
   .annuler {
@@ -39,4 +50,15 @@
     color: #566568;
     border-color: #566568;
   }
+
+  .btn-success {
+  background-color: #759CE7;
+  border-radius: 50px;
+  border: none;
+}
+  .btn-default {
+  background-color: $mylightgrey;
+  border-radius: 50px;
+  border: none;
+}
 </style>
