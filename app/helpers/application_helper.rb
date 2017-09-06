@@ -25,19 +25,19 @@ module ApplicationHelper
       @set_status1 = "active"
       @set_status2 = "disabled"
       @set_status3 = "disabled"
-      @triangle_position = "calc(25% - 228px)"
+      @triangle_position = "calc(16% - 70px)"
       @button_link = link_to "Etape suivante", planning_users_path(@planning), class: "button"
     when "users"
       @set_status1 = "completed"
       @set_status2 = "active"
       @set_status3 = "disabled"
-      @triangle_position = "calc(50% - 225px)"
-      @button_link = link_to "Calcul du planing", planning_conflicts_path(@planning), class: "button", id: "user-submit-btn"
+      @triangle_position = "calc(50% - 70px)"
+      @button_link = link_to "Calcul du planning", planning_conflicts_path(@planning), class: "button", id: "user-submit-btn"
     else
       @set_status1 = "completed"
       @set_status2 = "completed"
       @set_status3 = "active"
-      @triangle_position = "calc(75% - 221px)"
+      @triangle_position = "calc(84% - 70px)"
       @button_link = link_to "Retour au dashboard", plannings_path(@planning), class: "button"
 
     end

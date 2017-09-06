@@ -94,7 +94,7 @@
 .frame .slidee li a {
   text-decoration:none;
   color:$mygrey;
-  font-size: 50px;
+  font-size: 60px;
   padding: 38px 75px 69px 70px;
 
 }
@@ -108,18 +108,18 @@
 }
 
 .date_range {
-  color: $mylightgrey;
-  font-size:16px;
+  color: $mygrey;
+  font-size:20px;
   position:absolute;
   text-align: center;
   top: 10px;
   p {
-    color :$mylightgrey
+    color :$mygrey;
   }
 }
 
 .not_started {
-  background-color: $mylightgrey;
+  background-color: $mysuperlightgrey;
   .date_range {
     color: $mygrey;
     p {
