@@ -6,13 +6,14 @@
     width: 100vh;
   }
 }
-.dispos{
-  padding: 20px;
-  color: #516568;
-  height: 450px;
-  width: 750px;
+.modal-content {
+  .dispos{
+    padding: 20px;
+    color: #516568;
+    height: 450px;
+    width: 100%;
+  }
 }
-
 .modal {
   margin-right: 27vh;
   margin-left: 0vh;

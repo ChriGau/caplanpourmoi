@@ -25,7 +25,7 @@ class SlotsController < ApplicationController
   def new
     @slot = Slot.new
     @planning = Planning.find(params[:planning_id])
-    @slot.user_id = User.find_by_first_name("pierre").id
+    @slot.user_id = User.find_by_first_name("paul").id
   end
 
   def edit

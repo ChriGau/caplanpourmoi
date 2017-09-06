@@ -1,12 +1,16 @@
   <%= render 'shared/planningsteps', locals: {planning: @planning, url: @url} %>
 
   <div class="wrap-plan" >
-    <div class="triangle" style= "left:<%= @triangle_position %>" ></div>
-          <div class="row">
-        <div class="col-xs-4">
-          <div id="slot_form" style=""></div>
-        </div>
+    <div class="row">
+      <div class="col-xs-9">
+        <div class="triangle" style= "left:<%= @triangle_position %>" ></div>
       </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-4">
+        <div id="slot_form" style=""></div>
+      </div>
+    </div>
     <div class="row spacing">
       <ul class="list-inline dragndrop-metiers">
         <% @slot_templates.each do |slot| %>
@@ -87,9 +91,18 @@
   font-family: "Robot";
   font-size: 13px;
 }
+/*bouton month*/
+.fc-month-button {
+  width: 90px;
+}
+.fc-state-active {
+  background-color: #191654;
+  color: white;
+}
 
-.fc-button-group .active {
-  background-color: $mygrey;
+/*bouton week*/
+.fc-agendaWeek-button {
+  width: 90px;
 }
 /* ne pas montrer le title de l'event*/
 .fc-title {
