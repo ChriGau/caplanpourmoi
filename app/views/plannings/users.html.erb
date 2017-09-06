@@ -2,7 +2,11 @@
 <%= render 'shared/planningsteps', locals: {planning: @planning, url: @url} %>
 
 <div class="wrap-plan" >
-  <div class="triangle" style= "left:<%= @triangle_position %>" ></div>
+  <div class="row">
+    <div class="col-xs-9">
+      <div class="triangle" style= "left:<%= @triangle_position %>" ></div>
+    </div>
+  </div>
   <div class="row">
     <div class="roles-decrement">
     </div>
