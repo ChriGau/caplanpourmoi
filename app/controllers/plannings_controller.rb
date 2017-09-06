@@ -123,7 +123,7 @@ class PlanningsController < ApplicationController
   def demo_method(planning)
       vendeur = Role.find_by_name("vendeur")
       barista = Role.find_by_name("barista")
-
+      # useless
       s1 = planning.slots.where(user_id: nil).find_by_role_id(vendeur.id)
       if (s1 != nil && s1.user.nil?)
         s1.user = User.find_by_first_name("valentine")
@@ -134,6 +134,12 @@ class PlanningsController < ApplicationController
       if (s2 != nil && s2.user.nil?)
         s2.user = User.find_by_first_name("paul")
         s2.save
+      end
+      # added
+      s= Slots.where(user_id: User.find_by_first_name("axel").id)
+      s.each do |slots|
+        s.user_id = User.find_by_first_name("arielle").id
+        s.save!
       end
   end
 
