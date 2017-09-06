@@ -136,10 +136,10 @@ class PlanningsController < ApplicationController
         s2.save
       end
       # added
-      s= Slots.where(user_id: User.find_by_first_name("axel").id)
-      s.each do |slots|
-        s.user_id = User.find_by_first_name("arielle").id
-        s.save!
+      s = Slot.where(user_id: User.find_by_first_name("axel").id)
+      s.each do |slot|
+        slot.user_id = User.find_by_first_name("arielle").id
+        slot.save!
       end
   end
 
