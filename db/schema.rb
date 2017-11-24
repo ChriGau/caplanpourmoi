@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170829160940) do
+ActiveRecord::Schema.define(version: 20171124100901) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -63,6 +63,20 @@ ActiveRecord::Schema.define(version: 20170829160940) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "slotgroups", force: :cascade do |t|
+    t.integer  "nb_required"
+    t.integer  "nb_available"
+    t.boolean  "simulation_status"
+    t.integer  "priority"
+    t.integer  "nb_combinations"
+    t.integer  "ranking_algo"
+    t.integer  "interval"
+    t.integer  "slot_id"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+    t.index ["slot_id"], name: "index_slotgroups_on_slot_id", using: :btree
+  end
+
   create_table "slots", force: :cascade do |t|
     t.datetime "start_at"
     t.datetime "end_at"
@@ -109,6 +123,7 @@ ActiveRecord::Schema.define(version: 20170829160940) do
   add_foreign_key "constraints", "users"
   add_foreign_key "role_users", "roles"
   add_foreign_key "role_users", "users"
+  add_foreign_key "slotgroups", "slots"
   add_foreign_key "slots", "plannings"
   add_foreign_key "slots", "roles"
   add_foreign_key "slots", "users"
