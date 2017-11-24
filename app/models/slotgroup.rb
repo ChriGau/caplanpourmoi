@@ -2,7 +2,6 @@ class Slotgroup < ApplicationRecord
   has_many :slots
 
   # TODO : after_save :set...
-
   def set_nb_required
     #TODO - number of slots relative to this slotgroup
   end
