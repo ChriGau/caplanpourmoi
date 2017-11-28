@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171126161305) do
+ActiveRecord::Schema.define(version: 20171128093928) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -59,8 +59,10 @@ ActiveRecord::Schema.define(version: 20171126161305) do
   create_table "roles", force: :cascade do |t|
     t.string   "name"
     t.string   "role_color"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.integer  "slotgroup_id"
+    t.index ["slotgroup_id"], name: "index_roles_on_slotgroup_id", using: :btree
   end
 
   create_table "slotgroups", force: :cascade do |t|
@@ -73,8 +75,6 @@ ActiveRecord::Schema.define(version: 20171126161305) do
     t.integer  "interval"
     t.datetime "created_at",        null: false
     t.datetime "updated_at",        null: false
-    t.datetime "start"
-    t.datetime "end"
   end
 
   create_table "slots", force: :cascade do |t|
@@ -125,6 +125,7 @@ ActiveRecord::Schema.define(version: 20171126161305) do
   add_foreign_key "constraints", "users"
   add_foreign_key "role_users", "roles"
   add_foreign_key "role_users", "users"
+  add_foreign_key "roles", "slotgroups"
   add_foreign_key "slots", "plannings"
   add_foreign_key "slots", "roles"
   add_foreign_key "slots", "slotgroups"

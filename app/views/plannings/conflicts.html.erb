@@ -24,6 +24,16 @@
   </div>
 </div>
 
+
+<div class="col-md-8 col-lg-8 col-xs-12">
+  <% @slotgroups.each do |slotgroup| %>
+  <div class="col-xs-10">
+    <b> <%= slotgroup.role_id %> <b> ||<%=slotgroup.start_at  %> ||<%=slotgroup.end_at  %>  </b> </br>
+  </div>
+  <% end %>
+</div>
+</div>
+
 <!-- ___________________________ JS __________________________________ -->
 
 <%= content_for(:after_js) do %>

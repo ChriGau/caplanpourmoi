@@ -80,8 +80,6 @@ class PlanningsController < ApplicationController
          }
         @slots_array << a
 
-
-
         if slot.user_id == User.find_by_first_name("no solution").id
           @slots_solution << b
         else
@@ -91,6 +89,10 @@ class PlanningsController < ApplicationController
       # Fake solution => le boss remplacera le no solution
       @user_solution = User.find_by_first_name("jean")
     demo_method(@planning) if @planning.week_number == 37
+
+    if @slots.count >0
+      @slotgroups = create_slotgroups(@slots, @slotgroups)
+    end
   end
 
   def users
@@ -150,4 +152,25 @@ class PlanningsController < ApplicationController
   def set_planning
     @planning = Planning.find(params[:id])
   end
+
+  def create_slotgroups(slots, slotgroups)
+    slots.each do |slot|
+      binding.pry
+      if Slotgroup.find_by(start: slot.start_at, end: slot.end_at, role_id: slot.role_id).nil?
+        new_slotgroup(slot, slotgroups)
+        binding.pry
+      end
+    end
+  end
+
+  def new_slotgroup(slot, slotgroups)
+    @slotgroup = Slotgroup.new
+    @slotgroup.start = slot.start_at
+    @slotgroup.end = slot.end_at
+    @slotgroup.role_id = slot.role_id
+    slotgroups << @slotgroup
+    return slotgroups
+  end
+
 end
+

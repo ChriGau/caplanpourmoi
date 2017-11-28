@@ -1,7 +1,21 @@
 class Slotgroup < ApplicationRecord
   has_many :slots
+
   #test branching
   # TODO : after_save :set...
+
+  def start_at
+    #TODO - returns start date of the slots related to this slotgroup
+  end
+
+  def end_at
+    #TODO - returns start date of the slots related to this slotgroup
+  end
+
+  def role
+    #TODO - returns role of the slots related to this slotgroup
+  end
+
   def set_nb_required
     #TODO - number of slots relative to this slotgroup
   end
