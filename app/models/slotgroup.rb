@@ -4,15 +4,31 @@ class Slotgroup < ApplicationRecord
   #test branching
   # TODO : after_save :set...
 
-  def users
-    #TODO - returns role of the slots related to this slotgroup
-    @users = User.Slot.where(slotgroup_id: self.id).includes(:slotgroups).sort do |a|
-      @users << a.user_id
+  def user_id
+    # Applies to a slotgroup
+    # Returns list (array) of the users of the slots related to this slotgroup
+    @users_id=[]
+    @slots = Slot.where(slotgroup_id: self.id).each do |slot|
+      @users_id << slot.user_id
     end
+    return @users_id
   end
 
-  def set_nb_required
-    #TODO - number of slots relative to this slotgroup
+  def users
+    # Applies to a slotgroup
+    # Returns list (array) of the users names of the slots related to this slotgroup
+    @names=[]
+    @users = Slot.where(slotgroup_id: self.id).each do |slot|
+      @users = User.where(id: slot.user_id).each do |user|
+        @names << user.first_name
+      end
+    end
+    return @names
+  end
+
+  def nb_required
+    # returns number of slots relative to this slotgroup
+    Slot.where(slotgroup_id: self.id).count
   end
 
   def self.list_available_skilled_users(slotgroup_id)

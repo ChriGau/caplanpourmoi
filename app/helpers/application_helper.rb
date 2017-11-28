@@ -58,7 +58,7 @@ module ApplicationHelper
   end
 
   def role_id
-    # applies to a slotgroup - returns role of the slots related to this slotgroup
+    # applies to a slotgroup - returns role_id of the slots related to this slotgroup
     Slot.where(slotgroup_id: self.id).first.role_id
   end
 
