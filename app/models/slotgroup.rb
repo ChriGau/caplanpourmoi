@@ -4,16 +4,11 @@ class Slotgroup < ApplicationRecord
   #test branching
   # TODO : after_save :set...
 
-  def start_at
-    #TODO - returns start date of the slots related to this slotgroup
-  end
-
-  def end_at
-    #TODO - returns start date of the slots related to this slotgroup
-  end
-
-  def role
+  def users
     #TODO - returns role of the slots related to this slotgroup
+    @users = User.Slot.where(slotgroup_id: self.id).includes(:slotgroups).sort do |a|
+      @users << a.user_id
+    end
   end
 
   def set_nb_required

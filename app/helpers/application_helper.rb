@@ -46,4 +46,35 @@ module ApplicationHelper
   def fetch_user_solution
     User.where(first_name: "jean")
   end
+
+  def start_at
+    # applies to a slotgroup - returns start date of the slots related to this slotgroup
+    Slot.where(slotgroup_id: self.id).first.start_at
+  end
+
+  def end_at
+    # applies to a slotgroup - returns end date of the slots related to this slotgroup
+    Slot.where(slotgroup_id: self.id).first.end_at
+  end
+
+  def role_id
+    # applies to a slotgroup - returns role of the slots related to this slotgroup
+    Slot.where(slotgroup_id: self.id).first.role_id
+  end
+
+  def role_name
+    # applies to a slotgroup - returns name of the role of the 1st slot related to a slotgroup
+    Role.find(Slot.where(slotgroup_id: self.id).first.role_id).name
+  end
+
+  def planning_id
+    # Applies to a slotgroup - returns planning_id of the slots related to this slotgroup
+    Slot.where(slotgroup_id: self.id).first.planning_id
+  end
+
+  def planning_name
+    # Applies to a slotgroup - returns planning_id of the slots related to this slotgroup
+    Planning.where(Slot.where(slotgroup_id: self.id).first.planning_id).name
+  end
+
 end
