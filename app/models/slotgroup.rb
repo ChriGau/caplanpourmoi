@@ -4,9 +4,36 @@ class Slotgroup < ApplicationRecord
   #test branching
   # TODO : after_save :set...
 
+  #  --------------------------    Slotgroups HELPERS
+
+  def slots
+    # returns Array of slots instances related to a slotgroup
+    Slot.where(slotgroup_id: self.id).to_a
+  end
+
+  def start_at
+    # returns start date of the slots related to this slotgroup
+    Slot.where(slotgroup_id: self.id).first.start_at
+  end
+
+  def end_at
+    # returns end date of the slots related to this slotgroup
+    Slot.where(slotgroup_id: self.id).first.end_at
+  end
+
+  def role_id
+    # returns role_id of the slots related to this slotgroup
+    Slot.where(slotgroup_id: self.id).first.role_id
+  end
+
+  def role_name
+    # returns name of the role of the 1st slot related to a slotgroup
+    Role.find(Slot.where(slotgroup_id: self.id).first.role_id).name
+  end
+
+
   def user_id
-    # Applies to a slotgroup
-    # Returns list (array) of the users of the slots related to this slotgroup
+    # returns list (array) of the users of the slots related to this slotgroup
     @users_id=[]
     @slots = Slot.where(slotgroup_id: self.id).each do |slot|
       @users_id << slot.user_id
@@ -14,17 +41,28 @@ class Slotgroup < ApplicationRecord
     return @users_id
   end
 
-  def users
-    # Applies to a slotgroup
-    # Returns list (array) of the users names of the slots related to this slotgroup
+  def user_name
+    # Returns list (array) of the users first + last names of the slots related to this slotgroup
     @names=[]
     @users = Slot.where(slotgroup_id: self.id).each do |slot|
       @users = User.where(id: slot.user_id).each do |user|
-        @names << user.first_name
+        @names << user.first_name + " " + user.last_name
       end
     end
     return @names
   end
+
+  def planning_id
+    # Applies to a slotgroup - returns planning_id of the slots related to this slotgroup
+    Slot.where(slotgroup_id: self.id).first.planning_id
+  end
+
+  def planning_name
+    # Applies to a slotgroup - returns planning_id of the slots related to this slotgroup
+    Planning.where(Slot.where(slotgroup_id: self.id).first.planning_id).name
+  end
+
+  #  --------------------------    End of HELPERS
 
   def nb_required
     # returns number of slots relative to this slotgroup
