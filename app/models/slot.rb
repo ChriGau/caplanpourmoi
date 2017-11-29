@@ -25,23 +25,10 @@ class Slot < ApplicationRecord
     Slot.where(start_at: self.start_at, end_at: self.end_at, role_id: self.role_id, slotgroup_id: nil)
   end
 
-  def set_slot_simulation_status(slots)
-    # determine slot simulation status
-    slots.each do |slot|
-      cpt_no_solutions = 0
-      # skilled & available users >= required  users?
-      if slot.slotgroup.nb_available >= slot.slotgroup.nb_required
-        puts "blabla"
-      end
-    end
-  end
-
-  private
+private
 
   def set_planning_status
     planning.set_status if planning
   end
-
-
 
 end

@@ -102,7 +102,7 @@ class Slotgroup < ApplicationRecord
     return list
   end
 
-  def set_simulation_status
+  def set_slotgroup_simulation_status
     #TODO - false if 0 available users, else true
   end
 
