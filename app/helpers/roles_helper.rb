@@ -6,7 +6,7 @@ module RolesHelper
     end
   end
 
-    def background_text_color_role(role)
+  def background_text_color_role(role)
     case role.role_color
     when "black", "#89043D"
       "color: #F2F2F2"

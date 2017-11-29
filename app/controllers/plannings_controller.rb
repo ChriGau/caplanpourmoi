@@ -40,7 +40,7 @@ class PlanningsController < ApplicationController
     @slots.each do |slot|
       # Fake solution > def user id solution
 
-      if  User.find(slot.user_id).profile_picture != nil
+      if User.find(slot.user_id).profile_picture != nil
         # picture du user
         picture = "http://res.cloudinary.com/dksqsr3pd/image/upload/c_fill,r_60,w_60/" + User.find(slot.user_id).profile_picture.path
       else
@@ -60,14 +60,14 @@ class PlanningsController < ApplicationController
         planning_id: slot.planning_id,
         user_id: User.find(slot.user_id).id,
         picture: picture
-         }
+      }
 
-        picture_solution = "http://res.cloudinary.com/dksqsr3pd/image/upload/c_fill,r_60,w_60/" + User.find_by_first_name("jean").profile_picture.path
-        user_id_solution = User.find_by_first_name("jean").id
+      picture_solution = "http://res.cloudinary.com/dksqsr3pd/image/upload/c_fill,r_60,w_60/" + User.find_by_first_name("jean").profile_picture.path
+      user_id_solution = User.find_by_first_name("jean").id
 
-         b = {
-        id:  slot.id,
-        start:  slot.start_at,
+      b = {
+        id: slot.id,
+        start: slot.start_at,
         end: slot.end_at,
         title: Role.find_by_id(slot.role_id).name, # nom du role
         role_id: slot.role_id, # nom du role
@@ -77,19 +77,16 @@ class PlanningsController < ApplicationController
         planning_id: slot.planning_id,
         user_id: user_id_solution,
         picture: picture_solution
-         }
-        @slots_array << a
-
-
-
-        if slot.user_id == User.find_by_first_name("no solution").id
-          @slots_solution << b
-        else
-          @slots_solution << a
-        end
+      }
+      @slots_array << a
+      if slot.user_id == User.find_by_first_name("no solution").id
+        @slots_solution << b
+      else
+        @slots_solution << a
       end
-      # Fake solution => le boss remplacera le no solution
-      @user_solution = User.find_by_first_name("jean")
+    end
+    # Fake solution => le boss remplacera le no solution
+    @user_solution = User.find_by_first_name("jean")
     demo_method(@planning) if @planning.week_number == 37
   end
 
@@ -112,7 +109,6 @@ class PlanningsController < ApplicationController
     redirect_to planning_conflicts_path(@planning)
   end
 
-
   def events
     # json only request for fullcalendar
     # render events.json.jbuilder
@@ -121,26 +117,26 @@ class PlanningsController < ApplicationController
   private
 
   def demo_method(planning)
-      vendeur = Role.find_by_name("vendeur")
-      barista = Role.find_by_name("barista")
-      # useless
-      s1 = planning.slots.where(user_id: nil).find_by_role_id(vendeur.id)
-      if (s1 != nil && s1.user.nil?)
-        s1.user = User.find_by_first_name("valentine")
-        s1.save
-      end
+    vendeur = Role.find_by_name("vendeur")
+    barista = Role.find_by_name("barista")
+    # useless
+    s1 = planning.slots.where(user_id: nil).find_by_role_id(vendeur.id)
+    if (s1 != nil && s1.user.nil?)
+      s1.user = User.find_by_first_name("valentine")
+      s1.save
+    end
 
-      s2 = planning.slots.where(user_id: nil).find_by_role_id(barista.id)
-      if (s2 != nil && s2.user.nil?)
-        s2.user = User.find_by_first_name("paul")
-        s2.save
-      end
-      # added
-      s = Slot.where(user_id: User.find_by_first_name("axel").id)
-      s.each do |slot|
-        slot.user_id = User.find_by_first_name("arielle").id
-        slot.save!
-      end
+    s2 = planning.slots.where(user_id: nil).find_by_role_id(barista.id)
+    if (s2 != nil && s2.user.nil?)
+      s2.user = User.find_by_first_name("paul")
+      s2.save
+    end
+    # added
+    s = Slot.where(user_id: User.find_by_first_name("axel").id)
+    s.each do |slot|
+      slot.user_id = User.find_by_first_name("arielle").id
+      slot.save!
+    end
   end
 
   def planning_params

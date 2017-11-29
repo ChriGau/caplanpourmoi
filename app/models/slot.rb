@@ -5,7 +5,6 @@ class Slot < ApplicationRecord
   validates :role_id, presence: true
   after_save :set_planning_status
 
-
   def self.slot_templates
     slot_templates = []
     Role.all.each do |role|

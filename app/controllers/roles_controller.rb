@@ -27,6 +27,5 @@ class RolesController < ApplicationController
 
   def params_role
     params.require(:role).permit(:name, :role_color)
-
   end
 end

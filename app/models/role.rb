@@ -35,9 +35,9 @@ class Role < ApplicationRecord
         code: "#3E5665",
       },
       slotcolor7: {
-      name_fr: "Bleu nuit",
-      name_en: "Midnight blue",
-      code: "#1D1D75",
+        name_fr: "Bleu nuit",
+        name_en: "Midnight blue",
+        code: "#1D1D75",
       },
       slotcolor8: {
         name_fr: "Jaune maïs",
@@ -56,5 +56,4 @@ class Role < ApplicationRecord
       }
     }
   end
-
 end

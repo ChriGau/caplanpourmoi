@@ -1,6 +1,4 @@
 class UsersController < ApplicationController
-
-
   def index
     @users = User.all
   end
@@ -10,13 +8,12 @@ class UsersController < ApplicationController
     @roles = Role.all
     @users = User.where.not(first_name: "no solution")
     @slot_templates = Slot.slot_templates # liste des roles
-
     @user = User.find(params[:id])
     @planning = Planning.first
     @constraints = @user.constraints
     @constraints_array = []
     @constraints.each do |constraint|
-    title = set_title
+      title = set_title
       a= {
         id:  constraint.id,
         start:  constraint.start_at,
@@ -26,10 +23,9 @@ class UsersController < ApplicationController
         updated_at: constraint.updated_at,
         color: set_constraint_color(title),
         user_id: constraint.user_id
-        }
-        # construire le BASIC hashs
-        @constraints_array << a
-
+      }
+      # construire le BASIC hashs
+      @constraints_array << a
     end
 
     respond_to do |format|
@@ -48,7 +44,7 @@ class UsersController < ApplicationController
     @constraints = @user.constraints
     @constraints_array = []
     @constraints.each do |constraint|
-    title = set_title
+      title = set_title
       a= {
         id:  constraint.id,
         start:  constraint.start_at,
@@ -58,9 +54,9 @@ class UsersController < ApplicationController
         updated_at: constraint.updated_at,
         color: set_constraint_color(title),
         user_id: constraint.user_id
-        }
-        # construire le BASIC hashs
-        @constraints_array << a
+      }
+      # construire le BASIC hashs
+      @constraints_array << a
     end
   end
 
@@ -82,7 +78,6 @@ class UsersController < ApplicationController
   #   end
   # end
 
-
   private
 
   def user_params
@@ -102,5 +97,4 @@ class UsersController < ApplicationController
       "orange"
     end
   end
-
 end
