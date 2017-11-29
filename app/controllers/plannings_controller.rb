@@ -90,8 +90,9 @@ class PlanningsController < ApplicationController
       @user_solution = User.find_by_first_name("jean")
     demo_method(@planning) if @planning.week_number == 37
 
-    if @slots.count >0
-      @slotgroups = create_slotgroups(@slots, @slotgroups)
+    # if we have some slots and no slotgroup then create slotgroups
+    if @slots.count >0 and get_array_of_slotgroup_id(@slots).count == 0
+      @slotgroups = CreateSlotgroupsService.new(@slots).perform
     end
   end
 
@@ -153,23 +154,17 @@ class PlanningsController < ApplicationController
     @planning = Planning.find(params[:id])
   end
 
-  def create_slotgroups(slots, slotgroups)
+
+  def get_array_of_slotgroup_id(slots)
+    # returns array of slotgroups_id assigned to an array of slots
+    puts slots
+    slotgroups = []
     slots.each do |slot|
-      binding.pry
-      if Slotgroup.find_by(start: slot.start_at, end: slot.end_at, role_id: slot.role_id).nil?
-        new_slotgroup(slot, slotgroups)
-        binding.pry
+      if not slot.slotgroup_id.nil?
+        slotgroups << slot.slotgroup_id
       end
     end
-  end
-
-  def new_slotgroup(slot, slotgroups)
-    @slotgroup = Slotgroup.new
-    @slotgroup.start = slot.start_at
-    @slotgroup.end = slot.end_at
-    @slotgroup.role_id = slot.role_id
-    slotgroups << @slotgroup
-    return slotgroups
+    slotgroups.uniq # get rid of duplicates
   end
 
 end

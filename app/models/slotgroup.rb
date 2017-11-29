@@ -69,7 +69,7 @@ class Slotgroup < ApplicationRecord
     Slot.where(slotgroup_id: self.id).count
   end
 
-  def self.list_available_skilled_users(slotgroup_id)
+  def list_available_skilled_users(slotgroup_id)
     #TODO - return list of available (no constraints) and skilled users
   end
 
@@ -77,11 +77,11 @@ class Slotgroup < ApplicationRecord
     #TODO - count of list_available_skilled_users
   end
 
-  def self.overlapping_slotgroups(slotgroup_id)
+  def overlapping_slotgroups(slotgroup_id)
     #TODO - return list of slotgroups overlapping this slotgroup
   end
 
-  def self.overlapping_users(slotgroup_id)
+  def overlapping_users(slotgroup_id)
     #TODO - return list of users simultaneously required on overlapping slotgroups
     # and constrained slotgroups (required=available)
   end
@@ -90,7 +90,7 @@ class Slotgroup < ApplicationRecord
     #TODO - false if 0 available users, else true
   end
 
-  def self.combinations_of_available_users(slotgroup_id)
+  def combinations_of_available_users(slotgroup_id)
     #TODO - returns list of combinations
     #example : [ [1,5,4] , [1,6,4] ] => 2 combinations of triplets possible
   end
