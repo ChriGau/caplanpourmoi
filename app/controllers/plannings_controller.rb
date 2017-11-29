@@ -38,9 +38,9 @@ class PlanningsController < ApplicationController
     @jean_id == User.find_by_first_name("jean").id
 
     @slots.each do |slot|
-    # Fake solution > def user id solution
+      # Fake solution > def user id solution
 
-       if  User.find(slot.user_id).profile_picture != nil
+      if  User.find(slot.user_id).profile_picture != nil
         # picture du user
         picture = "http://res.cloudinary.com/dksqsr3pd/image/upload/c_fill,r_60,w_60/" + User.find(slot.user_id).profile_picture.path
       else

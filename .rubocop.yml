@@ -1,0 +1,77 @@
+inherit_from: .rubocop_todo.yml
+
+AllCops:
+  TargetRubyVersion: 2.3
+  Include:
+    - '**/Rakefile'
+    - '**/config.ru'
+  Exclude:
+    - 'db/**/*'
+    - 'config/**/*'
+    - 'bin/**/*'
+    - Gemfile
+
+
+# Documentation:
+#   Enabled: false
+
+# FrozenStringLiteralComment:
+#   Enabled: false
+
+# StructInheritance:
+#   Enabled: false
+
+# Metrics/BlockLength:
+#   Enabled: true
+#   Exclude:
+#     - lib/tasks/**/*
+
+# TrailingCommaInLiteral:
+#   Enabled: false
+
+# StringLiterals:
+#   Enabled: false
+
+# AsciiComments:
+#   Enabled: false
+
+# AlignParameters:
+#   Enabled: false
+
+# Metrics/LineLength:
+#   Max: 100
+
+# Style/Lambda:
+#   Enabled: false
+
+# Style/SignalException:
+#   Enabled: false
+
+# Style/NumericLiteralPrefix:
+#   Enabled: false
+
+# Style/NumericLiterals:
+#   Enabled: false
+
+# Style/SymbolArray:
+#   Enabled: false
+
+# Style/ClassAndModuleChildren:
+#   Enabled: false
+
+# Lint/SafeNavigationChain:
+#   Enabled: false
+
+# Style/SafeNavigation:
+#   Enabled: false
+
+
+# Style/PercentLiteralDelimiters:
+#   Description: "Use `%`-literal delimiters consistently"
+#   Enabled: true
+#   PreferredDelimiters:
+#     "%i": "()"
+#     "%r": "{}"
+#     "%w": "()"
+#     "%W": "()"
+#     "%x": "[]"

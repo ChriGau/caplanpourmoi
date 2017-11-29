@@ -27,7 +27,7 @@ class UsersController < ApplicationController
         color: set_constraint_color(title),
         user_id: constraint.user_id
         }
-      # construire le BASIC hashs
+        # construire le BASIC hashs
         @constraints_array << a
 
     end
@@ -59,7 +59,7 @@ class UsersController < ApplicationController
         color: set_constraint_color(title),
         user_id: constraint.user_id
         }
-      # construire le BASIC hashs
+        # construire le BASIC hashs
         @constraints_array << a
     end
   end
