@@ -7,8 +7,6 @@ class CreateSlotgroupsService
   def perform
     @slotgroups = create_slotgroups(@slots)
     calculate_caracteristics_slotgroups(@slotgroups)
-    binding.pry
-    return @slotgroups
   end
 
   def create_slotgroups(slots)
@@ -20,7 +18,7 @@ class CreateSlotgroupsService
           @slotgroup = new_slotgroup(slot)
           @slotgroups << @slotgroup
           # assign similar slots to this slotgroup
-          assign_slotgroup_to_slots(slot.similar_slots, @slotgroup.id)
+          assign_slotgroup_to_slots(slot.similar_slots, @slotgroup)
       end
     end
     return @slotgroups
@@ -29,8 +27,8 @@ class CreateSlotgroupsService
   def calculate_caracteristics_slotgroups(slotgroups)
     slotgroups.each do |slotgroup|
       slotgroup.nb_required = slotgroup.nb_required
+      slotgroup.nb_available = set_nb_available_users
       slotgroup.save
-
     end
   end
 
@@ -43,11 +41,8 @@ class CreateSlotgroupsService
     return @slotgroup
   end
 
-  def assign_slotgroup_to_slots(slots, slotgroup_id)
-    slots.each do |slot|
-      slot.slotgroup_id = slotgroup_id
-      slot.save
-    end
+  def assign_slotgroup_to_slots(slots, slotgroup)
+    slotgroup.slots << slots
   end
 
 end

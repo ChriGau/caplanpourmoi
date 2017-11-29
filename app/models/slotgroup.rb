@@ -6,10 +6,8 @@ class Slotgroup < ApplicationRecord
 
   #  --------------------------    Slotgroups HELPERS
 
-  def slots
-    # returns Array of slots instances related to a slotgroup
-    Slot.where(slotgroup_id: self.id).to_a
-  end
+
+    # [Slotgroup].slots => returns Array of slots instances related to a slotgroup
 
   def start_at
     # returns start date of the slots related to this slotgroup
@@ -23,7 +21,7 @@ class Slotgroup < ApplicationRecord
 
   def role_id
     # returns role_id of the slots related to this slotgroup
-    Slot.where(slotgroup_id: self.id).first.role_id
+      Slot.where(slotgroup_id: self.id).first.role_id
   end
 
   def role_name
@@ -69,12 +67,44 @@ class Slotgroup < ApplicationRecord
     Slot.where(slotgroup_id: self.id).count
   end
 
-  def list_available_skilled_users(slotgroup_id)
-    #TODO - return list of available (no constraints) and skilled users
+  def list_available_skilled_users
+    #TODO - return list of skilled (have role) and available (no constraint) users
+    list = []
+    users = User.where.not(first_name: "no solution").includes(:roles, :plannings, :teams).sort
+    users.each do |user|
+      # user has the role?
+      user_roles = user.role_id # get array with the user's roles
+      has_role = false
+      user_roles.each do |user_role|
+        unless user_role == true
+          if user_role == self.role_id
+            has_role = true
+          end
+        end
+      end
+      if has_role == true
+        # user is available?
+        constraints = user.constraint
+        available = true # init
+        constraints.each do |constraint|
+          unless available == false
+            if not((self.start_at <= constraint.end_at) or (self.end_at >= constraint.start_at))
+              available = false
+            end
+          end
+        end
+        # if has role + is available => add user to list
+        if available == true
+          list << user
+        end
+      end
+    end
+    return list
   end
 
   def set_nb_available_users
     #TODO - count of list_available_skilled_users
+    self.list_available_skilled_users.count
   end
 
   def overlapping_slotgroups(slotgroup_id)
