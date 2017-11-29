@@ -106,7 +106,7 @@ class Slotgroup < ApplicationRecord
     #TODO - false if 0 available users, else true
   end
 
-  def set_nb_available_users
+  def nb_skilled_and_available_users
     #TODO - count of list_available_skilled_users
     self.list_available_skilled_users.count
   end

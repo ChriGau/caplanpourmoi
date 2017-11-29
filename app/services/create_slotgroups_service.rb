@@ -27,7 +27,7 @@ class CreateSlotgroupsService
   def calculate_caracteristics_slotgroups(slotgroups)
     slotgroups.each do |slotgroup|
       slotgroup.nb_required = slotgroup.nb_required
-      slotgroup.nb_available = slotgroup.set_nb_available_users
+      slotgroup.nb_available = slotgroup.nb_skilled_and_available_users
       slotgroup.save
     end
   end
