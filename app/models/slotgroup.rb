@@ -102,6 +102,10 @@ class Slotgroup < ApplicationRecord
     return list
   end
 
+  def set_simulation_status
+    #TODO - false if 0 available users, else true
+  end
+
   def set_nb_available_users
     #TODO - count of list_available_skilled_users
     self.list_available_skilled_users.count
@@ -114,10 +118,6 @@ class Slotgroup < ApplicationRecord
   def overlapping_users(slotgroup_id)
     #TODO - return list of users simultaneously required on overlapping slotgroups
     # and constrained slotgroups (required=available)
-  end
-
-  def set_simulation_status
-    #TODO - false if 0 available users, else true
   end
 
   def combinations_of_available_users(slotgroup_id)
