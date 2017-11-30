@@ -10,6 +10,4 @@ class User < ApplicationRecord
   has_many :teams
   has_many :role_users
   has_attachment :profile_picture
-
-
 end
