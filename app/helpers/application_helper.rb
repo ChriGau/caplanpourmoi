@@ -19,6 +19,7 @@ module ApplicationHelper
     Role.all.order(:name)
   end
 
+  # rubocop:disable AbcSize, LineLength
   def set_step_status
     case action_name
     when "skeleton"
@@ -39,9 +40,9 @@ module ApplicationHelper
       @set_status3 = "active"
       @triangle_position = "calc(84% - 70px)"
       @button_link = link_to "Retour au dashboard", plannings_path(@planning), class: "button"
-
     end
   end
+  # rubocop:enable AbcSize, LineLength
 
   def fetch_user_solution
     User.where(first_name: "jean")

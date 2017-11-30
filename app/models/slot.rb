@@ -1,5 +1,5 @@
 class Slot < ApplicationRecord
-  belongs_to :planning, optional:true
+  belongs_to :planning, optional: true
   belongs_to :role
   belongs_to :user, optional: true
   validates :role_id, presence: true

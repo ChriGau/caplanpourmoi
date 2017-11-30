@@ -1,16 +1,19 @@
+# rubocop:disable Metrics/ClassLength
 class PlanningsController < ApplicationController
   before_action :set_planning, only: [:skeleton, :users, :conflicts, :events]
 
+  # rubocop:disable AbcSize
   def index
     @plannings = Planning.all.order(:week_number)
     @roles = Role.all
 
-    @users = User.where.not(first_name: "no solution").includes(:roles).sort do |a,b|
+    @users = User.where.not(first_name: "no solution").includes(:roles).sort do |a, b|
       a.roles.first.name <=> b.roles.first.name
     end
 
     @slot_templates = Slot.slot_templates # liste des roles
   end
+  # rubocop:enable AbcSize
 
   def show
   end
@@ -22,6 +25,7 @@ class PlanningsController < ApplicationController
     @slot_templates = Slot.slot_templates # liste des roles
   end
 
+  # rubocop:disable AbcSize, BlockLength, LineLength
   def conflicts
     @planning = Planning.find(params[:id])
     @slots = @planning.slots.order(:id)
@@ -35,7 +39,6 @@ class PlanningsController < ApplicationController
     @slots_array = []
     @slots_solution = []
     @user = current_user
-    @jean_id == User.find_by_first_name("jean").id
 
     @slots.each do |slot|
       # Fake solution > def user id solution
@@ -52,8 +55,8 @@ class PlanningsController < ApplicationController
         id:  slot.id,
         start:  slot.start_at,
         end: slot.end_at,
-        title: Role.find_by_id(slot.role_id).name, # nom du role
-        role_id: slot.role_id, # nom du role
+        title: Role.find_by_id(slot.role_id).name, # nom du role
+        role_id: slot.role_id, # nom du role
         created_at: slot.created_at,
         updated_at: slot.updated_at,
         color: Role.find_by_id(slot.role_id).role_color,
@@ -69,8 +72,8 @@ class PlanningsController < ApplicationController
         id: slot.id,
         start: slot.start_at,
         end: slot.end_at,
-        title: Role.find_by_id(slot.role_id).name, # nom du role
-        role_id: slot.role_id, # nom du role
+        title: Role.find_by_id(slot.role_id).name, # nom du role
+        role_id: slot.role_id, # nom du role
         created_at: slot.created_at,
         updated_at: slot.updated_at,
         color: Role.find_by_id(slot.role_id).role_color,
@@ -91,7 +94,7 @@ class PlanningsController < ApplicationController
   end
 
   def users
-    @users = User.where.not(first_name: "no solution").includes(:roles, :plannings, :teams).sort do |a,b|
+    @users = User.where.not(first_name: "no solution").includes(:roles, :plannings, :teams).sort do |a, b|
       if a.plannings.include?(@planning) == b.plannings.include?(@planning)
         a.roles.first.name <=> b.roles.first.name
       elsif a.plannings.include?(@planning)
@@ -101,6 +104,7 @@ class PlanningsController < ApplicationController
       end
     end
   end
+  # rubocop:enable AbcSize, BlockLength, LineLength
 
   def update
     @planning = Planning.find(params[:id])
@@ -116,6 +120,7 @@ class PlanningsController < ApplicationController
 
   private
 
+  # rubocop:disable AbcSize
   def demo_method(planning)
     vendeur = Role.find_by_name("vendeur")
     barista = Role.find_by_name("barista")
@@ -138,6 +143,7 @@ class PlanningsController < ApplicationController
       slot.save!
     end
   end
+  # rubocop:enable AbcSize
 
   def planning_params
     params.require(:planning).permit("user_ids" => [])
@@ -147,3 +153,4 @@ class PlanningsController < ApplicationController
     @planning = Planning.find(params[:id])
   end
 end
+# rubocop:enable Metrics/ClassLength

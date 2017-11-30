@@ -42,7 +42,7 @@ class Role < ApplicationRecord
       slotcolor8: {
         name_fr: "Jaune maïs",
         name_en: "Maize",
-        code: "#FFED6E" ,
+        code: "#FFED6E",
       },
       slotcolor9: {
         name_fr: "Violet Aubergine",

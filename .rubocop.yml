@@ -11,11 +11,13 @@ AllCops:
     - 'bin/**/*'
     - Gemfile
 
+Metrics/LineLength:
+  Max: 100
+
+FrozenStringLiteralComment:
+  Enabled: false
 
 # Documentation:
-#   Enabled: false
-
-# FrozenStringLiteralComment:
 #   Enabled: false
 
 # StructInheritance:
@@ -38,8 +40,6 @@ AllCops:
 # AlignParameters:
 #   Enabled: false
 
-# Metrics/LineLength:
-#   Max: 100
 
 # Style/Lambda:
 #   Enabled: false

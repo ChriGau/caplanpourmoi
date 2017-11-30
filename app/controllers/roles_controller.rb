@@ -2,7 +2,7 @@ class RolesController < ApplicationController
   def new
     @role = Role.new
     @color_collection = []
-    Role.color_list.each { |key,value| @color_collection << value[:name_fr] }
+    Role.color_list.each { |value| @color_collection << value[:name_fr] }
   end
 
   def create

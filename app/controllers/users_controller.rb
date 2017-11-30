@@ -3,6 +3,7 @@ class UsersController < ApplicationController
     @users = User.all
   end
 
+  # rubocop:disable AbcSize
   def show
     @plannings = Planning.all.order(:week_number)
     @roles = Role.all
@@ -14,7 +15,7 @@ class UsersController < ApplicationController
     @constraints_array = []
     @constraints.each do |constraint|
       title = set_title
-      a= {
+      a = {
         id:  constraint.id,
         start:  constraint.start_at,
         end: constraint.end_at,
@@ -24,7 +25,7 @@ class UsersController < ApplicationController
         color: set_constraint_color(title),
         user_id: constraint.user_id
       }
-      # construire le BASIC hashs
+      # construire le BASIC hashs
       @constraints_array << a
     end
 
@@ -33,11 +34,13 @@ class UsersController < ApplicationController
       format.html
     end
   end
+  # rubocop:enable AbcSize
 
   def infos
     @user = User.find(params[:id])
   end
 
+  # rubocop:disable AbcSize
   def dispos
     @user = User.find(params[:id])
     @planning = Planning.first
@@ -45,7 +48,7 @@ class UsersController < ApplicationController
     @constraints_array = []
     @constraints.each do |constraint|
       title = set_title
-      a= {
+      a = {
         id:  constraint.id,
         start:  constraint.start_at,
         end: constraint.end_at,
@@ -55,10 +58,11 @@ class UsersController < ApplicationController
         color: set_constraint_color(title),
         user_id: constraint.user_id
       }
-      # construire le BASIC hashs
+      # construire le BASIC hashs
       @constraints_array << a
     end
   end
+  # rubocop:enable AbcSize
 
   def new
     @user = User.new

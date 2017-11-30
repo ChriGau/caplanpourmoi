@@ -22,6 +22,4 @@ class Planning < ApplicationRecord
       complete!
     end
   end
-
-  private
 end
