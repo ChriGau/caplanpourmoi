@@ -11,20 +11,41 @@ class User < ApplicationRecord
   has_many :role_users
   has_attachment :profile_picture
 
-  def role_id
-    # get array of role_id concerning a user
-    array_of_role_id = []
-    roleusers = RoleUser.where(user_id: self.id)
-    roleusers.each do |roleuser|
-      array_of_role_id << roleuser.role_id
-    end
-    return array_of_role_id
-  end
-
   def constraint
     # returns list of constraints related to this user
     Constraint.where(user_id: self.id)
   end
 
+  def is_skilled?(role_id)
+    self.get_array_of_user_role_id.include?(role_id)
+  end
+
+  def is_available?(start_at, end_at)
+    available = true
+      self.constraint.each do |constraint|
+        unless available == false
+          if not((start_at <= constraint.end_at) or (end_at >= constraint.start_at))
+            available = false
+          end
+        end
+      end
+      return available
+  end
+
+  def is_skilled_and_available?(start_at, end_at, role_id)
+    if self.is_skilled?(role_id) == true and self.is_available?(start_at, end_at) == true
+      return true
+    else
+      return false
+    end
+  end
+
+  def get_array_of_user_role_id
+    array = []
+    self.roles.each do |role|
+      array << role.id
+    end
+    return array
+  end
 
 end

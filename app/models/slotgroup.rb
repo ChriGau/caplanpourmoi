@@ -6,8 +6,7 @@ class Slotgroup < ApplicationRecord
 
   #  --------------------------    Slotgroups HELPERS
 
-
-    # [Slotgroup].slots => returns Array of slots instances related to a slotgroup
+  # [Slotgroup].slots => returns Array of slots instances related to a slotgroup
 
   def start_at
     # returns start date of the slots related to this slotgroup
@@ -72,32 +71,7 @@ class Slotgroup < ApplicationRecord
     list = []
     users = User.where.not(first_name: "no solution").includes(:roles, :plannings, :teams).sort
     users.each do |user|
-      # user has the role?
-      user_roles = user.role_id # get array with the user's roles
-      has_role = false
-      user_roles.each do |user_role|
-        unless user_role == true
-          if user_role == self.role_id
-            has_role = true
-          end
-        end
-      end
-      if has_role == true
-        # user is available?
-        constraints = user.constraint
-        available = true # init
-        constraints.each do |constraint|
-          unless available == false
-            if not((self.start_at <= constraint.end_at) or (self.end_at >= constraint.start_at))
-              available = false
-            end
-          end
-        end
-        # if has role + is available => add user to list
-        if available == true
-          list << user
-        end
-      end
+      list << user if user.is_skilled_and_available?(self.start_at, self.end_at, self.role_id) == true
     end
     return list
   end
