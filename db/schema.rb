@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171129154942) do
+ActiveRecord::Schema.define(version: 20171130093100) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -68,13 +68,13 @@ ActiveRecord::Schema.define(version: 20171129154942) do
   create_table "slotgroups", force: :cascade do |t|
     t.integer  "nb_required"
     t.integer  "nb_available"
-    t.boolean  "simulation_status"
+    t.boolean  "simulation_status", default: false
     t.integer  "priority"
     t.integer  "nb_combinations"
     t.integer  "ranking_algo"
     t.integer  "interval"
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
   end
 
   create_table "slots", force: :cascade do |t|

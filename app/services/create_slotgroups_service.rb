@@ -8,6 +8,7 @@ class CreateSlotgroupsService
     @slotgroups = create_slotgroups(@slots)
     calculate_caracteristics_slotgroups(@slotgroups)
     set_slot_simulation_status(@slots)
+    set_slotgroup_simulation_status(@slotgroups)
   end
 
   def create_slotgroups(slots)
@@ -52,8 +53,7 @@ class CreateSlotgroupsService
       if slotgroup.nb_available >= slotgroup.nb_required
         set_slot_simulation_status_to_true(slotgroup.slots)
       else
-        nb_slots_to_simulate = slotgroup.nb_required - slotgroup.nb_available
-        set_slot_simulation_status_to_true(slotgroup.slots.first(nb_slots_to_simulate))
+        set_slot_simulation_status_to_true(slotgroup.slots.first(slotgroup.nb_available))
       end
     end
   end
@@ -74,6 +74,14 @@ class CreateSlotgroupsService
     slots.each do |slot|
       slot.simulation_status = true
       slot.save
+    end
+  end
+
+  def set_slotgroup_simulation_status(slotgroups)
+    slotgroups.each do |slotgroup|
+      if Slot.where(slotgroup_id: slotgroup.id, simulation_status: true).count >0
+        slotgroup.simulation_status = true
+      end
     end
   end
 

@@ -19,7 +19,6 @@ class SlotsController < ApplicationController
         format.json { render json: @slot.errors, status: :unprocessable_entity }
       end
     end
-
   end
 
   def new
