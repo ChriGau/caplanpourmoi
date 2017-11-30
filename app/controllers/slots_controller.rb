@@ -1,6 +1,7 @@
 class SlotsController < ApplicationController
   before_action :set_planning, only: [:create, :new, :edit, :resolution, :update]
-  # rubocop:disable AbcSize
+
+  # rubocop:disable AbcSize, MethodLength
   # Too much assignment, condition and branching
   def create
     @slot = Slot.new(slot_params)
@@ -21,19 +22,19 @@ class SlotsController < ApplicationController
       end
     end
   end
-  # rubocop:enable AbcSize
+  # rubocop:enable AbcSize, MethodLength
 
   def new
     @slot = Slot.new
-    @slot.user_id = User.find_by_first_name("paul").id
+    @slot.user_id = User.find_by_first_name('paul').id
   end
 
   def edit
     @slot = Slot.find(params[:id])
-    @user = User.find_by_first_name("jean")
+    @user = User.find_by_first_name('jean')
   end
 
-  # rubocop:disable AbcSize
+  # rubocop:disable AbcSize, MethodLength
   def resolution
     # idem que edit
     @slot = Slot.find(params[:id])
@@ -66,7 +67,7 @@ class SlotsController < ApplicationController
       end
     end
   end
-  # rubocop:enable AbcSize
+  # rubocop:enable AbcSize, MethodLength
 
   def slot_params
     params.require(:slot).permit(:start_at, :end_at, :role_id, :user_id)

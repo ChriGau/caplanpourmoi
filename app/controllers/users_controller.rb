@@ -3,11 +3,11 @@ class UsersController < ApplicationController
     @users = User.all
   end
 
-  # rubocop:disable AbcSize
+  # rubocop:disable AbcSize, MethodLength
   def show
     @plannings = Planning.all.order(:week_number)
     @roles = Role.all
-    @users = User.where.not(first_name: "no solution")
+    @users = User.where.not(first_name: 'no solution')
     @slot_templates = Slot.slot_templates # liste des roles
     @user = User.find(params[:id])
     @planning = Planning.first
@@ -22,7 +22,7 @@ class UsersController < ApplicationController
         title: title,
         created_at: constraint.created_at,
         updated_at: constraint.updated_at,
-        color: set_constraint_color(title),
+        color: constraint_color(title),
         user_id: constraint.user_id
       }
       # construire le BASIC hashs
@@ -34,13 +34,13 @@ class UsersController < ApplicationController
       format.html
     end
   end
-  # rubocop:enable AbcSize
+  # rubocop:enable AbcSize, MethodLength
 
   def infos
     @user = User.find(params[:id])
   end
 
-  # rubocop:disable AbcSize
+  # rubocop:disable AbcSize, MethodLength
   def dispos
     @user = User.find(params[:id])
     @planning = Planning.first
@@ -55,14 +55,14 @@ class UsersController < ApplicationController
         title: title,
         created_at: constraint.created_at,
         updated_at: constraint.updated_at,
-        color: set_constraint_color(title),
+        color: constraint_color(title),
         user_id: constraint.user_id
       }
       # construire le BASIC hashs
       @constraints_array << a
     end
   end
-  # rubocop:enable AbcSize
+  # rubocop:enable AbcSize, MethodLength
 
   def new
     @user = User.new
@@ -89,16 +89,16 @@ class UsersController < ApplicationController
   end
 
   def set_title
-    ["Congé  annuel", "Congé maladie", "Préférence"].sample
+    ['Congé  annuel', 'Congé maladie', 'Préférence'].sample
   end
 
-  def set_constraint_color(title)
-    if title == "Congé annuel"
-      "red"
-    elsif title == "Congé maladie"
-      "blue"
+  def constraint_color(title)
+    if title == 'Congé annuel'
+      'red'
+    elsif title == 'Congé maladie'
+      'blue'
     else
-      "orange"
+      'orange'
     end
   end
 end

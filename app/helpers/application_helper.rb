@@ -19,32 +19,32 @@ module ApplicationHelper
     Role.all.order(:name)
   end
 
-  # rubocop:disable AbcSize, LineLength
+  # rubocop:disable AbcSize, LineLength, MethodLength
   def set_step_status
     case action_name
-    when "skeleton"
-      @set_status1 = "active"
-      @set_status2 = "disabled"
-      @set_status3 = "disabled"
-      @triangle_position = "calc(16% - 70px)"
-      @button_link = link_to "Etape suivante", planning_users_path(@planning), class: "button"
-    when "users"
-      @set_status1 = "completed"
-      @set_status2 = "active"
-      @set_status3 = "disabled"
-      @triangle_position = "calc(50% - 70px)"
-      @button_link = link_to "Calcul du planning", planning_conflicts_path(@planning), class: "button", id: "user-submit-btn"
+    when 'skeleton'
+      @set_status1 = 'active'
+      @set_status2 = 'disabled'
+      @set_status3 = 'disabled'
+      @triangle_position = 'calc(16% - 70px)'
+      @button_link = link_to 'Etape suivante', planning_users_path(@planning), class: 'button'
+    when 'users'
+      @set_status1 = 'completed'
+      @set_status2 = 'active'
+      @set_status3 = 'disabled'
+      @triangle_position = 'calc(50% - 70px)'
+      @button_link = link_to 'Calcul du planning', planning_conflicts_path(@planning), class: 'button', id: 'user-submit-btn'
     else
-      @set_status1 = "completed"
-      @set_status2 = "completed"
-      @set_status3 = "active"
-      @triangle_position = "calc(84% - 70px)"
-      @button_link = link_to "Retour au dashboard", plannings_path(@planning), class: "button"
+      @set_status1 = 'completed'
+      @set_status2 = 'completed'
+      @set_status3 = 'active'
+      @triangle_position = 'calc(84% - 70px)'
+      @button_link = link_to 'Retour au dashboard', plannings_path(@planning), class: 'button'
     end
   end
-  # rubocop:enable AbcSize, LineLength
+  # rubocop:enable AbcSize, LineLength, MethodLength
 
   def fetch_user_solution
-    User.where(first_name: "jean")
+    User.where(first_name: 'jean')
   end
 end

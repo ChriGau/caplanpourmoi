@@ -10,7 +10,7 @@ class Planning < ApplicationRecord
   end
 
   def set_status
-    conflict_user_id = User.find_by_first_name("no solution").id
+    conflict_user_id = User.find_by_first_name('no solution').id
 
     if slots.empty?
       not_started!

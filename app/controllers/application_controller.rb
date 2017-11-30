@@ -13,14 +13,12 @@ class ApplicationController < ActionController::Base
   end
 
   def set_layout
-    if action_name == "home" || controller_name == "sessions"
-      "home_signin"
-    end
+    return 'home_signin' if action_name == 'home' || controller_name == 'sessions'
   end
 
   # setup your host to generate the absolute url needed to load your images from the external world
   # https://www.lewagon.com/blog/setup-meta-tags-rails
   def default_url_options
-    { host: ENV["HOST"] || "localhost:3000" }
+    { host: ENV['HOST'] || 'localhost:3000' }
   end
 end

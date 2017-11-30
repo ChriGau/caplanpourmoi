@@ -4,24 +4,19 @@ module PlanningHelper
   end
 
   def planning_slide_label(planning)
-    case planning.status.to_sym
-    when :not_started
-      "S#{planning.week_number}"
-    else
-      "S#{planning.week_number}"
-    end
+    "S#{planning.week_number}"
   end
 
   def planning_status_label(planning)
     case planning.status.to_sym
     when :not_started
-      "(Aucun Planning)"
+      '(Aucun Planning)'
     when :in_progress
-      "(En cours)"
+      '(En cours)'
     when :complete
-      "(Validé)"
+      '(Validé)'
     else
-      "(Incomplet)"
+      '(Incomplet)'
     end
   end
 
@@ -41,10 +36,10 @@ module PlanningHelper
   end
 
   def planning_count_people_on_similar_slot(planning, slot)
-    planning.slots.count { |s|
+    planning.slots.count do |s|
       s.start_at == slot.start_at &&
         s.end_at == slot.end_at &&
         s.role_id == slot.role_id
-    }
+    end
   end
 end

@@ -16,6 +16,6 @@ class Slot < ApplicationRecord
   private
 
   def set_planning_status
-    planning.set_status if planning
+    planning&.set_status
   end
 end
