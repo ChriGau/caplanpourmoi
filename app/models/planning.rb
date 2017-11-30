@@ -1,7 +1,7 @@
 class Planning < ApplicationRecord
   has_many :teams, dependent: :destroy
   has_many :users, through: :teams
-  has_many :slots
+  has_many :slots, dependent: :destroy
   enum status: [:not_started, :in_progress, :with_conflicts, :complete]
   after_initialize :init
 
@@ -10,7 +10,7 @@ class Planning < ApplicationRecord
   end
 
   def set_status
-    conflict_user_id = User.find_by_first_name('no solution').id
+    conflict_user_id = User.find_by(first_name: 'no solution').id
 
     if slots.empty?
       not_started!
