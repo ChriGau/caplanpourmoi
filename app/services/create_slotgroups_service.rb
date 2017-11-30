@@ -29,7 +29,7 @@ class CreateSlotgroupsService
   def calculate_caracteristics_slotgroups(slotgroups)
     slotgroups.each do |slotgroup|
       slotgroup.nb_required = slotgroup.nb_required
-      slotgroup.nb_available = slotgroup.nb_skilled_and_available_users
+      slotgroup.nb_available = slotgroup.nb_available
       slotgroup.save
     end
   end
@@ -53,9 +53,11 @@ class CreateSlotgroupsService
       if slotgroup.nb_available >= slotgroup.nb_required
         set_slot_simulation_status_to_true(slotgroup.slots)
       else
-        set_slot_simulation_status_to_true(slotgroup.slots.first(slotgroup.nb_available))
+        set_slot_simulation_status_to_true(slotgroup.slots.first(slotgroup.nb_available
+        # note: slot.simulation_status is set to false by default
       end
     end
+    # TODO? add check if all slots have a slotgroup_id != nil?
   end
 
   def get_array_of_slotgroups(slots)

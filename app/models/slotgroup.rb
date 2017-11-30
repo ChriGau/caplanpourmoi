@@ -1,65 +1,50 @@
 class Slotgroup < ApplicationRecord
   has_many :slots
 
-  #test branching
-  # TODO : after_save :set...
-
-  #  --------------------------    Slotgroups HELPERS
-
-  # [Slotgroup].slots => returns Array of slots instances related to a slotgroup
-
   def start_at
-    # returns start date of the slots related to this slotgroup
-    Slot.where(slotgroup_id: self.id).first.start_at
+    # returns start date of the 1st slot related to this slotgroup
+    slots.first.start_at
   end
 
   def end_at
-    # returns end date of the slots related to this slotgroup
-    Slot.where(slotgroup_id: self.id).first.end_at
+    # returns end date of the  1st slot related to this slotgroup
+    slots.first.end_at
   end
 
   def role_id
-    # returns role_id of the slots related to this slotgroup
-      Slot.where(slotgroup_id: self.id).first.role_id
+    # returns role_id of the  1st slot related to this slotgroup
+    slots.first.role_id
   end
 
   def role_name
     # returns name of the role of the 1st slot related to a slotgroup
-    Role.find(Slot.where(slotgroup_id: self.id).first.role_id).name
+    slots.first.role_id.name
   end
 
-
-  def user_id
-    # returns list (array) of the users of the slots related to this slotgroup
-    @users_id=[]
-    @slots = Slot.where(slotgroup_id: self.id).each do |slot|
-      @users_id << slot.user_id
-    end
-    return @users_id
+  def solution_slots_user_id
+    # TODO // cf table solutionslots
+    # returns Array of the users of the solution slots related to this slotgroup
+    slots.map(&:user_id)
   end
 
-  def user_name
-    # Returns list (array) of the users first + last names of the slots related to this slotgroup
-    @names=[]
-    @users = Slot.where(slotgroup_id: self.id).each do |slot|
-      @users = User.where(id: slot.user_id).each do |user|
-        @names << user.first_name + " " + user.last_name
-      end
-    end
-    return @names
+  def solution_slots_user_name
+    # returns Array of the users names of 1st slot belonging to this slotgroup
+    # TODO
+    slots.map(&:user).map(&:concatenate_first_and_last_name)
+  end
+
+  def solution_slots_users
   end
 
   def planning_id
-    # Applies to a slotgroup - returns planning_id of the slots related to this slotgroup
-    Slot.where(slotgroup_id: self.id).first.planning_id
+    # Returns planning_id of the slots related to this slotgroup
+    slots.first.planning_id
   end
 
   def planning_name
-    # Applies to a slotgroup - returns planning_id of the slots related to this slotgroup
-    Planning.where(Slot.where(slotgroup_id: self.id).first.planning_id).name
+    # Get name of the planning related to the 1st slot related to this slotgroup
+    slots.first.name
   end
-
-  #  --------------------------    End of HELPERS
 
   def nb_required
     # returns number of slots relative to this slotgroup
@@ -67,7 +52,7 @@ class Slotgroup < ApplicationRecord
   end
 
   def list_available_skilled_users
-    #TODO - return list of skilled (have role) and available (no constraint) users
+    #returns list of skilled (have role) and available (no constraint) users
     list = []
     users = User.where.not(first_name: "no solution").includes(:roles, :plannings, :teams).sort
     users.each do |user|
@@ -80,7 +65,7 @@ class Slotgroup < ApplicationRecord
     #TODO - false if 0 available users, else true
   end
 
-  def nb_skilled_and_available_users
+  def nb_available
     #TODO - count of list_available_skilled_users
     self.list_available_skilled_users.count
   end

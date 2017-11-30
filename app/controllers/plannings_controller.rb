@@ -91,8 +91,8 @@ class PlanningsController < ApplicationController
     demo_method(@planning) if @planning.week_number == 37
 
     # if we have some slots and no slotgroup then create slotgroups
-    if @slots.count >0 and get_array_of_slotgroup_id(@slots).count == 0
-      @slotgroups = CreateSlotgroupsService.new(@slots).perform
+    if slots.count >0 and get_array_of_slotgroup_id(slots).count == 0
+      slotgroups = CreateSlotgroupsService.new(slots).perform
     end
   end
 

@@ -16,6 +16,10 @@ class User < ApplicationRecord
     Constraint.where(user_id: self.id)
   end
 
+  def concatenate_first_and_last_name
+    first_name + " " + last_name
+  end
+
   def is_skilled?(role_id)
     self.get_array_of_user_role_id.include?(role_id)
   end
