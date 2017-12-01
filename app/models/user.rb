@@ -37,7 +37,7 @@ class User < ApplicationRecord
   end
 
   def is_skilled_and_available?(start_at, end_at, role_id)
-    if self.is_skilled?(role_id) == true and self.is_available?(start_at, end_at) == true
+    if is_skilled?(role_id) == true and is_available?(start_at, end_at) == true
       return true
     else
       return false

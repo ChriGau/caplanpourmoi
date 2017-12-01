@@ -25,6 +25,12 @@ class Slot < ApplicationRecord
     Slot.where(start_at: self.start_at, end_at: self.end_at, role_id: self.role_id, slotgroup_id: nil)
   end
 
+  def initialize_slot_hash
+    h = { slot_instance: self,
+          slotgroup_id: nil,
+          simulation_status: false }
+  end
+
 private
 
   def set_planning_status
