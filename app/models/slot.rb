@@ -2,7 +2,6 @@ class Slot < ApplicationRecord
   belongs_to :planning, optional:true
   belongs_to :role
   belongs_to :user, optional: true
-  belongs_to :slotgroup, optional: true
   validates :role_id, presence: true
   after_save :set_planning_status
 

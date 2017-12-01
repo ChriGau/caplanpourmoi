@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171130171456) do
+ActiveRecord::Schema.define(version: 20171201170921) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -70,31 +70,16 @@ ActiveRecord::Schema.define(version: 20171130171456) do
     t.index ["slotgroup_id"], name: "index_roles_on_slotgroup_id", using: :btree
   end
 
-  create_table "slotgroups", force: :cascade do |t|
-    t.integer  "nb_required"
-    t.integer  "nb_available"
-    t.boolean  "simulation_status", default: false
-    t.integer  "priority"
-    t.integer  "nb_combinations"
-    t.integer  "ranking_algo"
-    t.integer  "interval"
-    t.datetime "created_at",                        null: false
-    t.datetime "updated_at",                        null: false
-  end
-
   create_table "slots", force: :cascade do |t|
     t.datetime "start_at"
     t.datetime "end_at"
     t.integer  "planning_id"
     t.integer  "role_id"
     t.integer  "user_id"
-    t.datetime "created_at",                        null: false
-    t.datetime "updated_at",                        null: false
-    t.integer  "slotgroup_id"
-    t.boolean  "simulation_status", default: false
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
     t.index ["planning_id"], name: "index_slots_on_planning_id", using: :btree
     t.index ["role_id"], name: "index_slots_on_role_id", using: :btree
-    t.index ["slotgroup_id"], name: "index_slots_on_slotgroup_id", using: :btree
     t.index ["user_id"], name: "index_slots_on_user_id", using: :btree
   end
 
@@ -133,7 +118,6 @@ ActiveRecord::Schema.define(version: 20171130171456) do
   add_foreign_key "role_users", "users"
   add_foreign_key "slots", "plannings"
   add_foreign_key "slots", "roles"
-  add_foreign_key "slots", "slotgroups"
   add_foreign_key "slots", "users"
   add_foreign_key "teams", "plannings"
   add_foreign_key "teams", "users"
