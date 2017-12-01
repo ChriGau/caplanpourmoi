@@ -90,11 +90,11 @@ class PlanningsController < ApplicationController
       @user_solution = User.find_by_first_name("jean")
     demo_method(@planning) if @planning.week_number == 37
 
-    # if we have some slots and no slotgroup then create slotgroups
-    if @slots.count >0 and get_array_of_slotgroup_id(@slots).count == 0
+    # TODO : if no solution, generate solution calculation
+    # => solution calculation
       @slotgroups_calcul_array = CalculSolutionV1.new(@planning).perform[:slotgroups_array]
       @slots_calcul_array = CalculSolutionV1.new(@planning).perform[:slots_array]
-    end
+
   end
 
   def users
