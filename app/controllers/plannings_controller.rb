@@ -92,7 +92,8 @@ class PlanningsController < ApplicationController
 
     # if we have some slots and no slotgroup then create slotgroups
     if @slots.count >0 and get_array_of_slotgroup_id(@slots).count == 0
-      calcul_solutions = CalculSolutionV1.new(@planning).perform
+      @slotgroups_calcul_array = CalculSolutionV1.new(@planning).perform[:slotgroups_array]
+      @slots_calcul_array = CalculSolutionV1.new(@planning).perform[:slots_array]
     end
   end
 

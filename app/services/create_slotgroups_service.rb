@@ -14,9 +14,8 @@ class CreateSlotgroupsService
     slotgroups_array = create_slotgroups(@slots_array)
     calculate_caracteristics_slotgroups(slotgroups_array)
     set_slots_simulation_status(@slots_array, slotgroups_array)
-    # set_slotgroups_simulation_status(@slotgroups)
-    binding.pry
-    return slotgroups_array, @slots_array
+    set_slotgroups_simulation_status(slotgroups_array)
+    return { slotgroups_array: slotgroups_array, slots_array: @slots_array }
   end
 
   def create_slotgroups(slots_array)

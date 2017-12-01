@@ -15,21 +15,15 @@ class Slot < ApplicationRecord
     slot_templates
   end
 
-  def similar_slots
-    # return list of slots with same start + end + role
-    Slot.where(start_at: self.start_at, end_at: self.end_at, role_id: self.role_id)
-  end
-
-  def similar_slots_unassigned
-    # return list of similar and unassigned slots (no slotgroup_id)
-    Slot.where(start_at: self.start_at, end_at: self.end_at, role_id: self.role_id, slotgroup_id: nil)
-  end
-
   def initialize_slot_hash
     h = { slotgroup_id: nil,
           simulation_status: false,
           slot_instance: self
            }
+  end
+
+  def similar_slots
+    Slot.where(planning_id: self.planning_id, start_at: self.start_at, end_at: self.end_at, role_id: self.role_id)
   end
 
 private

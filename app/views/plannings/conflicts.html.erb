@@ -24,18 +24,41 @@
   </div>
 </div>
 
-
 <div class="col-md-8 col-lg-8 col-xs-12">
-  <% if not @slotgroups.nil?  %>
-  <% @slotgroups.each do |slotgroup| %>
-  <div class="col-xs-10">
-    <b> slotgroup id : <%= slotgroup.id %> / nb_required : <%= slotgroup.nb_required %> / nb available : <%= slotgroup.nb_available %> / simulation_status: <%= slotgroup.simulation_status %><b> </br>
+  <% if not @slotgroups_calcul_array.nil?  %>
+  <% @slotgroups_calcul_array.each do |slotgroup| %>
+      <ul><b>SLOTGROUP_ID: <%= slotgroup[:slotgroup_id] %> </b> </ul>
+      <li> start_at: <%= slotgroup[:start_at] %> </li>
+      <li> end_at: <%= slotgroup[:end_at] %> </li>
+      <li> role_id: <%= slotgroup[:role_id] %> </li>
+      <li>role_name: <%= slotgroup[:role_name] %> </li>
+      <li> nb_required: <%= slotgroup[:nb_required] %> </li>
+      <li> nb available: <%= slotgroup[:nb_available] %> </li>
+      <li> list_available_users: <%= slotgroup[:list_available_users] %> </li>
+      <li> simulation_status: <%= slotgroup[:simulation_status] %> </li>
+      <li> slots_to_simulate: <%= slotgroup[:slots_to_simulate] %> </li>
+      <li> overlapping_slotsgroups: <%= slotgroup[:overlapping_slotgroups] %> </li>
+      <li> combinations_of_available_users: <%= slotgroup[:combinations_of_available_users] %> </li>
+      <li> nb_combinations_of_available_users: <%= slotgroup[:nb_combinations_of_available_users] %></li>
+      <li> priority: <%= slotgroup[:priority] %> </li>
+      <li> ranking_algo: <%= slotgroup[:ranking_algo] %> </li>
+      <li> calculation_interval: <%= slotgroup[:calculation_interval] %> <br></li>
+    <% end %>
+    <% end %>
+</div>
+<br><br>
+<div class="col-md-8 col-lg-8 col-xs-12">
+  <% if not @slots_calcul_array.nil?  %>
+  <% @slots_calcul_array.each do |slot| %>
+  <div class="col-xs-12">
+      <ul><b> SLOT_SIMULATION: <%= slot[:slot_instance] %> </b> </ul>
+      <li> simulation_status: <%= slot[:simulation_status] %> </li>
+      <li> slotgroup_id: <%= slot[:slotgroup_id] %> </li>
     </div>
     <% end %>
     <% end %>
-  </div>
 </div>
-
+<br><br>
 <!-- ___________________________ JS __________________________________ -->
 
 <%= content_for(:after_js) do %>
