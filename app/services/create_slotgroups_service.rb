@@ -3,23 +3,26 @@
 # determine each slot's simulation_status
 class CreateSlotgroupsService
 
-  def initialize(initialized_slots_array, planning)
-    @slots_array = initialized_slots_array
-    users = planning.users # array of instances of users
+  def initialize(slots_array, planning)
+    @slots_array =  slots_array# [ {} , {} ]
+    @planning = planning
+    @users = @planning.users # array of instances of users
   end
 
   def perform
     slotgroups_array = []
     slotgroups_array = create_slotgroups(@slots_array)
     calculate_caracteristics_slotgroups(slotgroups_array)
-    # set_slot_simulation_status(@slots)
-    # set_slotgroup_simulation_status(@slotgroups)
+    set_slots_simulation_status(@slots_array, slotgroups_array)
+    # set_slotgroups_simulation_status(@slotgroups)
+    binding.pry
+    return slotgroups_array, @slots_array
   end
 
-  def create_slotgroups(initialized_slots_array)
+  def create_slotgroups(slots_array)
     slotgroups_array = []
     cpt_slotgroup = 0
-    @slots_array.each do |slot_hash|
+    slots_array.each do |slot_hash|
       if slot_hash[:slotgroup_id].nil?
         cpt_slotgroup += 1
         slotgroup = initialize_slotgroup_hash(cpt_slotgroup, slot_hash[:slot_instance])
@@ -50,71 +53,67 @@ class CreateSlotgroupsService
           calculation_interval: nil }
   end
 
-  def calculate_caracteristics_slotgroups(slotgroups_array)
-    slotgroups_array.each do |slotgroup|
-      slotgroup[:nb_required] = set_slotgroup_nb_required(slotgroup[:slotgroup_id])
-      slotgroup[:nb_available] = set_slotgroup_nb_available(slotgroup[:slotgroup_id], )
-    end
-  end
-
   def assign_slotgroup_to_slots(similar_slots, slotgroup_id)
     similar_slots.each do |slot|
       h = @slots_array.find {|x| x[:slot_instance] == slot }
-      if h != nil
-        h[:slotgroup_id] = slotgroup_id
-      end
+      h[:slotgroup_id] = slotgroup_id unless h.nil?
+    end
+  end
+
+  def calculate_caracteristics_slotgroups(slotgroups_array)
+    slotgroups_array.each do |slotgroup|
+      slotgroup[:nb_required] = set_slotgroup_nb_required(slotgroup[:slotgroup_id])
+      slotgroup[:nb_available] = set_slotgroup_availability(@users, slotgroup[:start_at], slotgroup[:end_at], slotgroup[:role_id] )[:nb]
+      slotgroup[:list_available_users] = set_slotgroup_availability(@users, slotgroup[:start_at], slotgroup[:end_at], slotgroup[:role_id] )[:list]
     end
   end
 
   def set_slotgroup_nb_required(slotgroup_id)
-    @slots_array.find {|x| x[:slotgroup_id] == slotgroup_id }.count
+    @slots_array.select {|x| x[:slotgroup_id] == slotgroup_id }.count
   end
 
-  def set_slotgroup_nb_available(user_instances, start_at, end_at, role_id)
-    cpt = 0
+  def set_slotgroup_availability(user_instances, start_at, end_at, role_id)
+    # sets nb available users + lists them
+    nb_available_users = 0
+    array_available_users = []
     user_instances.each do |user|
-      cpt += 1 if user.is_skilled_and_available?(start_at, end_at, role_id)?
-    end
-  end
-
-  # def set_slot_simulation_status(slots)
-  #   slotgroups = get_array_of_slotgroups(slots)
-  #   slotgroups.each do |slotgroup|
-  #     if slotgroup.nb_available >= slotgroup.nb_required
-  #       set_slot_simulation_status_to_true(slotgroup.slots)
-  #     else
-  #       set_slot_simulation_status_to_true(slotgroup.slots.first(slotgroup.nb_available)
-  #       # note: slot.simulation_status is set to false by default
-  #     end
-  #   end
-  #   # TODO? add check if all slots have a slotgroup_id != nil?
-  # end
-
-  def get_array_of_slotgroups(slots)
-    array_of_slotgroups = []
-    slots.each do |slot|
-      unless slot.slotgroup.nil?
-        if not array_of_slotgroups.include?(slot.slotgroup)
-          array_of_slotgroups << slot.slotgroup
-        end
+      if user.is_skilled_and_available?(start_at, end_at, role_id)
+        nb_available_users += 1
+        array_available_users << user
       end
     end
-    return array_of_slotgroups
+    return { nb: nb_available_users, list: array_available_users }
   end
 
-  def set_slot_simulation_status_to_true(slots)
-    slots.each do |slot|
-      slot.simulation_status = true
-      slot.save
+  def set_slots_simulation_status(slots_array, slotgroups_array)
+    slotgroups_array.each do |slotgroup|
+      if slotgroup[:nb_available] >= slotgroup[:nb_required]
+        set_slots_simulation_status_to_true(get_similar_slots(slotgroup[:slotgroup_id]))
+      else
+        set_slots_simulation_status_to_true(get_similar_slots(slotgroup[:slotgroup_id]).first(slotgroup[:nb_available]))
+        # note: slot.simulation_status is set to false by default
+      end
     end
   end
 
-  def set_slotgroup_simulation_status(slotgroups)
+  def get_similar_slots(slotgroup_id) # => [ { } , { } ]
+      @slots_array.select { |x| x[:slotgroup_id] == slotgroup_id }
+  end
+
+  def set_slots_simulation_status_to_true(slots_hashes)
+    slots_hashes.each do |slot_hash|
+      @slots_array.find {|x| x[:slot_instance] == slot_hash[:slot_instance] }[:simulation_status] = true
+    end
+  end
+
+  def set_slotgroups_simulation_status(slotgroups)
     slotgroups.each do |slotgroup|
-      if Slot.where(slotgroup_id: slotgroup.id, simulation_status: true).count >0
-        slotgroup.simulation_status = true
-      end
+      slotgroup[:simulation_status] = true if nb_slots_to_simulate(slotgroup[:slotgroup_id]) > 0
     end
+  end
+
+  def nb_slots_to_simulate(slotgroup_id)
+    @slots_array.find { |x| x[:slotgroup_id] == slotgroup_id and x[:simulation_status] = true }.count
   end
 
 end

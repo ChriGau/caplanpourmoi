@@ -26,9 +26,10 @@ class Slot < ApplicationRecord
   end
 
   def initialize_slot_hash
-    h = { slot_instance: self,
-          slotgroup_id: nil,
-          simulation_status: false }
+    h = { slotgroup_id: nil,
+          simulation_status: false,
+          slot_instance: self
+           }
   end
 
 private
