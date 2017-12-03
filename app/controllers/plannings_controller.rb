@@ -54,41 +54,41 @@ class PlanningsController < ApplicationController
         id:  slot.id,
         start:  slot.start_at,
         end: slot.end_at,
-        title: Role.find_by_id(slot.role_id).name, # nom du role
+        title: Role.find_by(id: slot.role_id).name, # nom du role
         role_id: slot.role_id, # nom du role
         created_at: slot.created_at,
         updated_at: slot.updated_at,
-        color: Role.find_by_id(slot.role_id).role_color,
+        color: Role.find_by(id: slot.role_id).role_color,
         planning_id: slot.planning_id,
         user_id: User.find(slot.user_id).id,
         picture: picture
       }
 
-      picture_solution = 'http://res.cloudinary.com/dksqsr3pd/image/upload/c_fill,r_60,w_60/' + User.find_by_first_name('jean').profile_picture.path
-      user_id_solution = User.find_by_first_name('jean').id
+      picture_solution = 'http://res.cloudinary.com/dksqsr3pd/image/upload/c_fill,r_60,w_60/' + User.find_by(first_name: 'jean').profile_picture.path
+      user_id_solution = User.find_by(first_name: 'jean').id
 
       b = {
         id: slot.id,
         start: slot.start_at,
         end: slot.end_at,
-        title: Role.find_by_id(slot.role_id).name, # nom du role
+        title: Role.find_by(id: slot.role_id).name, # nom du role
         role_id: slot.role_id, # nom du role
         created_at: slot.created_at,
         updated_at: slot.updated_at,
-        color: Role.find_by_id(slot.role_id).role_color,
+        color: Role.find_by(id: slot.role_id).role_color,
         planning_id: slot.planning_id,
         user_id: user_id_solution,
         picture: picture_solution
       }
       @slots_array << a
-      @slots_solution << if slot.user_id == User.find_by_first_name('no solution').id
+      @slots_solution << if slot.user_id == User.find_by(first_name: 'no solution').id
                            b
                          else
                            a
                          end
     end
     # Fake solution => le boss remplacera le no solution
-    @user_solution = User.find_by_first_name('jean')
+    @user_solution = User.find_by(first_name: 'jean')
     demo_method(@planning) if @planning.week_number == 37
   end
 
@@ -123,24 +123,24 @@ class PlanningsController < ApplicationController
 
   # rubocop:disable AbcSize, MethodLength
   def demo_method(planning)
-    vendeur = Role.find_by_name('vendeur')
-    barista = Role.find_by_name('barista')
+    vendeur = Role.find_by(name: 'vendeur')
+    barista = Role.find_by(name: 'barista')
     # useless
-    s1 = planning.slots.where(user_id: nil).find_by_role_id(vendeur.id)
+    s1 = planning.slots.where(user_id: nil).where(role_id: vendeur.id)[0]
     if !s1.nil? && s1.user.nil?
-      s1.user = User.find_by_first_name('valentine')
+      s1.user = User.find_by(first_name: 'valentine')
       s1.save
     end
 
-    s2 = planning.slots.where(user_id: nil).find_by_role_id(barista.id)
+    s2 = planning.slots.where(user_id: nil).where(role_id: barista.id)[0]
     if !s2.nil? && s2.user.nil?
-      s2.user = User.find_by_first_name('paul')
+      s2.user = User.find_by(first_name: 'paul')
       s2.save
     end
     # added
-    s = Slot.where(user_id: User.find_by_first_name('axel').id)
+    s = Slot.where(user_id: User.find_by(first_name: 'axel').id)
     s.each do |slot|
-      slot.user_id = User.find_by_first_name('arielle').id
+      slot.user_id = User.find_by(first_name: 'arielle').id
       slot.save!
     end
   end

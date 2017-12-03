@@ -7,7 +7,7 @@ class Slot < ApplicationRecord
 
   def self.slot_templates
     slot_templates = []
-    Role.all.each do |role|
+    Role.find_each do |role|
       slot_templates << Slot.new(role_id: role.id)
     end
     slot_templates

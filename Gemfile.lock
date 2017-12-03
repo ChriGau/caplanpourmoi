@@ -292,7 +292,7 @@ DEPENDENCIES
   rails-assets-sly!
   react-rails (~> 1.8)
   redis
-  rubocop
+  rubocop (~> 0.51.0)
   sass-rails
   simple_form
   spring
