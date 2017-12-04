@@ -20,12 +20,4 @@ class CalculSolutionV1 < ApplicationRecord
     slots.map(&:initialize_slot_hash)
   end
 
-  def generate_general_information_hash(planning_id)
-    general_information_hash = { planning_id: planning_id }
-  end
-
-private
-
-
-
 end
