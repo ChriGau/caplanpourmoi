@@ -4,7 +4,7 @@
 class CreateSlotgroupsService
 
   def initialize(slots_array, planning)
-    @slots_array =  slots_array# [ {} , {} ]
+    @slots_array =  slots_array # [ {} , {} ]
     @planning = planning
     @users = @planning.users # array of instances of users
   end

@@ -11,45 +11,19 @@ class User < ApplicationRecord
   has_many :role_users
   has_attachment :profile_picture
 
-  def constraint
-    # returns list of constraints related to this user
-    Constraint.where(user_id: self.id)
-  end
-
   def concatenate_first_and_last_name
     first_name + " " + last_name
   end
 
   def is_skilled?(role_id)
-    self.get_array_of_user_role_id.include?(role_id)
+    roles.map(&:id).include?(role_id)
   end
 
   def is_available?(start_at, end_at)
-    available = true
-      self.constraint.each do |constraint|
-        unless available == false
-          if not((start_at <= constraint.end_at) or (end_at >= constraint.start_at))
-            available = false
-          end
-        end
-      end
-      return available
+    constraints.where('start_at <= ? and end_at >= ?', end_at, start_at).empty?
   end
 
   def is_skilled_and_available?(start_at, end_at, role_id)
-    if is_skilled?(role_id) == true and is_available?(start_at, end_at) == true
-      return true
-    else
-      return false
-    end
+    is_skilled?(role_id) && is_available?(start_at, end_at)
   end
-
-  def get_array_of_user_role_id
-    array = []
-    self.roles.each do |role|
-      array << role.id
-    end
-    return array
-  end
-
 end
