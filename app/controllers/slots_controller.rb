@@ -26,12 +26,12 @@ class SlotsController < ApplicationController
 
   def new
     @slot = Slot.new
-    @slot.user_id = User.find_by_first_name('paul').id
+    @slot.user_id = User.find_by(first_name: 'paul').id
   end
 
   def edit
     @slot = Slot.find(params[:id])
-    @user = User.find_by_first_name('jean')
+    @user = User.find_by(first_name: 'jean')
   end
 
   # rubocop:disable AbcSize, MethodLength
