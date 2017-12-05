@@ -22,7 +22,8 @@ class Slot < ApplicationRecord
   end
 
   def similar_slots
-    Slot.where(planning_id: self.planning_id, start_at: self.start_at, end_at: self.end_at, role_id: self.role_id)
+    Slot.where('planning_id = ? and start_at = ? and end_at = ? and role_id = ?',
+                planning_id, start_at, end_at, role_id)
   end
 
 private
