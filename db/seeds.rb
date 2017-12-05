@@ -946,6 +946,25 @@ puts ""
 
 Planning.first.not_started!
 
+puts "11 - 2 new slots on planning n°18 to test slotgroups"
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 35).id,
+  start_at: "2017-08-29 07:00",
+  end_at: "2017-08-29 15:00",
+  role_id: Role.find_by_name("barista").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 35).id,
+  start_at: "2017-08-29 07:00",
+  end_at: "2017-08-29 15:00",
+  role_id: Role.find_by_name("barista").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+
 puts ""
 puts  "  >> #{User.count} users created"
 puts  "  >> #{Role.count} roles created"
