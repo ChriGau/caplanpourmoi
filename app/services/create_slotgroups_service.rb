@@ -3,10 +3,11 @@
 # determine each slot's simulation_status
 class CreateSlotgroupsService
 
-  def initialize(slots_array, planning)
+  def initialize(slots_array, planning, calcul_solution_v1_instance)
     @slots_array =  slots_array# [ {} , {} ]
     @planning = planning
     @users = @planning.users # array of instances of users
+    @calcul = calcul_solution_v1_instance
   end
 
   def perform
@@ -15,6 +16,7 @@ class CreateSlotgroupsService
     calculate_caracteristics_slotgroups(slotgroups_array)
     set_slots_simulation_status(@slots_array, slotgroups_array)
     set_slotgroups_simulation_status(slotgroups_array)
+    save_calcul_items(slotgroups_array, @slots_array, @calcul)
     return { slotgroups_array: slotgroups_array, slots_array: @slots_array }
   end
 
@@ -113,6 +115,12 @@ class CreateSlotgroupsService
 
   def nb_slots_to_simulate(slotgroup_id)
     @slots_array.find { |x| x[:slotgroup_id] == slotgroup_id and x[:simulation_status] = true }.count
+  end
+
+  def save_calcul_items(slotgroups, slots, calcul_solution_v1_instance)
+    calcul_solution_v1_instance.slotgroups_array = slotgroups
+    calcul_solution_v1_instance.slots_array = slots
+    calcul_solution_v1_instance.save
   end
 
 end

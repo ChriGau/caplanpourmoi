@@ -92,9 +92,10 @@ class PlanningsController < ApplicationController
 
     # TODO : if no solution, generate solution calculation
     # => solution calculation
-      @slotgroups_calcul_array = CalculSolutionV1.new(@planning).perform[:slotgroups_array]
-      @slots_calcul_array = CalculSolutionV1.new(@planning).perform[:slots_array]
-
+      calcul_v1 = CalculSolutionV1.new(@planning)
+      calcul_v1.save
+      @slotgroups_calcul_array = calcul_v1.perform[:slotgroups_array]
+      @slots_calcul_array = calcul_v1.perform[:slots_array]
   end
 
   def users
