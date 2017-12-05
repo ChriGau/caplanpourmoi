@@ -94,10 +94,10 @@ class PlanningsController < ApplicationController
 
     # TODO : if no solution, generate solution calculation
     # => solution calculation
-      calcul_v1 = CalculSolutionV1.new(@planning)
-      calcul_v1.save
-      @slotgroups_calcul_array = calcul_v1.perform[:slotgroups_array]
-      @slots_calcul_array = calcul_v1.perform[:slots_array]
+    calcul_v1 = CalculSolutionV1.new(@planning)
+    calcul_v1.save
+    @slotgroups_calcul_array = calcul_v1.perform[:slotgroups_array]
+    @slots_calcul_array = calcul_v1.perform[:slots_array]
   end
 
   # rubocop:enable MethodLength
@@ -162,18 +162,13 @@ class PlanningsController < ApplicationController
     @planning = Planning.find(params[:id])
   end
 
-
   def get_array_of_slotgroup_id(slots)
-    # returns array of slotgroups_id assigned to an array of slots
-    puts slots
+    # returns array of slotgroups_id assigned to an array of slots
     slotgroups = []
     slots.each do |slot|
-      if not slot.slotgroup_id.nil?
-        slotgroups << slot.slotgroup_id
-      end
+      slotgroups << slot.slotgroup_id unless slot.slotgroup_id.nil?
     end
     slotgroups.uniq # get rid of duplicates
   end
-
 end
 # rubocop:enable Metrics/ClassLength
