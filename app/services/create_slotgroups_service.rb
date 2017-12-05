@@ -3,6 +3,7 @@
 # determine each slot's simulation_status
 
 # rubocop:disable LineLength, MethodLength, ClassLength
+
 class CreateSlotgroupsService
   def initialize(slots_array, planning, calcul_solution_v1_instance)
     @slots_array =  slots_array # [ {} , {} ]
@@ -18,7 +19,8 @@ class CreateSlotgroupsService
     determine_slots_simulation_status(slotgroups_array)
     determine_slotgroups_simulation_status(slotgroups_array)
     save_calcul_items(slotgroups_array, @slots_array, @calcul)
-    determine_overlapping_slotgroups(slotgroups_array, @slots_array, @calcul)
+    determine_overlapping_slotgroups(slotgroups_array)
+    determine_overlapping_users(slotgroups_array)
     { slotgroups_array: slotgroups_array, slots_array: @slots_array }
   end
 
@@ -127,18 +129,43 @@ class CreateSlotgroupsService
     calcul_solution_v1_instance.save
   end
 
-  def determine_overlapping_slotgroups(slotgroups_array, slotgroup, calcul)
-    slotgroups_array.each do |slotgroup_hash_1|
+  def determine_overlapping_slotgroups(slotgroups_array)
+    slotgroups_array.each do |slotgroup_hash_one|
       list_overlapping_slotgroups = []
-      slotgroups_array.each do |slotgroup_hash_2|
-        if slotgroup_hash_1[:slotgroup_id] != slotgroup_hash_2[:slotgroup_id] &&
-          slotgroup_hash_2[:start_at] < slotgroup_hash_1[:end_at] &&
-          slotgroup_hash_2[:end_at] > slotgroup_hash_1[:start_at]
-          list_overlapping_slotgroups << slotgroup_hash_2[:slotgroup_id]
+      slotgroups_array.each do |slotgroup_hash_two|
+        next if slotgroup_hash_one[:slotgroup_id] == slotgroup_hash_two[:slotgroup_id]
+        if slotgroups_overlap?(slotgroup_hash_one, slotgroup_hash_two)
+          list_overlapping_slotgroups << slotgroup_hash_two[:slotgroup_id]
         end
-        slotgroup_hash_1[:overlapping_slotgroups] = list_overlapping_slotgroups
-        # ('start_at <= ? and end_at >= ?', slotgroup_hash[:start_at], slotgroup_hash[:start_at])?
+        slotgroup_hash_one[:overlapping_slotgroups] = list_overlapping_slotgroups
       end
     end
+  end
+
+  def slotgroups_overlap?(slotgroup_hash_one, slotgroup_hash_two)
+    # overlap if (start1 - end2) * (start1 - end2) > 0
+    ((slotgroup_hash_one[:start_at] - slotgroup_hash_two[:end_at]) *
+    (slotgroup_hash_two[:start_at] - slotgroup_hash_one[:end_at])).positive?
+  end
+
+  def determine_overlapping_users(slotgroups_array)
+    # identifies ressources overlaps on slotgroups to simulate, where required = available.
+    slotgroups_array.each do |slotgroup|
+      list_overlapping_users = []
+      slotgroup[:overlapping_slotgroups].each do |overlapping_slotgroup|
+        s = find_slotgroup_by_id(slotgroups_array, overlapping_slotgroup)
+        next if s[:nb_required] != s[:nb_available] || s[:role_id] != slotgroup[:role_id]
+        intersect = s[:list_available_users] & slotgroup[:list_available_users]
+        list_overlapping_users << intersect if intersect.count.positive?
+      end
+      slotgroup[:overlapping_users] = list_overlapping_users.uniq
+    end
+  end
+
+  private
+
+  def find_slotgroup_by_id(slotgroups_array, slotgroup_id)
+    # returns slotgroup hash
+    slotgroups_array.find { |x| x[:slotgroup_id] == slotgroup_id }
   end
 end
