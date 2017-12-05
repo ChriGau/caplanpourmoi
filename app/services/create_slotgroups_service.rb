@@ -128,6 +128,17 @@ class CreateSlotgroupsService
   end
 
   def determine_overlapping_slotgroups(slotgroups_array, slotgroup, calcul)
-    # slotgroup chevauche un autre slotgroup?
+    slotgroups_array.each do |slotgroup_hash_1|
+      list_overlapping_slotgroups = []
+      slotgroups_array.each do |slotgroup_hash_2|
+        if slotgroup_hash_1[:slotgroup_id] != slotgroup_hash_2[:slotgroup_id] &&
+          slotgroup_hash_2[:start_at] < slotgroup_hash_1[:end_at] &&
+          slotgroup_hash_2[:end_at] > slotgroup_hash_1[:start_at]
+          list_overlapping_slotgroups << slotgroup_hash_2[:slotgroup_id]
+        end
+        slotgroup_hash_1[:overlapping_slotgroups] = list_overlapping_slotgroups
+        # ('start_at <= ? and end_at >= ?', slotgroup_hash[:start_at], slotgroup_hash[:start_at])?
+      end
+    end
   end
 end
