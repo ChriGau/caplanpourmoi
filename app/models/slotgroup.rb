@@ -1,5 +1,5 @@
 class Slotgroup < ApplicationRecord
-  def new(cpt_slotgroup, slot_instance)
+  def new(cpt_slotgroup, slot)
     id = cpt_slotgroup
     start_at = slot_instance[:start_at]
     end_at = slot_instance[:end_at]

@@ -14,17 +14,20 @@ class CreateSlotgroupsService
   end
 
   def perform
-    slotgroups_array = create_slotgroups(@slots_array) # step 1.1
+    slotgroups_array = create_slotgroups(@slots_array) # step 1.1.
     calculate_caracteristics_slotgroups(slotgroups_array) # step 1.2. & 2.
     determine_slots_simulation_status(slotgroups_array) # step 2.
     determine_slotgroups_simulation_status(slotgroups_array) # step 2.
     save_calcul_items(slotgroups_array, @slots_array, @calcul)
     determine_overlapping_slotgroups(slotgroups_array) # step 3.1.
     determine_overlapping_users(slotgroups_array) # step 3.2.
-    fix_overlaps(slotgroups_array, @slots_array) # step 3.3
-    binding.pry
-    determine_slots_simulation_status(slotgroups_array) # step 3.3
+    fix_overlaps(slotgroups_array, @slots_array) # step 3.3.
+    determine_slots_simulation_status(slotgroups_array) # step 3.3.
     determine_slotgroups_simulation_status(slotgroups_array) # step 3.
+    determine_slots_to_simulate(@slots_array, slotgroups_array) # step 3.
+    determine_combinations_of_available_users(slotgroups_array) # step 4.
+    determine_ranking_algo(slotgroups_array) # step 5.1.
+    determine_calculation_interval(slotgroups_array) # step 5.2.2.
     { slotgroups_array: slotgroups_array, slots_array: @slots_array }
   end
 
@@ -212,6 +215,49 @@ class CreateSlotgroupsService
     end
   end
 
+  def determine_slots_to_simulate(slots_array, slotgroups_array)
+    slotgroups_array.each do |slotgroup_hash|
+      slotgroup_hash[:slots_to_simulate] = slots_to_simulate(slots_array, slotgroup_hash[:slotgroup_id])
+    end
+  end
+
+  def slots_to_simulate(slots_array, slotgroup_id)
+    slots_array.select{ |x| x[:slotgroup_id] == slotgroup_id && x[:simulation_status] == true }
+  end
+
+  def determine_combinations_of_available_users(slotgroups_array)
+    slotgroups_array.each do |slotgroup_hash|
+      combinations_size = determine_combinations_size(slotgroup_hash)
+      slotgroup_hash[:combinations_of_available_users] = slotgroup_hash[:list_available_users].combination(combinations_size).to_a
+      if slotgroup_hash[:combinations_of_available_users][0].empty?
+        slotgroup_hash[:nb_combinations_available_users] = 0
+      else
+          slotgroup_hash[:nb_combinations_available_users] = slotgroup_hash[:combinations_of_available_users].count
+      end
+    end
+  end
+
+  def determine_ranking_algo(slotgroups_array)
+    # order slotgroups by decreasing nb_combinations_available_users
+    cpt_ranking_algo = 1
+    slotgroups_array.sort_by!{ |x| x[:nb_combinations_available_users] }.reverse!
+    slotgroups_array.each do |slotgroup_hash|
+      slotgroup_hash[:ranking_algo] = cpt_ranking_algo
+      cpt_ranking_algo += 1
+    end
+  end
+
+  def determine_calculation_interval(slotgroups_array)
+    slotgroups_array.each do |slotgroup_hash|
+      calculation_interval = 1
+      slotgroups_array.each do |slotgroup_hash_bis|
+        next if slotgroup_hash_bis[:ranking_algo] < slotgroup_hash[:ranking_algo] || slotgroup_hash[:ranking_algo] == slotgroup_hash_bis[:ranking_algo]
+        calculation_interval = calculation_interval * slotgroup_hash_bis[:nb_combinations_available_users]
+      end
+      slotgroup_hash[:calculation_interval] = calculation_interval
+    end
+  end
+
   private
 
   def find_slotgroup_by_id(slotgroups_array, slotgroup_id) # returns slotgroup hash
@@ -227,6 +273,14 @@ class CreateSlotgroupsService
     if overlapped_slotgroup[:list_available_users].include?(overlapping_user)
       overlapped_slotgroup[:list_available_users].delete(overlapping_user)
       overlapped_slotgroup[:nb_available] -= 1 if overlapped_slotgroup[:nb_available] != 0
+    end
+  end
+
+  def determine_combinations_size(slotgroup_hash)
+    if slotgroup_hash[:nb_available] >= slotgroup_hash[:nb_required]
+      combinations_size = slotgroup_hash[:nb_required]
+    else
+      combinations_size = slotgroup_hash[:nb_available]
     end
   end
 end
