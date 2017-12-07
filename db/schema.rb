@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171207100416) do
+ActiveRecord::Schema.define(version: 20171207135145) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -69,27 +69,6 @@ ActiveRecord::Schema.define(version: 20171207100416) do
     t.string   "role_color"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-  end
-
-  create_table "slotgroups", force: :cascade do |t|
-    t.datetime "start_at"
-    t.datetime "end_at"
-    t.integer  "role_id"
-    t.string   "role_name"
-    t.integer  "nb_required"
-    t.integer  "nb_available"
-    t.text     "list_available_users"
-    t.boolean  "simulation_status"
-    t.text     "slots_to_simulate"
-    t.text     "overlaps"
-    t.text     "combinations_of_available_users"
-    t.integer  "nb_combinations_available_users"
-    t.integer  "priority"
-    t.integer  "ranking_algo"
-    t.integer  "calculation_interval"
-    t.text     "users_solution"
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
   end
 
   create_table "slots", force: :cascade do |t|

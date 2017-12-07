@@ -27,22 +27,23 @@
 <div class="col-md-8 col-lg-8 col-xs-12">
   <% if not @slotgroups_calcul_array.nil?  %>
   <% @slotgroups_calcul_array.each do |slotgroup| %>
-      <ul><b>SLOTGROUP_ID: <%= slotgroup[:slotgroup_id] %> </b> </ul>
-      <li> start_at: <%= slotgroup[:start_at] %> </li>
-      <li> end_at: <%= slotgroup[:end_at] %> </li>
-      <li> role_id: <%= slotgroup[:role_id] %> </li>
-      <li>role_name: <%= slotgroup[:role_name] %> </li>
-      <li> nb_required: <%= slotgroup[:nb_required] %> </li>
-      <li> nb available: <%= slotgroup[:nb_available] %> </li>
-      <li> list_available_users: <%= slotgroup[:list_available_users] %> </li>
-      <li> simulation_status: <%= slotgroup[:simulation_status] %> </li>
-      <li> slots_to_simulate: <%= slotgroup[:slots_to_simulate] %> </li>
-      <li> overlaps: <%= slotgroup[:overlaps] %> </li>
-      <li> combinations_of_available_users: <%= slotgroup[:combinations_of_available_users] %> </li>
-      <li> nb_combinations_of_available_users: <%= slotgroup[:nb_combinations_available_users] %></li>
-      <li> priority: <%= slotgroup[:priority] %> </li>
-      <li> ranking_algo: <%= slotgroup[:ranking_algo] %> </li>
-      <li> calculation_interval: <%= slotgroup[:calculation_interval] %> <br></li>
+      <ul><b>SLOTGROUP_ID: <%= slotgroup.id %> </b> </ul>
+      <li> start_at: <%= slotgroup.start_at %> </li>
+      <li> end_at: <%= slotgroup.end_at %> </li>
+      <li> role_id: <%= slotgroup.role_id %> </li>
+      <li>role_name: <%= slotgroup.role_name %> </li>
+      <li>planning_id: <%= slotgroup.planning_id %> </li>
+      <li> nb_required: <%= slotgroup.nb_required %> </li>
+      <li> nb available: <%= slotgroup.nb_available %> </li>
+      <li> list_available_users: <%= slotgroup.list_available_users %> </li>
+      <li> simulation_status: <%= slotgroup.simulation_status %> </li>
+      <li> slots_to_simulate: <%= slotgroup.slots_to_simulate %> </li>
+      <li> overlaps: <%= slotgroup.overlaps %> </li>
+      <li> combinations_of_available_users: <%= slotgroup.combinations_of_available_users %> </li>
+      <li> nb_combinations_of_available_users: <%= slotgroup.nb_combinations_available_users %></li>
+      <li> priority: <%= slotgroup.priority %> </li>
+      <li> ranking_algo: <%= slotgroup.ranking_algo %> </li>
+      <li> calculation_interval: <%= slotgroup.calculation_interval %> <br></li>
     <% end %>
     <% end %>
 </div>
