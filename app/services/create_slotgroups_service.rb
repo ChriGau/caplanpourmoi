@@ -22,8 +22,9 @@ class CreateSlotgroupsService
     determine_overlapping_slotgroups(slotgroups_array) # step 3.1.
     determine_overlapping_users(slotgroups_array) # step 3.2.
     fix_overlaps(slotgroups_array, @slots_array) # step 3.3
+    binding.pry
     determine_slots_simulation_status(slotgroups_array) # step 3.3
-    determine_slotgroups_simulation_status(slotgroups_array) # step 3.3
+    determine_slotgroups_simulation_status(slotgroups_array) # step 3.
     { slotgroups_array: slotgroups_array, slots_array: @slots_array }
   end
 
@@ -126,12 +127,15 @@ class CreateSlotgroupsService
   end
 
   def determine_slotgroup_simulation_status(slotgroup)
-
-    slotgroup[:simulation_status] = true if nb_slots_to_simulate(slotgroup[:slotgroup_id]).positive?
+    if nb_slots_to_simulate(slotgroup[:slotgroup_id]).positive?
+      slotgroup[:simulation_status] = true
+    else
+      slotgroup[:simulation_status] = false
+    end
   end
 
   def determine_slotgroups_simulation_status(slotgroups)
-    determine_slotgroup_simulation_status if slotgroups
+    determine_slotgroup_simulation_status if slotgroups.class != Array
     else
     slotgroups.each do |slotgroup|
       determine_slotgroup_simulation_status(slotgroup)
@@ -139,7 +143,13 @@ class CreateSlotgroupsService
   end
 
   def nb_slots_to_simulate(slotgroup_id)
-    @slots_array.find { |x| x[:slotgroup_id] == slotgroup_id && x[:simulation_status] = true }.count
+    a = @slots_array.find { |x| x[:slotgroup_id] == slotgroup_id &&
+      x[:simulation_status] == true }
+    if a.nil?
+      b = 0
+    elsif a.class == Array ? b = a.count : b= 1
+    end
+    return b
   end
 
   # rubocop:enable AbcSize, LineLength

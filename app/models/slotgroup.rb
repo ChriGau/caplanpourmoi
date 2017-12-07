@@ -1,50 +1,21 @@
 class Slotgroup < ApplicationRecord
-  has_many :slots
-  # test branching
-  # TODO : after_save :set...
-  def set_nb_required
-    # TODO: - number of slots relative to this slotgroup
-  end
-
-  def self.list_available_skilled_users(slotgroup_id)
-    # TODO: - return list of available (no constraints) and skilled users
-  end
-
-  def set_nb_available_users
-    # TODO: - count of list_available_skilled_users
-  end
-
-  def self.overlapping_slotgroups(slotgroup_id)
-    # TODO: - return list of slotgroups overlapping this slotgroup
-  end
-
-  def self.overlapping_users(slotgroup_id)
-    # TODO: - return list of users simultaneously required on overlapping slotgroups
-    # and constrained slotgroups (required=available)
-  end
-
-  def set_simulation_status
-    # TODO: - false if 0 available users, else true
-  end
-
-  def self.combinations_of_available_users(slotgroup_id)
-    # TODO: - returns list of combinations
-    # example : [ [1,5,4] , [1,6,4] ] => 2 combinations of triplets possible
-  end
-
-  def set_nb_combinations
-    # TODO: - count of combinations_of_available_users
-  end
-
-  def set_priority
-    # TODO: - max of slots' priority
-  end
-
-  def set_ranking_algo
-    # TODO: - order by decreasing number of combinations per slotgroups
-  end
-
-  def set_interval
-    # TODO
+  def new(cpt_slotgroup, slot_instance)
+    id = cpt_slotgroup
+    start_at = slot_instance[:start_at]
+    end_at = slot_instance[:end_at]
+    role_id = slot_instance[:role_id]
+    role_name = Role.find(slot_instance[:role_id]).name
+    nb_required = nil
+    nb_available = nil
+    list_available_users = nil,
+    simulation_status = nil,
+    slots_to_simulate = nil,
+    overlaps = nil,
+    combinations_of_available_users = nil,
+    nb_combinations_available_users = nil,
+    priority = rand(5), # faked for now
+    ranking_algo = nil,
+    calculation_interval = nil,
+    users_solution = nil
   end
 end
