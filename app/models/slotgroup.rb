@@ -38,22 +38,27 @@ class Slotgroup
   end
 
   def determine_slotgroup_simulation_status
-    nb_available.positive? ? self.simulation_status = true : self.simulation_status = false
+    return self.simulation_status = true if nb_available.positive?
+    return self.simulation_status = false unless nb_available.positive?
   end
 
-  def determine_combinations_size
+  def determine_nb_slots_to_simulate
     nb_available >= nb_required ? nb_required : nb_available
   end
 
   def make_user_unavailable(overlapping_user)
     # make unavailable in overlapped slotgroup
-    if list_available_users.include?(overlapping_user)
-      list_available_users.delete(overlapping_user)
-      self.nb_available -= 1 if nb_available != 0
-    end
+    make_user_actually_unavailable(overlapping_user) if list_available_users.include?(overlapping_user)
+  end
+
+  def make_user_actually_unavailable(overlapping_user)
+    list_available_users.delete(overlapping_user)
+    self.nb_available -= 1 if nb_available != 0
   end
 
   def take_into_calculation_interval_account(slotgroup_bis)
-    slotgroup_bis.ranking_algo < ranking_algo || slotgroup_bis.ranking_algo == ranking_algo || slotgroup_bis.simulation_status == false
+    slotgroup_bis.ranking_algo < ranking_algo ||
+      slotgroup_bis.ranking_algo == ranking_algo ||
+      slotgroup_bis.simulation_status == false
   end
 end

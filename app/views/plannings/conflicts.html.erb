@@ -25,8 +25,8 @@
 </div>
 
 <div class="col-md-8 col-lg-8 col-xs-12">
-  <% if not @slotgroups_calcul_array.nil?  %>
-  <% @slotgroups_calcul_array.each do |slotgroup| %>
+  <% if not @calcul_arrays[:slotgroups_array].nil?  %>
+  <% @calcul_arrays[:slotgroups_array].each do |slotgroup| %>
       <ul><b>SLOTGROUP_ID: <%= slotgroup.id %> </b> </ul>
       <li> start_at: <%= slotgroup.start_at %> </li>
       <li> end_at: <%= slotgroup.end_at %> </li>
@@ -49,8 +49,8 @@
 </div>
 <br><br>
 <div class="col-md-8 col-lg-8 col-xs-12">
-  <% if not @slots_calcul_array.nil?  %>
-  <% @slots_calcul_array.each do |slot| %>
+  <% if not @calcul_arrays[:slots_array].nil?  %>
+  <% @calcul_arrays[:slots_array].each do |slot| %>
   <div class="col-xs-12">
       <ul><b> SLOT_SIMULATION: <%= slot[:slot_instance] %> </b> </ul>
       <li> simulation_status: <%= slot[:simulation_status] %> </li>

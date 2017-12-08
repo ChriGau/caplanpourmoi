@@ -96,8 +96,8 @@ class PlanningsController < ApplicationController
     # => solution calculation
     calcul_v1 = CalculSolutionV1.new(@planning)
     calcul_v1.save
-    @slotgroups_calcul_array = calcul_v1.perform[:slotgroups_array]
-    @slots_calcul_array = calcul_v1.perform[:slots_array]
+    # @calcul_arrays = { slotgroups_array: @slotgroups_array, slots_array: @slots_array }
+    @calcul_arrays = calcul_v1.perform
   end
 
   # rubocop:enable MethodLength
