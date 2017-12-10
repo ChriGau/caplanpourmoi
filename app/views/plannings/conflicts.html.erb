@@ -59,7 +59,22 @@
     <% end %>
     <% end %>
 </div>
-<br><br>
+<br><br><br>
+
+  <% if not @test_possibilities.empty?  %>
+    <div class="col-xs-12">
+    <% @test_possibilities.each do |all_plannings| %>
+      <ul> POSSIBILITIES:  </ul> <br>
+      <% all_plannings.each do |planning| %>
+          <li>slotgroup_ranking: <%= planning[:sg_ranking] %></li>
+          <li>slotgroup_id: <%= planning[:sg_id] %></li>
+          <li>combination: <%= planning[:combination] %></li>
+          <li>overlaps: <%= planning[:overlaps] %></li>
+           <br>
+      <% end %>
+    <% end %>
+  <% end %>
+  </div>
 <!-- ___________________________ JS __________________________________ -->
 
 <%= content_for(:after_js) do %>

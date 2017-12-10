@@ -61,4 +61,61 @@ class Slotgroup
       slotgroup_bis.ranking_algo == ranking_algo ||
       slotgroup_bis.simulation_status == false
   end
+
+  def take_into_calculation_nb_branches_account
+    self.ranking_algo == 1
+  end
+
+  def calculate_interval_position(branch, true_or_false)
+    interval = self.calculation_interval
+    if true_or_false == true
+      if (branch % self.nb_combinations_available_users).zero?
+        interval_position = branch / self.nb_combinations_available_users
+      else
+        interval_position = (branch / self.nb_combinations_available_users).abs + 1
+      end
+    else
+      if (branch % interval).zero?
+        interval_position = (branch / interval).abs
+      else
+        interval_position = (branch / interval).abs + 1
+      end
+    end
+    return interval_position
+  end
+
+  def calculate_position(branch, interval_position, true_or_false)
+    if true_or_false == true
+      if branch <= self.nb_combinations_available_users
+        position = branch
+      else
+        if (interval_position * self.nb_combinations_available_users - branch).zero?
+          position = self.nb_combinations_available_users
+        else
+          position = self.nb_combinations_available_users - ((interval_position * self.nb_combinations_available_users) - branch).abs
+        end
+      end
+    else
+      if branch <= self.calculation_interval
+        position = 1
+      else
+        if (interval_position % self.nb_combinations_available_users).zero?
+          position = self.nb_combinations_available_users
+        else
+          if interval_position < self.nb_combinations_available_users
+            position = interval_position
+          else
+            for a in 1..self.calculation_interval
+              if ((interval_position + a) % self.nb_combinations_available_users).zero?
+                position = self.nb_combinations_available_users - a
+                break
+              end
+            end
+          end
+        end
+      end
+    end
+    return position
+  end
+
 end
