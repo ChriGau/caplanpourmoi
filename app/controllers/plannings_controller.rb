@@ -97,11 +97,16 @@ class PlanningsController < ApplicationController
     calcul_v1 = CalculSolutionV1.new(@planning)
     calcul_v1.save
 
-    # @calcul_results = { calcul_arrays: @calcul_arrays, test_possibilities: @test_possibilities, solutions: @solutions_array }
+    # @calcul_results = { calcul_arrays: @calcul_arrays,
+    # test_possibilities: @build_solutions[:test_possibilities],
+    # solutions_array: @build_solutions[:solutions_array],
+    # best_solution: best_solution }
     @calcul_results = calcul_v1.perform
     # @calcul_arrays = { slotgroups_array: @slotgroups_array, slots_array: @slots_array }
     @calcul_arrays = @calcul_results[:calcul_arrays]
     @test_possibilities = @calcul_results[:test_possibilities]
+    @solutions_array = @calcul_results[:solutions_array]
+    @best_solution = @calcul_results[:best_solution]
   end
 
   # rubocop:enable MethodLength

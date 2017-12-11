@@ -80,6 +80,7 @@ class CreateSlotgroupsService
   # rubocop:disable AbcSize
 
   def determine_overlapping_users
+    # list users which have no options but to be selected on 2 overlapping sg
     @slotgroups_array.each do |slotgroup|
       next if slotgroup.nb_required != slotgroup.nb_available
       slotgroup.overlaps.each do |overlapping_slotgroups_array|
