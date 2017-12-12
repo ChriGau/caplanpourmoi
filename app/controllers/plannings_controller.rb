@@ -30,9 +30,6 @@ class PlanningsController < ApplicationController
     @slots = @planning.slots.order(:id)
     @slot = Slot.new
     @slot_templates = Slot.slot_templates # liste des roles
-    # modifier 1 slot mécano du  mercredi 13/9 en "no solution"
-    # guersbru : le dit slot n'a pas toujours l'id 887... ça crash je commente la ligne
-    # Slot.find(887).user_id = "no solution"
     @url = 'conflicts'
     # variables pour fullcalendar
     @slots_array = []
@@ -97,16 +94,15 @@ class PlanningsController < ApplicationController
     calcul_v1 = CalculSolutionV1.new(@planning)
     calcul_v1.save
 
-    # @calcul_results = { calcul_arrays: @calcul_arrays,
-    # test_possibilities: @build_solutions[:test_possibilities],
-    # solutions_array: @build_solutions[:solutions_array],
-    # best_solution: best_solution }
+    # @calcul_results = { :calcul_arrays, :test_possibilities, :solutions_array, :best_solution, :calculation_abstract }
     @calcul_results = calcul_v1.perform
     # @calcul_arrays = { slotgroups_array: @slotgroups_array, slots_array: @slots_array }
     @calcul_arrays = @calcul_results[:calcul_arrays]
     @test_possibilities = @calcul_results[:test_possibilities]
     @solutions_array = @calcul_results[:solutions_array]
     @best_solution = @calcul_results[:best_solution]
+    @calculation_abstract = @calcul_results[:calculation_abstract]
+    flash[:notice] = message_calculation_notice
   end
 
   # rubocop:enable MethodLength
@@ -178,6 +174,16 @@ class PlanningsController < ApplicationController
       slotgroups << slot.slotgroup_id unless slot.slotgroup_id.nil?
     end
     slotgroups.uniq # get rid of duplicates
+  end
+
+  def message_calculation_notice
+    pourcent = (@calculation_abstract[:nb_iterations].fdiv(@calculation_abstract[:nb_possibilities_theory]) * 100).round(2)
+    "#{@calculation_abstract[:nb_solutions]} solutions trouvées,
+    dont #{@calculation_abstract[:nb_optimal_solutions]} optimales.
+     #{@calculation_abstract[:nb_iterations]} itérations effectuées parmi
+    #{@calculation_abstract[:nb_possibilities_theory]} possibilités théoriques,
+    soit #{pourcent}
+     pourcents du champs balayé"
   end
 end
 # rubocop:enable Metrics/ClassLength
