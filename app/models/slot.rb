@@ -19,14 +19,10 @@ class Slot < ApplicationRecord
       slot_instance: self }
   end
 
-  # rubocop:disable AlignParameters
-
   def similar_slots
     Slot.where('planning_id = ? and start_at = ? and end_at = ? and role_id = ?',
-                planning_id, start_at, end_at, role_id)
+               planning_id, start_at, end_at, role_id)
   end
-
-  # rubocop:enable AlignParameters
 
   private
 
