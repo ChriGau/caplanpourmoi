@@ -15,20 +15,3 @@ class PlanningPossibility
     @priority = rand(5) # faked for now
   end
 end
-
-    # {
-    # :possibility_id => 1,
-    # :nb_overlapping_users => 1,
-    # :overlaps_details =>
-    #   {
-    #   :slotgroup_id_1 => 1,
-    #   :slotgroup_id_2 => 2,
-    #   :overlapping_user => user,
-    #   },
-    # :nb_hours_overtime => 25.5,
-    # :solution =>
-    #   {
-    #   :slotgroup_id => 1,
-    #   :users => [instances of users]
-    #   }
-    # }

@@ -176,6 +176,8 @@ class PlanningsController < ApplicationController
     slotgroups.uniq # get rid of duplicates
   end
 
+  # rubocop:disable LineLength
+
   def message_calculation_notice
     pourcent = (@calculation_abstract[:nb_iterations].fdiv(@calculation_abstract[:nb_possibilities_theory]) * 100).round(2)
     "#{@calculation_abstract[:nb_solutions]} solutions trouvées,

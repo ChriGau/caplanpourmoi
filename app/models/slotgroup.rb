@@ -19,6 +19,8 @@ class Slotgroup
     @priority = rand(5) # faked for now
   end
 
+  # rubocop:disable LineLength
+
   def determine_slotgroup_nb_required(slotgroup_id, slots_array)
     self.nb_required = slots_array.select { |x| x[:slotgroup_id] == slotgroup_id }.count
   end
@@ -63,16 +65,19 @@ class Slotgroup
   end
 
   def take_into_calculation_nb_branches_account
-    self.ranking_algo == 1
+    ranking_algo == 1
   end
 
+  # rubocop:disable AbcSize, IfInsideElse, ConditionalAssignment, MethodLength
+  # IfInsideElse <, ConditionalAssignment => disabled bcz makes method reading less fluid
+
   def calculate_interval_position(branch, true_or_false)
-    interval = self.calculation_interval
+    interval = calculation_interval
     if true_or_false == true
-      if (branch % self.nb_combinations_available_users).zero?
-        interval_position = branch / self.nb_combinations_available_users
+      if (branch % nb_combinations_available_users).zero?
+        interval_position = branch / nb_combinations_available_users
       else
-        interval_position = (branch / self.nb_combinations_available_users).abs + 1
+        interval_position = (branch / nb_combinations_available_users).abs + 1
       end
     else
       if (branch % interval).zero?
@@ -81,41 +86,36 @@ class Slotgroup
         interval_position = (branch / interval).abs + 1
       end
     end
-    return interval_position
+    interval_position
   end
+  # rubocop:enable AbcSize
+  # rubocop:disable BlockNesting, For, AbcSize,PerceivedComplexity, CyclomaticComplexity
 
   def calculate_position(branch, interval_position, true_or_false)
     if true_or_false == true
-      if branch <= self.nb_combinations_available_users
+      if branch <= nb_combinations_available_users
         position = branch
+      elsif (interval_position * nb_combinations_available_users - branch).zero?
+        position = nb_combinations_available_users
       else
-        if (interval_position * self.nb_combinations_available_users - branch).zero?
-          position = self.nb_combinations_available_users
-        else
-          position = self.nb_combinations_available_users - ((interval_position * self.nb_combinations_available_users) - branch).abs
-        end
+        position = nb_combinations_available_users - ((interval_position * nb_combinations_available_users) - branch).abs
       end
     else
-      if branch <= self.calculation_interval
+      if branch <= calculation_interval
         position = 1
+      elsif (interval_position % nb_combinations_available_users).zero?
+        position = nb_combinations_available_users
+      elsif interval_position < nb_combinations_available_users
+        position = interval_position
       else
-        if (interval_position % self.nb_combinations_available_users).zero?
-          position = self.nb_combinations_available_users
-        else
-          if interval_position < self.nb_combinations_available_users
-            position = interval_position
-          else
-            for a in 1..self.calculation_interval
-              if ((interval_position + a) % self.nb_combinations_available_users).zero?
-                position = self.nb_combinations_available_users - a
-                break
-              end
-            end
+        for a in 1..calculation_interval
+          if ((interval_position + a) % nb_combinations_available_users).zero?
+            position = nb_combinations_available_users - a
+            break
           end
         end
       end
     end
-    return position
+    position
   end
-
 end

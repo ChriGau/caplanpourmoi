@@ -1,5 +1,4 @@
 class CalculSolutionV1 < ApplicationRecord
-
   attr_accessor :planning, :calcul_arrays, :build_solutions
 
   def initialize(planning)
@@ -7,17 +6,22 @@ class CalculSolutionV1 < ApplicationRecord
     @planning = planning
   end
 
+  # rubocop:disable LineLength, MethodLength, AbcSize
+
   def perform
     slots = planning.slots
     initialized_slots_array = initialize_slots_array(slots) # get [ {} , {} ]
     calcul_arrays = CreateSlotgroupsService.new(initialized_slots_array, planning, self).perform
     # select only slotgroups to simulate => inject into GoFindSolutionsService
-    # todo = do not simulate les 1 combination possible
+    # todo = do not simulate les 1 combination possible
     to_simulate_slotgroups_arrays = select_slotgroups_to_simulate(calcul_arrays[:slotgroups_array])
-    # go through plannings possibilities, assess them, select them.
+    # go through plannings possibilities, assess them, select best solution.
     build_solutions = GoFindSolutionsV1Service.new(planning, self, to_simulate_slotgroups_arrays).perform
-    # @build_solutions = { test_possibilities: test_possibilities, solutions_array: solutions_array, best_solution: best_solution }
+    # @build_solutions = { :test_possibilities, :solutions_array,
+    #                       :solutions_array, :best_solution }
     # best_solution = hash of solutions_array.
+    # make the best solution diplayable
+    make_best_solution_displayable
     { calcul_arrays: calcul_arrays,
       test_possibilities: build_solutions[:test_possibilities],
       solutions_array: build_solutions[:solutions_array],
@@ -34,5 +38,11 @@ class CalculSolutionV1 < ApplicationRecord
     slotgroups_array.each do |slotgroup|
       a << slotgroup if slotgroup.simulation_status == true
     end
+  end
+
+  def make_best_solution_displayable
+    # Créer une instance de solution
+    # Créer autant d'instances de SolutionsSlots que de slotgroups
+    #
   end
 end

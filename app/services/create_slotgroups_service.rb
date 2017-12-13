@@ -5,7 +5,6 @@
 # rubocop:disable LineLength, MethodLength, ClassLength
 
 class CreateSlotgroupsService
-
   attr_accessor :slots_array, :planning, :users, :calcul, :slotgroups_array
 
   def initialize(slots_array, planning, calcul_solution_v1_instance)
@@ -14,6 +13,8 @@ class CreateSlotgroupsService
     @users = @planning.users
     @calcul = calcul_solution_v1_instance
   end
+
+  # rubocop:disable AbcSize
 
   def perform
     self.slotgroups_array = create_slotgroups # step 1.1.
@@ -32,6 +33,8 @@ class CreateSlotgroupsService
     save_calcul_items(calcul)
     { slotgroups_array: slotgroups_array, slots_array: slots_array }
   end
+
+  # rubocop:enable AbcSize
 
   def create_slotgroups
     slotgroups_array = []
@@ -99,8 +102,6 @@ class CreateSlotgroupsService
     end
   end
 
-  # rubocop:enable AbcSize
-
   def fix_overlaps
     # TODO, define priorities per slotgroup (faked for now)
     slotgroups_array.sort_by!(&:priority)
@@ -121,6 +122,8 @@ class CreateSlotgroupsService
       end
     end
   end
+
+  # rubocop:enable AbcSize
 
   def determine_slots_to_simulate
     slotgroups_array.each do |slotgroup|
