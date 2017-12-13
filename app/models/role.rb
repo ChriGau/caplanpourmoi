@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: roles
+#
+#  id           :integer          not null, primary key
+#  name         :string
+#  role_color   :string
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  slotgroup_id :integer
+#
+
 class Role < ApplicationRecord
   has_many :users, through: :role_users
 
