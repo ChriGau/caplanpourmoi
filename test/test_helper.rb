@@ -2,6 +2,10 @@
 ENV["RAILS_ENV"] = "test"
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
+require 'minitest/reporters'
+# rubocop:disable ColonMethodCall
+Minitest::Reporters::use! [Minitest::Reporters::ProgressReporter.new]
+# rubocop:enable ColonMethodCall
 
 class ActiveSupport::TestCase
   include FactoryBot::Syntax::Methods
