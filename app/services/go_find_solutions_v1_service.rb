@@ -25,7 +25,6 @@ class GoFindSolutionsV1Service
     self.build_solutions = go_through_plannings
     # select the best solution
     build_solutions[:best_solution] = pick_best_solution(build_solutions[:solutions_array])
-    binding.pry
     # return
     build_solutions
   end
@@ -60,7 +59,7 @@ class GoFindSolutionsV1Service
     for tree in 1..nb_trees
       for branch in 1..nb_branches
         self.planning_possibility = []
-        next if solution_id == 1
+        # next if solution_id ==  # pour stopper les itérations au bout de la nième solution
         # we skip this branch if we must
         next if must_we_jump_to_another_branch?(tree, next_tree, branch, next_branch)
         # let's build a planning possibility
@@ -104,7 +103,6 @@ class GoFindSolutionsV1Service
   end
 
   # rubocop:enable For
-  # rubocop:disable GuardClause
 
   def pick_best_solution(solutions_array)
     # Selects one solution from a collection of solutions.
@@ -115,6 +113,7 @@ class GoFindSolutionsV1Service
       random_choice = rand(1..collection_no_overlaps.count)
       return collection_no_overlaps[random_choice - 1]
     else
+      # if overlaps, fix them => assign user according to slotgroups priority
       assign_no_solution_user_for_sg_with_overlaps(solutions_array.last)
       return solutions_array.last
     end
@@ -277,7 +276,7 @@ class GoFindSolutionsV1Service
   def assign_no_solution_user_for_sg_with_overlaps(solutions_array)
     # we have a solution_array which contains overlaps. This solution has been
     # selected as the best one. We need to update the combinations so that the
-    # one which is in overlap => no solution
+    # one which is in overlap => no solution
     # solutions_array = [ {:solution_id, :possibility_id, :nb_overlaps, :planning_possibility} ]
     # :planning_possibility => {:sg_ranking, :sg_id, :combination, :overlaps}
     # TODO, il ne faudrait pas assigner les 2 slots en 'no solution' mais plutôt
@@ -291,14 +290,14 @@ class GoFindSolutionsV1Service
         overlap[:users].each do |user|
           if combination.include?(user)
             position_of_overlapping_user_in_combination = combination.index(user)
-            possibility_hash[:combination][position_of_overlapping_user_in_combination] = get_no_solution_user
+            possibility_hash[:combination][position_of_overlapping_user_in_combination] = determine_no_solution_user
           end
         end
       end
     end
   end
 
-  def get_no_solution_user
+  def determine_no_solution_user
     User.find_by(first_name: 'no solution')
   end
 end
