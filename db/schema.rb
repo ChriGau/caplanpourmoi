@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171207135145) do
+ActiveRecord::Schema.define(version: 20171214130832) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -84,6 +84,15 @@ ActiveRecord::Schema.define(version: 20171207135145) do
     t.index ["user_id"], name: "index_slots_on_user_id", using: :btree
   end
 
+  create_table "solutions", force: :cascade do |t|
+    t.integer "calculsolutionv1_id"
+    t.integer "nb_overlaps"
+    t.integer "nb_extra_hours"
+    t.integer "status"
+    t.integer "planning_id"
+    t.index ["planning_id"], name: "index_solutions_on_planning_id", using: :btree
+  end
+
   create_table "teams", force: :cascade do |t|
     t.integer  "planning_id"
     t.integer  "user_id"
@@ -120,6 +129,7 @@ ActiveRecord::Schema.define(version: 20171207135145) do
   add_foreign_key "slots", "plannings"
   add_foreign_key "slots", "roles"
   add_foreign_key "slots", "users"
+  add_foreign_key "solutions", "plannings"
   add_foreign_key "teams", "plannings"
   add_foreign_key "teams", "users"
 end
