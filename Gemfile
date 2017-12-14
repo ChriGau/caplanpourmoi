@@ -53,6 +53,7 @@ group :development, :test do
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
   gem 'rubocop', '~> 0.51.0', require: false
+  gem 'factory_bot_rails'
 end
 
 group :development do
