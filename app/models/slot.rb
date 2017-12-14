@@ -4,6 +4,7 @@ class Slot < ApplicationRecord
   belongs_to :user, optional: true
   validates :role_id, presence: true
   after_save :set_planning_status
+  has_many :solution_slots
 
   def self.slot_templates
     slot_templates = []

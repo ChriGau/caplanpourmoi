@@ -9,6 +9,7 @@ class User < ApplicationRecord
   has_many :roles, through: :role_users
   has_many :teams, dependent: :destroy
   has_many :role_users # added back bcoz triggers 'association not found error'
+  has_many :solution_slots
   has_attachment :profile_picture
 
   def concatenate_first_and_last_name
