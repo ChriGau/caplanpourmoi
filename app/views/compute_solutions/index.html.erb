@@ -1,4 +1,8 @@
-<h1>Planning Semaine: <%= @planning.week_number %></h1>
+<h1>Caculs lancés pour la semaine <%= @planning.week_number %></h1>
+
+<%= link_to planning_compute_solutions_path, method: :post do %>
+  <button class="btn btn-primary btn-block">Compute planning</button>
+<% end %>
 
 <table class="table table-striped table-hover" style="width:100%">
   <tr>
@@ -9,7 +13,7 @@
     <th>Nombre de solutions</th>
   </tr>
   <% @compute_solutions.each do |compute_sol| %>
-    <tr class=<%= compute_sol.ready? ? "success" : "" %>>
+    <tr class=<%= compute_sol.ready? ? "success" : compute_sol.error? ? "danger" : "info" %>>
       <td><%= compute_sol.id %></td>
       <td><%= compute_sol.created_at %></td>
       <td><%= compute_sol.status %></td>

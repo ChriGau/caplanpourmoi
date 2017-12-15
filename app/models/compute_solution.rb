@@ -20,5 +20,10 @@
 class ComputeSolution < ApplicationRecord
   belongs_to :planning
   enum status: [:pending, :ready, :error]
+  before_create :default_status
+
+  def default_status
+    self.status = "pending"
+  end
 
 end
