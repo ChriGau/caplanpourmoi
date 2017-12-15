@@ -89,7 +89,15 @@ class PlanningsController < ApplicationController
     end
     # Fake solution => le boss remplacera le no solution
     @user_solution = User.find_by(first_name: 'jean')
+
     demo_method(@planning) if @planning.week_number == 37
+
+    # TODO : if no solution, generate solution calculation
+    # => solution calculation
+      calcul_v1 = CalculSolutionV1.new(@planning)
+      calcul_v1.save
+      @slotgroups_calcul_array = calcul_v1.perform[:slotgroups_array]
+      @slots_calcul_array = calcul_v1.perform[:slots_array]
   end
 
   # rubocop:enable MethodLength
@@ -153,5 +161,19 @@ class PlanningsController < ApplicationController
   def set_planning
     @planning = Planning.find(params[:id])
   end
+
+
+  def get_array_of_slotgroup_id(slots)
+    # returns array of slotgroups_id assigned to an array of slots
+    puts slots
+    slotgroups = []
+    slots.each do |slot|
+      if not slot.slotgroup_id.nil?
+        slotgroups << slot.slotgroup_id
+      end
+    end
+    slotgroups.uniq # get rid of duplicates
+  end
+
 end
 # rubocop:enable Metrics/ClassLength

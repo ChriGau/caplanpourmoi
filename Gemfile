@@ -54,6 +54,8 @@ group :development, :test do
   gem 'spring-watcher-listen', '~> 2.0.0'
   gem 'rubocop', '~> 0.51.0', require: false
   gem 'annotate'
+  gem 'factory_bot_rails'
+  gem 'minitest-reporters'
 end
 
 group :development do

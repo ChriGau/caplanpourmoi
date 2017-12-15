@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171126161305) do
+ActiveRecord::Schema.define(version: 20171205090910) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,6 +28,14 @@ ActiveRecord::Schema.define(version: 20171126161305) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.index ["attachinariable_type", "attachinariable_id", "scope"], name: "by_scoped_parent", using: :btree
+  end
+
+  create_table "calcul_solution_v1s", force: :cascade do |t|
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+    t.text     "slots_array"
+    t.text     "slotgroups_array"
+    t.text     "information"
   end
 
   create_table "constraints", force: :cascade do |t|
@@ -59,22 +67,10 @@ ActiveRecord::Schema.define(version: 20171126161305) do
   create_table "roles", force: :cascade do |t|
     t.string   "name"
     t.string   "role_color"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "slotgroups", force: :cascade do |t|
-    t.integer  "nb_required"
-    t.integer  "nb_available"
-    t.boolean  "simulation_status"
-    t.integer  "priority"
-    t.integer  "nb_combinations"
-    t.integer  "ranking_algo"
-    t.integer  "interval"
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
-    t.datetime "start"
-    t.datetime "end"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.integer  "slotgroup_id"
+    t.index ["slotgroup_id"], name: "index_roles_on_slotgroup_id", using: :btree
   end
 
   create_table "slots", force: :cascade do |t|
@@ -83,12 +79,10 @@ ActiveRecord::Schema.define(version: 20171126161305) do
     t.integer  "planning_id"
     t.integer  "role_id"
     t.integer  "user_id"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
-    t.integer  "slotgroup_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
     t.index ["planning_id"], name: "index_slots_on_planning_id", using: :btree
     t.index ["role_id"], name: "index_slots_on_role_id", using: :btree
-    t.index ["slotgroup_id"], name: "index_slots_on_slotgroup_id", using: :btree
     t.index ["user_id"], name: "index_slots_on_user_id", using: :btree
   end
 
@@ -127,7 +121,6 @@ ActiveRecord::Schema.define(version: 20171126161305) do
   add_foreign_key "role_users", "users"
   add_foreign_key "slots", "plannings"
   add_foreign_key "slots", "roles"
-  add_foreign_key "slots", "slotgroups"
   add_foreign_key "slots", "users"
   add_foreign_key "teams", "plannings"
   add_foreign_key "teams", "users"

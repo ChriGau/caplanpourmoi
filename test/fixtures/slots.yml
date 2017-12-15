@@ -1,0 +1,4 @@
+two_hours:
+  start_at: <%= DateTime.now %>
+  end_at: <%= DateTime.now + 1.hour %>
+  role_id: 1
