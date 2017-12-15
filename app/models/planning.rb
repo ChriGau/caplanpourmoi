@@ -14,6 +14,7 @@ class Planning < ApplicationRecord
   has_many :teams, dependent: :destroy
   has_many :users, through: :teams
   has_many :slots, dependent: :destroy
+  has_many :compute_solutions, dependent: :destroy
   enum status: [:not_started, :in_progress, :with_conflicts, :complete]
   after_initialize :init
 

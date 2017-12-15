@@ -39,10 +39,10 @@
 #                 new_role GET    /roles/new(.:format)                             roles#new
 #               user_infos GET    /users/:id/infos(.:format)                       users#infos
 #              user_dispos GET    /users/:id/dispos(.:format)                      users#dispos
-# 
+#
 # Routes for Attachinary::Engine:
 #   cors GET  /cors(.:format) attachinary/cors#show {:format=>/json/}
-# 
+#
 
 Rails.application.routes.draw do
   mount Attachinary::Engine => "/attachinary"
@@ -51,6 +51,7 @@ Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   resources :plannings, only: [:show, :index, :update] do
     resources :slots, only: [:create, :edit, :show, :update, :resolve, :new]
+    resources :compute_solutions, only: [:index]
     member do
       get :events, format: :json
     end

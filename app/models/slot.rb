@@ -11,6 +11,18 @@
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #
+# Indexes
+#
+#  index_slots_on_planning_id  (planning_id)
+#  index_slots_on_role_id      (role_id)
+#  index_slots_on_user_id      (user_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (planning_id => plannings.id)
+#  fk_rails_...  (role_id => roles.id)
+#  fk_rails_...  (user_id => users.id)
+#
 
 class Slot < ApplicationRecord
   belongs_to :planning, optional: true
