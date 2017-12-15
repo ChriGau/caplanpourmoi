@@ -5,4 +5,6 @@ class Solution < ApplicationRecord
   has_many :slots, through: :solution_slots
 
   validates :planning_id, presence: true
+
+  enum status: [:in_progress, :with_conflicts, :validated, :optimal, :fresh]
 end

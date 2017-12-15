@@ -59,7 +59,7 @@ class GoFindSolutionsV1Service
     for tree in 1..nb_trees
       for branch in 1..nb_branches
         self.planning_possibility = []
-        # next if solution_id ==  # pour stopper les itérations au bout de la nième solution
+        next if solution_id ==  5  # pour stopper les itérations au bout de la nième solution
         # we skip this branch if we must
         next if must_we_jump_to_another_branch?(tree, next_tree, branch, next_branch)
         # let's build a planning possibility

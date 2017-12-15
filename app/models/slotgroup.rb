@@ -58,6 +58,10 @@ class Slotgroup
     self.nb_available -= 1 if nb_available != 0
   end
 
+  def more_or_equal_available_as_required?
+    self.nb_available >= self.nb_required
+  end
+
   def take_into_calculation_interval_account(slotgroup_bis)
     slotgroup_bis.ranking_algo < ranking_algo ||
       slotgroup_bis.ranking_algo == ranking_algo ||

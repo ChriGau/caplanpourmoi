@@ -36,9 +36,40 @@ class PlanningsController < ApplicationController
     @slots_solution = []
     @user = current_user
 
+    # Fake solution => le boss remplacera le no solution
+    @user_solution = User.find_by(first_name: 'jean')
+
+    if @planning.week_number == 37
+      demo_method(@planning)
+    # if planning is not complete, generate a solution
+    elsif @planning.status != 'complete' && @planning.slots.count.positive? && !@test_possibilities.nil?
+      # => solution calculation
+      calcul_v1 = CalculSolutionV1.new(@planning)
+      calcul_v1.save
+
+      # @calcul_results = { :calcul_arrays, :test_possibilities, :solutions_array, :best_solution, :calculation_abstract }
+      @calcul_results = calcul_v1.perform
+      # @calcul_arrays = { slotgroups_array: @slotgroups_array, slots_array: @slots_array }
+      @calcul_arrays = @calcul_results[:calcul_arrays]
+      @test_possibilities = @calcul_results[:test_possibilities]
+      @solutions_array = @calcul_results[:solutions_array]
+      @best_solution = @calcul_results[:best_solution]
+      @calculation_abstract = @calcul_results[:calculation_abstract]
+      flash[:notice] = message_calculation_notice
+
+      #  affecter aux slots le user de la solution de ce planning au statut :validated
+      # identifier la solution validée
+      solution_instance = Solution.find_by(planning_id: @planning.id, calculsolutionv1_id: calcul_v1.id, status: :fresh)
+      @slots.each do |slot|
+        # get solution_slot related to this slot
+        the_solution_slot = SolutionSlot.select { |x| x.solution_id == solution_instance.id && x.slot_id == slot.id }
+        slot.user_id = the_solution_slot.first.user_id
+        slot.save
+      end
+    end
+
     @slots.each do |slot|
       # Fake solution > def user id solution
-
       if !User.find(slot.user_id).profile_picture.nil?
         # picture du user
         picture = 'http://res.cloudinary.com/dksqsr3pd/image/upload/c_fill,r_60,w_60/' + User.find(slot.user_id).profile_picture.path
@@ -84,25 +115,6 @@ class PlanningsController < ApplicationController
                            a
                          end
     end
-    # Fake solution => le boss remplacera le no solution
-    @user_solution = User.find_by(first_name: 'jean')
-
-    demo_method(@planning) if @planning.week_number == 37
-
-    # TODO : if no solution, generate solution calculation
-    # => solution calculation
-    calcul_v1 = CalculSolutionV1.new(@planning)
-    calcul_v1.save
-
-    # @calcul_results = { :calcul_arrays, :test_possibilities, :solutions_array, :best_solution, :calculation_abstract }
-    @calcul_results = calcul_v1.perform
-    # @calcul_arrays = { slotgroups_array: @slotgroups_array, slots_array: @slots_array }
-    @calcul_arrays = @calcul_results[:calcul_arrays]
-    @test_possibilities = @calcul_results[:test_possibilities]
-    @solutions_array = @calcul_results[:solutions_array]
-    @best_solution = @calcul_results[:best_solution]
-    @calculation_abstract = @calcul_results[:calculation_abstract]
-    flash[:notice] = message_calculation_notice
   end
 
   # rubocop:enable MethodLength
