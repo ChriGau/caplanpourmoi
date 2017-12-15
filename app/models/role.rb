@@ -9,6 +9,10 @@
 #  updated_at   :datetime         not null
 #  slotgroup_id :integer
 #
+# Indexes
+#
+#  index_roles_on_slotgroup_id  (slotgroup_id)
+#
 
 class Role < ApplicationRecord
   has_many :users, through: :role_users
