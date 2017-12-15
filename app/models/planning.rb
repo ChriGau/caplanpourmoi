@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: plannings
+#
+#  id          :integer          not null, primary key
+#  week_number :integer
+#  year        :integer
+#  status      :integer
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#
+
 class Planning < ApplicationRecord
   has_many :teams, dependent: :destroy
   has_many :users, through: :teams

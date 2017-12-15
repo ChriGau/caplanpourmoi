@@ -1,3 +1,17 @@
+# == Schema Information
+#
+# Table name: slots
+#
+#  id          :integer          not null, primary key
+#  start_at    :datetime
+#  end_at      :datetime
+#  planning_id :integer
+#  role_id     :integer
+#  user_id     :integer
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#
+
 class Slot < ApplicationRecord
   belongs_to :planning, optional: true
   belongs_to :role
