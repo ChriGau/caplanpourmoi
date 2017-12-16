@@ -3,7 +3,7 @@ class ComputeSolutionsController < ApplicationController
   before_action :set_planning, only: [:index, :create]
 
   def index
-    @compute_solutions = @planning.compute_solutions.order(created_at: :asc)
+    @compute_solutions = @planning.compute_solutions.order(created_at: :desc)
   end
 
   def create

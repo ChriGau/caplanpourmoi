@@ -65,4 +65,10 @@ Rails.application.routes.draw do
   get 'users/:id/infos', to: 'users#infos', as: 'user_infos'
   get 'users/:id/dispos', to: 'users#dispos', as: 'user_dispos'
 
+  # Sidekiq Web UI, only for admins.
+  require "sidekiq/web"
+  authenticate :user, lambda { |u| u.is_owner } do
+    mount Sidekiq::Web => '/sidekiq'
+  end
+
 end
