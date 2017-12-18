@@ -30,6 +30,7 @@ class Slot < ApplicationRecord
   belongs_to :user, optional: true
   validates :role_id, presence: true
   after_save :set_planning_status
+  has_many :solution_slots
 
   def self.slot_templates
     slot_templates = []
@@ -40,21 +41,19 @@ class Slot < ApplicationRecord
   end
 
   def initialize_slot_hash
-    h = { slotgroup_id: nil,
-          simulation_status: false,
-          slot_instance: self
-           }
+    { slotgroup_id: nil,
+      simulation_status: false,
+      slot_instance: self }
   end
 
   def similar_slots
     Slot.where('planning_id = ? and start_at = ? and end_at = ? and role_id = ?',
-                planning_id, start_at, end_at, role_id)
+               planning_id, start_at, end_at, role_id)
   end
 
-private
+  private
 
   def set_planning_status
     planning&.set_status
   end
-
 end
