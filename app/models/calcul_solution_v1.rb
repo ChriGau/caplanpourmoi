@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: calcul_solution_v1s
+#
+#  id               :integer          not null, primary key
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#  slots_array      :text
+#  slotgroups_array :text
+#  information      :text
+#
+
 class CalculSolutionV1 < ApplicationRecord
   attr_accessor :planning, :calcul_arrays, :build_solutions, :solution
 

@@ -1,0 +1,19 @@
+# == Schema Information
+#
+# Table name: roles
+#
+#  id           :integer          not null, primary key
+#  name         :string
+#  role_color   :string
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  slotgroup_id :integer
+#
+# Indexes
+#
+#  index_roles_on_slotgroup_id  (slotgroup_id)
+#
+
+mecano:
+  id: 1
+  name: "mécano"

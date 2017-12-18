@@ -1,6 +1,24 @@
+# == Schema Information
+#
+# Table name: roles
+#
+#  id           :integer          not null, primary key
+#  name         :string
+#  role_color   :string
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  slotgroup_id :integer
+#
+# Indexes
+#
+#  index_roles_on_slotgroup_id  (slotgroup_id)
+#
+
 class Role < ApplicationRecord
   has_many :users, through: :role_users
   has_many :solution_slots, through: :slots
+  has_many :role_users
+
 
   # rubocop:disable MethodLength
   def self.color_list
