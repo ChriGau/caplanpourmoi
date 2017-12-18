@@ -1,3 +1,27 @@
+# == Schema Information
+#
+# Table name: solution_slots
+#
+#  id             :integer          not null, primary key
+#  nb_extra_hours :integer
+#  status         :integer
+#  user_id        :integer
+#  slot_id        :integer
+#  solution_id    :integer
+#
+# Indexes
+#
+#  index_solution_slots_on_slot_id      (slot_id)
+#  index_solution_slots_on_solution_id  (solution_id)
+#  index_solution_slots_on_user_id      (user_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (slot_id => slots.id)
+#  fk_rails_...  (solution_id => solutions.id)
+#  fk_rails_...  (user_id => users.id)
+#
+
 class SolutionSlot < ApplicationRecord
   belongs_to :solution, dependent: :destroy
   belongs_to :user

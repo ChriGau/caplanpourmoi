@@ -1,3 +1,23 @@
+# == Schema Information
+#
+# Table name: solutions
+#
+#  id                  :integer          not null, primary key
+#  calculsolutionv1_id :integer
+#  nb_overlaps         :integer
+#  nb_extra_hours      :integer
+#  status              :integer
+#  planning_id         :integer
+#
+# Indexes
+#
+#  index_solutions_on_planning_id  (planning_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (planning_id => plannings.id)
+#
+
 class Solution < ApplicationRecord
   belongs_to :planning
   has_many :solution_slots
