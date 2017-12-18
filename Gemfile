@@ -7,7 +7,6 @@ gem 'jbuilder', '~> 2.0'
 gem 'pg'
 gem 'puma'
 gem 'rails', '5.0.5'
-gem 'redis'
 gem 'cloudinary', '1.1.7'
 gem 'attachinary', github: 'assembler/attachinary'
 gem 'jquery-fileupload-rails'
@@ -41,6 +40,11 @@ gem 'react-rails', '~> 1.8'
 
 # jquery ui pour drag slot on calendar from outside
 gem 'jquery-ui-rails'
+
+# background jobs
+gem 'sidekiq'
+gem 'sidekiq-failures', '~> 1.0'
+
 
 source 'https://rails-assets.org' do
   gem 'rails-assets-classnames'

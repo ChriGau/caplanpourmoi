@@ -38,6 +38,14 @@ ActiveRecord::Schema.define(version: 20171214131732) do
     t.text     "information"
   end
 
+  create_table "compute_solutions", force: :cascade do |t|
+    t.integer  "status"
+    t.integer  "planning_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.index ["planning_id"], name: "index_compute_solutions_on_planning_id", using: :btree
+  end
+
   create_table "constraints", force: :cascade do |t|
     t.datetime "start_at"
     t.datetime "end_at"
@@ -134,6 +142,7 @@ ActiveRecord::Schema.define(version: 20171214131732) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   end
 
+  add_foreign_key "compute_solutions", "plannings"
   add_foreign_key "constraints", "users"
   add_foreign_key "role_users", "roles"
   add_foreign_key "role_users", "users"
