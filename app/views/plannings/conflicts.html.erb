@@ -24,41 +24,130 @@
   </div>
 </div>
 
-<div class="col-md-8 col-lg-8 col-xs-12">
-  <% if not @slotgroups_calcul_array.nil?  %>
-  <% @slotgroups_calcul_array.each do |slotgroup| %>
-      <ul><b>SLOTGROUP_ID: <%= slotgroup[:slotgroup_id] %> </b> </ul>
-      <li> start_at: <%= slotgroup[:start_at] %> </li>
-      <li> end_at: <%= slotgroup[:end_at] %> </li>
-      <li> role_id: <%= slotgroup[:role_id] %> </li>
-      <li>role_name: <%= slotgroup[:role_name] %> </li>
-      <li> nb_required: <%= slotgroup[:nb_required] %> </li>
-      <li> nb available: <%= slotgroup[:nb_available] %> </li>
-      <li> list_available_users: <%= slotgroup[:list_available_users] %> </li>
-      <li> simulation_status: <%= slotgroup[:simulation_status] %> </li>
-      <li> slots_to_simulate: <%= slotgroup[:slots_to_simulate] %> </li>
-      <li> overlapping_slotsgroups: <%= slotgroup[:overlapping_slotgroups] %> </li>
-      <li> combinations_of_available_users: <%= slotgroup[:combinations_of_available_users] %> </li>
-      <li> nb_combinations_of_available_users: <%= slotgroup[:nb_combinations_of_available_users] %></li>
-      <li> priority: <%= slotgroup[:priority] %> </li>
-      <li> ranking_algo: <%= slotgroup[:ranking_algo] %> </li>
-      <li> calculation_interval: <%= slotgroup[:calculation_interval] %> <br></li>
+  <% if not @calcul_arrays.nil? %>
+    <% if @calcul_arrays[:slotgroups_array].nil?  %>
+      <% @calcul_arrays[:slotgroups_array].each do |slotgroup| %>
+        <div class="col-xs-12" style = "border: 1px solid blue;">
+          <div class="col-xs-6">
+            <ul><b>SLOTGROUP_ID: <%= slotgroup.id %> </b> </ul>
+            <li> start_at: <%= slotgroup.start_at %> </li>
+            <li> end_at: <%= slotgroup.end_at %> </li>
+            <li> role_id: <%= slotgroup.role_id %> </li>
+            <li>role_name: <%= slotgroup.role_name %> </li>
+            <li>planning_id: <%= slotgroup.planning_id %> </li>
+            <li> nb_required: <%= slotgroup.nb_required %> </li>
+            <li> nb available: <%= slotgroup.nb_available %> </li>
+            <li> list_available_users: <%= slotgroup.list_available_users %> </li>
+          </div>
+          <div class="col-xs-6">
+            <li> simulation_status: <%= slotgroup.simulation_status %> </li>
+            <li> slots_to_simulate: <%= slotgroup.slots_to_simulate %> </li>
+            <li> overlaps: <%= slotgroup.overlaps %> </li>
+            <li> combinations_of_available_users: <%= slotgroup.combinations_of_available_users %> </li>
+            <li> nb_combinations_of_available_users: <%= slotgroup.nb_combinations_available_users %></li>
+            <li> priority: <%= slotgroup.priority %> </li>
+            <li> ranking_algo: <%= slotgroup.ranking_algo %> </li>
+            <li> calculation_interval: <%= slotgroup.calculation_interval %> <br></li>
+          </div>
+        </div>
+      <% end %>
     <% end %>
+  <% end %>
+
+
+
+<b> ----------------------------------- SOLUTIONS -----------------------------------</b>
+
+<!-- @solutions_array = [{ solution_id: solution_id, nb_overlaps: nb_overlaps , planning_possibility: @planning_possibility }, {...} ] -->
+  <% if not @solutions_array.nil?  %>
+    <% if not @solutions_array.empty?  %>
+      <ul> SOLUTIONS:  </ul> <br>
+      <div class="col-xs-6">
+      <% @solutions_array.each do |solution| %>
+             <b>
+                <li>solution_id: <%= solution[:solution_id] %></li>
+                <li>possibility_id: <%= solution[:possibility_id] %></li>
+                <li>nb_overlaps: <%= solution[:nb_overlaps] %></li>
+              </b>
+              Planning possibility:
+              <% solution[:planning_possibility].each do |solution| %>
+                <li>sg_ranking: <%= solution[:sg_ranking] %></li>
+                <li>sg_id: <%= solution[:sg_id] %></li>
+                <li>combination: <%= solution[:combination] %></li>
+                <li>overlaps: <%= solution[:overlaps] %></li>
+                *****
+            <% end %>
+             *************************************************************************
+        <% end %>
+        **************** Next solution ******************
+      </div>
     <% end %>
-</div>
-<br><br>
-<div class="col-md-8 col-lg-8 col-xs-12">
-  <% if not @slots_calcul_array.nil?  %>
-  <% @slots_calcul_array.each do |slot| %>
-  <div class="col-xs-12">
-      <ul><b> SLOT_SIMULATION: <%= slot[:slot_instance] %> </b> </ul>
-      <li> simulation_status: <%= slot[:simulation_status] %> </li>
-      <li> slotgroup_id: <%= slot[:slotgroup_id] %> </li>
+  <% end %>
+<br>
+
+<!--
+<b> ----------------------------------- POSSIBILITIES -----------------------------------</b>
+
+<% if not @test_possibilities.nil? %>
+  <% if not @test_possibilities.empty?  %>
+    <div class="col-xs-6">
+      <% @test_possibilities.each do |all_plannings| %>
+        <% all_plannings.each do |planning| %>
+            <li>slotgroup_ranking: <%= planning[:sg_ranking] %></li>
+            <li>slotgroup_id: <%= planning[:sg_id] %></li>
+            <li>combination: <%= planning[:combination] %></li>
+            <li>overlaps: <%= planning[:overlaps] %></li>
+             <br>
+             *************************
+        <% end %>
+      ********************************** Next possibility **********************************
+      <% end %>
     </div>
+  <% end %>
+<% end %>
+<br>
+
+-->
+
+<b> ----------------------------------- SLOTS CARACTERISTICS -----------------------------------</b>
+
+  <% if not @calcul_arrays.nil? %>
+    <% if @calcul_arrays[:slots_array].nil?  %>
+      <div class="col-xs-12">
+      <% @calcul_arrays[:slots_array].each do |slot| %>
+          <ul><b> SLOT_SIMULATION: <%= slot[:slot_instance] %> </b> </ul>
+          <li> simulation_status: <%= slot[:simulation_status] %> </li>
+          <li> slotgroup_id: <%= slot[:slotgroup_id] %> </li>
+        <% end %>
+      </div>
     <% end %>
-    <% end %>
-</div>
-<br><br>
+  <% end %>
+
+<br>
+
+
+<b> //////////////////////////////// BEST SOLUTION \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ </b>
+
+  <% if not @best_solution.nil?  %>
+    <ul> SELECTED SOLUTION:  </ul> <br>
+    <div class="col-xs-12">
+    <b>
+      <li>solution_id: <%= @best_solution[:solution_id] %></li>
+      <li>possibility_id: <%= @best_solution[:possibility_id] %></li>
+      <li>nb_overlaps: <%= @best_solution[:nb_overlaps] %></li>
+    </b>
+      <% @best_solution[:planning_possibility].each do |slotgroup| %>
+        <li>slotgroup_ranking: <%= slotgroup[:sg_ranking] %></li>
+        <li>slotgroup_id: <%= slotgroup[:sg_id] %></li>
+        <li>combination: <%= slotgroup[:combination] %></li>
+        <li>overlaps: <%= slotgroup[:overlaps] %></li>
+        *****************
+      <% end %>
+       <br>
+    </div>
+  <% end %>
+<br>
+
 <!-- ___________________________ JS __________________________________ -->
 
 <%= content_for(:after_js) do %>
