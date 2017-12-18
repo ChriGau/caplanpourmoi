@@ -59,7 +59,7 @@ class Slotgroup
   end
 
   def more_or_equal_available_as_required?
-    self.nb_available >= self.nb_required
+    nb_available >= nb_required
   end
 
   def take_into_calculation_interval_account(slotgroup_bis)

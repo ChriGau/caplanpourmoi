@@ -59,7 +59,7 @@ class GoFindSolutionsV1Service
     for tree in 1..nb_trees
       for branch in 1..nb_branches
         self.planning_possibility = []
-        next if solution_id ==  5  # pour stopper les itérations au bout de la nième solution
+        # next if solution_id ==  1000  # pour stopper les itérations au bout de la nième solution
         # we skip this branch if we must
         next if must_we_jump_to_another_branch?(tree, next_tree, branch, next_branch)
         # let's build a planning possibility
@@ -229,6 +229,9 @@ class GoFindSolutionsV1Service
     slotgroup.overlaps.each do |overlapping_slotgroup_hash|
       users_in_overlap = [] # reinit
       overlapped_slotgroup_id = overlapping_slotgroup_hash[:slotgroup_id]
+      # on passe au suivant si l'overlap concerne un slotgroup qui n'est pas simulé
+      # càd que l'on ne trouve pas ce slotgroup.
+      next if find_slotgroup_possibility_by_id(overlapped_slotgroup_id).nil?
       overlapped_slotgroup_possibility = find_slotgroup_possibility_by_id(overlapped_slotgroup_id)
       users_in_overlap = slotgroup_possibility_combination & overlapped_slotgroup_possibility[:combination]
       unless users_in_overlap.nil? || users_in_overlap.empty?
@@ -241,8 +244,8 @@ class GoFindSolutionsV1Service
     { nb_overlaps_slotgroup: nb_overlaps_slotgroup, slotgroup_possibility: slotgroup_possibility }
   end
 
-  def find_slotgroup_possibility_by_id(overlapping_slotgroup_id)
-    planning_possibility.find { |x| x[:sg_id] == overlapping_slotgroup_id }
+  def find_slotgroup_possibility_by_id(slotgroup_id)
+    planning_possibility.find { |x| x[:sg_id] == slotgroup_id }
   end
 
   def overlaps_equal_zero_or_lower_than_best?(overlaps, overlaps_best_scoring)

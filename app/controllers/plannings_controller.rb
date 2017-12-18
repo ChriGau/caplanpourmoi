@@ -41,12 +41,11 @@ class PlanningsController < ApplicationController
 
     if @planning.week_number == 37
       demo_method(@planning)
-    # if planning is not complete, generate a solution
-    elsif @planning.status != 'complete' && @planning.slots.count.positive? && !@test_possibilities.nil?
+    # if planning is not complete and contains slots => generate solutions
+    elsif @planning.status != :complete && @slots.count.positive?
       # => solution calculation
       calcul_v1 = CalculSolutionV1.new(@planning)
       calcul_v1.save
-
       # @calcul_results = { :calcul_arrays, :test_possibilities, :solutions_array, :best_solution, :calculation_abstract }
       @calcul_results = calcul_v1.perform
       # @calcul_arrays = { slotgroups_array: @slotgroups_array, slots_array: @slots_array }
@@ -61,7 +60,7 @@ class PlanningsController < ApplicationController
       # identifier la solution validée
       solution_instance = Solution.find_by(planning_id: @planning.id, calculsolutionv1_id: calcul_v1.id, status: :fresh)
       @slots.each do |slot|
-        # get solution_slot related to this slot
+        # get solution_slot related to this slot
         the_solution_slot = SolutionSlot.select { |x| x.solution_id == solution_instance.id && x.slot_id == slot.id }
         slot.user_id = the_solution_slot.first.user_id
         slot.save
@@ -191,13 +190,17 @@ class PlanningsController < ApplicationController
   # rubocop:disable LineLength
 
   def message_calculation_notice
-    pourcent = (@calculation_abstract[:nb_iterations].fdiv(@calculation_abstract[:nb_possibilities_theory]) * 100).round(2)
-    "#{@calculation_abstract[:nb_solutions]} solutions trouvées,
-    dont #{@calculation_abstract[:nb_optimal_solutions]} optimales.
-     #{@calculation_abstract[:nb_iterations]} itérations effectuées parmi
-    #{@calculation_abstract[:nb_possibilities_theory]} possibilités théoriques,
-    soit #{pourcent}
-     pourcents du champs balayé"
+    if @calculation_abstract.nil?
+      'non calculable car 0 solution'
+    else
+      pourcent = (@calculation_abstract[:nb_iterations].fdiv(@calculation_abstract[:nb_possibilities_theory]) * 100).round(2)
+      "#{@calculation_abstract[:nb_solutions]} solutions trouvées,
+      dont #{@calculation_abstract[:nb_optimal_solutions]} optimales.
+       #{@calculation_abstract[:nb_iterations]} itérations effectuées parmi
+      #{@calculation_abstract[:nb_possibilities_theory]} possibilités théoriques,
+      soit #{pourcent}
+       pourcents du champs balayé"
+    end
   end
 end
 # rubocop:enable Metrics/ClassLength
