@@ -16,6 +16,7 @@ class CalculSolutionV1 < ApplicationRecord
   def initialize(planning)
     super({})
     @planning = planning
+    @no_solution_user = [User.find_by(first_name: 'no solution')]
   end
 
   # rubocop:disable LineLength, MethodLength, AbcSize
@@ -84,45 +85,43 @@ class CalculSolutionV1 < ApplicationRecord
   def create_solution_slots(slotgroups_array, planning_possibility)
     # on reprend tous les slotgroups (même à ne pas simuler)
     slotgroups_array.each do |slotgroup_instance|
-      # recupérer la combination
-      combination = get_slotgroup_combination(planning_possibility, slotgroup_instance)
       # si simulation_status = false, user = no solution
       if slotgroup_instance.simulation_status == false
         # récupérer les id des slots liés à ce slotgroup
         slots_id_array = get_array_of_ids_of_slots_related_to_a_slotgroup(slotgroup_instance.id, calcul_arrays[:slots_array])
         # créer les instances de slot_solutions avec user_id = 'no solution'
-        create_solution_slots_for_a_group_of_slots(slots_id_array, no_solution_user_id)
+        create_solution_slots_for_a_group_of_slots(slots_id_array)
       # si required >= available => affecter à chacun des slots les users de la combination
       elsif slotgroup_instance.nb_available >= slotgroup_instance.nb_required
-        # récupérer les id des slots liés à ce slotgroup
         slots_id_array = get_array_of_ids_of_slots_related_to_a_slotgroup(slotgroup_instance.id, calcul_arrays[:slots_array])
-        user_solution_position = 0
-        slots_id_array.each do |slot_id|
-          create_solution_slot_instance(slot_id, combination[user_solution_position].id)
-          user_solution_position += 1
-        end
+        combination = get_slotgroup_combination(planning_possibility, slotgroup_instance)
+        create_solution_slots_for_a_group_of_slots(slots_id_array, combination)
       # sinon (il y a des slots à simuler et d'autres non)
       else
+
+        slots_id_array_false = get_array_of_slots_ids_related_to_slotgroup_id_according_to_simulation_status(false, slotgroup_instance.id, calcul_arrays[:slots_array])
+        slots_id_array_true = get_array_of_slots_ids_related_to_slotgroup_id_according_to_simulation_status(true, slotgroup_instance.id, calcul_arrays[:slots_array])
+        # leur affecter les users de la combination
+        combination = get_slotgroup_combination(planning_possibility, slotgroup_instance)
+        create_solution_slots_for_a_group_of_slots(slots_id_array_true, combination)
+        create_solution_slots_for_a_group_of_slots(slots_id_array_false)
+      end
+    end
+  end
+
+  def create_solution_slots_from_a_group_of_slots_and_solution_combinations(slots_id_array, combination)
+      # recupérer la combination
+        combination = get_slotgroup_combination(planning_possibility, slotgroup_instance)
         # prendre tous les slots à simuler = true (en toute logique cela correspond au nombre de users dans la combination)
         slots_id_array = get_array_of_slots_ids_related_to_slotgroup_id_according_to_simulation_status(true, slotgroup_instance.id, calcul_arrays[:slots_array])
         # leur affecter les users de la combination
-        user_solution_position = 0
-        slots_id_array.each do |slot_id|
-          create_solution_slot_instance(slot_id, combination[user_solution_position].id)
-          user_solution_position += 1
-        end
-        # réaffecter 'no solution' aux slots à simuler = false
-        slots_id_array = get_array_of_slots_ids_related_to_slotgroup_id_according_to_simulation_status(false, slotgroup_instance.id, calcul_arrays[:slots_array])
-        # leur affecter les users de la combination
-        create_solution_slots_for_a_group_of_slots(slots_id_array, no_solution_user_id)
-      end
-    end
+        create_solution_slots_for_a_group_of_slots(slots_id_array, users)
   end
 
   def create_solution_slots_when_no_slotgroup_to_simulate
     # get slots_id related to the planning
     slots_id_array = planning.slots.map(&:id)
-    create_solution_slots_for_a_group_of_slots(slots_id_array, no_solution_user_id)
+    create_solution_slots_for_a_group_of_slots(slots_id_array)
   end
 
   private
@@ -148,17 +147,17 @@ class CalculSolutionV1 < ApplicationRecord
     slots_array.select { |x| x[:slotgroup_id] == slotgroup_id && x[:simulation_status] == simulation_status }
   end
 
-  def create_solution_slots_for_a_group_of_slots(slots_id_array, user_id)
-    slots_id_array.each do |slot_id|
-      create_solution_slot_instance(slot_id, user_id)
-    end
+  def create_solution_slots_for_a_group_of_slots(slots_id_array, users = @no_solution_user, sequence = 0)
+      return if sequence == slots_id_array.length
+      create_solution_slot_instance(slots_id_array[sequence], users[sequence])
+      create_solution_slots_for_a_group_of_slots(slots_id_array, users, sequence +=1)
   end
 
-  def create_solution_slot_instance(slot_id, user_id)
+  def create_solution_slot_instance(slot_id, user)
     s = SolutionSlot.new
     s.solution_id = solution.id
     s.slot_id = slot_id
-    s.user_id = user_id
+    s.user = user
     # TODO, s.extra_hours
     s.save
   end
