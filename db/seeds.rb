@@ -11,9 +11,12 @@ puts ""
 # destroy Slot before planning
 RoleUser.destroy_all
 Constraint.destroy_all
+ComputeSolution.destroy_all
+SolutionSlot.destroy_all
 Slot.destroy_all
 Role.destroy_all
 Team.destroy_all
+Solution.destroy_all
 Planning.destroy_all
 User.destroy_all
 
@@ -62,6 +65,15 @@ i = 1
   i += 1
 end
 
+i = 1
+20.times do
+  p = Planning.new
+  p.week_number = 1 + i
+  p.year = 2018
+  p.save!
+  i += 1
+end
+
 p = Planning.first
 
 
@@ -79,6 +91,12 @@ Role.create!(name: "barista",
             )
 Role.create!(name: "patron",
             role_color: "black"
+            )
+Role.create!(name: "chef",
+            role_color: "blue"
+            )
+Role.create!(name: "commis",
+            role_color: "pink"
             )
 
 # un-assigned value : color_role
@@ -210,6 +228,89 @@ User.create!(email: "wtf@boutique.com",
             profile_picture: open_image("./images_seeds/avatar_no.jpg")
   )
 
+# Creation des users pour test cas Ecomotiv
+User.create!(email: "benedict@boutique.com",
+            working_hours: 32,
+            is_owner: false,
+            first_name: "benedict",
+            last_name: "cumberbach",
+            password: "password",
+            profile_picture: open_image("./images_seeds/benedict_cumberbach.png")
+  )
+
+User.create!(email: "roxane@boutique.com",
+            working_hours: 32,
+            is_owner: false,
+            first_name: "roxanne",
+            last_name: "machin",
+            password: "password",
+            profile_picture: open_image("./images_seeds/roxanne.png")
+  )
+
+User.create!(email: "caroline@boutique.com",
+            working_hours: 32,
+            is_owner: false,
+            first_name: "caroline",
+            last_name: "la tortue",
+            password: "password",
+            profile_picture: open_image("./images_seeds/caroline.png")
+  )
+
+User.create!(email: "ninon@boutique.com",
+            working_hours: 32,
+            is_owner: false,
+            first_name: "ninon",
+            last_name: "the rockstar",
+            password: "password",
+            profile_picture: open_image("./images_seeds/ninon.png")
+  )
+
+User.create!(email: "oahn@boutique.com",
+            working_hours: 32,
+            is_owner: false,
+            first_name: "oanh",
+            last_name: "da boss",
+            password: "password",
+            profile_picture: open_image("./images_seeds/oanh.png")
+  )
+
+User.create!(email: "virginie@boutique.com",
+            working_hours: 32,
+            is_owner: false,
+            first_name: "virginie",
+            last_name: "td",
+            password: "password",
+            profile_picture: open_image("./images_seeds/virginie.png")
+  )
+
+User.create!(email: "lorraine@boutique.com",
+            working_hours: 32,
+            is_owner: false,
+            first_name: "lorraine",
+            last_name: "cauquil",
+            password: "password",
+            profile_picture: open_image("./images_seeds/lorraine.png")
+  )
+
+User.create!(email: "mariana@boutique.com",
+            working_hours: 32,
+            is_owner: false,
+            first_name: "mariana",
+            last_name: "Columbia",
+            password: "password",
+            profile_picture: open_image("./images_seeds/mariana.png")
+  )
+
+User.create!(email: "david@boutique.com",
+            working_hours: 32,
+            is_owner: false,
+            first_name: "david",
+            last_name: "abitboul",
+            password: "password",
+            profile_picture: open_image("./images_seeds/david.png")
+  )
+
+
 puts "6 - assigning roles to members"
 puts ""
 
@@ -300,6 +401,85 @@ b.save!
 a = User.find_by_first_name('jean')
 b = RoleUser.new
 b.role_id = Role.find_by_name("patron").id
+b.user_id = a.id
+b.save!
+
+# Roles pour l'Ecomotiv
+a = User.find_by_first_name('benedict')
+b = RoleUser.new
+b.role_id = Role.find_by_name("barista").id
+b.user_id = a.id
+b.save!
+
+a = User.find_by_first_name('roxanne')
+b = RoleUser.new
+b.role_id = Role.find_by_name("chef").id
+b.user_id = a.id
+b.save!
+
+a = User.find_by_first_name('caroline')
+b = RoleUser.new
+b.role_id = Role.find_by_name('barista').id
+b.user_id = a.id
+b.save!
+
+a = User.find_by_first_name('ninon')
+b = RoleUser.new
+b.role_id = Role.find_by_name('chef').id
+b.user_id = a.id
+b.save!
+
+a = User.find_by_first_name('ninon')
+b = RoleUser.new
+b.role_id = Role.find_by_name('barista').id
+b.user_id = a.id
+b.save!
+
+a = User.find_by_first_name('oanh')
+b = RoleUser.new
+b.role_id = Role.find_by_name('chef').id
+b.user_id = a.id
+b.save!
+
+a = User.find_by_first_name('oanh')
+b = RoleUser.new
+b.role_id = Role.find_by_name('barista').id
+b.user_id = a.id
+b.save!
+
+a = User.find_by_first_name('virginie')
+b = RoleUser.new
+b.role_id = Role.find_by_name('barista').id
+b.user_id = a.id
+b.save!
+
+a = User.find_by_first_name('lorraine')
+b = RoleUser.new
+b.role_id = Role.find_by_name('barista').id
+b.user_id = a.id
+b.save!
+
+a = User.find_by_first_name('lorraine')
+b = RoleUser.new
+b.role_id = Role.find_by_name('commis').id
+b.user_id = a.id
+b.save!
+
+a = User.find_by_first_name('mariana')
+b = RoleUser.new
+b.role_id = Role.find_by_name('barista').id
+b.user_id = a.id
+b.save!
+
+a = User.find_by_first_name('david')
+b = RoleUser.new
+b.role_id = Role.find_by_name('barista').id
+b.user_id = a.id
+b.save!
+
+a = User.find_by_first_name('david')
+b = RoleUser.new
+b.role_id = Role.find_by_name('commis').id
 b.user_id = a.id
 b.save!
 
@@ -457,6 +637,8 @@ p36 = Planning.find_by_week_number(36)
 p38 = Planning.find_by_week_number(38)
 p39 = Planning.find_by_week_number(39)
 p40 = Planning.find_by_week_number(40)
+
+
 
 
 ##11/09
@@ -964,6 +1146,563 @@ Slot.create!(
   user_id: User.find_by_first_name("no solution").id
   )
 
+# Creation de slots pour la semaine 39
+# baristas
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 39).id,
+  start_at: "2017-09-25 07:00",
+  end_at: "2017-09-25 15:00",
+  role_id: Role.find_by_name("barista").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 39).id,
+  start_at: "2017-09-26 07:00",
+  end_at: "2017-09-26 15:00",
+  role_id: Role.find_by_name("barista").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 39).id,
+  start_at: "2017-09-27 07:00",
+  end_at: "2017-09-27 15:00",
+  role_id: Role.find_by_name("barista").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 39).id,
+  start_at: "2017-09-28 07:00",
+  end_at: "2017-09-28 15:00",
+  role_id: Role.find_by_name("barista").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 39).id,
+  start_at: "2017-09-29 07:00",
+  end_at: "2017-09-29 15:00",
+  role_id: Role.find_by_name("barista").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 39).id,
+  start_at: "2017-09-30 07:00",
+  end_at: "2017-09-30 15:00",
+  role_id: Role.find_by_name("barista").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+# mécanos
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 39).id,
+  start_at: "2017-09-25 07:30",
+  end_at: "2017-09-25 15:30",
+  role_id: Role.find_by_name("mécano").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 39).id,
+  start_at: "2017-09-26 07:30",
+  end_at: "2017-09-26 16:15",
+  role_id: Role.find_by_name("mécano").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 39).id,
+  start_at: "2017-09-27 07:30",
+  end_at: "2017-09-27 14:00",
+  role_id: Role.find_by_name("mécano").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 39).id,
+  start_at: "2017-09-27 07:30",
+  end_at: "2017-09-27 16:15",
+  role_id: Role.find_by_name("mécano").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 39).id,
+  start_at: "2017-09-28 07:30",
+  end_at: "2017-09-28 15:00",
+  role_id: Role.find_by_name("mécano").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 39).id,
+  start_at: "2017-09-29 07:30",
+  end_at: "2017-09-29 16:15",
+  role_id: Role.find_by_name("mécano").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 39).id,
+  start_at: "2017-09-29 07:30",
+  end_at: "2017-09-29 16:15",
+  role_id: Role.find_by_name("mécano").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 39).id,
+  start_at: "2017-09-30 07:30",
+  end_at: "2017-09-30 16:15",
+  role_id: Role.find_by_name("mécano").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+# vendeurs
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 39).id,
+  start_at: "2017-09-25 09:00",
+  end_at: "2017-09-25 19:30",
+  role_id: Role.find_by_name("vendeur").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 39).id,
+  start_at: "2017-09-26 09:00",
+  end_at: "2017-09-26 19:30",
+  role_id: Role.find_by_name("vendeur").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 39).id,
+  start_at: "2017-09-27 09:00",
+  end_at: "2017-09-27 19:30",
+  role_id: Role.find_by_name("vendeur").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 39).id,
+  start_at: "2017-09-28 09:00",
+  end_at: "2017-09-28 19:30",
+  role_id: Role.find_by_name("vendeur").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 39).id,
+  start_at: "2017-09-29 14:20",
+  end_at: "2017-09-29 19:30",
+  role_id: Role.find_by_name("vendeur").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 39).id,
+  start_at: "2017-09-30 14:20",
+  end_at: "2017-09-30 19:30",
+  role_id: Role.find_by_name("vendeur").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 39).id,
+  start_at: "2017-09-25 14:20",
+  end_at: "2017-09-25 19:30",
+  role_id: Role.find_by_name("vendeur").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 39).id,
+  start_at: "2017-09-26 14:20",
+  end_at: "2017-09-26 19:30",
+  role_id: Role.find_by_name("vendeur").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 39).id,
+  start_at: "2017-09-27 14:20",
+  end_at: "2017-09-27 19:30",
+  role_id: Role.find_by_name("vendeur").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 39).id,
+  start_at: "2017-09-28 14:20",
+  end_at: "2017-09-28 19:30",
+  role_id: Role.find_by_name("vendeur").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 39).id,
+  start_at: "2017-09-29 14:20",
+  end_at: "2017-09-29 19:30",
+  role_id: Role.find_by_name("vendeur").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 39).id,
+  start_at: "2017-09-30 14:20",
+  end_at: "2017-09-30 19:30",
+  role_id: Role.find_by_name("vendeur").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+# planning week 03 -- sur le modele de l'ecomotiv
+# baristas
+
+# lundi
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
+  start_at: "2018-01-15 08:00",
+  end_at: "2018-01-15 15:00",
+  role_id: Role.find_by_name("barista").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
+  start_at: "2018-01-15 11:30",
+  end_at: "2018-01-15 14:15",
+  role_id: Role.find_by_name("barista").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
+  start_at: "2018-01-15 15:00",
+  end_at: "2018-01-15 20:00",
+  role_id: Role.find_by_name("barista").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+# mardi
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
+  start_at: "2018-01-16 08:00",
+  end_at: "2018-01-16 15:00",
+  role_id: Role.find_by_name("barista").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
+  start_at: "2018-01-16 11:30",
+  end_at: "2018-01-16 14:15",
+  role_id: Role.find_by_name("barista").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
+  start_at: "2018-01-16 15:00",
+  end_at: "2018-01-16 20:00",
+  role_id: Role.find_by_name("barista").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+# mercredi
+
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
+  start_at: "2018-01-17 08:00",
+  end_at: "2018-01-17 15:00",
+  role_id: Role.find_by_name("barista").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
+  start_at: "2018-01-17 11:30",
+  end_at: "2018-01-17 14:15",
+  role_id: Role.find_by_name("barista").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
+  start_at: "2018-01-17 15:00",
+  end_at: "2018-01-17 20:00",
+  role_id: Role.find_by_name("barista").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+# jeudi
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
+  start_at: "2018-01-18 08:00",
+  end_at: "2018-01-18 15:00",
+  role_id: Role.find_by_name("barista").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
+  start_at: "2018-01-18 11:30",
+  end_at: "2018-01-18 14:15",
+  role_id: Role.find_by_name("barista").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
+  start_at: "2018-01-18 15:00",
+  end_at: "2018-01-18 20:00",
+  role_id: Role.find_by_name("barista").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+# vendredi
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
+  start_at: "2018-01-19 08:00",
+  end_at: "2018-01-19 15:00",
+  role_id: Role.find_by_name("barista").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
+  start_at: "2018-01-19 11:30",
+  end_at: "2018-01-19 14:15",
+  role_id: Role.find_by_name("barista").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
+  start_at: "2018-01-19 15:00",
+  end_at: "2018-01-19 20:00",
+  role_id: Role.find_by_name("barista").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+# samedi
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
+  start_at: "2018-01-20 08:00",
+  end_at: "2018-01-20 15:00",
+  role_id: Role.find_by_name("barista").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
+  start_at: "2018-01-20 15:00",
+  end_at: "2018-01-20 20:00",
+  role_id: Role.find_by_name("barista").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+# dimanche
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
+  start_at: "2018-01-21 08:00",
+  end_at: "2018-01-21 15:00",
+  role_id: Role.find_by_name("barista").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
+  start_at: "2018-01-21 15:00",
+  end_at: "2018-01-21 20:00",
+  role_id: Role.find_by_name("barista").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+# chef
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
+  start_at: "2018-01-15 08:00",
+  end_at: "2018-01-15 15:00",
+  role_id: Role.find_by_name("chef").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
+  start_at: "2018-01-16 08:00",
+  end_at: "2018-01-16 15:00",
+  role_id: Role.find_by_name("chef").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
+  start_at: "2018-01-17 08:00",
+  end_at: "2018-01-17 15:00",
+  role_id: Role.find_by_name("chef").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
+  start_at: "2018-01-18 08:00",
+  end_at: "2018-01-18 15:00",
+  role_id: Role.find_by_name("chef").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
+  start_at: "2018-01-19 08:00",
+  end_at: "2018-01-19 15:00",
+  role_id: Role.find_by_name("chef").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
+  start_at: "2018-01-20 08:00",
+  end_at: "2018-01-20 15:00",
+  role_id: Role.find_by_name("chef").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
+  start_at: "2018-01-21 08:00",
+  end_at: "2018-01-21 15:00",
+  role_id: Role.find_by_name("chef").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+# commis
+
+#  slot 8h --> 15h
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
+  start_at: "2018-01-15 08:00",
+  end_at: "2018-01-15 15:00",
+  role_id: Role.find_by_name("commis").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
+  start_at: "2018-01-16 08:00",
+  end_at: "2018-01-16 15:00",
+  role_id: Role.find_by_name("commis").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
+  start_at: "2018-01-17 08:00",
+  end_at: "2018-01-17 15:00",
+  role_id: Role.find_by_name("commis").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
+  start_at: "2018-01-18 08:00",
+  end_at: "2018-01-18 15:00",
+  role_id: Role.find_by_name("commis").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
+  start_at: "2018-01-19 08:00",
+  end_at: "2018-01-19 15:00",
+  role_id: Role.find_by_name("commis").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
+  start_at: "2018-01-20 08:00",
+  end_at: "2018-01-20 15:00",
+  role_id: Role.find_by_name("commis").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
+  start_at: "2018-01-21 08:00",
+  end_at: "2018-01-21 15:00",
+  role_id: Role.find_by_name("commis").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+# slots 14h15 - 20h semaine
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
+  start_at: "2018-01-15 14:15",
+  end_at: "2018-01-15 20:00",
+  role_id: Role.find_by_name("commis").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
+  start_at: "2018-01-16 14:15",
+  end_at: "2018-01-16 20:00",
+  role_id: Role.find_by_name("commis").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
+  start_at: "2018-01-17 14:15",
+  end_at: "2018-01-17 20:00",
+  role_id: Role.find_by_name("commis").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
+  start_at: "2018-01-18 14:15",
+  end_at: "2018-01-18 20:00",
+  role_id: Role.find_by_name("commis").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
+  start_at: "2018-01-19 14:15",
+  end_at: "2018-01-19 20:00",
+  role_id: Role.find_by_name("commis").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+# slot 15h - 20h le weekend
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
+  start_at: "2018-01-20 15:00",
+  end_at: "2018-01-20 20:00",
+  role_id: Role.find_by_name("commis").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
+
+Slot.create!(
+  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
+  start_at: "2018-01-21 15:00",
+  end_at: "2018-01-21 20:00",
+  role_id: Role.find_by_name("commis").id,
+  user_id: User.find_by_first_name("no solution").id
+  )
 
 puts ""
 puts  "  >> #{User.count} users created"
