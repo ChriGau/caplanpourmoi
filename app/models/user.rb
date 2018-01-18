@@ -24,7 +24,6 @@
 #
 #  index_users_on_email                 (email) UNIQUE
 #  index_users_on_reset_password_token  (reset_password_token) UNIQUE
-#
 
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
@@ -35,7 +34,7 @@ class User < ApplicationRecord
   has_many :plannings, through: :teams
   has_many :slots, dependent: :destroy
   has_many :roles, through: :role_users
-  has_many :role_users
+  has_many :role_users, dependent: :destroy
   has_many :teams, dependent: :destroy
   has_many :role_users # added back bcoz triggers 'association not found error'
   has_many :solution_slots
