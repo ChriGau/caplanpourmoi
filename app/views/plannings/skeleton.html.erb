@@ -7,7 +7,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-xs-4 slot_form" style="background-color: green">
+      <div class="col-xs-4 slot_form">
         <p>Create a slot</p>
         <!-- intégrer du date picker bootstrap dans simple form via gem https://github.com/Eonasdan/bootstrap-datetimepicker -->
         <%= simple_form_for [@planning, @slot] do |f| %>
@@ -21,6 +21,7 @@
             </span>
           </div>
         </div>
+
         <div class="form-group">
           <div class='input-group date' id='datetimepicker2'>
             <input name="slot[end_at]" type='text' value="<%= @slot.end_at %>" class="form-control" />
@@ -32,9 +33,11 @@
       </div>
       <%= f.input :role_id, placeholder: "Role", label: false, collection: fetch_roles  %>
       <%= f.submit "Valider", class: "btn btn-success" %>
+      <%= f.button :button, "Cancel", type: :reset, class: "btn btn-none cancel-button" %>
       <% end %>
       </div>
     </div>
+
     <div class="row spacing">
       <ul class="list-inline dragndrop-metiers">
         <% @slot_templates.each do |slot| %>
@@ -147,14 +150,14 @@
     });
     // assign default event data to draggable elements
     $('.draggable').data('duration', '03:00');
-  </script>
-  <!-- enable bootstrap in simple form -->
-  <script type="text/javascript">
-    $(function () {
-      $('#datetimepicker1').datetimepicker();
-      $('#datetimepicker2').datetimepicker();
+    // hide slot_form when clicking on its 'Cancel' button
+    $(".cancel-button").click(function(){
+      $(".slot_form").hide();
     });
+
   </script>
+
+
   <script>
     $('#calendar').fullCalendar({
       //calendar attributes
@@ -184,16 +187,26 @@
 
       // clic on a day
       dayClick: function(date, jsEvent, view) {
-
         // affiche l'encart pour entrer un nouveau slot
         $(".slot_form").show();
         var planning_id = <%= @planning.id %>;
+        // new Date est une fonction js pour créer une date à partir d'un string
+        var a = new Date(date.format());
+        // enable + custom bootstrap in simple form
+        $('#datetimepicker1').datetimepicker({
+          defaultDate: a,
+          locale: 'FR'
+         });
+        $('#datetimepicker2').datetimepicker({
+          defaultDate: a.setHours(a.getHours()+5),
+          locale: 'FR'
+         });
         // affiche le new de slots --> form
         $.ajax({
           type: "GET",
           url: Routes.new_planning_slot_path( planning_id, { format: 'js' } ),
           success: function(data) {
-            console.log("ok");
+            console.log(Event);
           },
           error: function(jqXHR) {
             console.log(jqXHR.responseText);

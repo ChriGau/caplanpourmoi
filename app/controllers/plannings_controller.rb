@@ -21,7 +21,7 @@ class PlanningsController < ApplicationController
     @planning = Planning.find(params[:id])
     @slots = @planning.slots.order(:id)
     @slot = Slot.new
-    @slot_templates = Slot.slot_templates # liste des roles
+    @slot_templates = Slot.slot_templates # liste des
   end
 
   # rubocop:disable AbcSize, BlockLength, LineLength, MethodLength
