@@ -213,10 +213,32 @@
           }
         });
       },
-
+      // what happens when we select a time period on the calendar
+      select: function( start, end, jsEvent, view ) {
+        $(".slot_form").show();
+        $('#datetimepicker1').datetimepicker({
+          defaultDate: start.format(),
+          locale: 'FR'
+         });
+        $('#datetimepicker2').datetimepicker({
+          defaultDate: end.format(),
+          locale: 'FR'
+         });
+        $.ajax({
+          type: "GET",
+          url: Routes.new_planning_slot_path( planning_id, { format: 'js' } ),
+          success: function(data) {
+            console.log(Event);
+          },
+          error: function(jqXHR) {
+            console.log(jqXHR.responseText);
+          }
+        });
+      },
       eventReceive: function( event ) {
         alert('drop received');
       }
+
     });
   </script>
   <% end %>
