@@ -49,7 +49,7 @@ Rails.application.routes.draw do
   devise_for :users
   root to: 'pages#home'
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
-  resources :plannings, only: [:show, :index, :update] do
+  resources :plannings, only: [:show, :index, :update, :create] do
     resources :slots, only: [:create, :edit, :show, :update, :resolve, :new]
     resources :compute_solutions, only: [:index, :create]
     member do

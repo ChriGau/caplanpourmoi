@@ -29,9 +29,9 @@ module PlanningHelper
     end
   end
 
-  def parse_week_number(planning)
-    week_start = Date.commercial(2017, planning.week_number, 1).strftime('%d/%m')
-    week_end = Date.commercial(2017, planning.week_number, 7).strftime('%d/%m')
+  def parse_week_number(week_number)
+    week_start = Date.commercial(2017, week_number, 1).strftime('%d/%m')
+    week_end = Date.commercial(2017, week_number, 7).strftime('%d/%m')
     "Du #{week_start} au #{week_end}"
   end
 
