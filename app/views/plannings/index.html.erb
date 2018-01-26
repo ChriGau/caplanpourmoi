@@ -11,14 +11,21 @@
   <button class="forward"><i class="fa fa-chevron-right" aria-hidden="true"></i> </button>
   <div id="planning-list" class="frame">
     <ul class="slidee">
-      <% @plannings.each do |planning| %>
-        <li class="<%= planning_slide_class(planning)%>">
+      <% @plannings_list.each do |week| %>
+        <li class="<%= week[:planning].nil?? "not_started" : planning_slide_class(week[:planning])  %>">
           <div class="date_range">
-            <%= parse_week_number(planning) %>
+            <%= week[:year] %> <br>
+            <%= parse_week_number(week[:week_number]) %>
           </div>
           <p></p>
-          <div class="premier-plan"><%= planning_link(planning) %></div>
-          <div><p> <%= planning_status_label(planning) %> </p></div>
+          <div class="premier-plan">
+            <% if week[:planning].nil? %>
+            <%= link_to "S#{week[:week_number]}", plannings_path(year_number: week[:year], week_number: week[:week_number]), method: :post %>
+            <% else %>
+              <%= planning_link(week[:planning]) %>
+            <% end %>
+          </div>
+          <div><%= week[:planning].nil?? "(Aucun Planning)" : planning_status_label(week[:planning]) %></div>
         </li>
       <% end %>
     </ul>
