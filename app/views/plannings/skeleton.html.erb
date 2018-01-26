@@ -21,7 +21,6 @@
             </span>
           </div>
         </div>
-
         <div class="form-group">
           <div class='input-group date' id='datetimepicker2'>
             <input name="slot[end_at]" type='text' value="<%= @slot.end_at %>" class="form-control" />
@@ -35,6 +34,24 @@
       <%= f.submit "Valider", class: "btn btn-success" %>
       <%= f.button :button, "Cancel", type: :reset, class: "btn btn-none cancel-button" %>
       <% end %>
+      </div>
+      <div class="col-xs-offset-4 col-xs-4 update_form" style="">
+      <%= simple_form_for [@planning, @slot], remote: true do |f| %>
+        <label for="start_at">Début: </label>
+            <input type="datetime" name="" id="update_start">
+          <label for="end_at">Fin: </label>
+            <input type="datetime" name="" id="update_end">
+          <label for="role">Role: </label>
+            <input list="roles" id="update_role" autocomplete="on" /></label>
+              <datalist id="roles">
+                <% @slot_templates.each do |slot| %>
+                  <option value= <%= slot.role.name.capitalize %> >
+                <% end %>
+              </datalist>
+           <input type="button" onclick="alert('il faut lancer le CRUD')" value="Mettre à jour">
+           <input type="button" value="Annuler" id="update_cancel">
+           <input type="button" value="Supprimer" id="delete_slot">
+        <% end %>
       </div>
     </div>
 
@@ -143,6 +160,7 @@
 <script>
     // hide slot form
     $(".slot_form").hide();
+    $(".update_form").hide();
     // make roles draggable
     $('#my-draggable').draggable({
       revert: true,      // immediately snap back to original position
@@ -154,7 +172,9 @@
     $(".cancel-button").click(function(){
       $(".slot_form").hide();
     });
-
+    $("#update_cancel").click(function() {
+      $(".update_form").hide();
+    });
   </script>
 
 
@@ -216,6 +236,7 @@
       // what happens when we select a time period on the calendar
       select: function( start, end, jsEvent, view ) {
         $(".slot_form").show();
+        var planning_id = <%= @planning.id %>;
         $('#datetimepicker1').datetimepicker({
           defaultDate: start.format(),
           locale: 'FR'
@@ -233,6 +254,34 @@
           error: function(jqXHR) {
             console.log(jqXHR.responseText);
           }
+        });
+      },
+      eventClick: function( calEvent, jsEvent, view) {
+        $(this).css('border-color', 'red');
+        $(this).css('border-width', 'thick');
+        $(".update_form").show()
+        var planning_id = <%= @planning.id %>;
+        var slot_id = calEvent.id;
+        var role_name = calEvent.title;
+        var start_date = new Date(calEvent.start.format());
+        var end_date = new Date(calEvent.end.format());
+        $("#update_start").val(new Date(start_date.setHours(start_date.getHours() - 1)));
+        $("#update_end").val(new Date(end_date.setHours(end_date.getHours() -1 )));
+        $("#update_role").val(calEvent.title);
+        $("#delete_slot").click( function (){
+          var build_url = "/plannings/" + planning_id + "/slots/" + slot_id;
+          $.ajax({
+            type: "DELETE",
+            url: build_url,
+            format: 'js',
+            success: function(data) {
+              console.log(Event);
+            },
+            error: function(jqXHR) {
+              console.log(jqXHR.responseText);
+              console.log("ajax echec");
+            }
+          });
         });
       },
       eventReceive: function( event ) {

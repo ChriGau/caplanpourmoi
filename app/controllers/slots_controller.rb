@@ -1,5 +1,5 @@
 class SlotsController < ApplicationController
-  before_action :set_planning_id, only: [:create, :new, :edit, :resolution, :update]
+  before_action :set_planning_id, only: [:create, :new, :edit, :resolution, :update, :destroy]
 
   # rubocop:disable AbcSize, MethodLength
   # Too much assignment, condition and branching
@@ -29,9 +29,14 @@ class SlotsController < ApplicationController
     @slot = Slot.new
   end
 
-  def edit
-    @slot = Slot.find(params[:id])
-    @user = User.find_by(first_name: 'jean')
+  def edit(*slot_id)
+    puts slot_id
+      @slot = Slot.find(slot_id)
+      @user = User.find_by(user_id: @slot.user_id)
+
+      @slot = Slot.find(params[:id])
+      @user = User.find_by(first_name: 'jean')
+
   end
 
   # rubocop:disable AbcSize, MethodLength
@@ -68,6 +73,12 @@ class SlotsController < ApplicationController
     end
   end
   # rubocop:enable AbcSize, MethodLength
+
+  def destroy
+    @slot = Slot.find(params[:id])
+    @slot.destroy
+    render json: @slot
+  end
 
   def slot_params
     params.require(:slot).permit(:start_at, :end_at, :role_id, :user_id)

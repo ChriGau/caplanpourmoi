@@ -21,7 +21,7 @@ class PlanningsController < ApplicationController
     @planning = Planning.find(params[:id])
     @slots = @planning.slots.order(:id)
     @slot = Slot.new
-    @slot_templates = Slot.slot_templates # liste des
+    @slot_templates = Slot.slot_templates # liste des roles (Array)
   end
 
   # rubocop:disable AbcSize, BlockLength, LineLength, MethodLength
@@ -29,7 +29,7 @@ class PlanningsController < ApplicationController
     @planning = Planning.find(params[:id])
     @slots = @planning.slots.order(:id)
     @slot = Slot.new
-    @slot_templates = Slot.slot_templates # liste des roles
+    @slot_templates = Slot.slot_templates # liste des roles (Array)
     @url = 'conflicts'
     # variables pour fullcalendar
     @slots_array = []
