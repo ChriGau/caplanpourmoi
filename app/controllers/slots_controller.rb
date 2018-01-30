@@ -30,13 +30,25 @@ class SlotsController < ApplicationController
   end
 
   def edit(*slot_id)
+  @planning = Planning.find(params[:planning_id])
+  @slot = Slot.find(params[:id])
+  if @slot.save
+    respond_to do |format|
+    format.html { redirect_to planning_skeleton_path(@planning.id) }
+    format.js  # <-- will render `app/views/shifts/edit.js.erb`
+    end
+  else
+    respond_to do |format|
+    format.html { render 'slots/edit' }
+    format.js  # <-- idem
+    end
+  end
     puts slot_id
       @slot = Slot.find(slot_id)
       @user = User.find_by(user_id: @slot.user_id)
 
       @slot = Slot.find(params[:id])
       @user = User.find_by(first_name: 'jean')
-
   end
 
   # rubocop:disable AbcSize, MethodLength
@@ -75,9 +87,12 @@ class SlotsController < ApplicationController
   # rubocop:enable AbcSize, MethodLength
 
   def destroy
-    @slot = Slot.find(params[:id])
-    @slot.destroy
-    render json: @slot
+    # @slot = Slot.find(params[:id])
+    @slot = Slot.destroy(params[:id])
+    respond_to do |format|
+      format.html { redirect_to planning_skeleton_path(@planning.id) }
+      format.js  # <-- will render `app/views/slots/destroy.js.erb`
+    end
   end
 
   def slot_params

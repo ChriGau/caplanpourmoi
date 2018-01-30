@@ -10,7 +10,7 @@
       <div class="col-xs-4 slot_form">
         <p>Create a slot</p>
         <!-- intégrer du date picker bootstrap dans simple form via gem https://github.com/Eonasdan/bootstrap-datetimepicker -->
-        <%= simple_form_for [@planning, @slot] do |f| %>
+        <%= simple_form_for [@planning, @slot],remote: true do |f| %>
         <%= f.error_notification %>
         <div class="form-group">
           <div class='input-group date' id='datetimepicker1'>
@@ -30,28 +30,11 @@
             </span>
         </div>
       </div>
-      <%= f.input :role_id, placeholder: "Role", label: false, collection: fetch_roles  %>
-      <%= f.submit "Valider", class: "btn btn-success" %>
+      <%= f.input :role_id, placeholder: "Role", label: false, collection: fetch_roles, class: "slot_role"  %>
+      <%= f.submit "Valider", class: "btn btn-success create_slot" %>
       <%= f.button :button, "Cancel", type: :reset, class: "btn btn-none cancel-button" %>
+      <%= f.button :button, "Supprimer", type: :reset, class: "btn btn-none delete_slot" %>
       <% end %>
-      </div>
-      <div class="col-xs-offset-4 col-xs-4 update_form" style="">
-      <%= simple_form_for [@planning, @slot], remote: true do |f| %>
-        <label for="start_at">Début: </label>
-            <input type="datetime" name="" id="update_start">
-          <label for="end_at">Fin: </label>
-            <input type="datetime" name="" id="update_end">
-          <label for="role">Role: </label>
-            <input list="roles" id="update_role" autocomplete="on" /></label>
-              <datalist id="roles">
-                <% @slot_templates.each do |slot| %>
-                  <option value= <%= slot.role.name.capitalize %> >
-                <% end %>
-              </datalist>
-           <input type="button" onclick="alert('il faut lancer le CRUD')" value="Mettre à jour">
-           <input type="button" value="Annuler" id="update_cancel">
-           <input type="button" value="Supprimer" id="delete_slot">
-        <% end %>
       </div>
     </div>
 
@@ -157,10 +140,9 @@
 <!-- ___________________________ JS __________________________________ -->
 
 <%= content_for(:after_js) do %>
-<script>
+<script type="text/javascript">
     // hide slot form
     $(".slot_form").hide();
-    $(".update_form").hide();
     // make roles draggable
     $('#my-draggable').draggable({
       revert: true,      // immediately snap back to original position
@@ -168,17 +150,20 @@
     });
     // assign default event data to draggable elements
     $('.draggable').data('duration', '03:00');
+    // hide slot_form + reload page when clicking on the 'Valider' button
+    $('.create_slot').click(function(){
+      $(".slot_form").hide();
+      location.reload();
+    });
     // hide slot_form when clicking on its 'Cancel' button
     $(".cancel-button").click(function(){
       $(".slot_form").hide();
+      // 1. get border thickness of Event back to normal
+      $(".fc-time-grid-event").css('border-width', '0px','box-shadow', '0px 0px 3.5px -1px white inset', 'padding', '2px' , 'padding-top', '7px','padding', '3px');
+      // 2. reload page
+      location.reload();
     });
-    $("#update_cancel").click(function() {
-      $(".update_form").hide();
-    });
-  </script>
 
-
-  <script>
     $('#calendar').fullCalendar({
       //calendar attributes
       header: {
@@ -192,10 +177,6 @@
       editable: true, // events on the calendar can be modified
       droppable: true, // allows things to be dropped onto the calendar
       selectable: true,
-      drop: function(date) {
-        alert("Dropped on " + date.format());
-        console.log("DROPPED!!!!!!!!!!")
-      },
       minTime: "07:00:00", // starting time, even when scrolled all the way up
       maxTime: "22:00:00",
       defaultView: "agendaWeek",
@@ -204,47 +185,21 @@
       height: "auto", // implique pas de scroll à l'intérieur du calendrier
       aspectRatio: 4,
       events: '<%= events_planning_path(@planning.id, format: :json) %>',
-
-      // clic on a day
-      dayClick: function(date, jsEvent, view) {
-        // affiche l'encart pour entrer un nouveau slot
-        $(".slot_form").show();
-        var planning_id = <%= @planning.id %>;
-        // new Date est une fonction js pour créer une date à partir d'un string
-        var a = new Date(date.format());
-        // enable + custom bootstrap in simple form
-        $('#datetimepicker1').datetimepicker({
-          defaultDate: a,
-          locale: 'FR'
-         });
-        $('#datetimepicker2').datetimepicker({
-          defaultDate: a.setHours(a.getHours()+5),
-          locale: 'FR'
-         });
-        // affiche le new de slots --> form
-        $.ajax({
-          type: "GET",
-          url: Routes.new_planning_slot_path( planning_id, { format: 'js' } ),
-          success: function(data) {
-            console.log(Event);
-          },
-          error: function(jqXHR) {
-            console.log(jqXHR.responseText);
-          }
-        });
-      },
       // what happens when we select a time period on the calendar
       select: function( start, end, jsEvent, view ) {
         $(".slot_form").show();
         var planning_id = <%= @planning.id %>;
+        // set default value of the date inputs (inside simple form)
         $('#datetimepicker1').datetimepicker({
-          defaultDate: start.format(),
+          defaultDate: new Date(start.format()),
           locale: 'FR'
          });
         $('#datetimepicker2').datetimepicker({
           defaultDate: end.format(),
           locale: 'FR'
          });
+        // TODO: set default value of the f.input value of the clicked Event
+        // get form to create a new slot
         $.ajax({
           type: "GET",
           url: Routes.new_planning_slot_path( planning_id, { format: 'js' } ),
@@ -259,35 +214,42 @@
       eventClick: function( calEvent, jsEvent, view) {
         $(this).css('border-color', 'red');
         $(this).css('border-width', 'thick');
-        $(".update_form").show()
+        console.log(this);
+        $(".slot_form").show()
         var planning_id = <%= @planning.id %>;
         var slot_id = calEvent.id;
         var role_name = calEvent.title;
         var start_date = new Date(calEvent.start.format());
         var end_date = new Date(calEvent.end.format());
-        $("#update_start").val(new Date(start_date.setHours(start_date.getHours() - 1)));
-        $("#update_end").val(new Date(end_date.setHours(end_date.getHours() -1 )));
-        $("#update_role").val(calEvent.title);
-        $("#delete_slot").click( function (){
-          var build_url = "/plannings/" + planning_id + "/slots/" + slot_id;
+        console.log("slot_id =>> " + slot_id );
+        $("#datetimepicker1").datetimepicker({
+          defaultDate: new Date(start_date.setHours(start_date.getHours() - 1)),
+          locale: 'FR'
+        });
+        $("#datetimepicker2").datetimepicker({
+          defaultDate: new Date(end_date.setHours(end_date.getHours() -1 )),
+          locale: 'FR'
+        });
+        // TODO: set default vale for .slot_role
+        var build_url = "/plannings/" + planning_id + "/slots/" + slot_id;
+        $(".delete_slot").click( function (){
           $.ajax({
             type: "DELETE",
             url: build_url,
             format: 'js',
             success: function(data) {
               console.log(Event);
+              // recharger la page
+              location.reload();
             },
             error: function(jqXHR) {
-              console.log(jqXHR.responseText);
               console.log("ajax echec");
+              console.log(jqXHR.responseText);
+              location.reload();
             }
           });
         });
-      },
-      eventReceive: function( event ) {
-        alert('drop received');
       }
-
     });
   </script>
   <% end %>
