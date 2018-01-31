@@ -65,15 +65,6 @@ i = 1
   i += 1
 end
 
-i = 1
-20.times do
-  p = Planning.new
-  p.week_number = 1 + i
-  p.year = 2018
-  p.save!
-  i += 1
-end
-
 p = Planning.first
 
 
@@ -229,86 +220,86 @@ User.create!(email: "wtf@boutique.com",
   )
 
 # Creation des users pour test cas Ecomotiv
-User.create!(email: "benedict@boutique.com",
-            working_hours: 32,
-            is_owner: false,
-            first_name: "benedict",
-            last_name: "cumberbach",
-            password: "password",
-            profile_picture: open_image("./images_seeds/benedict_cumberbach.png")
-  )
+# User.create!(email: "benedict@boutique.com",
+#             working_hours: 32,
+#             is_owner: false,
+#             first_name: "benedict",
+#             last_name: "cumberbach",
+#             password: "password",
+#             profile_picture: open_image("./images_seeds/benedict_cumberbach.png")
+#   )
 
-User.create!(email: "roxane@boutique.com",
-            working_hours: 32,
-            is_owner: false,
-            first_name: "roxanne",
-            last_name: "machin",
-            password: "password",
-            profile_picture: open_image("./images_seeds/roxanne.png")
-  )
+# User.create!(email: "roxane@boutique.com",
+#             working_hours: 32,
+#             is_owner: false,
+#             first_name: "roxanne",
+#             last_name: "machin",
+#             password: "password",
+#             profile_picture: open_image("./images_seeds/roxanne.png")
+#   )
 
-User.create!(email: "caroline@boutique.com",
-            working_hours: 32,
-            is_owner: false,
-            first_name: "caroline",
-            last_name: "la tortue",
-            password: "password",
-            profile_picture: open_image("./images_seeds/caroline.png")
-  )
+# User.create!(email: "caroline@boutique.com",
+#             working_hours: 32,
+#             is_owner: false,
+#             first_name: "caroline",
+#             last_name: "la tortue",
+#             password: "password",
+#             profile_picture: open_image("./images_seeds/caroline.png")
+#   )
 
-User.create!(email: "ninon@boutique.com",
-            working_hours: 32,
-            is_owner: false,
-            first_name: "ninon",
-            last_name: "the rockstar",
-            password: "password",
-            profile_picture: open_image("./images_seeds/ninon.png")
-  )
+# User.create!(email: "ninon@boutique.com",
+#             working_hours: 32,
+#             is_owner: false,
+#             first_name: "ninon",
+#             last_name: "the rockstar",
+#             password: "password",
+#             profile_picture: open_image("./images_seeds/ninon.png")
+#   )
 
-User.create!(email: "oahn@boutique.com",
-            working_hours: 32,
-            is_owner: false,
-            first_name: "oanh",
-            last_name: "da boss",
-            password: "password",
-            profile_picture: open_image("./images_seeds/oanh.png")
-  )
+# User.create!(email: "oahn@boutique.com",
+#             working_hours: 32,
+#             is_owner: false,
+#             first_name: "oanh",
+#             last_name: "da boss",
+#             password: "password",
+#             profile_picture: open_image("./images_seeds/oanh.png")
+#   )
 
-User.create!(email: "virginie@boutique.com",
-            working_hours: 32,
-            is_owner: false,
-            first_name: "virginie",
-            last_name: "td",
-            password: "password",
-            profile_picture: open_image("./images_seeds/virginie.png")
-  )
+# User.create!(email: "virginie@boutique.com",
+#             working_hours: 32,
+#             is_owner: false,
+#             first_name: "virginie",
+#             last_name: "td",
+#             password: "password",
+#             profile_picture: open_image("./images_seeds/virginie.png")
+#   )
 
-User.create!(email: "lorraine@boutique.com",
-            working_hours: 32,
-            is_owner: false,
-            first_name: "lorraine",
-            last_name: "cauquil",
-            password: "password",
-            profile_picture: open_image("./images_seeds/lorraine.png")
-  )
+# User.create!(email: "lorraine@boutique.com",
+#             working_hours: 32,
+#             is_owner: false,
+#             first_name: "lorraine",
+#             last_name: "cauquil",
+#             password: "password",
+#             profile_picture: open_image("./images_seeds/lorraine.png")
+#   )
 
-User.create!(email: "mariana@boutique.com",
-            working_hours: 32,
-            is_owner: false,
-            first_name: "mariana",
-            last_name: "Columbia",
-            password: "password",
-            profile_picture: open_image("./images_seeds/mariana.png")
-  )
+# User.create!(email: "mariana@boutique.com",
+#             working_hours: 32,
+#             is_owner: false,
+#             first_name: "mariana",
+#             last_name: "Columbia",
+#             password: "password",
+#             profile_picture: open_image("./images_seeds/mariana.png")
+#   )
 
-User.create!(email: "david@boutique.com",
-            working_hours: 32,
-            is_owner: false,
-            first_name: "david",
-            last_name: "abitboul",
-            password: "password",
-            profile_picture: open_image("./images_seeds/david.png")
-  )
+# User.create!(email: "david@boutique.com",
+#             working_hours: 32,
+#             is_owner: false,
+#             first_name: "david",
+#             last_name: "abitboul",
+#             password: "password",
+#             profile_picture: open_image("./images_seeds/david.png")
+#   )
 
 
 puts "6 - assigning roles to members"
@@ -405,83 +396,83 @@ b.user_id = a.id
 b.save!
 
 # Roles pour l'Ecomotiv
-a = User.find_by_first_name('benedict')
-b = RoleUser.new
-b.role_id = Role.find_by_name("barista").id
-b.user_id = a.id
-b.save!
+# a = User.find_by_first_name('benedict')
+# b = RoleUser.new
+# b.role_id = Role.find_by_name("barista").id
+# b.user_id = a.id
+# b.save!
 
-a = User.find_by_first_name('roxanne')
-b = RoleUser.new
-b.role_id = Role.find_by_name("chef").id
-b.user_id = a.id
-b.save!
+# a = User.find_by_first_name('roxanne')
+# b = RoleUser.new
+# b.role_id = Role.find_by_name("chef").id
+# b.user_id = a.id
+# b.save!
 
-a = User.find_by_first_name('caroline')
-b = RoleUser.new
-b.role_id = Role.find_by_name('barista').id
-b.user_id = a.id
-b.save!
+# a = User.find_by_first_name('caroline')
+# b = RoleUser.new
+# b.role_id = Role.find_by_name('barista').id
+# b.user_id = a.id
+# b.save!
 
-a = User.find_by_first_name('ninon')
-b = RoleUser.new
-b.role_id = Role.find_by_name('chef').id
-b.user_id = a.id
-b.save!
+# a = User.find_by_first_name('ninon')
+# b = RoleUser.new
+# b.role_id = Role.find_by_name('chef').id
+# b.user_id = a.id
+# b.save!
 
-a = User.find_by_first_name('ninon')
-b = RoleUser.new
-b.role_id = Role.find_by_name('barista').id
-b.user_id = a.id
-b.save!
+# a = User.find_by_first_name('ninon')
+# b = RoleUser.new
+# b.role_id = Role.find_by_name('barista').id
+# b.user_id = a.id
+# b.save!
 
-a = User.find_by_first_name('oanh')
-b = RoleUser.new
-b.role_id = Role.find_by_name('chef').id
-b.user_id = a.id
-b.save!
+# a = User.find_by_first_name('oanh')
+# b = RoleUser.new
+# b.role_id = Role.find_by_name('chef').id
+# b.user_id = a.id
+# b.save!
 
-a = User.find_by_first_name('oanh')
-b = RoleUser.new
-b.role_id = Role.find_by_name('barista').id
-b.user_id = a.id
-b.save!
+# a = User.find_by_first_name('oanh')
+# b = RoleUser.new
+# b.role_id = Role.find_by_name('barista').id
+# b.user_id = a.id
+# b.save!
 
-a = User.find_by_first_name('virginie')
-b = RoleUser.new
-b.role_id = Role.find_by_name('barista').id
-b.user_id = a.id
-b.save!
+# a = User.find_by_first_name('virginie')
+# b = RoleUser.new
+# b.role_id = Role.find_by_name('barista').id
+# b.user_id = a.id
+# b.save!
 
-a = User.find_by_first_name('lorraine')
-b = RoleUser.new
-b.role_id = Role.find_by_name('barista').id
-b.user_id = a.id
-b.save!
+# a = User.find_by_first_name('lorraine')
+# b = RoleUser.new
+# b.role_id = Role.find_by_name('barista').id
+# b.user_id = a.id
+# b.save!
 
-a = User.find_by_first_name('lorraine')
-b = RoleUser.new
-b.role_id = Role.find_by_name('commis').id
-b.user_id = a.id
-b.save!
+# a = User.find_by_first_name('lorraine')
+# b = RoleUser.new
+# b.role_id = Role.find_by_name('commis').id
+# b.user_id = a.id
+# b.save!
 
-a = User.find_by_first_name('mariana')
-b = RoleUser.new
-b.role_id = Role.find_by_name('barista').id
-b.user_id = a.id
-b.save!
+# a = User.find_by_first_name('mariana')
+# b = RoleUser.new
+# b.role_id = Role.find_by_name('barista').id
+# b.user_id = a.id
+# b.save!
 
-a = User.find_by_first_name('david')
-b = RoleUser.new
-b.role_id = Role.find_by_name('barista').id
-b.user_id = a.id
-b.save!
+# a = User.find_by_first_name('david')
+# b = RoleUser.new
+# b.role_id = Role.find_by_name('barista').id
+# b.user_id = a.id
+# b.save!
 
-a = User.find_by_first_name('david')
-b = RoleUser.new
-b.role_id = Role.find_by_name('commis').id
-b.user_id = a.id
-b.save!
+# a = User.find_by_first_name('david')
+# b = RoleUser.new
+# b.role_id = Role.find_by_name('commis').id
+# b.user_id = a.id
+# b.save!
 
 puts "7 - assigning constraints to members"
 puts ""
@@ -1353,354 +1344,6 @@ Slot.create!(
   start_at: "2017-09-30 14:20",
   end_at: "2017-09-30 19:30",
   role_id: Role.find_by_name("vendeur").id,
-  user_id: User.find_by_first_name("no solution").id
-  )
-
-# planning week 03 -- sur le modele de l'ecomotiv
-# baristas
-
-# lundi
-
-Slot.create!(
-  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
-  start_at: "2018-01-15 08:00",
-  end_at: "2018-01-15 15:00",
-  role_id: Role.find_by_name("barista").id,
-  user_id: User.find_by_first_name("no solution").id
-  )
-
-Slot.create!(
-  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
-  start_at: "2018-01-15 11:30",
-  end_at: "2018-01-15 14:15",
-  role_id: Role.find_by_name("barista").id,
-  user_id: User.find_by_first_name("no solution").id
-  )
-
-Slot.create!(
-  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
-  start_at: "2018-01-15 15:00",
-  end_at: "2018-01-15 20:00",
-  role_id: Role.find_by_name("barista").id,
-  user_id: User.find_by_first_name("no solution").id
-  )
-
-# mardi
-
-Slot.create!(
-  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
-  start_at: "2018-01-16 08:00",
-  end_at: "2018-01-16 15:00",
-  role_id: Role.find_by_name("barista").id,
-  user_id: User.find_by_first_name("no solution").id
-  )
-
-Slot.create!(
-  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
-  start_at: "2018-01-16 11:30",
-  end_at: "2018-01-16 14:15",
-  role_id: Role.find_by_name("barista").id,
-  user_id: User.find_by_first_name("no solution").id
-  )
-
-Slot.create!(
-  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
-  start_at: "2018-01-16 15:00",
-  end_at: "2018-01-16 20:00",
-  role_id: Role.find_by_name("barista").id,
-  user_id: User.find_by_first_name("no solution").id
-  )
-
-# mercredi
-
-
-# Slot.create!(
-#   planning_id: Planning.find_by(week_number: 03, year: 2018).id,
-#   start_at: "2018-01-17 08:00",
-#   end_at: "2018-01-17 15:00",
-#   role_id: Role.find_by_name("barista").id,
-#   user_id: User.find_by_first_name("no solution").id
-#   )
-
-# Slot.create!(
-#   planning_id: Planning.find_by(week_number: 03, year: 2018).id,
-#   start_at: "2018-01-17 11:30",
-#   end_at: "2018-01-17 14:15",
-#   role_id: Role.find_by_name("barista").id,
-#   user_id: User.find_by_first_name("no solution").id
-#   )
-
-# Slot.create!(
-#   planning_id: Planning.find_by(week_number: 03, year: 2018).id,
-#   start_at: "2018-01-17 15:00",
-#   end_at: "2018-01-17 20:00",
-#   role_id: Role.find_by_name("barista").id,
-#   user_id: User.find_by_first_name("no solution").id
-#   )
-
-# jeudi
-
-# Slot.create!(
-#   planning_id: Planning.find_by(week_number: 03, year: 2018).id,
-#   start_at: "2018-01-18 08:00",
-#   end_at: "2018-01-18 15:00",
-#   role_id: Role.find_by_name("barista").id,
-#   user_id: User.find_by_first_name("no solution").id
-#   )
-
-# Slot.create!(
-#   planning_id: Planning.find_by(week_number: 03, year: 2018).id,
-#   start_at: "2018-01-18 11:30",
-#   end_at: "2018-01-18 14:15",
-#   role_id: Role.find_by_name("barista").id,
-#   user_id: User.find_by_first_name("no solution").id
-#   )
-
-# Slot.create!(
-#   planning_id: Planning.find_by(week_number: 03, year: 2018).id,
-#   start_at: "2018-01-18 15:00",
-#   end_at: "2018-01-18 20:00",
-#   role_id: Role.find_by_name("barista").id,
-#   user_id: User.find_by_first_name("no solution").id
-#   )
-
-# vendredi
-
-Slot.create!(
-  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
-  start_at: "2018-01-19 08:00",
-  end_at: "2018-01-19 15:00",
-  role_id: Role.find_by_name("barista").id,
-  user_id: User.find_by_first_name("no solution").id
-  )
-
-Slot.create!(
-  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
-  start_at: "2018-01-19 11:30",
-  end_at: "2018-01-19 14:15",
-  role_id: Role.find_by_name("barista").id,
-  user_id: User.find_by_first_name("no solution").id
-  )
-
-Slot.create!(
-  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
-  start_at: "2018-01-19 15:00",
-  end_at: "2018-01-19 20:00",
-  role_id: Role.find_by_name("barista").id,
-  user_id: User.find_by_first_name("no solution").id
-  )
-
-# samedi
-
-Slot.create!(
-  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
-  start_at: "2018-01-20 08:00",
-  end_at: "2018-01-20 15:00",
-  role_id: Role.find_by_name("barista").id,
-  user_id: User.find_by_first_name("no solution").id
-  )
-
-Slot.create!(
-  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
-  start_at: "2018-01-20 15:00",
-  end_at: "2018-01-20 20:00",
-  role_id: Role.find_by_name("barista").id,
-  user_id: User.find_by_first_name("no solution").id
-  )
-
-# dimanche
-
-# Slot.create!(
-#   planning_id: Planning.find_by(week_number: 03, year: 2018).id,
-#   start_at: "2018-01-21 08:00",
-#   end_at: "2018-01-21 15:00",
-#   role_id: Role.find_by_name("barista").id,
-#   user_id: User.find_by_first_name("no solution").id
-#   )
-
-# Slot.create!(
-#   planning_id: Planning.find_by(week_number: 03, year: 2018).id,
-#   start_at: "2018-01-21 15:00",
-#   end_at: "2018-01-21 20:00",
-#   role_id: Role.find_by_name("barista").id,
-#   user_id: User.find_by_first_name("no solution").id
-#   )
-
-# chef
-
-Slot.create!(
-  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
-  start_at: "2018-01-15 08:00",
-  end_at: "2018-01-15 15:00",
-  role_id: Role.find_by_name("chef").id,
-  user_id: User.find_by_first_name("no solution").id
-  )
-
-Slot.create!(
-  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
-  start_at: "2018-01-16 08:00",
-  end_at: "2018-01-16 15:00",
-  role_id: Role.find_by_name("chef").id,
-  user_id: User.find_by_first_name("no solution").id
-  )
-
-Slot.create!(
-  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
-  start_at: "2018-01-17 08:00",
-  end_at: "2018-01-17 15:00",
-  role_id: Role.find_by_name("chef").id,
-  user_id: User.find_by_first_name("no solution").id
-  )
-
-# Slot.create!(
-#   planning_id: Planning.find_by(week_number: 03, year: 2018).id,
-#   start_at: "2018-01-18 08:00",
-#   end_at: "2018-01-18 15:00",
-#   role_id: Role.find_by_name("chef").id,
-#   user_id: User.find_by_first_name("no solution").id
-#   )
-
-# Slot.create!(
-#   planning_id: Planning.find_by(week_number: 03, year: 2018).id,
-#   start_at: "2018-01-19 08:00",
-#   end_at: "2018-01-19 15:00",
-#   role_id: Role.find_by_name("chef").id,
-#   user_id: User.find_by_first_name("no solution").id
-#   )
-
-# Slot.create!(
-#   planning_id: Planning.find_by(week_number: 03, year: 2018).id,
-#   start_at: "2018-01-20 08:00",
-#   end_at: "2018-01-20 15:00",
-#   role_id: Role.find_by_name("chef").id,
-#   user_id: User.find_by_first_name("no solution").id
-#   )
-
-Slot.create!(
-  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
-  start_at: "2018-01-21 08:00",
-  end_at: "2018-01-21 15:00",
-  role_id: Role.find_by_name("chef").id,
-  user_id: User.find_by_first_name("no solution").id
-  )
-
-# commis
-
-#  slot 8h --> 15h
-
-Slot.create!(
-  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
-  start_at: "2018-01-15 08:00",
-  end_at: "2018-01-15 15:00",
-  role_id: Role.find_by_name("commis").id,
-  user_id: User.find_by_first_name("no solution").id
-  )
-
-Slot.create!(
-  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
-  start_at: "2018-01-16 08:00",
-  end_at: "2018-01-16 15:00",
-  role_id: Role.find_by_name("commis").id,
-  user_id: User.find_by_first_name("no solution").id
-  )
-
-Slot.create!(
-  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
-  start_at: "2018-01-17 08:00",
-  end_at: "2018-01-17 15:00",
-  role_id: Role.find_by_name("commis").id,
-  user_id: User.find_by_first_name("no solution").id
-  )
-
-Slot.create!(
-  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
-  start_at: "2018-01-18 08:00",
-  end_at: "2018-01-18 15:00",
-  role_id: Role.find_by_name("commis").id,
-  user_id: User.find_by_first_name("no solution").id
-  )
-
-# Slot.create!(
-#   planning_id: Planning.find_by(week_number: 03, year: 2018).id,
-#   start_at: "2018-01-19 08:00",
-#   end_at: "2018-01-19 15:00",
-#   role_id: Role.find_by_name("commis").id,
-#   user_id: User.find_by_first_name("no solution").id
-#   )
-
-# Slot.create!(
-#   planning_id: Planning.find_by(week_number: 03, year: 2018).id,
-#   start_at: "2018-01-20 08:00",
-#   end_at: "2018-01-20 15:00",
-#   role_id: Role.find_by_name("commis").id,
-#   user_id: User.find_by_first_name("no solution").id
-#   )
-
-# Slot.create!(
-#   planning_id: Planning.find_by(week_number: 03, year: 2018).id,
-#   start_at: "2018-01-21 08:00",
-#   end_at: "2018-01-21 15:00",
-#   role_id: Role.find_by_name("commis").id,
-#   user_id: User.find_by_first_name("no solution").id
-  # )
-
-# slots 14h15 - 20h semaine
-
-Slot.create!(
-  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
-  start_at: "2018-01-15 14:15",
-  end_at: "2018-01-15 20:00",
-  role_id: Role.find_by_name("commis").id,
-  user_id: User.find_by_first_name("no solution").id
-  )
-
-Slot.create!(
-  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
-  start_at: "2018-01-16 14:15",
-  end_at: "2018-01-16 20:00",
-  role_id: Role.find_by_name("commis").id,
-  user_id: User.find_by_first_name("no solution").id
-  )
-
-Slot.create!(
-  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
-  start_at: "2018-01-17 14:15",
-  end_at: "2018-01-17 20:00",
-  role_id: Role.find_by_name("commis").id,
-  user_id: User.find_by_first_name("no solution").id
-  )
-
-Slot.create!(
-  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
-  start_at: "2018-01-18 14:15",
-  end_at: "2018-01-18 20:00",
-  role_id: Role.find_by_name("commis").id,
-  user_id: User.find_by_first_name("no solution").id
-  )
-
-# Slot.create!(
-#   planning_id: Planning.find_by(week_number: 03, year: 2018).id,
-#   start_at: "2018-01-19 14:15",
-#   end_at: "2018-01-19 20:00",
-#   role_id: Role.find_by_name("commis").id,
-#   user_id: User.find_by_first_name("no solution").id
-#   )
-
-# slot 15h - 20h le weekend
-
-Slot.create!(
-  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
-  start_at: "2018-01-20 15:00",
-  end_at: "2018-01-20 20:00",
-  role_id: Role.find_by_name("commis").id,
-  user_id: User.find_by_first_name("no solution").id
-  )
-
-Slot.create!(
-  planning_id: Planning.find_by(week_number: 03, year: 2018).id,
-  start_at: "2018-01-21 15:00",
-  end_at: "2018-01-21 20:00",
-  role_id: Role.find_by_name("commis").id,
   user_id: User.find_by_first_name("no solution").id
   )
 
