@@ -15,7 +15,7 @@
         <li class="<%= week[:planning].nil?? "not_started" : planning_slide_class(week[:planning])  %>">
           <div class="date_range">
             <%= week[:year] %> <br>
-            <%= parse_week_number(week[:week_number]) %>
+            <%= parse_week_number(week[:week_number], week[:year]) %>
           </div>
           <p></p>
           <div class="premier-plan">
