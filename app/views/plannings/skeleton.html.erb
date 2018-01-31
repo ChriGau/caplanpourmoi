@@ -8,7 +8,7 @@
     </div>
     <div class="row">
       <div class="col-xs-4 slot_form">
-        <p>Create a slot</p>
+        <p>Attributs du Slot</p>
         <!-- intégrer du date picker bootstrap dans simple form via gem https://github.com/Eonasdan/bootstrap-datetimepicker -->
         <%= simple_form_for [@planning, @slot],remote: true do |f| %>
         <%= f.error_notification %>
@@ -155,13 +155,14 @@
       $(".slot_form").hide();
       location.reload();
     });
-    // hide slot_form when clicking on its 'Cancel' button
+    // when clicking on its 'Cancel' button
     $(".cancel-button").click(function(){
       $(".slot_form").hide();
       // 1. get border thickness of Event back to normal
       $(".fc-time-grid-event").css('border-width', '0px','box-shadow', '0px 0px 3.5px -1px white inset', 'padding', '2px' , 'padding-top', '7px','padding', '3px');
       // 2. reload page
-      location.reload();
+      $('#calendar').fullCalendar( 'refetchEvents' );
+      // location.reload();
     });
 
     $('#calendar').fullCalendar({
@@ -187,19 +188,13 @@
       events: '<%= events_planning_path(@planning.id, format: :json) %>',
       // what happens when we select a time period on the calendar
       select: function( start, end, jsEvent, view ) {
+        console.log("we are here");
+        console.log(start.format());
+        console.log(end.format());
         $(".slot_form").show();
-        var planning_id = <%= @planning.id %>;
-        // set default value of the date inputs (inside simple form)
-        $('#datetimepicker1').datetimepicker({
-          defaultDate: new Date(start.format()),
-          locale: 'FR'
-         });
-        $('#datetimepicker2').datetimepicker({
-          defaultDate: end.format(),
-          locale: 'FR'
-         });
         // TODO: set default value of the f.input value of the clicked Event
         // get form to create a new slot
+        var planning_id = <%= @planning.id %>;
         $.ajax({
           type: "GET",
           url: Routes.new_planning_slot_path( planning_id, { format: 'js' } ),
@@ -210,6 +205,15 @@
             console.log(jqXHR.responseText);
           }
         });
+        // set default value of the date inputs (inside simple form)
+        $('#datetimepicker1').datetimepicker({
+          defaultDate: new Date(start.format()),
+          locale: 'FR'
+         });
+        $('#datetimepicker2').datetimepicker({
+          defaultDate: end.format(),
+          locale: 'FR'
+         });
       },
       eventClick: function( calEvent, jsEvent, view) {
         $(this).css('border-color', 'red');
@@ -223,11 +227,11 @@
         var end_date = new Date(calEvent.end.format());
         console.log("slot_id =>> " + slot_id );
         $("#datetimepicker1").datetimepicker({
-          defaultDate: new Date(start_date.setHours(start_date.getHours() - 1)),
+          defaultDate: new Date(start_date.setHours(start_date.getHours() - 2)),
           locale: 'FR'
         });
         $("#datetimepicker2").datetimepicker({
-          defaultDate: new Date(end_date.setHours(end_date.getHours() -1 )),
+          defaultDate: new Date(end_date.setHours(end_date.getHours() -2 )),
           locale: 'FR'
         });
         // TODO: set default vale for .slot_role
