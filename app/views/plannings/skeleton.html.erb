@@ -206,9 +206,8 @@
           }
         });
         // set default value of the date inputs (inside simple form)
-        $('#datetimepicker1 .form-control').val(new Date(start.format()));
-        $('#datetimepicker1 .form-control').datetimepicker({
-          // defaultDate: new Date(start.format()),
+        $('#datetimepicker1').datetimepicker({
+          defaultDate: new Date(start.format()),
           locale: 'FR'
          });
         $('#datetimepicker2 .form-control').datetimepicker({
