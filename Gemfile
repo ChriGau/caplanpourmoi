@@ -65,3 +65,7 @@ end
 group :development do
   gem 'web-console', '>= 3.3.0'
 end
+
+group :production do
+  gem 'scout_apm'
+end
