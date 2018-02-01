@@ -1,27 +1,29 @@
 <%= render 'shared/planningsteps', locals: {planning: @planning, url: @url} %>
 
 <div class="wrap-plan">
-<%= link_to planning_compute_solutions_path, method: :post do %>
-  <button class="btn btn-primary btn-block">Compute planning</button>
-<% end %>
 
-<table class="table table-striped table-hover" style="width:100%">
-  <tr>
-    <th>n° du calcul</th>
-    <th>Démarré à</th>
-    <th>Status</th>
-    <th>Terminé le</th>
-    <th>Nombre de solutions</th>
-  </tr>
-  <% @compute_solutions.each do |compute_sol| %>
-    <tr class=<%= compute_sol.ready? ? "success" : compute_sol.error? ? "danger" : "info" %>>
-      <td><%= compute_sol.id %></td>
-      <td><%= compute_sol.created_at %></td>
-      <td><%= compute_sol.status %></td>
-      <td><%= compute_sol.updated_at %></td>
-      <td><%= rand(1..1000) %></td>
+
+  <table class="table table-striped table-hover" style="width:100%">
+    <tr>
+      <th>n° du calcul</th>
+      <th>Démarré à</th>
+      <th>Status</th>
+      <th>Terminé le</th>
+      <th>Nombre de solutions</th>
+      <th>Chose solution</th>
     </tr>
-  <% end %>
+    <% @compute_solutions.each do |compute_sol| %>
+      <tr class=<%= compute_sol.ready? ? "success" : compute_sol.error? ? "danger" : "info" %>>
+        <td><%= compute_sol.id %></td>
+        <td><%= compute_sol.created_at %></td>
+        <td><%= compute_sol.status %></td>
+        <td><%= compute_sol.updated_at %></td>
+        <td><%= rand(1..1000) %></td>
+        <td>
+          <button class="btn btn-primary">validate</button>
+        </td>
+      </tr>
+    <% end %>
 
-</table>
+  </table>
 </div>

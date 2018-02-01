@@ -143,7 +143,10 @@ class PlanningsController < ApplicationController
     @planning = Planning.find(params[:id])
     @planning.update(planning_params)
     @planning.save!
-    redirect_to planning_conflicts_path(@planning)
+    compute_solutions = ComputeSolution.create(planning_id: @planning.id)
+    ComputePlanningSolutionsJob.perform_later(@planning, compute_solutions)
+    redirect_to planning_compute_solutions_path(@planning)
+
   end
 
   def events
