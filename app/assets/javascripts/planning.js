@@ -14,9 +14,9 @@ $(document).ready(function() {
     clickBar: true,
     // dynamicHandle: true,
 
-
   };
-  // $('#planning-list').sly(options);
+  if ($("#planning-list")[0]) {
   var sly = new Sly('#planning-list', options).init();
-  sly.toCenter(true)
+  sly.toCenter(true);
+  }
 });

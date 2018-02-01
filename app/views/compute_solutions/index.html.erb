@@ -1,5 +1,6 @@
-<h1>Caculs lancés pour la semaine <%= @planning.week_number %></h1>
+<%= render 'shared/planningsteps', locals: {planning: @planning, url: @url} %>
 
+<div class="wrap-plan">
 <%= link_to planning_compute_solutions_path, method: :post do %>
   <button class="btn btn-primary btn-block">Compute planning</button>
 <% end %>
@@ -23,3 +24,4 @@
   <% end %>
 
 </table>
+</div>

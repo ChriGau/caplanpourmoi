@@ -26,20 +26,27 @@ module ApplicationHelper
       @set_status1 = 'active'
       @set_status2 = 'disabled'
       @set_status3 = 'disabled'
-      @triangle_position = 'calc(16% - 70px)'
+      @set_status4 = 'disabled'
       @button_link = link_to 'Etape suivante', planning_users_path(@planning), class: 'button'
     when 'users'
       @set_status1 = 'completed'
       @set_status2 = 'active'
       @set_status3 = 'disabled'
-      @triangle_position = 'calc(50% - 70px)'
+      @set_status4 = 'disabled'
       @button_link = link_to 'Calcul du planning', planning_conflicts_path(@planning), class: 'button', id: 'user-submit-btn'
-    else
+    when 'index'
       @set_status1 = 'completed'
       @set_status2 = 'completed'
       @set_status3 = 'active'
-      @triangle_position = 'calc(84% - 70px)'
+      @set_status4 = 'disabled'
       @button_link = link_to 'Retour au dashboard', plannings_path(@planning), class: 'button'
+    else
+      @set_status1 = 'completed'
+      @set_status2 = 'completed'
+      @set_status3 = 'completed'
+      @set_status4 = 'active'
+      @button_link = link_to 'Retour au dashboard', plannings_path(@planning), class: 'button'
+
     end
   end
   # rubocop:enable AbcSize, LineLength, MethodLength
