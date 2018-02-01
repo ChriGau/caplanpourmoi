@@ -90,7 +90,6 @@ class SlotsController < ApplicationController
     # @slot = Slot.find(params[:id])
     @slot = Slot.destroy(params[:id])
     respond_to do |format|
-      format.html { redirect_to planning_skeleton_path(@planning.id) }
       format.js  # <-- will render `app/views/slots/destroy.js.erb`
     end
   end
