@@ -20,6 +20,5 @@ $(document).ready(function() {
     $(".fc-time-grid-event").css('border-width', '0px','box-shadow', '0px 0px 3.5px -1px white inset', 'padding', '2px' , 'padding-top', '7px','padding', '3px');
     // 2. reload page
     $('#calendar').fullCalendar( 'refetchEvents' );
-    // location.reload();
   });
 });
