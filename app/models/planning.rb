@@ -26,16 +26,14 @@ class Planning < ApplicationRecord
   end
 
   def set_status
-    conflict_user_id = User.find_by(first_name: 'no solution').id
-
     if slots.empty?
       not_started!
-    elsif slots.exists?(user_id: nil)
-      in_progress!
-    elsif slots.exists?(user_id: conflict_user_id)
+    elsif solutions.exists?(status: "validated")
+      complete!
+    elsif solutions.exists?(status: "with_conflicts")
       with_conflicts!
     else
-      complete!
+      in_progress!
     end
   end
 end

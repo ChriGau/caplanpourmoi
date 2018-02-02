@@ -3,10 +3,11 @@ class PlanningsController < ApplicationController
   before_action :set_planning, only: [:skeleton, :users, :conflicts, :events]
 
   # rubocop:disable AbcSize
-  def index
-    @plannings = Planning.all.order(:week_number)
-    @roles = Role.all
 
+  def index
+
+    @plannings_list = plannings_list
+    @roles = Role.all
     @users = User.where.not(first_name: 'no solution').includes(:roles).sort do |a, b|
       a.roles.first.name <=> b.roles.first.name
     end
@@ -16,6 +17,13 @@ class PlanningsController < ApplicationController
   # rubocop:enable AbcSize
 
   def show; end
+
+  def create
+    @planning = Planning.new(week_number: params[:week_number], year: params[:year_number])
+    if @planning.save
+      redirect_to planning_skeleton_path(@planning)
+    end
+  end
 
   def skeleton
     @planning = Planning.find(params[:id])
@@ -135,7 +143,10 @@ class PlanningsController < ApplicationController
     @planning = Planning.find(params[:id])
     @planning.update(planning_params)
     @planning.save!
-    redirect_to planning_conflicts_path(@planning)
+    compute_solutions = ComputeSolution.create(planning_id: @planning.id)
+    ComputePlanningSolutionsJob.perform_later(@planning, compute_solutions)
+    redirect_to planning_compute_solutions_path(@planning)
+
   end
 
   def events
@@ -144,6 +155,25 @@ class PlanningsController < ApplicationController
   end
 
   private
+
+  def plannings_list
+    current_week_number = Time.now.strftime('%U').to_i
+    current_year_number = Date.today.strftime('%Y').to_i
+    ((current_week_number - 49)..(current_week_number + 50)).to_a.map do |week_number|
+      if week_number <= 0
+        year = current_year_number - 1
+        week_number = 52 + week_number
+      elsif week_number <= 52
+        year = current_year_number
+        week_number = week_number
+      else
+        year = current_year_number + 1
+        week_number = (week_number - 52)
+      end
+      planning = Planning.find_by(year: year, week_number: week_number)
+      {year: year, week_number: week_number, planning: planning}
+    end
+  end
 
   # rubocop:disable AbcSize, MethodLength
   def demo_method(planning)

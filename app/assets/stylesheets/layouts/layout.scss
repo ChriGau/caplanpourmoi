@@ -20,19 +20,19 @@ h2 {
   background-color: $background;
   padding: 15px;
   position:relative;
-  margin-top:20px;
   margin-bottom:20px;
   border-radius:4px;
+  margin-top: 20px
 }
 
 .triangle {
-  position:absolute;
-  top:-35px;
   height:0px;
   width:0px;
   border-left: 70px solid transparent;
   border-right: 70px solid transparent;
   border-bottom: 20px solid $background;
+  left: 23%;
+  position:absolute;
 
 
 }

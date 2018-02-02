@@ -11,9 +11,12 @@ puts ""
 # destroy Slot before planning
 RoleUser.destroy_all
 Constraint.destroy_all
+ComputeSolution.destroy_all
+SolutionSlot.destroy_all
 Slot.destroy_all
 Role.destroy_all
 Team.destroy_all
+Solution.destroy_all
 Planning.destroy_all
 User.destroy_all
 
@@ -53,15 +56,6 @@ p.week_number = 36
 p.year = 2017
 p.save!
 
-i = 1
-10.times do
-  p = Planning.new
-  p.week_number = 37 + i
-  p.year = 2017
-  p.save!
-  i += 1
-end
-
 p = Planning.first
 
 
@@ -78,7 +72,7 @@ Role.create!(name: "barista",
             role_color: Role.color_list[:slotcolor3][:code]
             )
 Role.create!(name: "patron",
-            role_color: "black"
+            role_color: Role.color_list[:slotcolor4][:code]
             )
 
 # un-assigned value : color_role
@@ -210,6 +204,7 @@ User.create!(email: "wtf@boutique.com",
             profile_picture: open_image("./images_seeds/avatar_no.jpg")
   )
 
+
 puts "6 - assigning roles to members"
 puts ""
 
@@ -302,6 +297,8 @@ b = RoleUser.new
 b.role_id = Role.find_by_name("patron").id
 b.user_id = a.id
 b.save!
+
+
 
 puts "7 - assigning constraints to members"
 puts ""
@@ -454,9 +451,6 @@ puts ""
 p = Planning.first
 p35 = Planning.find_by_week_number(35)
 p36 = Planning.find_by_week_number(36)
-p38 = Planning.find_by_week_number(38)
-p39 = Planning.find_by_week_number(39)
-p40 = Planning.find_by_week_number(40)
 
 
 ##11/09
@@ -926,20 +920,6 @@ Slot.create!(
   user_id: User.find_by_first_name("magalie").id
   )
 
-Slot.create!(
-  planning_id: p38.id,
-  start_at: "2017-09-18 07:00",
-  end_at: "2017-09-18 15:00",
-  role_id: Role.find_by_name("mécano").id,
-  )
-
-Slot.create!(
-  planning_id: p39.id,
-  start_at: "2017-09-25 07:00",
-  end_at: "2017-09-25 15:00",
-  role_id: Role.find_by_name("barista").id,
-  user_id: User.find_by_first_name("no solution").id
-  )
 
 puts "10 - Fake status planning 37 for demo"
 puts ""
@@ -963,7 +943,6 @@ Slot.create!(
   role_id: Role.find_by_name("barista").id,
   user_id: User.find_by_first_name("no solution").id
   )
-
 
 puts ""
 puts  "  >> #{User.count} users created"
