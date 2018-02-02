@@ -2,45 +2,50 @@
   margin: 30px;
 }
 
-  .skeleton {
-
+.skeleton {
     width:inherit;
     height:inherit;
     margin: 0 auto;
 }
-  .fc-day-header {
+
+.fc-day-header {
     color: $gray;
     font-family: "Oswald";
     font-size: 20px;
-  }
-  .fc th, .fc td  {
+}
+
+.fc th, .fc td  {
     border-style: none;
     padding: 2px;
     border-width: 3px;
-  }
-  /* border des events*/
-  .fc-time-grid-event {
+}
+
+/* border des events*/
+.fc-time-grid-event {
     border-radius: 10px;
     border-width:0px;
     box-shadow: 0px 0px 3.5px -1px white inset;
     padding:2px;
     padding-top: 7px;
     padding: 3px;
-  }
-  /* axe y*/
-  .fc-axis .fc-time .fc-widget-content {
-    color: $gray;
-    font-family: "Oswald";
-    font-weight: 400;
-  }
-  /*nom du role dans l'event*/
-  .fc-title{
-   font-family: "Robot";
-   font-size: 12px;
-   font-weight: 300;
- }
- /* active week/day button*/
- .fc-toolbar .fc-state-active, .fc-toolbar .ui-state-active{
+}
+
+/* axe y*/
+.fc-axis .fc-time .fc-widget-content {
+  color: $gray;
+  font-family: "Oswald";
+  font-weight: 400;
+}
+
+/*nom du role dans l'event*/
+.fc-title{
+ font-family: "Robot";
+ font-size: 12px;
+ font-weight: 300;
+}
+
+/* active week/day button*/
+.fc-toolbar .fc-state-active, .fc-toolbar .ui-state-active{
   color: white;
   font-family: "Robot";
 }
@@ -52,16 +57,18 @@
   text-shadow:none;
   background-image: none;
   width:70px;
-
 }
+
 .fc-button-group {
   font-family: "Robot";
   font-size: 13px;
 }
+
 /*bouton month*/
 .fc-month-button {
   width: 90px;
 }
+
 .fc-state-active {
   background-color: #191654;
   color: white;
@@ -70,8 +77,4 @@
 /*bouton week*/
 .fc-agendaWeek-button {
   width: 90px;
-}
-/* ne pas montrer le title de l'event*/
-.fc-title {
-  display: none;
 }
