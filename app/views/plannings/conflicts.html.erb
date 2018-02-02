@@ -210,6 +210,7 @@
       eventRender: function(event, element) {
         console.log("here");
         console.log(event);
+        console.log(event.picture);
         element.find('.fc-title').html("<br/>" + "<img src= "+event.picture+" alt='' style='border-radius:60px;' >");
       }
     });
