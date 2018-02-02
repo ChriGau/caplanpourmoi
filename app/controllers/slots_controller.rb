@@ -1,5 +1,5 @@
 class SlotsController < ApplicationController
-  before_action :set_planning, only: [:create, :new, :edit, :resolution, :update]
+  before_action :set_planning_id, only: [:create, :new, :edit, :resolution, :update, :destroy]
 
   # rubocop:disable AbcSize, MethodLength
   # Too much assignment, condition and branching
@@ -8,6 +8,7 @@ class SlotsController < ApplicationController
     @slot.planning = @planning
     @slots = @planning.slots
     @slot_templates = Slot.slot_templates
+    @slot.user_id = User.find_by(first_name: 'no solution').id
     if @slot.save
       respond_to do |format|
         format.html { redirect_to planning_skeleton_path(@planning) }
@@ -26,12 +27,11 @@ class SlotsController < ApplicationController
 
   def new
     @slot = Slot.new
-    @slot.user_id = User.find_by(first_name: 'paul').id
   end
 
   def edit
-    @slot = Slot.find(params[:id])
-    @user = User.find_by(first_name: 'jean')
+      @slot = Slot.find(params[:id])
+      @user = User.find_by(first_name: 'jean')
   end
 
   # rubocop:disable AbcSize, MethodLength
@@ -68,6 +68,14 @@ class SlotsController < ApplicationController
     end
   end
   # rubocop:enable AbcSize, MethodLength
+
+  def destroy
+    # @slot = Slot.find(params[:id])
+    @slot = Slot.destroy(params[:id])
+    respond_to do |format|
+      format.js  # <-- will render `app/views/slots/destroy.js.erb`
+    end
+  end
 
   def slot_params
     params.require(:slot).permit(:start_at, :end_at, :role_id, :user_id)

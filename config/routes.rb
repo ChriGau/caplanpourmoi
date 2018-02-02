@@ -50,7 +50,7 @@ Rails.application.routes.draw do
   root to: 'pages#home'
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   resources :plannings, only: [:show, :index, :update, :create] do
-    resources :slots, only: [:create, :edit, :show, :update, :resolve, :new]
+    resources :slots, only: [:create, :edit, :show, :update, :resolve, :new, :destroy]
     resources :compute_solutions, only: [:index, :create]
     member do
       get :events, format: :json

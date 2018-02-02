@@ -1,47 +1,31 @@
-<%= simple_form_for [@planning, @slot], remote: true do |f| %>
-<%= f.error_notification %>
-<div class="form-group">
-  <div class='input-group date' id='datetimepicker1'>
-    <input name="slot[start_at]" type='text' value="<%= @slot.start_at %>" class="form-control" />
-    <span class="input-group-addon">
-      <span class="glyphicon glyphicon-calendar">
-      </span>
-    </span>
-  </div>
-</div>
-<div class="form-group">
-  <div class='input-group date' id='datetimepicker2'>
-    <input name="slot[end_at]" type='text' value="<%= @slot.end_at %>" class="form-control" />
-    <span class="input-group-addon">
-      <span class="glyphicon glyphicon-calendar">
-      </span>
-    </span>
-  </div>
-</div>
-<%= f.input :role_id, placeholder: "Role", label: false, collection: fetch_roles, label_method: lambda { |role| "#{role.name.capitalize} "}  %>
-<%= f.input :user_id, as: :hidden  %>
-<%= f.submit "Valider", class: "btn btn-success" %>
-<%= link_to "Annuler", :back, {:class=>"btn btn-default"} %>
-<% end %>
-
-
-
-<script type="text/javascript">
-  $(function () {
-    $('#datetimepicker1').datetimepicker({
-      format: 'YYYY-MM-DD HH:mm',
-       locale: 'fr',
-        defaultDate: "2017-09-13 09:00",
-    });
-    $('#datetimepicker2').datetimepicker({
-      format: 'YYYY-MM-DD HH:mm',
-      locale: 'fr',
-      defaultDate: "2017-09-13 09:00",
-    });
-  });
-</script>
-
-
+        <p>Attributs du Slot</p>
+        <!-- intégrer du date picker bootstrap dans simple form via gem https://github.com/Eonasdan/bootstrap-datetimepicker -->
+        <%= simple_form_for [@planning, @slot],remote: true do |f| %>
+        <%= f.error_notification %>
+        <div class="form-group">
+          <div class='input-group date' id='datetimepicker1'>
+            <input name="slot[start_at]" type='text' value="<%= @slot.start_at %>" class="form-control" />
+            <span class="input-group-addon">
+              <span class="glyphicon glyphicon-calendar">
+              </span>
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class='input-group date' id='datetimepicker2'>
+            <input name="slot[end_at]" type='text' value="<%= @slot.end_at %>" class="form-control" />
+            <span class="input-group-addon">
+              <span class="glyphicon glyphicon-calendar">
+              </span>
+            </span>
+        </div>
+      </div>
+      <%= f.input :role_id, placeholder: "Role", label: false, collection: fetch_roles, class: "slot_role"  %>
+      <%= f.submit "Valider", class: "btn btn-success create_slot" %>
+      <%= f.button :button, "Cancel", type: :reset, class: "btn btn-none cancel-button" %>
+      <%= f.button :button, "Supprimer", type: :reset, class: "btn btn-none delete_slot" %>
+      <% end %>
+      </div>
 
 
 <style>
@@ -50,7 +34,6 @@
     color: #566568;
     border-color: #566568;
   }
-
   .btn-success {
   background-color: #759CE7;
   border-radius: 50px;

@@ -2,35 +2,13 @@
 
   <div class="wrap-plan" >
     <div class="row">
+      <div class="col-xs-9">
+        <div class="triangle" style= "left:<%= @triangle_position %>" ></div>
+      </div>
+    </div>
+    <div class="row">
       <div class="col-xs-4 slot_form">
-        <p>Attributs du Slot</p>
-        <!-- intégrer du date picker bootstrap dans simple form via gem https://github.com/Eonasdan/bootstrap-datetimepicker -->
-        <%= simple_form_for [@planning, @slot],remote: true do |f| %>
-        <%= f.error_notification %>
-        <div class="form-group">
-          <div class='input-group date' id='datetimepicker1'>
-            <input name="slot[start_at]" type='text' value="<%= @slot.start_at %>" class="form-control" />
-            <span class="input-group-addon">
-              <span class="glyphicon glyphicon-calendar">
-              </span>
-            </span>
-          </div>
-        </div>
-        <div class="form-group">
-          <div class='input-group date' id='datetimepicker2'>
-            <input name="slot[end_at]" type='text' value="<%= @slot.end_at %>" class="form-control" />
-            <span class="input-group-addon">
-              <span class="glyphicon glyphicon-calendar">
-              </span>
-            </span>
-        </div>
-      </div>
-      <%= f.input :role_id, placeholder: "Role", label: false, collection: fetch_roles, class: "slot_role"  %>
-      <%= f.submit "Valider", class: "btn btn-success create_slot" %>
-      <%= f.button :button, "Cancel", type: :reset, class: "btn btn-none cancel-button" %>
-      <%= f.button :button, "Supprimer", type: :reset, class: "btn btn-none delete_slot" %>
-      <% end %>
-      </div>
+         <%= render 'slots/form', locals: {planning: @planning, slot: @slot} %>
     </div>
 
     <div class="row spacing">
@@ -51,205 +29,98 @@
 
 <!--  _______________________ CSS Calendar ___________________________ -->
 
-<style>
 
-#slot_form {
-  margin: 30px;
-}
-
-  .skeleton {
-
-    width:inherit;
-    height:inherit;
-    margin: 0 auto;
-}
-  .fc-day-header {
-    color: $mygrey;
-    font-family: "Oswald";
-    font-size: 20px;
-  }
-  .fc th, .fc td  {
-    border-style: none;
-    padding: 2px;
-    border-width: 3px;
-  }
-  /* border des events*/
-  .fc-time-grid-event {
-    border-radius: 10px;
-    border-width:0px;
-    box-shadow: 0px 0px 3.5px -1px white inset;
-    padding:2px;
-    padding-top: 7px;
-    padding: 3px;
-  }
-  /* axe y*/
-  .fc-axis .fc-time .fc-widget-content {
-    color: $mygrey;
-    font-family: "Oswald";
-    font-weight: 400;
-  }
-  /*nom du role dans l'event*/
-  .fc-title{
-   font-family: "Robot";
-   font-size: 12px;
-   font-weight: 300;
- }
- /* active week/day button*/
- .fc-toolbar .fc-state-active, .fc-toolbar .ui-state-active{
-  color: white;
-  font-family: "Robot";
-}
-
-.fc-button {
-  box-shadow: none;
-  font-weight: 400;
-  letter-spacing: 1.2px ;
-  text-shadow:none;
-  background-image: none;
-  width:70px;
-
-}
-.fc-button-group {
-  font-family: "Robot";
-  font-size: 13px;
-}
-/*bouton month*/
-.fc-month-button {
-  width: 90px;
-}
-.fc-state-active {
-  background-color: #191654;
-  color: white;
-}
-
-/*bouton week*/
-.fc-agendaWeek-button {
-  width: 90px;
-}
-/* ne pas montrer le title de l'event*/
-.fc-title {
-  display: none;
-}
-</style>
 
 <!-- ___________________________ JS __________________________________ -->
 
+<!-- JS part not involving fullcalendar is in calendar.js -->
+
 <%= content_for(:after_js) do %>
 <script type="text/javascript">
-    // hide slot form
-    $(".slot_form").hide();
-    // make roles draggable
-    $('#my-draggable').draggable({
-      revert: true,      // immediately snap back to original position
-      revertDuration: 0  //
-    });
-    // assign default event data to draggable elements
-    $('.draggable').data('duration', '03:00');
-    // hide slot_form + reload page when clicking on the 'Valider' button
-    $('.create_slot').click(function(){
-      $(".slot_form").hide();
-      location.reload();
-    });
-    // when clicking on its 'Cancel' button
-    $(".cancel-button").click(function(){
-      $(".slot_form").hide();
-      // 1. get border thickness of Event back to normal
-      $(".fc-time-grid-event").css('border-width', '0px','box-shadow', '0px 0px 3.5px -1px white inset', 'padding', '2px' , 'padding-top', '7px','padding', '3px');
-      // 2. reload page
-      $('#calendar').fullCalendar( 'refetchEvents' );
-      // location.reload();
-    });
 
-    $('#calendar').fullCalendar({
-      //calendar attributes
-      header: {
-        left: 'prev, next',
-        center: '', //title
-        right: 'agendaWeek,agendaDay',
-      },
-      themeSystem: 'bootstrap3',
-      allDaySlot: false,
-      locale: "fr",
-      editable: true, // events on the calendar can be modified
-      droppable: true, // allows things to be dropped onto the calendar
-      selectable: true,
-      minTime: "07:00:00", // starting time, even when scrolled all the way up
-      maxTime: "22:00:00",
-      defaultView: "agendaWeek",
-      defaultDate: '<%= Date.commercial(@planning.year, @planning.week_number, 1).beginning_of_week %>', // s'ouvre sur le 1e lundi de la semaine sélectionnée
-      hiddenDays: [ 0], // hider dimanche
-      height: "auto", // implique pas de scroll à l'intérieur du calendrier
-      aspectRatio: 4,
-      events: '<%= events_planning_path(@planning.id, format: :json) %>',
-      // what happens when we select a time period on the calendar
-      select: function( start, end, jsEvent, view ) {
-        console.log("we are here");
-        console.log(start.format());
-        console.log(end.format());
-        $(".slot_form").show();
-        // TODO: set default value of the f.input value of the clicked Event
-        // get form to create a new slot
-        var planning_id = <%= @planning.id %>;
+  $('#calendar').fullCalendar({
+    //calendar attributes
+    header: {
+      left: 'prev, next',
+      center: '', //title
+      right: 'agendaWeek,agendaDay',
+    },
+    themeSystem: 'bootstrap3',
+    allDaySlot: false,
+    locale: "fr",
+    editable: true, // events on the calendar can be modified
+    droppable: true, // allows things to be dropped onto the calendar
+    selectable: true,
+    minTime: "07:00:00", // starting time, even when scrolled all the way up
+    maxTime: "22:00:00",
+    defaultView: "agendaWeek",
+    defaultDate: '<%= Date.commercial(@planning.year, @planning.week_number, 1).beginning_of_week %>', // s'ouvre sur le 1e lundi de la semaine sélectionnée
+    hiddenDays: [ 0], // hider dimanche
+    height: "auto", // implique pas de scroll à l'intérieur du calendrier
+    aspectRatio: 4,
+    events: '<%= events_planning_path(@planning.id, format: :json) %>',
+    // what happens when we select a time period on the calendar
+    select: function( start, end, jsEvent, view ) {
+      $(".slot_form").show();
+      $('.create_slot').prop('disabled', false);
+      // get form to create a new slot
+      var planning_id = <%= @planning.id %>;
+      // set default value of the date inputs (inside simple form)
+      $('#datetimepicker1 .form-control').val(new Date(start.format()).toLocaleDateString('fr-FR', {timezone: 'UTC', hour: '2-digit', minute: '2-digit'}));
+      $('#datetimepicker1').datetimepicker({
+        locale: 'FR'
+       });
+      $('#datetimepicker2 .form-control').val(new Date(end.format()).toLocaleDateString('fr-FR', {timezone: 'UTC', hour: '2-digit', minute: '2-digit'}));
+      $('#datetimepicker2').datetimepicker({
+        locale: 'FR'
+       });
+    },
+    eventClick: function( calEvent, jsEvent, view) {
+      $(this).css('border-color', 'red');
+      $(this).css('border-width', 'thick');
+      $(".slot_form").show();
+      // disable 'Valider' button
+      $('.create_slot').prop('disabled', true);
+      // get variables
+      var planning_id = <%= @planning.id %>;
+      var slot_id = calEvent.id;
+      var role_id = calEvent.role_id;
+      var start_date = new Date(calEvent.start.format());
+      var start_date = new Date(start_date.setHours(start_date.getHours() -2));
+      var end_date = new Date(calEvent.end.format());
+      var end_date = new Date(end_date.setHours(end_date.getHours() -2));
+      // set default values to the form
+      $('#datetimepicker1 .form-control').val(start_date.toLocaleDateString('fr-FR', {timezone: 'UTC', hour: '2-digit', minute: '2-digit'}));
+      $("#datetimepicker1").datetimepicker({
+        locale: 'FR'
+      });
+      $('#datetimepicker2 .form-control').val(end_date.toLocaleDateString('fr-FR', {timezone: 'UTC', hour: '2-digit', minute: '2-digit'}));
+      $("#datetimepicker2").datetimepicker({
+        locale: 'FR'
+      });
+      $('#slot_role_id').val(role_id);
+      // Ajax request to delete a slot
+      var build_url = "/plannings/" + planning_id + "/slots/" + slot_id;
+      $(".delete_slot").click( function (){
         $.ajax({
-          type: "GET",
-          url: Routes.new_planning_slot_path( planning_id, { format: 'js' } ),
+          type: "DELETE",
+          url: build_url,
+          format: 'js',
           success: function(data) {
             console.log(Event);
+            // recharger la page
+            location.reload();
           },
           error: function(jqXHR) {
+            console.log("ajax echec");
             console.log(jqXHR.responseText);
+            location.reload();
           }
         });
-        // set default value of the date inputs (inside simple form)
-        $('#datetimepicker1').datetimepicker({
-          defaultDate: new Date(start.format()),
-          locale: 'FR'
-         });
-        $('#datetimepicker2 .form-control').datetimepicker({
-          defaultDate: end.format(),
-          locale: 'FR'
-         });
-      },
-      eventClick: function( calEvent, jsEvent, view) {
-        $(this).css('border-color', 'red');
-        $(this).css('border-width', 'thick');
-        console.log(this);
-        $(".slot_form").show()
-        var planning_id = <%= @planning.id %>;
-        var slot_id = calEvent.id;
-        var role_name = calEvent.title;
-        var start_date = new Date(calEvent.start.format());
-        var end_date = new Date(calEvent.end.format());
-        console.log("slot_id =>> " + slot_id );
-        $("#datetimepicker1").datetimepicker({
-          defaultDate: new Date(start_date.setHours(start_date.getHours() - 2)),
-          locale: 'FR'
-        });
-        $("#datetimepicker2").datetimepicker({
-          defaultDate: new Date(end_date.setHours(end_date.getHours() -2 )),
-          locale: 'FR'
-        });
-        // TODO: set default vale for .slot_role
-        var build_url = "/plannings/" + planning_id + "/slots/" + slot_id;
-        $(".delete_slot").click( function (){
-          $.ajax({
-            type: "DELETE",
-            url: build_url,
-            format: 'js',
-            success: function(data) {
-              console.log(Event);
-              // recharger la page
-              location.reload();
-            },
-            error: function(jqXHR) {
-              console.log("ajax echec");
-              console.log(jqXHR.responseText);
-              location.reload();
-            }
-          });
-        });
-      }
-    });
+      });
+    }
+  });
+
   </script>
   <% end %>
 
