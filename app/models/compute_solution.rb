@@ -25,7 +25,7 @@
 
 class ComputeSolution < ApplicationRecord
   belongs_to :planning
-  has_one :calcul_solution_v1
+  has_one :calcul_solution_v1, dependent: :destroy
   has_many :solutions
 
   enum status: [:pending, :ready, :error]
