@@ -2,15 +2,26 @@
 #
 # Table name: calcul_solution_v1s
 #
-#  id               :integer          not null, primary key
-#  created_at       :datetime         not null
-#  updated_at       :datetime         not null
-#  slots_array      :text
-#  slotgroups_array :text
-#  information      :text
+#  id                  :integer          not null, primary key
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
+#  slots_array         :text
+#  slotgroups_array    :text
+#  information         :text
+#  compute_solution_id :integer
+#
+# Indexes
+#
+#  index_calcul_solution_v1s_on_compute_solution_id  (compute_solution_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (compute_solution_id => compute_solutions.id)
 #
 
 class CalculSolutionV1 < ApplicationRecord
+  belongs_to :compute_solution
+
   attr_accessor :planning, :calcul_arrays, :build_solutions, :solution
 
   def initialize(planning)
@@ -21,7 +32,7 @@ class CalculSolutionV1 < ApplicationRecord
 
   # rubocop:disable LineLength, MethodLength, AbcSize
 
-  def perform
+  def perform(compute_solutions)
     slots = planning.slots
     initialized_slots_array = initialize_slots_array(slots) # step 1
     self.calcul_arrays = CreateSlotgroupsService.new(initialized_slots_array, planning, self).perform # step 2
@@ -34,7 +45,7 @@ class CalculSolutionV1 < ApplicationRecord
       build_solutions = GoFindSolutionsV1Service.new(planning, self, to_simulate_slotgroups_arrays).perform
       # step 5_case 1: mettre en mémoire la solution une solution
       puts 'GoFindSolutionsV1Service --> done. --> storing best solution'
-      self.solution = create_solution(build_solutions[:best_solution][:nb_overlaps], :fresh)
+      self.solution = create_solution(build_solutions[:best_solution][:nb_overlaps], :fresh, compute_solutions)
       # step 6_case 1: créer des solution_slots à partir de la best solution
       create_solution_slots(calcul_arrays[:slotgroups_array], build_solutions[:best_solution][:planning_possibility])
       # update return variables
@@ -44,7 +55,7 @@ class CalculSolutionV1 < ApplicationRecord
       calculation_abstract = build_solutions[:calculation_abstract]
     else
       # 0 slotgroups to simulate (case 2)
-      self.solution = create_solution(nil, :fresh) # step 5 case 2
+      self.solution = create_solution(nil, :fresh, compute_solutions) # step 5 case 2
       create_solution_slots_when_no_slotgroup_to_simulate # step 6 case 2
       # update return variables
       test_possibilities = nil
@@ -52,6 +63,10 @@ class CalculSolutionV1 < ApplicationRecord
       best_solution = nil
       calculation_abstract = nil
     end
+
+    # save calculation abstract in ComputeSolution instance
+    compute_solutions.save_calculation_abstract(calculation_abstract)
+
     { calcul_arrays: calcul_arrays,
       test_possibilities: test_possibilities,
       solutions_array: solutions_array,
@@ -71,13 +86,14 @@ class CalculSolutionV1 < ApplicationRecord
     a
   end
 
-  def create_solution(nb_overlaps, simulation_status)
+  def create_solution(nb_overlaps, simulation_status, compute_solutions)
     # creates an instance of solution
     solution = Solution.new
     solution.calculsolutionv1_id = id
     solution.planning_id = planning.id
     solution.nb_overlaps = nb_overlaps
     solution.status = simulation_status
+    solution.compute_solution = compute_solutions
     solution.save
     solution
   end

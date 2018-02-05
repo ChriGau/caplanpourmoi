@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171215141520) do
+ActiveRecord::Schema.define(version: 20180205144331) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -31,18 +31,26 @@ ActiveRecord::Schema.define(version: 20171215141520) do
   end
 
   create_table "calcul_solution_v1s", force: :cascade do |t|
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
     t.text     "slots_array"
     t.text     "slotgroups_array"
     t.text     "information"
+    t.integer  "compute_solution_id"
+    t.index ["compute_solution_id"], name: "index_calcul_solution_v1s_on_compute_solution_id", using: :btree
   end
 
   create_table "compute_solutions", force: :cascade do |t|
     t.integer  "status"
     t.integer  "planning_id"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+    t.integer  "nb_solutions"
+    t.integer  "nb_optimal_solutions"
+    t.integer  "nb_iterations"
+    t.integer  "nb_possibilities_theory"
+    t.decimal  "calculation_length"
+    t.integer  "nb_cuts_within_tree"
     t.index ["planning_id"], name: "index_compute_solutions_on_planning_id", using: :btree
   end
 
@@ -109,6 +117,8 @@ ActiveRecord::Schema.define(version: 20171215141520) do
     t.integer "nb_extra_hours"
     t.integer "status"
     t.integer "planning_id"
+    t.integer "compute_solution_id"
+    t.index ["compute_solution_id"], name: "index_solutions_on_compute_solution_id", using: :btree
     t.index ["planning_id"], name: "index_solutions_on_planning_id", using: :btree
   end
 
@@ -142,6 +152,7 @@ ActiveRecord::Schema.define(version: 20171215141520) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   end
 
+  add_foreign_key "calcul_solution_v1s", "compute_solutions"
   add_foreign_key "compute_solutions", "plannings"
   add_foreign_key "constraints", "users"
   add_foreign_key "role_users", "roles"
@@ -152,6 +163,7 @@ ActiveRecord::Schema.define(version: 20171215141520) do
   add_foreign_key "solution_slots", "slots"
   add_foreign_key "solution_slots", "solutions"
   add_foreign_key "solution_slots", "users"
+  add_foreign_key "solutions", "compute_solutions"
   add_foreign_key "solutions", "plannings"
   add_foreign_key "teams", "plannings"
   add_foreign_key "teams", "users"
