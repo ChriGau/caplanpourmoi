@@ -1,0 +1,47 @@
+.panel > a {
+  text-decoration: none;
+  color: $mygrey;
+}
+.panel > a:hover {
+  text-decoration: none;
+  color:black;
+}
+.panel:hover {
+  background-color: $background;
+}
+
+#sol-list {
+  font-size:18px;
+}
+
+.sol-item {
+  display: flex;
+  align-items: center;
+}
+
+.sol-btn {
+  width: 40px;
+  margin-right: 20px;
+}
+
+.sol-title {
+  flex: 1 1 auto;
+}
+
+#sol-list {
+  display: flex;
+  align-items: center;
+}
+
+.sol-status {
+  display: inline-block;
+  width: 100px;
+  font-size: 90%;
+  padding: .5em;
+
+}
+
+.computation-title {
+  margin: 0px 20px 0px 20px;
+  flex: 1 1 auto;
+}
