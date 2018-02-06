@@ -62,9 +62,6 @@ class PlanningsController < ApplicationController
         slot.save
       end
 
-    # Display notice when displaying solution
-    flash[:notice] = message_calculation_notice(solution_instance.compute_solution)
-
     @slots.each do |slot|
       # Fake solution > def user id solution
       if !User.find(slot.user_id).profile_picture.nil?
@@ -208,19 +205,5 @@ class PlanningsController < ApplicationController
   end
 
   # rubocop:disable LineLength
-
-  def message_calculation_notice(compute_solution)
-    if compute_solution.nb_solutions.nil?
-      'non calculable car 0 solution'
-    else
-      pourcent = (compute_solution.nb_iterations.fdiv(compute_solution.nb_possibilities_theory) * 100).round(2)
-      "#{compute_solution.nb_solutions} solutions trouvées,
-      dont #{compute_solution.nb_optimal_solutions} optimales.
-       #{compute_solution.nb_iterations} itérations effectuées parmi
-      #{compute_solution.nb_possibilities_theory} possibilités théoriques,
-      soit #{pourcent}
-       pourcents du champs balayé"
-    end
-  end
 end
 # rubocop:enable Metrics/ClassLength
