@@ -8,6 +8,7 @@ class SaveSolutionsAndSolutionSlotsService
     @planning = planning
     @compute_solution = compute_solution_instance
     @list_of_solutions = list_of_solutions
+    @no_solution_user = [User.find_by(first_name: 'no solution')]
   end
 
   def perform
@@ -64,12 +65,6 @@ class SaveSolutionsAndSolutionSlotsService
         slots_id_array = get_array_of_slots_ids_related_to_slotgroup_id_according_to_simulation_status(true, slotgroup_instance.id, @slots_array)
         # leur affecter les users de la combination
         create_solution_slots_for_a_group_of_slots(slots_id_array, solution_instance, users)
-  end
-
-  def create_solution_slots_when_no_slotgroup_to_simulate(solution_instance)
-    # get slots_id related to the planning
-    slots_id_array = planning.slots.map(&:id)
-    create_solution_slots_for_a_group_of_slots(slots_id_array, solution_instance)
   end
 
   private

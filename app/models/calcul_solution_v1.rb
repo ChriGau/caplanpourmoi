@@ -27,7 +27,7 @@ class CalculSolutionV1 < ApplicationRecord
   def initialize(planning)
     super({})
     @planning = planning
-    @no_solution_user = [User.find_by(first_name: 'no solution')]
+    @no_solution_user = User.find_by(first_name: 'no solution')
   end
 
   # rubocop:disable LineLength, MethodLength, AbcSize
@@ -53,11 +53,11 @@ class CalculSolutionV1 < ApplicationRecord
       best_solution = build_solutions[:best_solution]
       calculation_abstract = build_solutions[:calculation_abstract]
       # save calculation abstract in ComputeSolution instance
-      compute_solution.save_calculation_abstract(calculation_abstract)
+      compute_solutions.save_calculation_abstract(calculation_abstract)
     else
       # 0 slotgroups to simulate (case 2)
       # créer une instance de solution
-      solution_instance = create_solution(nil) # step 5 case 2
+      solution_instance = create_solution(nil, compute_solutions) # step 5 case 2
       # créer les SolutionSlots associés
       create_solution_slots_when_no_slotgroup_to_simulate # step 6 case 2
       # update return variables
@@ -68,7 +68,7 @@ class CalculSolutionV1 < ApplicationRecord
     end
 
     # randomely validate one solution
-    a = Solution.find_by(planning_id: planning.id)
+    a = Solution.select{ |x| x.planning_id == planning.id && x.compute_solution_id == compute_solutions.id }.first
     a.effectivity = 'chosen'
     a.save
 
@@ -89,6 +89,22 @@ class CalculSolutionV1 < ApplicationRecord
       a << slotgroup if slotgroup.simulation_status == true
     end
     a
+  end
+
+  def create_solution(nb_overlaps, compute_solution)
+    # creates an instance of solution
+    solution = Solution.new
+    solution.planning_id = @planning.id
+    solution.nb_overlaps = nb_overlaps
+    solution.compute_solution = compute_solution
+    solution.save
+    solution
+  end
+
+  def create_solution_slots_when_no_slotgroup_to_simulate(solution_instance)
+    # get slots_id related to the planning
+    slots_id_array = planning.slots.map(&:id)
+    create_solution_slots_for_a_group_of_slots(slots_id_array, solution_instance)
   end
 end
 

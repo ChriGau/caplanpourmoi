@@ -32,4 +32,5 @@ class Solution < ApplicationRecord
   validates :planning_id, presence: true
 
   enum status: [:in_progress, :with_conflicts, :validated, :optimal, :fresh]
+
 end
