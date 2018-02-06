@@ -204,6 +204,5 @@ class PlanningsController < ApplicationController
     slotgroups.uniq # get rid of duplicates
   end
 
-  # rubocop:disable LineLength
 end
 # rubocop:enable Metrics/ClassLength

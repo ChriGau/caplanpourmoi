@@ -1,0 +1,6 @@
+fr:
+  compute_solution:
+    status:
+      pending: "En Cours"
+      ready: "Disponible"
+      error: "Échoué"
