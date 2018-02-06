@@ -47,6 +47,7 @@ class CalculSolutionV1 < ApplicationRecord
       puts 'GoFindSolutionsV1Service --> done. --> storing best solution'
       # Créer Solutions et SolutionSlots associées
       SaveSolutionsAndSolutionSlotsService.new(calcul_arrays[:slotgroups_array], calcul_arrays[:slots_array], planning, compute_solutions, build_solutions[:best_solution]).perform
+      puts 'tenemos slotgroups to simulate --> Solution and SolutionSlots created'
       # update return variables
       test_possibilities = build_solutions[:test_possibilities]
       solutions_array = build_solutions[:solutions_array]
@@ -60,6 +61,7 @@ class CalculSolutionV1 < ApplicationRecord
       solution_instance = create_solution(nil, compute_solutions) # step 5 case 2
       # créer les SolutionSlots associés
       create_solution_slots_when_no_slotgroup_to_simulate # step 6 case 2
+      puts 'no slotgroups to simulate --> created Solution and SolutionSlots.'
       # update return variables
       test_possibilities = nil
       solutions_array = nil
