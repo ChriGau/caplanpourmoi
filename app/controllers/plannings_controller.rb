@@ -52,7 +52,9 @@ class PlanningsController < ApplicationController
     # TODO_2: change this so that solution_instance is determined according to Solution status
     #  affecter aux slots le user de la solution de ce planning au statut :validated
     # identifier la solution validée
-      solution_instance = Solution.select { |x| x.planning_id == @planning.id && x.status == "fresh" }.last
+    #  affecter aux slots le user de la solution de ce planning au statut :validated
+      # identifier la solution validée
+      solution_instance = Solution.find_by(planning_id: @planning.id, effectivity: 0)
       @slots.each do |slot|
         # get solution_slot related to this slot
         the_solution_slot = SolutionSlot.select { |x| x.solution_id == solution_instance.id && x.slot_id == slot.id }
