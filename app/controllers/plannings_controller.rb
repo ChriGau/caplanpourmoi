@@ -46,34 +46,19 @@ class PlanningsController < ApplicationController
 
     # Fake solution => le boss remplacera le no solution
     @user_solution = User.find_by(first_name: 'jean')
+    demo_method(@planning) if @planning.week_number == 37
 
-    if @planning.week_number == 37
-      demo_method(@planning)
-    # if planning is not complete and contains slots => generate solutions
-    elsif @planning.status != :complete && @slots.count.positive?
-      # => solution calculation
-      calcul_v1 = CalculSolutionV1.new(@planning)
-      calcul_v1.save
-      # @calcul_results = { :calcul_arrays, :test_possibilities, :solutions_array, :best_solution, :calculation_abstract }
-      @calcul_results = calcul_v1.perform
-      # @calcul_arrays = { slotgroups_array: @slotgroups_array, slots_array: @slots_array }
-      @calcul_arrays = @calcul_results[:calcul_arrays]
-      @test_possibilities = @calcul_results[:test_possibilities]
-      @solutions_array = @calcul_results[:solutions_array]
-      @best_solution = @calcul_results[:best_solution]
-      @calculation_abstract = @calcul_results[:calculation_abstract]
-      flash[:notice] = message_calculation_notice
-
-      #  affecter aux slots le user de la solution de ce planning au statut :validated
-      # identifier la solution validée
-      solution_instance = Solution.find_by(planning_id: @planning.id, calculsolutionv1_id: calcul_v1.id, status: :fresh)
+    # TODO_1: change this so that user_id is inherited from solution's effectivity
+    # TODO_2: change this so that solution_instance is determined according to Solution status
+    #  affecter aux slots le user de la solution de ce planning au statut :validated
+    # identifier la solution validée
+      solution_instance = Solution.select { |x| x.planning_id == @planning.id && x.status == "fresh" }.last
       @slots.each do |slot|
         # get solution_slot related to this slot
         the_solution_slot = SolutionSlot.select { |x| x.solution_id == solution_instance.id && x.slot_id == slot.id }
         slot.user_id = the_solution_slot.first.user_id
         slot.save
       end
-    end
 
     @slots.each do |slot|
       # Fake solution > def user id solution
@@ -219,18 +204,5 @@ class PlanningsController < ApplicationController
 
   # rubocop:disable LineLength
 
-  def message_calculation_notice
-    if @calculation_abstract.nil?
-      'non calculable car 0 solution'
-    else
-      pourcent = (@calculation_abstract[:nb_iterations].fdiv(@calculation_abstract[:nb_possibilities_theory]) * 100).round(2)
-      "#{@calculation_abstract[:nb_solutions]} solutions trouvées,
-      dont #{@calculation_abstract[:nb_optimal_solutions]} optimales.
-       #{@calculation_abstract[:nb_iterations]} itérations effectuées parmi
-      #{@calculation_abstract[:nb_possibilities_theory]} possibilités théoriques,
-      soit #{pourcent}
-       pourcents du champs balayé"
-    end
-  end
 end
 # rubocop:enable Metrics/ClassLength
