@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180205144331) do
+ActiveRecord::Schema.define(version: 20180205161023) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -112,11 +112,11 @@ ActiveRecord::Schema.define(version: 20180205144331) do
   end
 
   create_table "solutions", force: :cascade do |t|
-    t.integer "calculsolutionv1_id"
     t.integer "nb_overlaps"
     t.integer "nb_extra_hours"
-    t.integer "status"
     t.integer "planning_id"
+    t.integer "effectivity"
+    t.integer "relevance"
     t.integer "compute_solution_id"
     t.index ["compute_solution_id"], name: "index_solutions_on_compute_solution_id", using: :btree
     t.index ["planning_id"], name: "index_solutions_on_planning_id", using: :btree

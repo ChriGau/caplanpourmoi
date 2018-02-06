@@ -3,11 +3,11 @@
 # Table name: solutions
 #
 #  id                  :integer          not null, primary key
-#  calculsolutionv1_id :integer
 #  nb_overlaps         :integer
 #  nb_extra_hours      :integer
-#  status              :integer
 #  planning_id         :integer
+#  effectivity         :integer
+#  relevance           :integer
 #  compute_solution_id :integer
 #
 # Indexes
