@@ -23,8 +23,8 @@ class GoFindSolutionsV1Service
     self.nb_slotgroups = slotgroups_array.count
     # iterate through planning possibilities to extract solutions
     self.build_solutions = go_through_plannings
-    # select the best solution
-    build_solutions[:best_solution] = pick_best_solution(build_solutions[:solutions_array])
+    # select the best solutions
+    build_solutions[:best_solution] = pick_best_solutions(build_solutions[:solutions_array], 15)
     # return
     build_solutions
   end
@@ -104,18 +104,36 @@ class GoFindSolutionsV1Service
 
   # rubocop:enable For
 
-  def pick_best_solution(solutions_array)
-    # Selects one solution from a collection of solutions.
-    # several solutions with 0 overlaps? => choose randomly among those.
-    # else, we pick the last one and update the overlaps == 'no solution'
+def pick_best_solutions(solutions_array, how_many_solutions_do_we_store)
+    # Selects X solutions from a collection of solutions.
+    # several solutions with 0 overlaps? => pick the last X ones
+    # else, we pick the last X ones and update the overlaps == 'no solution'
     collection_no_overlaps = collect_solutions_with_no_overlap(solutions_array)
+    size_selection_solutions = how_many_solutions_do_we_store
     if collection_no_overlaps.count.positive?
-      random_choice = rand(1..collection_no_overlaps.count)
-      return collection_no_overlaps[random_choice - 1]
-    else
-      # if overlaps, fix them => assign user according to slotgroups priority
-      assign_no_solution_user_for_sg_with_overlaps(solutions_array.last)
-      return solutions_array.last
+      # if more optimal solutions than size of our top => pick the last size_selection_solutions ones
+      if collection_no_overlaps.count >= size_selection_solutions
+        return collection_no_overlaps.last(size_selection_solutions)
+      else
+        # pick the 1..size_selection_solutions ones
+        return collection_no_overlaps
+      end
+    else # if no optimal solutions
+      # if more solutions than size of our top
+      if solutions_array.count >= size_selection_solutions
+        # select the last X ones
+        solutions_array.last(size_selection_solutions).each do |partial_solution|
+          # fix overlaps => assign user according to slotgroups priority
+          assign_no_solution_user_for_sg_with_overlaps(partial_solution)
+        end
+        return solutions_array.last(size_selection_solutions)
+      else # less than 'size_selection_solutions' partial solutions
+        # select as many solutions as there are, and fix them
+        solutions_array.each do |partial_solution|
+          assign_no_solution_user_for_sg_with_overlaps(partial_solution)
+        end
+        return solutions_array
+      end
     end
   end
 
