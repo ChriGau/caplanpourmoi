@@ -24,7 +24,7 @@ class SaveSolutionsAndSolutionSlotsService
   def create_solution(nb_overlaps, compute_solution)
     # creates an instance of solution
     solution = Solution.new
-    solution.planning_id = @planning.id
+    solution.planning = @planning
     solution.nb_overlaps = nb_overlaps
     solution.compute_solution = compute_solution
     solution.save
