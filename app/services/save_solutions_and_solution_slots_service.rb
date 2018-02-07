@@ -2,7 +2,8 @@
 # output => creates instances of Solution and their associated SolutionSlots
 class SaveSolutionsAndSolutionSlotsService
 
-  def initialize(slotgroups_array, slots_array, planning, compute_solution_instance, list_of_solutions)
+  def initialize(slotgroups_array,
+    slots_array, planning, compute_solution_instance = nil, list_of_solutions = nil)
     @slotgroups_array = slotgroups_array
     @slots_array = slots_array
     @planning = planning
@@ -12,28 +13,21 @@ class SaveSolutionsAndSolutionSlotsService
   end
 
   def perform
-  # Pour chacune des solutions sélectionnées :
-    @list_of_solutions.each do |solution|
-      # créer une instance de Solution
-      solution_instance = create_solution(solution[:nb_overlaps], @compute_solution)
-      # créer les SolutionSlots associés
-      create_solution_slots(@slotgroups_array, solution[:planning_possibility], solution_instance)
+    if !@list_of_solutions.nil?
+    # Pour chacune des solutions sélectionnées :
+      @list_of_solutions.each do |solution|
+        solution_instance = create_solution(@compute_solution, solution[:nb_overlaps],)
+        create_solution_slots(@slotgroups_array, solution[:planning_possibility], solution_instance)
+      end
+    else
+      solution_instance = create_solution(@compute_solution)
+      create_solution_slots_for_a_group_of_slots(@planning.slots.map(&:id), solution_instance)
     end
   end
 
-  def create_solution(nb_overlaps, compute_solution)
-    # creates an instance of solution
-    solution = Solution.new
-    solution.planning = @planning
-    solution.nb_overlaps = nb_overlaps
-    if solution.nb_overlaps.zero?
-      solution.effectivity == :optimal
-    else
-      solution.effectivity == :partial
-    end
-    solution.compute_solution = compute_solution
-    solution.save
-    solution
+  def create_solution(compute_solution, nb_overlaps = nil)
+    status = !nb_overlaps.nil? && nb_overlaps.zero? ? :optimal : :partial
+    Solution.create(planning: @planning, compute_solution: compute_solution, nb_overlaps: nb_overlaps, relevance: status)
   end
 
   def create_solution_slots(slotgroups_array, planning_possibility, solution_instance)
@@ -102,15 +96,7 @@ class SaveSolutionsAndSolutionSlotsService
   end
 
   def create_solution_slot_instance(slot_id, user, solution_instance)
-    s = SolutionSlot.new
-    s.solution_id = solution_instance.id
-    s.slot_id = slot_id
-    s.user = user
+    s = SolutionSlot.create(solution: solution_instance, :slot_id => slot_id, user: user)
     # TODO, s.extra_hours
-    s.save
-  end
-
-  def no_solution_user_id
-    User.find_by(first_name: 'no solution').id
   end
 end
