@@ -34,9 +34,13 @@ class CalculSolutionV1 < ApplicationRecord
 
   def perform(compute_solution)
     slots = planning.slots
+    # initialize return variables
+    test_possibilities = nil
+    solutions_array = nil
+    best_solution = nil
+    calculation_abstract = nil
     initialized_slots_array = initialize_slots_array(slots) # step 1
     self.calcul_arrays = CreateSlotgroupsService.new(initialized_slots_array, planning, self).perform # step 2
-    puts 'CreateSlotgroupsService --> done'
     to_simulate_slotgroups_array = select_slotgroups_to_simulate(calcul_arrays[:slotgroups_array]) # step 3
     need_a_calcul = to_simulate_slotgroups_array.empty? ? false : true
     # there are some sg to simulate (case 1)
@@ -46,26 +50,19 @@ class CalculSolutionV1 < ApplicationRecord
       build_solutions = GoFindSolutionsV1Service.new(planning, self, to_simulate_slotgroups_array).perform
       # step 5_case 1: mettre en mémoire la solution une solution
       puts 'GoFindSolutionsV1Service --> done. --> storing best solution'
-    end
-      # Créer Solutions et SolutionSlots associées
-      list_of_solutions = need_a_calcul ? build_solutions[:best_solution] : nil
-      SaveSolutionsAndSolutionSlotsService.new(calcul_arrays[:slotgroups_array],
-        calcul_arrays[:slots_array], planning, compute_solution, list_of_solutions).perform
-      puts 'SaveSolutionsAndSolutionSlotsService --> done'
       # update return variables
-    if need_a_calcul
       test_possibilities = build_solutions[:test_possibilities]
       solutions_array = build_solutions[:solutions_array]
       best_solution = build_solutions[:best_solution]
       calculation_abstract = build_solutions[:calculation_abstract]
       # save calculation abstract in ComputeSolution instance
       compute_solution.save_calculation_abstract(calculation_abstract)
-    else
-      test_possibilities = nil
-      solutions_array = nil
-      best_solution = nil
-      calculation_abstract = nil
     end
+    # Créer Solutions et SolutionSlots associées
+    list_of_solutions = need_a_calcul ? build_solutions[:best_solution] : nil
+    SaveSolutionsAndSolutionSlotsService.new( calcul_arrays[:slotgroups_array],
+      calcul_arrays[:slots_array], planning, compute_solution, list_of_solutions ).perform
+    puts 'SaveSolutionsAndSolutionSlotsService --> done'
 
     # randomely validate one solution
     a = @planning.solutions.last
