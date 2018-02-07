@@ -14,7 +14,6 @@ class SaveSolutionsAndSolutionSlotsService
 
   def perform
     if !@list_of_solutions.nil?
-    # Pour chacune des solutions sélectionnées :
       @list_of_solutions.each do |solution|
         solution_instance = create_solution(@compute_solution, solution[:nb_overlaps],)
         create_solution_slots(@slotgroups_array, solution[:planning_possibility], solution_instance)

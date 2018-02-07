@@ -43,12 +43,10 @@ class CalculSolutionV1 < ApplicationRecord
     self.calcul_arrays = CreateSlotgroupsService.new(initialized_slots_array, planning, self).perform # step 2
     to_simulate_slotgroups_array = select_slotgroups_to_simulate(calcul_arrays[:slotgroups_array]) # step 3
     need_a_calcul = to_simulate_slotgroups_array.empty? ? false : true
-    # there are some sg to simulate (case 1)
-    if need_a_calcul
+    if need_a_calcul # there are some sg to simulate (case 1)
       # step 4: go through plannings possibilities, assess them, select best solution. (2 cases)
       puts 'GoFindSolutionsV1Service --> initiated'
       build_solutions = GoFindSolutionsV1Service.new(planning, self, to_simulate_slotgroups_array).perform
-      # step 5_case 1: mettre en mémoire la solution une solution
       puts 'GoFindSolutionsV1Service --> done. --> storing best solution'
       # update return variables
       test_possibilities = build_solutions[:test_possibilities]
@@ -64,7 +62,7 @@ class CalculSolutionV1 < ApplicationRecord
       calcul_arrays[:slots_array], planning, compute_solution, list_of_solutions ).perform
     puts 'SaveSolutionsAndSolutionSlotsService --> done'
 
-    # randomely validate one solution
+    # validate last solution created
     a = @planning.solutions.last
     a.effectivity = 'chosen'
     a.save
@@ -87,27 +85,6 @@ class CalculSolutionV1 < ApplicationRecord
     end
     a
   end
-
-#   def create_solution(nb_overlaps, compute_solution)
-#     # creates an instance of solution
-#     solution = Solution.new
-#     solution.planning = @planning
-#     solution.nb_overlaps = nb_overlaps
-#     solution.compute_solution = compute_solution
-#     solution.save
-#     solution
-#   end
-
-#   def no_sg_to_simulate_create_solution_and_solution_slots(compute_solution)
-#       solution_instance = create_solution(nil, compute_solution) # step 5 case 2
-#       create_solution_slots_when_no_slotgroup_to_simulate(solution_instance) # step 6 case 2
-#   end
-
-#   def create_solution_slots_when_no_slotgroup_to_simulate(solution_instance)
-#     # get slots_id related to the planning
-#     slots_id_array = planning.slots.map(&:id)
-#     create_solution_slots_for_a_group_of_slots(slots_id_array, solution_instance)
-#   end
 end
 
 
