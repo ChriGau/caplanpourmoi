@@ -115,9 +115,9 @@ ActiveRecord::Schema.define(version: 20180205161023) do
     t.integer "nb_overlaps"
     t.integer "nb_extra_hours"
     t.integer "planning_id"
+    t.integer "compute_solution_id"
     t.integer "effectivity"
     t.integer "relevance"
-    t.integer "compute_solution_id"
     t.index ["compute_solution_id"], name: "index_solutions_on_compute_solution_id", using: :btree
     t.index ["planning_id"], name: "index_solutions_on_planning_id", using: :btree
   end

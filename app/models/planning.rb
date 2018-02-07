@@ -28,9 +28,9 @@ class Planning < ApplicationRecord
   def set_status
     if slots.empty?
       not_started!
-    elsif solutions.exists?(status: "validated")
+    elsif solutions.exists?(relevance: "optimal")
       complete!
-    elsif solutions.exists?(status: "with_conflicts")
+    elsif solutions.exists?(relevance: "partial")
       with_conflicts!
     else
       in_progress!

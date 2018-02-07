@@ -1,47 +1,51 @@
-        <p>Attributs du Slot</p>
-        <!-- intégrer du date picker bootstrap dans simple form via gem https://github.com/Eonasdan/bootstrap-datetimepicker -->
-        <%= simple_form_for [@planning, @slot],remote: true do |f| %>
-        <%= f.error_notification %>
-        <div class="form-group">
-          <div class='input-group date' id='datetimepicker1'>
-            <input name="slot[start_at]" type='text' value="<%= @slot.start_at %>" class="form-control" />
-            <span class="input-group-addon">
-              <span class="glyphicon glyphicon-calendar">
-              </span>
+<!-- intégrer du date picker bootstrap dans simple form via gem https://github.com/Eonasdan/bootstrap-datetimepicker -->
+  <%= simple_form_for [@planning, @slot],remote: true do |f| %>
+  <%= f.error_notification %>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <div class='input-group date' id='datetimepicker1'>
+          <input name="slot[start_at]" type='text' value="<%= @slot.start_at %>" class="form-control" />
+          <span class="input-group-addon">
+            <span class="glyphicon glyphicon-calendar">
             </span>
-          </div>
-        </div>
-        <div class="form-group">
-          <div class='input-group date' id='datetimepicker2'>
-            <input name="slot[end_at]" type='text' value="<%= @slot.end_at %>" class="form-control" />
-            <span class="input-group-addon">
-              <span class="glyphicon glyphicon-calendar">
-              </span>
-            </span>
+          </span>
         </div>
       </div>
-      <%= f.input :role_id, placeholder: "Role", label: false, collection: fetch_roles, class: "slot_role"  %>
-      <%= f.submit "Valider", class: "btn btn-success create_slot" %>
-      <%= f.button :button, "Cancel", type: :reset, class: "btn btn-none cancel-button" %>
-      <%= f.button :button, "Supprimer", type: :reset, class: "btn btn-none delete_slot" %>
-      <% end %>
+      <div class="form-group">
+        <div class='input-group date' id='datetimepicker2'>
+          <input name="slot[end_at]" type='text' value="<%= @slot.end_at %>" class="form-control" />
+          <span class="input-group-addon">
+            <span class="glyphicon glyphicon-calendar">
+            </span>
+          </span>
+        </div>
       </div>
-
-
-<style>
-  .annuler {
-    background-color: white;
-    color: #566568;
-    border-color: #566568;
-  }
-  .btn-success {
-  background-color: #759CE7;
-  border-radius: 50px;
-  border: none;
-}
-  .btn-default {
-  background-color: $mylightgrey;
-  border-radius: 50px;
-  border: none;
-}
-</style>
+      <div>
+        <%= f.input :role_id, placeholder: "Role", label: false, collection: fetch_roles, class: "slot_role"  %>
+      </div>
+    </div>
+    <div class="col-xs-4">
+      <div class="form-group">
+        <p>Répéter le créneau</p>
+          <ul class="list-inline" >
+            <% [1,2,3,4,5,6].each do |daynum| %>
+              <li>
+                <div class="daysbox col-xs-4">
+                  <label>
+                  <%= t("days.#{Date::DAYNAMES[daynum]}") %>
+                  <%= check_box_tag "items[]", daynum, false, class: "hide" %>
+                  </label>
+                </div>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+    </div>
+    <div class="col-xs-12">
+      <div class="form-group">
+          <%= f.submit "Valider", class: "btn btn-success create_slot" %>
+          <%= f.button :button, "Cancel", type: :reset, class: "btn btn-none cancel-button" %>
+          <%= f.button :button, "Supprimer", type: :reset, class: "btn btn-none delete_slot" %>
+      </div>
+    </div>
+    <% end %>
