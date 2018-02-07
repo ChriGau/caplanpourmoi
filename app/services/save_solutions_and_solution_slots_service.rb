@@ -26,6 +26,11 @@ class SaveSolutionsAndSolutionSlotsService
     solution = Solution.new
     solution.planning = @planning
     solution.nb_overlaps = nb_overlaps
+    if solution.nb_overlaps.zero?
+      solution.effectivity == :optimal
+    else
+      solution.effectivity == :partial
+    end
     solution.compute_solution = compute_solution
     solution.save
     solution
