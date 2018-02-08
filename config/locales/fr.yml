@@ -4,3 +4,13 @@ fr:
       pending: "En Cours"
       ready: "Disponible"
       error: "Échoué"
+
+  days:
+    Sunday: "Dimanche"
+    Monday: "Lundi"
+    Tuesday: "Mardi"
+    Wednesday: "Mercredi"
+    Thursday: "Jeudi"
+    Friday: "Vendredi"
+    Saturday: "Samedi"
+

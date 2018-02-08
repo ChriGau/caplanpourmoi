@@ -6,9 +6,10 @@
         <div class="triangle" style= "left:<%= @triangle_position %>" ></div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-xs-4 slot_form">
-         <%= render 'slots/form', locals: {planning: @planning, slot: @slot} %>
+    <div class="row tamere">
+      <div class="slot_form">
+        <%= render 'slots/form', locals: {planning: @planning, slot: @slot} %>
+      </div>
     </div>
 
     <div class="row spacing">
@@ -66,6 +67,7 @@
     events: '<%= events_planning_path(@planning.id, format: :json) %>',
     // what happens when we select a time period on the calendar
     select: function( start, end, jsEvent, view ) {
+
       $(".slot_form").show();
       $('.create_slot').prop('disabled', false);
       // get form to create a new slot
@@ -79,6 +81,17 @@
       $('#datetimepicker2').datetimepicker({
         locale: 'FR'
        });
+      //behavior of days sélection
+      $('input:checkbox').each(function(){
+        $(this)[0].disabled= false;
+        $(this)[0].checked= false;
+      });
+      $('.daysbox').removeClass('checked unselectable');
+      var date = (new Date(end.format()).getDay());
+      $('input:checkbox[value='+date+']')[0].disabled= true;
+      $('input:checkbox[value='+date+']').parent().parent().addClass('unselectable');
+
+
     },
     eventClick: function( calEvent, jsEvent, view) {
       $(this).css('border-color', 'red');

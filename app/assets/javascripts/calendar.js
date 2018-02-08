@@ -2,6 +2,10 @@ $(document).ready(function() {
   // hide slot form
   $(".slot_form").hide();
   // make roles draggable
+  $("input:checkbox").click(function(){
+    $(this).parent().parent().toggleClass("checked");
+  });
+
   $('#my-draggable').draggable({
     revert: true,      // immediately snap back to original position
     revertDuration: 0  //
