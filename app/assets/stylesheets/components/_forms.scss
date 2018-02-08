@@ -1,7 +1,15 @@
 .daysbox {
-  background: $mylightgrey;
+  border: 1px solid $mygrey;
   width: 100px;
   height: 30px;
+}
+
+.unselectable {
+  background: $mygrey;
+  opacity: 0.5;
+  :hover {
+    cursor: default;
+  }
 }
 
 .checked {
