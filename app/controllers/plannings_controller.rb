@@ -56,59 +56,53 @@ class PlanningsController < ApplicationController
       # identifier la solution validée
       solution_instance = @planning.solutions.chosen.last
       @slots.each do |slot|
-        # get solution_slot related to this slot
-        the_solution_slot = SolutionSlot.select { |x| x.solution_id == solution_instance.id && x.slot_id == slot.id }
-        slot.user_id = the_solution_slot.first.user_id
-        slot.save
+        solution_slot = solution_instance.solution_slots.select{|x| x.slot == slot }
+        # Fake solution > def user id solution
+        if !User.find(solution_slot.user_id).profile_picture.nil?
+          # picture du user
+          picture = 'http://res.cloudinary.com/dksqsr3pd/image/upload/c_fill,r_60,w_60/' + User.find(solution_slot.user_id).profile_picture.path
+        else
+          # point d'interrogation par defaut
+          picture = 'http://a398.idata.over-blog.com/60x60/3/91/14/12/novembre-2010/point-d-interrogation-bleu-ciel.jpg'
+        end
+
+        a = {
+          id:  slot.id,
+          start:  slot.start_at,
+          end: slot.end_at,
+          title: Role.find_by(id: slot.role_id).name, # nom du role
+          role_id: slot.role_id, # nom du role
+          created_at: slot.created_at,
+          updated_at: slot.updated_at,
+          color: Role.find_by(id: slot.role_id).role_color,
+          planning_id: slot.planning_id,
+          user_id: User.find(solution_slot.user_id).id,
+          picture: picture
+        }
+
+        picture_solution = 'http://res.cloudinary.com/dksqsr3pd/image/upload/c_fill,r_60,w_60/' + User.find_by(first_name: 'jean').profile_picture.path
+        user_id_solution = User.find_by(first_name: 'jean').id
+
+        b = {
+          id: slot.id,
+          start: slot.start_at,
+          end: slot.end_at,
+          title: Role.find_by(id: slot.role_id).name, # nom du role
+          role_id: slot.role_id, # nom du role
+          created_at: slot.created_at,
+          updated_at: slot.updated_at,
+          color: Role.find_by(id: slot.role_id).role_color,
+          planning_id: slot.planning_id,
+          user_id: user_id_solution,
+          picture: picture_solution
+        }
+        @slots_array << a
+        @slots_solution << if solution_slot.user_id == User.find_by(first_name: 'no solution').id
+                             b
+                           else
+                             a
+                           end
       end
-
-    @slots.each do |slot|
-      # Fake solution > def user id solution
-      if !User.find(slot.user_id).profile_picture.nil?
-        # picture du user
-        picture = 'http://res.cloudinary.com/dksqsr3pd/image/upload/c_fill,r_60,w_60/' + User.find(slot.user_id).profile_picture.path
-      else
-        # point d'interrogation par defaut
-        picture = 'http://a398.idata.over-blog.com/60x60/3/91/14/12/novembre-2010/point-d-interrogation-bleu-ciel.jpg'
-      end
-
-      a = {
-        id:  slot.id,
-        start:  slot.start_at,
-        end: slot.end_at,
-        title: Role.find_by(id: slot.role_id).name, # nom du role
-        role_id: slot.role_id, # nom du role
-        created_at: slot.created_at,
-        updated_at: slot.updated_at,
-        color: Role.find_by(id: slot.role_id).role_color,
-        planning_id: slot.planning_id,
-        user_id: User.find(slot.user_id).id,
-        picture: picture
-      }
-
-      picture_solution = 'http://res.cloudinary.com/dksqsr3pd/image/upload/c_fill,r_60,w_60/' + User.find_by(first_name: 'jean').profile_picture.path
-      user_id_solution = User.find_by(first_name: 'jean').id
-
-      b = {
-        id: slot.id,
-        start: slot.start_at,
-        end: slot.end_at,
-        title: Role.find_by(id: slot.role_id).name, # nom du role
-        role_id: slot.role_id, # nom du role
-        created_at: slot.created_at,
-        updated_at: slot.updated_at,
-        color: Role.find_by(id: slot.role_id).role_color,
-        planning_id: slot.planning_id,
-        user_id: user_id_solution,
-        picture: picture_solution
-      }
-      @slots_array << a
-      @slots_solution << if slot.user_id == User.find_by(first_name: 'no solution').id
-                           b
-                         else
-                           a
-                         end
-    end
   end
 
   # rubocop:enable MethodLength
