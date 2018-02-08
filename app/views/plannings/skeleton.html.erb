@@ -6,8 +6,10 @@
         <div class="triangle" style= "left:<%= @triangle_position %>" ></div>
       </div>
     </div>
-    <div class="row slot_form">
-      <%= render 'slots/form', locals: {planning: @planning, slot: @slot} %>
+    <div class="row tamere">
+      <div class="slot_form">
+        <%= render 'slots/form', locals: {planning: @planning, slot: @slot} %>
+      </div>
     </div>
 
     <div class="row spacing">
