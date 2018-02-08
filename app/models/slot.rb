@@ -48,15 +48,15 @@ class Slot < ApplicationRecord
                planning_id, start_at, end_at, role_id)
   end
 
+  def get_chosen_solution_slot
+    # for a given slot, get the instance of solution_slot which is associated to it and
+    # belongs to the chosen solution
+    self.solution_slots.select{ |x| x.solution.chosen? && x.slot == self }.first
+  end
+
   private
 
   def set_planning_status
     planning&.set_status
-  end
-
-  def self.get_chosen_solution_slot
-    # for a given slot, get the instance of solution_slot which is associated to it and
-    # belongs to the chosen solution
-    SolutionSlot.select{ |x| x.solution.chosen? && x.slot == self }.first
   end
 end
