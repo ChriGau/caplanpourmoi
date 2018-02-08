@@ -6,7 +6,7 @@ class SlotsController < ApplicationController
   def create
     slot_model = Slot.new(slot_params)
     user_id = User.find_by(first_name: 'no solution').id
-    slot_model.user_id = user_id
+    # slot_model.user_id = user_id
     slot_list = [slot_model]
 
     clicked_day = slot_params[:start_at].to_datetime.strftime("%u").to_i

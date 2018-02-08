@@ -27,6 +27,7 @@ class Slot < ApplicationRecord
   validates :role_id, presence: true
   after_save :set_planning_status
   has_many :solution_slots, dependent: :destroy
+  has_many :solutions, through: :solution_slots
 
   def self.slot_templates
     slot_templates = []
@@ -51,5 +52,11 @@ class Slot < ApplicationRecord
 
   def set_planning_status
     planning&.set_status
+  end
+
+  def self.get_associated_chosen_solution_slot
+    # for a given slot, get the instance of solution_slot which is associated to it and
+    # belongs to the chosen solution
+    SolutionSlot.select{ |x| x.solution.chosen? && x.slot == self }.first
   end
 end
