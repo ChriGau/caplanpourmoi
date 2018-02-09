@@ -48,55 +48,10 @@ class PlanningsController < ApplicationController
     @user_solution = User.find_by(first_name: 'jean')
     demo_method(@planning) if @planning.week_number == 37
 
-    @solution_instance = @planning.solutions.chosen.last
-    @solution_slots = @solution_instance.solution_slots # Array of SolutionSlots
-    @slots.each do |slot|
-      solution_slot = @solution_slots.select{ |x| x.slot == slot }.first
-      # Fake solution > def user id solution
-      if !User.find(solution_slot.user.id).profile_picture.nil?
-        # picture du user
-        picture = 'http://res.cloudinary.com/dksqsr3pd/image/upload/c_fill,r_60,w_60/' + User.find(solution_slot.user.id).profile_picture.path
-      else
-        # point d'interrogation par defaut
-        picture = 'http://a398.idata.over-blog.com/60x60/3/91/14/12/novembre-2010/point-d-interrogation-bleu-ciel.jpg'
-      end
-
-      a = {
-        id:  slot.id,
-        start:  slot.start_at,
-        end: slot.end_at,
-        title: Role.find_by(id: slot.role_id).name, # nom du role
-        role_id: slot.role_id, # nom du role
-        created_at: slot.created_at,
-        updated_at: slot.updated_at,
-        color: Role.find_by(id: slot.role_id).role_color,
-        planning_id: slot.planning_id,
-        user_id: User.find(solution_slot.user).id,
-        picture: picture
-      }
-
-      picture_solution = 'http://res.cloudinary.com/dksqsr3pd/image/upload/c_fill,r_60,w_60/' + User.find_by(first_name: 'jean').profile_picture.path
-      user_id_solution = User.find_by(first_name: 'jean').id
-
-      b = {
-        id: slot.id,
-        start: slot.start_at,
-        end: slot.end_at,
-        title: Role.find_by(id: slot.role_id).name, # nom du role
-        role_id: slot.role_id, # nom du role
-        created_at: slot.created_at,
-        updated_at: slot.updated_at,
-        color: Role.find_by(id: slot.role_id).role_color,
-        planning_id: slot.planning_id,
-        user_id: user_id_solution,
-        picture: picture_solution
-      }
-      @slots_array << a
-      @slots_solution << if solution_slot.user == User.find_by(first_name: 'no solution')
-                           b
-                         else
-                           a
-                         end
+    if !@planning.solutions.exists?
+      flash.now[:alert] = "Générez des solutions pour votre planning"
+    elsif !@planning.solutions.chosen.exists?
+      flash.now[:alert] = "Validez une solution pour votre planning"
     end
   end
 
