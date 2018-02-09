@@ -12,7 +12,7 @@
       <% @users.each do |user| %>
         <div class="col-xs-12 col-sm-6 col-md-2 col-lg-2">
           <div
-          class="card choice <%= @planning.users.include?(user) ? "active" : "" %> "
+          class="card choice <%= @planning.users.include?(user) ? "checked" : "" %> "
           >
             <label>
               <input
@@ -47,11 +47,6 @@
 
 <%= content_for(:after_js) do %>
     <script>
-      $(document).ready(function(){
-        $(".checkbox").change(function(){
-          $(this).parent().parent().toggleClass("active");
-        });
-
         $("#user-submit-btn").click(function(event){
           event.preventDefault();
 
