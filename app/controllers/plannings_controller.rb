@@ -55,11 +55,13 @@ class PlanningsController < ApplicationController
     #  affecter aux slots le user de la solution de ce planning au statut :validated
       # identifier la solution validée
       solution_instance = @planning.solutions.chosen.last
-      @slots.each do |slot|
-        # get solution_slot related to this slot
-        the_solution_slot = SolutionSlot.select { |x| x.solution_id == solution_instance.id && x.slot_id == slot.id }
-        slot.user_id = the_solution_slot.first.user_id
-        slot.save
+      unless solution_instance.nil?
+        @slots.each do |slot|
+          # get solution_slot related to this slot
+          the_solution_slot = SolutionSlot.select { |x| x.solution_id == solution_instance.id && x.slot_id == slot.id }
+          slot.user_id = the_solution_slot.first.user_id
+          slot.save
+        end
       end
 
     @slots.each do |slot|
