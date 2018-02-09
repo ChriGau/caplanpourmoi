@@ -11,9 +11,37 @@
 }
 
 #sol-list {
-  font-size:18px;
+  font-size:16px;
+  display: flex;
+  align-items: center;
 }
 
+
+.nb_solutions {
+  background: white;
+  color: $mygrey;
+}
+
+.computation-title {
+  margin: 0px 20px 0px 20px;
+}
+.infos {
+  margin-left: 5px;
+  blockquote {
+    padding:5px;
+    margin: 0px;
+  }
+  p {
+    font-size:15px;
+    color:$mygrey;
+    padding:0px;
+    margin:0px
+  }
+  footer {
+    font-size : 14px;
+
+  }
+}
 .sol-item {
   display: flex;
   align-items: center;
@@ -24,24 +52,10 @@
   margin-right: 20px;
 }
 
-.sol-title {
-  flex: 1 1 auto;
-}
-
-#sol-list {
-  display: flex;
-  align-items: center;
-}
 
 .sol-status {
   display: inline-block;
-  width: 100px;
+  width: 130px;
   font-size: 90%;
   padding: .5em;
-
-}
-
-.computation-title {
-  margin: 0px 20px 0px 20px;
-  flex: 1 1 auto;
 }

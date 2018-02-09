@@ -25,6 +25,14 @@ class Planning < ApplicationRecord
     self.status ||= :not_started
   end
 
+  def valid_compute_solutions
+    compute_solutions.where('created_at > ?', self.slots.map(&:updated_at).max).order(created_at: :desc)
+  end
+
+  def outdated_compute_solutions
+    compute_solutions.where('created_at < ?', self.slots.map(&:updated_at).max).order(created_at: :desc)
+  end
+
   def set_status
     if slots.empty?
       not_started!
