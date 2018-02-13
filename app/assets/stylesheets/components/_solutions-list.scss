@@ -25,7 +25,14 @@
 .computation-title {
   margin: 0px 20px 0px 20px;
 }
+
+.compute-props{
+  flex-grow: 1;
+  display:flex;
+  justify-content: space-around;
+}
 .infos {
+  width:33%;
   margin-left: 5px;
   blockquote {
     padding:5px;
@@ -41,15 +48,33 @@
     font-size : 14px;
 
   }
+  ul {
+    list-style-type:none;
+    padding-left: 0px;
+  }
+  .role-name {
+    padding: 0px 4px;
+  }
 }
 .sol-item {
   display: flex;
   align-items: center;
+  justify-content: space-between;
 }
 
-.sol-btn {
-  width: 40px;
-  margin-right: 20px;
+.action-group button {
+  width: 50px;
+  padding: 10px;
+  background-color: $myblue;
+  border-color: $myblue;
+  i {
+  color:white;
+  }
+}
+
+.sol-details {
+  flex-grow:1;
+  margin: 0px 40px;
 }
 
 

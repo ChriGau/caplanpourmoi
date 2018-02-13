@@ -16,6 +16,7 @@
 #  p_nb_slots              :integer
 #  p_nb_hours              :string
 #  p_nb_hours_roles        :text
+#  team                    :text
 #
 # Indexes
 #
@@ -29,11 +30,12 @@
 class ComputeSolution < ApplicationRecord
   belongs_to :planning
   has_one :calcul_solution_v1, dependent: :destroy
-  has_many :solutions
+  has_many :solutions, dependent: :destroy
   serialize :p_nb_hours_roles
+  serialize :team, Hash
 
   enum status: [:pending, :ready, :error]
-  before_create :default_status, :planning_props
+  before_create :default_status, :planning_props, :build_team
 
   def default_status
     self.status = "pending"
@@ -44,6 +46,16 @@ class ComputeSolution < ApplicationRecord
     self.p_nb_slots = planning.slots.count
     self.p_nb_hours = nb_hours(planning)
     self.p_nb_hours_roles = hours_per_role(planning)
+  end
+
+  def build_team
+    team = Hash.new {|hash,key| hash[key] = [] }
+    self.planning.users.each do |user|
+      user.roles.each do |role|
+        team[role.name.to_sym] << user.first_name
+      end
+    end
+    self.team = team
   end
 
   def save_calculation_abstract(calculation_abstract)
