@@ -460,7 +460,6 @@ Slot.create!(
   start_at: "2017-09-11 08:00",
   end_at: "2017-09-11 14:00",
   role_id: Role.find_by_name("mécano").id,
-  user_id: User.find_by_first_name("pierre").id
   )
 
 Slot.create!(
@@ -468,7 +467,6 @@ Slot.create!(
   start_at: "2017-09-11 08:00",
   end_at: "2017-09-11 14:00",
   role_id: Role.find_by_name("mécano").id,
-  user_id: User.find_by_first_name("jeannie").id
   )
 
 # 2
@@ -477,7 +475,6 @@ Slot.create!(
   start_at: "2017-09-11 14:00",
   end_at: "2017-09-11 20:00",
   role_id: Role.find_by_name("mécano").id,
-  user_id: User.find_by_first_name("jacques").id
   )
 
 Slot.create!(
@@ -485,7 +482,6 @@ Slot.create!(
   start_at: "2017-09-11 14:00",
   end_at: "2017-09-11 20:00",
   role_id: Role.find_by_name("mécano").id,
-  user_id: User.find_by_first_name("bob").id
   )
 # 3
 Slot.create!(
@@ -493,7 +489,6 @@ Slot.create!(
   start_at: "2017-09-11 10:00",
   end_at: "2017-09-11 14:00",
   role_id: Role.find_by_name("vendeur").id,
-  user_id: User.find_by_first_name("axel").id
   )
 
 Slot.create!(
@@ -501,7 +496,6 @@ Slot.create!(
   start_at: "2017-09-11 10:00",
   end_at: "2017-09-11 13:00",
   role_id: Role.find_by_name("vendeur").id,
-  user_id: User.find_by_first_name("valentine").id
   )
 
 Slot.create!(
@@ -509,7 +503,6 @@ Slot.create!(
   start_at: "2017-09-11 10:00",
   end_at: "2017-09-11 13:00",
   role_id: Role.find_by_name("vendeur").id,
-  user_id: User.find_by_first_name("emma").id
   )
 
 #4
@@ -518,7 +511,6 @@ Slot.create!(
   start_at: "2017-09-11 15:00",
   end_at: "2017-09-11 18:00",
   role_id: Role.find_by_name("vendeur").id,
-  user_id: User.find_by_first_name("axel").id
   )
 
 Slot.create!(
@@ -526,7 +518,6 @@ Slot.create!(
   start_at: "2017-09-11 14:00",
   end_at: "2017-09-11 18:00",
   role_id: Role.find_by_name("vendeur").id,
-  user_id: User.find_by_first_name("valentine").id
   )
 
 Slot.create!(
@@ -534,7 +525,6 @@ Slot.create!(
   start_at: "2017-09-11 14:00",
   end_at: "2017-09-11 18:00",
   role_id: Role.find_by_name("vendeur").id,
-  user_id: User.find_by_first_name("emma").id
   )
 
 #5
@@ -543,7 +533,6 @@ Slot.create!(
   start_at: "2017-09-11 08:00",
   end_at: "2017-09-11 15:30",
   role_id: Role.find_by_name("barista").id,
-  user_id: User.find_by_first_name("paul").id
   )
 
 ##############12/09
@@ -553,7 +542,6 @@ Slot.create!(
   start_at: "2017-09-12 08:00",
   end_at: "2017-09-12 14:00",
   role_id: Role.find_by_name("mécano").id,
-  user_id: User.find_by_first_name("pierre").id
   )
 
 Slot.create!(
@@ -561,7 +549,6 @@ Slot.create!(
   start_at: "2017-09-12 08:00",
   end_at: "2017-09-12 14:00",
   role_id: Role.find_by_name("mécano").id,
-  user_id: User.find_by_first_name("jeannie").id
   )
 
 #7
@@ -570,14 +557,12 @@ Slot.create!(
   start_at: "2017-09-12 14:00",
   end_at: "2017-09-12 20:00",
   role_id: Role.find_by_name("mécano").id,
-  user_id: User.find_by_first_name("jacques").id
   )
 Slot.create!(
   planning_id: p.id,
   start_at: "2017-09-12 14:00",
   end_at: "2017-09-12 20:00",
   role_id: Role.find_by_name("mécano").id,
-  user_id: User.find_by_first_name("bob").id
   )
 
 #8
@@ -586,14 +571,12 @@ Slot.create!(
   start_at: "2017-09-12 10:00",
   end_at: "2017-09-12 13:00",
   role_id: Role.find_by_name("vendeur").id,
-  user_id: User.find_by_first_name("axel").id
   )
 Slot.create!(
   planning_id: p.id,
   start_at: "2017-09-12 10:00",
   end_at: "2017-09-12 14:00",
   role_id: Role.find_by_name("vendeur").id,
-  user_id: User.find_by_first_name("valentine").id
   )
 #9
 Slot.create!(
@@ -601,14 +584,12 @@ Slot.create!(
   start_at: "2017-09-12 14:00",
   end_at: "2017-09-12 18:00",
   role_id: Role.find_by_name("vendeur").id,
-  user_id: User.find_by_first_name("axel").id
   )
 Slot.create!(
   planning_id: p.id,
   start_at: "2017-09-12 15:00",
   end_at: "2017-09-12 18:00",
   role_id: Role.find_by_name("vendeur").id,
-  user_id: User.find_by_first_name("valentine").id
   )
 
 #10
@@ -617,7 +598,6 @@ Slot.create!(
   start_at: "2017-09-12 8:00",
   end_at: "2017-09-12 15:30",
   role_id: Role.find_by_name("barista").id,
-  user_id: User.find_by_first_name("paul").id
   )
 #### 13/09
 
@@ -626,7 +606,6 @@ Slot.create!(
   start_at: "2017-09-13 08:00",
   end_at: "2017-09-13 14:00",
   role_id: Role.find_by_name("mécano").id,
-  user_id: User.find_by_first_name("pierre").id
   )
 
 Slot.create!(
@@ -634,7 +613,6 @@ Slot.create!(
   start_at: "2017-09-13 08:00",
   end_at: "2017-09-13 14:00",
   role_id: Role.find_by_name("mécano").id,
-  user_id: User.find_by_first_name("jeannie").id
   )
 
 #12
@@ -643,36 +621,13 @@ Slot.create!(
   start_at: "2017-09-13 14:00",
   end_at: "2017-09-13 20:00",
   role_id: Role.find_by_name("mécano").id,
-  user_id: User.find_by_first_name("jacques").id
   )
 Slot.create!(
   planning_id: p.id,
   start_at: "2017-09-13 14:00",
   end_at: "2017-09-13 20:00",
   role_id: Role.find_by_name("mécano").id,
-  user_id: User.find_by_first_name("bob").id
   )
-
-
-# TO BE CRETED DURING DEMO
-# Slot.create!(
-#   planning_id: p.id,
-#   start_at: "2017-09-13 10:00",
-#   end_at: "2017-09-13 18:00",
-#   role_id: Role.find_by_name("vendeur").id,
-#   user_id: User.find_by_first_name("valentine").id
-#   )
-
-# #15
-# Slot.create!(
-#   planning_id: p.id,
-#   start_at: "2017-09-13 10:00",
-#   end_at: "2017-09-13 15:30",
-#   role_id: Role.find_by_name("barista").id,
-#   user_id: User.find_by_first_name("paul").id
-#   )
-
-#######14/09
 
 #16
 Slot.create!(
@@ -680,14 +635,12 @@ Slot.create!(
   start_at: "2017-09-14 08:00",
   end_at: "2017-09-14 14:00",
   role_id: Role.find_by_name("mécano").id,
-  user_id: User.find_by_first_name("pierre").id
   )
 Slot.create!(
   planning_id: p.id,
   start_at: "2017-09-14 08:00",
   end_at: "2017-09-14 14:00",
   role_id: Role.find_by_name("mécano").id,
-  user_id: User.find_by_first_name("jeannie").id
   )
 
 #
@@ -696,14 +649,12 @@ Slot.create!(
   start_at: "2017-09-14 14:00",
   end_at: "2017-09-14 20:00",
   role_id: Role.find_by_name("mécano").id,
-  user_id: User.find_by_first_name("jacques").id
   )
 Slot.create!(
   planning_id: p.id,
   start_at: "2017-09-14 14:00",
   end_at: "2017-09-14 20:00",
   role_id: Role.find_by_name("mécano").id,
-  user_id: User.find_by_first_name("bob").id
   )
 
 #18
@@ -712,7 +663,6 @@ Slot.create!(
   start_at: "2017-09-14 10:00",
   end_at: "2017-09-14 13:00",
   role_id: Role.find_by_name("vendeur").id,
-  user_id: User.find_by_first_name("axel").id
   )
 
 #19
@@ -721,21 +671,18 @@ Slot.create!(
   start_at: "2017-09-14 10:00",
   end_at: "2017-09-14 14:00",
   role_id: Role.find_by_name("vendeur").id,
-  user_id: User.find_by_first_name("emma").id
   )
 Slot.create!(
   planning_id: p.id,
   start_at: "2017-09-14 14:00",
   end_at: "2017-09-14 18:00",
   role_id: Role.find_by_name("vendeur").id,
-  user_id: User.find_by_first_name("axel").id
   )
 Slot.create!(
   planning_id: p.id,
   start_at: "2017-09-14 15:00",
   end_at: "2017-09-14 18:00",
   role_id: Role.find_by_name("vendeur").id,
-  user_id: User.find_by_first_name("emma").id
   )
 #20
 Slot.create!(
@@ -743,7 +690,6 @@ Slot.create!(
   start_at: "2017-09-14 08:00",
   end_at: "2017-09-14 15:30",
   role_id: Role.find_by_name("barista").id,
-  user_id: User.find_by_first_name("paul").id
   )
 
 #### 15/09
@@ -753,14 +699,12 @@ Slot.create!(
   start_at: "2017-09-15 08:00",
   end_at: "2017-09-15 14:00",
   role_id: Role.find_by_name("mécano").id,
-  user_id: User.find_by_first_name("pierre").id
   )
 Slot.create!(
   planning_id: p.id,
   start_at: "2017-09-15 08:00",
   end_at: "2017-09-15 14:00",
   role_id: Role.find_by_name("mécano").id,
-  user_id: User.find_by_first_name("jeannie").id
   )
 #22
 Slot.create!(
@@ -768,14 +712,12 @@ Slot.create!(
   start_at: "2017-09-15 14:00",
   end_at: "2017-09-15 20:00",
   role_id: Role.find_by_name("mécano").id,
-  user_id: User.find_by_first_name("jacques").id
   )
 Slot.create!(
   planning_id: p.id,
   start_at: "2017-09-15 14:00",
   end_at: "2017-09-15 20:00",
   role_id: Role.find_by_name("mécano").id,
-  user_id: User.find_by_first_name("bob").id
   )
 #23
 Slot.create!(
@@ -783,14 +725,12 @@ Slot.create!(
   start_at: "2017-09-15 10:00",
   end_at: "2017-09-15 14:00",
   role_id: Role.find_by_name("vendeur").id,
-  user_id: User.find_by_first_name("axel").id
   )
 Slot.create!(
   planning_id: p.id,
   start_at: "2017-09-15 10:00",
   end_at: "2017-09-15 13:00",
   role_id: Role.find_by_name("vendeur").id,
-  user_id: User.find_by_first_name("emma").id
   )
 #24
 Slot.create!(
@@ -798,14 +738,12 @@ Slot.create!(
   start_at: "2017-09-15 15:00",
   end_at: "2017-09-15 18:00",
   role_id: Role.find_by_name("vendeur").id,
-  user_id: User.find_by_first_name("axel").id
   )
 Slot.create!(
   planning_id: p.id,
   start_at: "2017-09-15 14:00",
   end_at: "2017-09-15 18:00",
   role_id: Role.find_by_name("vendeur").id,
-  user_id: User.find_by_first_name("emma").id
   )
 
 Slot.create!(
@@ -813,7 +751,6 @@ Slot.create!(
   start_at: "2017-09-15 8:00",
   end_at: "2017-09-15 15:30",
   role_id: Role.find_by_name("barista").id,
-  user_id: User.find_by_first_name("paul").id
   )
 
 #### 16/09 Samedi Grosse journée
@@ -823,14 +760,12 @@ Slot.create!(
   start_at: "2017-09-16 08:00",
   end_at: "2017-09-16 14:00",
   role_id: Role.find_by_name("mécano").id,
-  user_id: User.find_by_first_name("pierre").id
   )
 Slot.create!(
   planning_id: p.id,
   start_at: "2017-09-16 08:00",
   end_at: "2017-09-16 14:00",
   role_id: Role.find_by_name("mécano").id,
-  user_id: User.find_by_first_name("jeannie").id
   )
 #27
 Slot.create!(
@@ -838,14 +773,12 @@ Slot.create!(
   start_at: "2017-09-16 14:00",
   end_at: "2017-09-16 20:00",
   role_id: Role.find_by_name("mécano").id,
-  user_id: User.find_by_first_name("jacques").id
   )
 Slot.create!(
   planning_id: p.id,
   start_at: "2017-09-16 14:00",
   end_at: "2017-09-16 20:00",
   role_id: Role.find_by_name("mécano").id,
-  user_id: User.find_by_first_name("bob").id
   )
 #28
 Slot.create!(
@@ -853,21 +786,18 @@ Slot.create!(
   start_at: "2017-09-16 10:00",
   end_at: "2017-09-16 13:00",
   role_id: Role.find_by_name("vendeur").id,
-  user_id: User.find_by_first_name("axel").id
   )
 Slot.create!(
   planning_id: p.id,
   start_at: "2017-09-16 10:00",
   end_at: "2017-09-16 13:00",
   role_id: Role.find_by_name("vendeur").id,
-  user_id: User.find_by_first_name("valentine").id
   )
 Slot.create!(
   planning_id: p.id,
   start_at: "2017-09-16 10:00",
   end_at: "2017-09-16 14:00",
   role_id: Role.find_by_name("vendeur").id,
-  user_id: User.find_by_first_name("emma").id
   )
 #29
 Slot.create!(
@@ -875,14 +805,12 @@ Slot.create!(
   start_at: "2017-09-16 14:00",
   end_at: "2017-09-16 18:00",
   role_id: Role.find_by_name("vendeur").id,
-  user_id: User.find_by_first_name("axel").id
   )
 Slot.create!(
   planning_id: p.id,
   start_at: "2017-09-16 14:00",
   end_at: "2017-09-16 18:00",
   role_id: Role.find_by_name("vendeur").id,
-  user_id: User.find_by_first_name("valentine").id
   )
 
 Slot.create!(
@@ -890,7 +818,6 @@ Slot.create!(
   start_at: "2017-09-16 15:00",
   end_at: "2017-09-16 18:00",
   role_id: Role.find_by_name("vendeur").id,
-  user_id: User.find_by_first_name("emma").id
   )
 
 
@@ -901,7 +828,6 @@ Slot.create!(
   start_at: "2017-09-16 8:00",
   end_at: "2017-09-16 15:30",
   role_id: Role.find_by_name("barista").id,
-  user_id: User.find_by_first_name("no solution").id
   )
 
 Slot.create!(
@@ -909,7 +835,6 @@ Slot.create!(
   start_at: "2017-08-28 07:00",
   end_at: "2017-08-28 15:00",
   role_id: Role.find_by_name("mécano").id,
-  user_id: User.find_by_first_name("magalie").id
   )
 
 Slot.create!(
@@ -917,7 +842,6 @@ Slot.create!(
   start_at: "2017-09-4 07:00",
   end_at: "2017-09-4 15:00",
   role_id: Role.find_by_name("mécano").id,
-  user_id: User.find_by_first_name("magalie").id
   )
 
 
@@ -933,7 +857,6 @@ Slot.create!(
   start_at: "2017-08-29 07:00",
   end_at: "2017-08-29 15:00",
   role_id: Role.find_by_name("barista").id,
-  user_id: User.find_by_first_name("no solution").id
   )
 
 Slot.create!(
@@ -941,7 +864,6 @@ Slot.create!(
   start_at: "2017-08-29 07:00",
   end_at: "2017-08-29 15:00",
   role_id: Role.find_by_name("barista").id,
-  user_id: User.find_by_first_name("no solution").id
   )
 
 puts ""
