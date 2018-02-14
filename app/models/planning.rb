@@ -17,12 +17,21 @@ class Planning < ApplicationRecord
   has_many :compute_solutions, dependent: :destroy
   has_many :solutions, dependent: :destroy
   has_many :solution_slots, through: :solutions
+  has_many :roles, -> { distinct }, through: :slots
 
   enum status: [:not_started, :in_progress, :with_conflicts, :complete]
   after_initialize :init
 
   def init
     self.status ||= :not_started
+  end
+
+  def valid_compute_solutions
+    compute_solutions.where('created_at > ?', self.slots.map(&:updated_at).max).order(created_at: :desc)
+  end
+
+  def outdated_compute_solutions
+    compute_solutions.where('created_at < ?', self.slots.map(&:updated_at).max).order(created_at: :desc)
   end
 
   def set_status

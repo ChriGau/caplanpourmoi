@@ -11,37 +11,76 @@
 }
 
 #sol-list {
-  font-size:18px;
-}
-
-.sol-item {
+  font-size:16px;
   display: flex;
   align-items: center;
 }
 
-.sol-btn {
-  width: 40px;
-  margin-right: 20px;
-}
 
-.sol-title {
-  flex: 1 1 auto;
-}
-
-#sol-list {
-  display: flex;
-  align-items: center;
-}
-
-.sol-status {
-  display: inline-block;
-  width: 100px;
-  font-size: 90%;
-  padding: .5em;
-
+.nb_solutions {
+  background: white;
+  color: $mygrey;
 }
 
 .computation-title {
   margin: 0px 20px 0px 20px;
-  flex: 1 1 auto;
+}
+
+.compute-props{
+  flex-grow: 1;
+  display:flex;
+  justify-content: space-around;
+}
+.infos {
+  width:33%;
+  margin-left: 5px;
+  blockquote {
+    padding:5px;
+    margin: 0px;
+  }
+  p {
+    font-size:15px;
+    color:$mygrey;
+    padding:0px;
+    margin:0px
+  }
+  footer {
+    font-size : 14px;
+
+  }
+  ul {
+    list-style-type:none;
+    padding-left: 0px;
+  }
+  .role-name {
+    padding: 0px 4px;
+  }
+}
+.sol-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.action-group button {
+  width: 50px;
+  padding: 10px;
+  background-color: $myblue;
+  border-color: $myblue;
+  i {
+  color:white;
+  }
+}
+
+.sol-details {
+  flex-grow:1;
+  margin: 0px 40px;
+}
+
+
+.sol-status {
+  display: inline-block;
+  width: 130px;
+  font-size: 90%;
+  padding: .5em;
 }

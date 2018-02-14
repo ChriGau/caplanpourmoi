@@ -32,5 +32,6 @@ fr:
     - samedi
   time:
     formats:
-      default: "%d/%m/%Y"
+      default: "%d/%m/%y"
       short: "%e %b à %Hh%M"
+      default_heure:  "%d/%m/%y à %Hh%M"

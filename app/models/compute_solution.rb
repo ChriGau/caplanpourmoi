@@ -13,6 +13,10 @@
 #  nb_possibilities_theory :integer
 #  calculation_length      :decimal(, )
 #  nb_cuts_within_tree     :integer
+#  p_nb_slots              :integer
+#  p_nb_hours              :string
+#  p_nb_hours_roles        :text
+#  team                    :text
 #
 # Indexes
 #
@@ -26,14 +30,32 @@
 class ComputeSolution < ApplicationRecord
   belongs_to :planning
   has_one :calcul_solution_v1, dependent: :destroy
-  has_many :solutions
+  has_many :solutions, dependent: :destroy
+  serialize :p_nb_hours_roles
+  serialize :team, Hash
 
   enum status: [:pending, :ready, :error]
-  before_create :default_status
-
+  before_create :default_status, :planning_props, :build_team
 
   def default_status
     self.status = "pending"
+  end
+
+  def planning_props
+    planning = self.planning
+    self.p_nb_slots = planning.slots.count
+    self.p_nb_hours = nb_hours(planning)
+    self.p_nb_hours_roles = hours_per_role(planning)
+  end
+
+  def build_team
+    team = Hash.new {|hash,key| hash[key] = [] }
+    self.planning.users.each do |user|
+      user.roles.each do |role|
+        team[role.name.to_sym] << user.first_name
+      end
+    end
+    self.team = team
   end
 
   def save_calculation_abstract(calculation_abstract)
@@ -46,4 +68,23 @@ class ComputeSolution < ApplicationRecord
     self.nb_cuts_within_tree = calculation_abstract[:nb_cuts_within_tree]
   end
 
+  private
+
+  def nb_hours(planning)
+    seconds = (planning.slots.map{|slot| slot.end_at - slot.start_at}.reduce(:+)).to_i
+    seconds_in_hours(seconds)
+  end
+
+  def seconds_in_hours(seconds)
+    [seconds / 3600, seconds / 60 % 60].map { |t| t.to_s.rjust(2,'0') }.join('h')
+  end
+
+  def hours_per_role(planning)
+    role_hours = {}
+    planning.slots.map(&:role).uniq.each do |role|
+      slots_per_role = planning.slots.where(role_id: role.id)
+      role_hours[role.name.to_sym] = seconds_in_hours(slots_per_role.map{|slot| slot.end_at - slot.start_at}.reduce(:+).to_i)
+    end
+    role_hours
+  end
 end
