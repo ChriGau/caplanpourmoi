@@ -12,6 +12,7 @@
 
 ActiveRecord::Schema.define(version: 20180213103141) do
 
+
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -96,12 +97,10 @@ ActiveRecord::Schema.define(version: 20180213103141) do
     t.datetime "end_at"
     t.integer  "planning_id"
     t.integer  "role_id"
-    t.integer  "user_id"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
     t.index ["planning_id"], name: "index_slots_on_planning_id", using: :btree
     t.index ["role_id"], name: "index_slots_on_role_id", using: :btree
-    t.index ["user_id"], name: "index_slots_on_user_id", using: :btree
   end
 
   create_table "solution_slots", force: :cascade do |t|
@@ -163,7 +162,6 @@ ActiveRecord::Schema.define(version: 20180213103141) do
   add_foreign_key "role_users", "users"
   add_foreign_key "slots", "plannings"
   add_foreign_key "slots", "roles"
-  add_foreign_key "slots", "users"
   add_foreign_key "solution_slots", "slots"
   add_foreign_key "solution_slots", "solutions"
   add_foreign_key "solution_slots", "users"

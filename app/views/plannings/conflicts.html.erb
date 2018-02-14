@@ -185,7 +185,7 @@
       hiddenDays: [ 0], // hider dimanche
       height: "auto", // implique pas de scroll à l'intérieur du calendrier
       aspectRatio: 4,
-      events: '<%= events_planning_path(@planning.id, format: :json) %>',
+      events: '<%= resultevents_planning_path(@planning.id, format: :json) %>',
 
       // simulation résolution conflit
       eventClick: function(calEvent, jsEvent, view) {

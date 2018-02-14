@@ -54,6 +54,7 @@ Rails.application.routes.draw do
     resources :compute_solutions, only: [:index, :create]
     member do
       get :events, format: :json
+      get :resultevents, format: :json
     end
   end
 
