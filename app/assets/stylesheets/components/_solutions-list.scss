@@ -19,7 +19,7 @@ h3 {
 }
 
 .panel-body {
-  padding: 10px 5px;
+  padding: 10px;
 }
 
 #sol-list {
@@ -64,7 +64,8 @@ h3 {
 }
 
 .list-group {
-  font-size:15px;
+  font-size: 15px;
+  margin-bottom: 5px;
   .chosen {
     border: 2px solid rgba(37, 50, 113,0.7);
   }
