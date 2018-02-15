@@ -1,3 +1,11 @@
+h3 {
+  font-size: 20px;
+}
+
+.history {
+  opacity: 0.4;
+}
+
 .panel > a {
   text-decoration: none;
   color: $mygrey;
@@ -10,16 +18,14 @@
   background-color: $background;
 }
 
+.panel-body {
+  padding: 10px;
+}
+
 #sol-list {
   font-size:16px;
   display: flex;
   align-items: center;
-}
-
-
-.nb_solutions {
-  background: white;
-  color: $mygrey;
 }
 
 .computation-title {
@@ -56,31 +62,66 @@
     padding: 0px 4px;
   }
 }
+
+.list-group {
+  font-size: 15px;
+  margin-bottom: 5px;
+  .chosen {
+    border: 2px solid rgba(37, 50, 113,0.7);
+  }
+}
 .sol-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-bottom: 3px;
+  padding: 5px 15px;
 }
 
-.action-group button {
-  width: 50px;
-  padding: 10px;
-  background-color: $myblue;
-  border-color: $myblue;
-  i {
-  color:white;
+.label{
+  &-caplan {
+  background-color: #324584;
+  color: $myyellow;
+  }
+}
+
+.badge {
+  font-weight: normal;
+  &-blue {
+  color: $myyellow;
+  background-color: #324584
+  }
+  &-white {
+    color: $mygrey;
+    background-color: white;
+
+  }
+}
+
+.action-group {
+  text-align: center;
+  a {
+  display:inline-block;
+  background-image: linear-gradient(161deg, $myblue, 0%, #324584 46%, #445A9E 100%);
+  border-radius: 5px;
+  padding: 2px 15px;
+  margin-left: 10px;
+  color: $myyellow;
+  text-decoration:none;
+  &:hover {
+    background-image: linear-gradient(161deg, $myyellow, 0%, $myyellow 46%, $myyellow 100%);
+    color: $myblue;
+    }
   }
 }
 
 .sol-details {
   flex-grow:1;
-  margin: 0px 40px;
+  margin: 0px 10px;
 }
 
 
 .sol-status {
   display: inline-block;
-  width: 130px;
   font-size: 90%;
-  padding: .5em;
 }

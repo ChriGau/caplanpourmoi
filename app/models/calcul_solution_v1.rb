@@ -62,10 +62,6 @@ class CalculSolutionV1 < ApplicationRecord
       calcul_arrays[:slots_array], planning, compute_solution, list_of_solutions ).perform
     puts 'SaveSolutionsAndSolutionSlotsService --> done'
 
-    # validate last solution created
-    a = @planning.solutions.last
-    a.effectivity = 'chosen'
-    a.save
 
     { calcul_arrays: calcul_arrays,
       test_possibilities: test_possibilities,

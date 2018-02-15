@@ -30,7 +30,7 @@
 class ComputeSolution < ApplicationRecord
   belongs_to :planning
   has_one :calcul_solution_v1, dependent: :destroy
-  has_many :solutions, dependent: :destroy
+  has_many :solutions,  -> { order(created_at: :asc) }, dependent: :destroy
   serialize :p_nb_hours_roles
   serialize :team, Hash
 
@@ -39,6 +39,10 @@ class ComputeSolution < ApplicationRecord
 
   def default_status
     self.status = "pending"
+  end
+
+  def sorted_solutions
+    solutions.sort_by {|x| x.created_at }
   end
 
   def planning_props

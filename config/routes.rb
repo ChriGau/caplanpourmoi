@@ -45,6 +45,7 @@
 #
 
 Rails.application.routes.draw do
+
   mount Attachinary::Engine => "/attachinary"
   devise_for :users
   root to: 'pages#home'
@@ -52,6 +53,11 @@ Rails.application.routes.draw do
   resources :plannings, only: [:show, :index, :update, :create] do
     resources :slots, only: [:create, :edit, :show, :update, :resolve, :new, :destroy]
     resources :compute_solutions, only: [:index, :create]
+    resources :solutions, only: [:show] do
+      member do
+        get :change_effectivity
+      end
+    end
     member do
       get :events, format: :json
       get :resultevents, format: :json
