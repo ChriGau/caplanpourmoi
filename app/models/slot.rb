@@ -65,7 +65,7 @@ class Slot < ApplicationRecord
         # pour chacun d'eux, vérifier s'ils ne sont pas assignés à des slots en overlap
         # récupérer la liste des slots qui sont en overlap avec notre slot en overlap
       end
-
+    end
   end
 
   private
