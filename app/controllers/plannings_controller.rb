@@ -44,10 +44,6 @@ class PlanningsController < ApplicationController
     @slots_solution = []
     @user = current_user
 
-    # Fake solution => le boss remplacera le no solution
-    @user_solution = User.find_by(first_name: 'jean')
-    demo_method(@planning) if @planning.week_number == 37
-
     if !@planning.solutions.exists?
       flash.now[:alert] = "Générez des solutions pour votre planning"
     elsif !@planning.solutions.chosen.exists?
@@ -110,35 +106,6 @@ class PlanningsController < ApplicationController
     end
   end
 
-  # rubocop:disable AbcSize, MethodLength
-  def demo_method(planning)
-    vendeur = Role.find_by(name: 'vendeur')
-    barista = Role.find_by(name: 'barista')
-    # useless
-    # sélectionner le slots pour lesquels user_id = nil + role_id = vendeur.id
-    s1 = planning.slots.select{|x| x.get_associated_chosen_solution_slot.user == nil && x.role_id == vendeur.id }.first
-    # remplacer le user de ce slot par 'valentine'
-    if !s1.nil? && s1.user.nil?
-      s1.get_associated_chosen_solution_slot.user = User.find_by(first_name: 'valentine')
-      s1.get_associated_chosen_solution_slot.save
-    end
-
-    # sélectionner le slots pour lesquels user_id = nil + role_id = barista.id
-    s2 = planning.slots.select{|x| x.get_associated_chosen_solution_slot.user == nil && x.role_id == barista.id }.first
-    if !s2.nil? && s2.user.nil?
-      s2.get_associated_chosen_solution_slot.user = User.find_by(first_name: 'paul')
-      s2.get_associated_chosen_solution_slot.save
-    end
-
-    # get slots where user_id == axel
-    s = Slot.select{|x| x.get_associated_chosen_solution_slot.user == User.find_by(first_name: 'axel') }
-    s.each do |slot|
-      slot.get_associated_chosen_solution_slot.user = User.find_by(first_name: 'arielle')
-      slot.get_associated_chosen_solution_slot.save!
-    end
-  end
-  # rubocop:enable AbcSize, MethodLength
-
   def planning_params
     params.require(:planning).permit('user_ids' => [])
   end
@@ -155,6 +122,5 @@ class PlanningsController < ApplicationController
     end
     slotgroups.uniq # get rid of duplicates
   end
-
 end
 # rubocop:enable Metrics/ClassLength

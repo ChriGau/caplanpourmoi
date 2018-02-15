@@ -448,7 +448,7 @@ Team.create!(planning_id: p.id,
 puts "9 - adding SLOTS to planning + solution"
 puts ""
 
-p = Planning.first
+p = Planning.first # equals planning of week 37
 p35 = Planning.find_by_week_number(35)
 p36 = Planning.find_by_week_number(36)
 
@@ -843,12 +843,6 @@ Slot.create!(
   end_at: "2017-09-4 15:00",
   role_id: Role.find_by_name("mécano").id,
   )
-
-
-puts "10 - Fake status planning 37 for demo"
-puts ""
-
-Planning.first.not_started!
 
 puts "11 - 2 new slots on planning n°18 to test slotgroups"
 
