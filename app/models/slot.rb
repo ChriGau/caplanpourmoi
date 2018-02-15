@@ -54,6 +54,20 @@ class Slot < ApplicationRecord
     self.solution_slots.select{ |x| x.solution.chosen? && x.slot == self }.first
   end
 
+  def get_available_users
+    # for a given slot, get list of alternative users
+    # <=> available + posess role
+    # list des pers. dispos + possèdent rôle
+    list_available_users = []
+    self.planning.users.each do |user|
+      list_available_users << user if user.available?(slot.start_at, slot.end_at)
+      available.each do |user|
+        # pour chacun d'eux, vérifier s'ils ne sont pas assignés à des slots en overlap
+        # récupérer la liste des slots qui sont en overlap avec notre slot en overlap
+      end
+
+  end
+
   private
 
   def set_planning_status
