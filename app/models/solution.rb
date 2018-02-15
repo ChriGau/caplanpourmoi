@@ -6,9 +6,11 @@
 #  nb_overlaps         :integer
 #  nb_extra_hours      :integer
 #  planning_id         :integer
-#  effectivity         :integer
-#  relevance           :integer
 #  compute_solution_id :integer
+#  effectivity         :integer          default("not_chosen")
+#  relevance           :integer
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
 #
 # Indexes
 #
@@ -31,7 +33,7 @@ class Solution < ApplicationRecord
 
   validates :planning_id, presence: true
 
-  enum effectivity: [:chosen, :not_chosen]
+  enum effectivity: [:not_chosen, :chosen]
   enum relevance: [:optimal, :partial]
 
 end

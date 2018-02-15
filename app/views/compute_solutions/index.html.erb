@@ -1,9 +1,9 @@
 <%= render 'shared/planningsteps', locals: {planning: @planning, url: @url} %>
 
 <div class="wrap-plan">
-  <h3>Solutions pour le planning</h2>
   <%= render partial: 'list_computed_solutions', locals: {computed_solutions: @valid_compute_solutions} %>
-  <h3>Historique de calcul</h2>
+<div class="history">
+  <h3>Historique de calcul</h3>
   <%= render partial: 'list_computed_solutions', locals: {computed_solutions: @outdated_compute_solutions} %>
 </div>
-
+</div>

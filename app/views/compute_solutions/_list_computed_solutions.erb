@@ -7,7 +7,7 @@
 
             <div class="sol-status label label-<%= computed_solution.ready? ? "success" : computed_solution.error? ? "danger" : "info" %>">
               <%= t("computed_solutionution.status.#{computed_solution.status}")%>
-              <span class="badge nb_solutions">
+              <span class="badge badge-white">
                 <%= computed_solution.nb_optimal_solutions %>
               </span> <br>
               <small><%= l computed_solution.created_at, format: :default_heure %></small>
@@ -62,18 +62,25 @@
         </div>
       </a>
 
-      <div id="<%= computed_solution.id %>" class="panel-collapse collapse">
+      <div id="<%= computed_solution.id %>" class="panel-collapse collapse <%= "in" if computed_solution.solutions.chosen.exists? %>">
         <div class="panel-body">
           <div class="list-group">
             <% computed_solution.solutions.each_with_index do |solution, index| %>
-              <div class="list-group-item sol-item">
-                <div class="sol-title">Solution n°<%= index + 1 %></div>
+              <div class="list-group-item sol-item <%= "chosen" if solution.chosen? %>">
+                <div class="sol-status label label-caplan">#<%= index + 1 %></div>
                 <div class="sol-details">
-                  extra hours : <span class="badge"> <%= solution.nb_extra_hours %></span> overlaps = <span class="badge" ><%= solution.relevance %></span>/ effectivity : <span class="badge" ><%= solution.effectivity %></span> / relevance <span class="badge" ><%= solution.relevance %></span>
+                  <strong> Indice de pertinence <span class="badge badge-blue" ><%= solution.relevance %></span></strong> (<%= solution.nb_extra_hours %>heures sup et <%= solution.relevance %> heures d'ubiquité)
                 </div>
                 <div class="action-group">
-                  <button class="sol-btn"><i class="fa fa-eye"></i></button>
-                  <button class="sol-btn"><i class="fa fa-check-circle"></i></button>
+                    <%= link_to change_effectivity_planning_solution_path(id: solution) do %>
+                      <% if solution.chosen? %>
+                        <i class="fa fa-check-circle"></i>
+                      <% else %>
+                        <i class="fa fa-circle"></i>
+                      <% end %>
+                    <% end %>
+
+                  <a><i class="fa fa-eye"></i></a>
                 </div>
               </div>
             <% end %>
