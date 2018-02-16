@@ -48,10 +48,8 @@ class Slot < ApplicationRecord
                planning_id, start_at, end_at, role_id)
   end
 
-  def get_chosen_solution_slot
-    # for a given slot, get the instance of solution_slot which is associated to it and
-    # belongs to the chosen solution
-    self.solution_slots.select{ |x| x.solution.chosen? && x.slot == self }.first
+  def get_solution_slot(solution)
+    solution_slots.find_by(solution: solution)
   end
 
   def get_available_users
