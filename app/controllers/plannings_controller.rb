@@ -35,14 +35,10 @@ class PlanningsController < ApplicationController
   # rubocop:disable AbcSize, BlockLength, LineLength, MethodLength
   def conflicts
     @planning = Planning.find(params[:id])
-    @slots = @planning.slots.order(:id)
-    @slot = Slot.new
+    @solution = @planning.solutions.chosen.first
     @slot_templates = Slot.slot_templates # liste des roles (Array)
     @url = 'conflicts'
     # variables pour fullcalendar
-    @slots_array = []
-    @slots_solution = []
-    @user = current_user
 
     if !@planning.solutions.exists?
       flash.now[:alert] = "Générez des solutions pour votre planning"
@@ -82,6 +78,7 @@ class PlanningsController < ApplicationController
   end
 
   def resultevents
+    @solution = Solution.find(params[:solution_id])
     # renders resultevents.json.jbuilder
   end
 

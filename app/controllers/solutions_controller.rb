@@ -1,7 +1,11 @@
 class SolutionsController < ApplicationController
 
-  before_action :set_planning, only: [:change_effectivity]
-  before_action :set_solution, only: [:change_effectivity]
+  before_action :set_planning, only: [:change_effectivity, :show]
+  before_action :set_solution, only: [:change_effectivity, :show]
+
+  def show
+
+  end
 
   def change_effectivity
     @planning.solutions.chosen.each do |solution|

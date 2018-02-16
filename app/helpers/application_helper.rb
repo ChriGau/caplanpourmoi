@@ -39,7 +39,11 @@ module ApplicationHelper
       @set_status2 = 'completed'
       @set_status3 = 'active'
       @set_status4 = 'disabled'
-      @button_link = link_to 'Voir le Planning', planning_conflicts_path(@planning), class: 'button'
+      if @solution
+        @button_link = link_to 'Voir le Planning', planning_conflicts_path(@planning, solution_id: @solution), class: 'button'
+      else
+        @button_link = link_to 'Voir le Planning', planning_conflicts_path(@planning), class: 'button'
+      end
     else
       @set_status1 = 'completed'
       @set_status2 = 'completed'

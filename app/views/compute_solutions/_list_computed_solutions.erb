@@ -76,11 +76,13 @@
                       <% if solution.chosen? %>
                         <i class="fa fa-check-circle"></i>
                       <% else %>
-                        <i class="fa fa-circle"></i>
+                        <i class="fa fa-circle-o"></i>
                       <% end %>
                     <% end %>
+                    <%= link_to planning_solution_path(id: solution) do %>
+                      <i class="fa fa-eye"></i>
+                    <% end %>
 
-                  <a><i class="fa fa-eye"></i></a>
                 </div>
               </div>
             <% end %>

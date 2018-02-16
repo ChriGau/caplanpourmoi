@@ -31,7 +31,7 @@
     <div class="col-xs-2 step <%= @set_status4 %>">
         <div class="step-num text-center">Etape 4</div>
         <div class="progress"><div class="progress-bar"></div></div>
-        <%= link_to "", planning_conflicts_path(@planning), class: "dot" %>
+        <%= link_to "", planning_conflicts_path(@planning, solution_id: @solution), class: "dot" %>
         <div class="comment text-center">Votre planning</div>
         <div class="triangle hide"></div>
     </div>
