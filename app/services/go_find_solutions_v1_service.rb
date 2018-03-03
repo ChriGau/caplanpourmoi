@@ -297,39 +297,6 @@ def pick_best_solutions(solutions_array, how_many_solutions_do_we_store)
     nb_possibilities
   end
 
-  # def assign_no_solution_user_for_sg_with_overlaps(solutions_array)
-  #   # we have a solution_array which contains overlaps.
-  #   # Il faut arbitrer ces conflits et affecter les ressources dispos aux slots
-  #   # solutions_array = [ {:solution_id, :possibility_id, :nb_overlaps, :planning_possibility} ]
-  #   # :planning_possibility => {:sg_ranking, :sg_id, :combination, :overlaps}
-  #   # Added via branch 'issue73' => assigner les users dispos sur autant de slots que possible.
-  #   # On laisse les slots restants vides.
-  #   # On itère via ranking_id croissant
-  #   solutions_array[:planning_possibility].each do |possibility_hash|
-  #     combination = possibility_hash[:combination] # Array d'instances de users
-  #     unless possibility_hash[:overlaps].empty?
-  #       possibility_hash[:overlaps].each do |overlap|
-  #         # overlap = [ { sg_id: overlapped_slotgroup_id, users: users_in_overlap.flatten }, {...} ]
-  #         # On garde intact la combination du slotgroup
-  #         # On met les users de cette combination à no_solution dans les slotgroups overlappés
-  #         # s'ils sont présents dans la combination proposée pour les slotgroups overlappés
-  #         intersect = combination & overlap[:users]
-  #         unless intersect.empty? or intersect.nil?
-  #           # get combination of overlapped slotgroup
-  #           overlapped_slotgroup_possibility_hash = solutions_array[:planning_possibility].select{ |planning_poss_hash| planning_poss_hash[:sg_id] == overlap[:sg_id] }.first
-  #           # mettre ces users en no solution dans la combination du slotgroup overlappé
-  #           intersect.each do |user|
-  #             # get position of user to replace by 'no solution'
-  #             position_of_overlapping_user_in_combination = overlapped_slotgroup_possibility_hash[:combination].index(user)
-  #             # replace
-  #             overlapped_slotgroup_possibility_hash[:combination][position_of_overlapping_user_in_combination] = determine_no_solution_user
-  #           end
-  #         end
-  #       end
-  #     end
-  #   end
-  # end
-
   def assign_no_solution_user_for_sg_with_overlaps(solutions_array)
     # we have a solution_array which contains overlaps. This solution has been
     # selected as the best one. We need to update the combinations so that the
@@ -363,9 +330,7 @@ def pick_best_solutions(solutions_array, how_many_solutions_do_we_store)
   def evaluate_nb_conflicts_for_a_solution(solution_hash)
     nb_conflicts = 0 # init
     solution_hash[:planning_possibility].each do |possibility_hash|
-      # binding.pry
-      nb_conflicts = nb_conflicts + possibility_hash[:combination].count{ |combination| combination == determine_no_solution_user }
-
+      nb_conflicts += possibility_hash[:combination].count{ |combination| combination == determine_no_solution_user }
     end
     solution_hash[:nb_conflicts] = nb_conflicts
   end
