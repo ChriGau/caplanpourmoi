@@ -19,7 +19,7 @@
                   <footer>
                   <%= computed_solution.p_nb_slots %> créneaux (<%= computed_solution.p_nb_hours %>heures)
                   <ul>
-                  <% computed_solution.p_nb_hours_roles.each do |role, hours|%>
+                  <% computed_solution.p_nb_hours_roles.each do |role, hours| %>
                     <li><span class="role-name" style="background-color: <%= role_color(role) %>; <%= role_text_color(role) %>"> <%= role.to_s %></span> : <%= hours %>h</li>
                   <% end %>
                   </ul>

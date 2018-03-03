@@ -11,6 +11,7 @@
 #  relevance           :integer
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
+#  nb_conflicts        :integer
 #
 # Indexes
 #
