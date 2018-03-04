@@ -37,4 +37,13 @@ class Solution < ApplicationRecord
   enum effectivity: [:not_chosen, :chosen]
   enum relevance: [:optimal, :partial]
 
+  def evaluate_relevance
+    nb_conflicts = 0 # init
+    solution_slots.each do |solution_slot|
+      nb_conflicts += 1 if solution_slot.user_id == User.find_by(first_name: 'no solution').id
+    end
+    self.nb_conflicts = nb_conflicts
+    self.relevance = !nb_conflicts.nil? && nb_conflicts.zero? ? :optimal : :partial
+    self.save!
+  end
 end

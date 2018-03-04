@@ -1,0 +1,82 @@
+=> {[33m:solution_id[0m=>[1;34m1[0m,
+ [33m:possibility_id[0m=>[1;34m1[0m,
+ [33m:nb_overlaps[0m=>[1;34m10[0m,
+ [33m:planning_possibility[0m=>
+  [{[33m:sg_ranking[0m=>[1;34m1[0m,
+    [33m:sg_id[0m=>[1;34m8[0m,
+    [33m:combination[0m=>
+     [[32m#<User id: 19, email: "paul@boutique.com", created_at: "2018-02-08 15:53:37", updated_at: "2018-02-08 15:53:37", working_hours: 37, is_owner: false, first_name: "paul", last_name: "Last name">[0m],
+    [33m:overlaps[0m=>
+     [{[33m:sg_id[0m=>[1;34m7[0m,
+       [33m:users[0m=>
+        [[32m#<User id: 19, email: "paul@boutique.com", created_at: "2018-02-08 15:53:37", updated_at: "2018-02-08 15:53:37", working_hours: 37, is_owner: false, first_name: "paul", last_name: "Last name">[0m]},
+      {[33m:sg_id[0m=>[1;34m9[0m,
+       [33m:users[0m=>
+        [[32m#<User id: 19, email: "paul@boutique.com", created_at: "2018-02-08 15:53:37", updated_at: "2018-02-08 15:53:37", working_hours: 37, is_owner: false, first_name: "paul", last_name: "Last name">[0m]}]},
+   {[33m:sg_ranking[0m=>[1;34m2[0m,
+    [33m:sg_id[0m=>[1;34m1[0m,
+    [33m:combination[0m=>
+     [[32m#<User id: 20, email: "jacques@boutique.com", created_at: "2018-02-08 15:53:39", updated_at: "2018-02-08 15:53:39", working_hours: 32, is_owner: false, first_name: "jacques", last_name: "Last name">[0m],
+    [33m:overlaps[0m=>
+     [{[33m:sg_id[0m=>[1;34m2[0m,
+       [33m:users[0m=>
+        [[32m#<User id: 20, email: "jacques@boutique.com", created_at: "2018-02-08 15:53:39", updated_at: "2018-02-08 15:53:39", working_hours: 32, is_owner: false, first_name: "jacques", last_name: "Last name">[0m]}]},
+   {[33m:sg_ranking[0m=>[1;34m3[0m,
+    [33m:sg_id[0m=>[1;34m9[0m,
+    [33m:combination[0m=>
+     [[32m#<User id: 19, email: "paul@boutique.com", created_at: "2018-02-08 15:53:37", updated_at: "2018-02-08 15:53:37", working_hours: 37, is_owner: false, first_name: "paul", last_name: "Last name">[0m],
+    [33m:overlaps[0m=>
+     [{[33m:sg_id[0m=>[1;34m7[0m,
+       [33m:users[0m=>
+        [[32m#<User id: 19, email: "paul@boutique.com", created_at: "2018-02-08 15:53:37", updated_at: "2018-02-08 15:53:37", working_hours: 37, is_owner: false, first_name: "paul", last_name: "Last name">[0m]},
+      {[33m:sg_id[0m=>[1;34m8[0m,
+       [33m:users[0m=>
+        [[32m#<User id: 19, email: "paul@boutique.com", created_at: "2018-02-08 15:53:37", updated_at: "2018-02-08 15:53:37", working_hours: 37, is_owner: false, first_name: "paul", last_name: "Last name">[0m]}]},
+   {[33m:sg_ranking[0m=>[1;34m4[0m,
+    [33m:sg_id[0m=>[1;34m7[0m,
+    [33m:combination[0m=>
+     [[32m#<User id: 19, email: "paul@boutique.com", created_at: "2018-02-08 15:53:37", updated_at: "2018-02-08 15:53:37", working_hours: 37, is_owner: false, first_name: "paul", last_name: "Last name">[0m],
+    [33m:overlaps[0m=>
+     [{[33m:sg_id[0m=>[1;34m8[0m,
+       [33m:users[0m=>
+        [[32m#<User id: 19, email: "paul@boutique.com", created_at: "2018-02-08 15:53:37", updated_at: "2018-02-08 15:53:37", working_hours: 37, is_owner: false, first_name: "paul", last_name: "Last name">[0m]},
+      {[33m:sg_id[0m=>[1;34m9[0m,
+       [33m:users[0m=>
+        [[32m#<User id: 19, email: "paul@boutique.com", created_at: "2018-02-08 15:53:37", updated_at: "2018-02-08 15:53:37", working_hours: 37, is_owner: false, first_name: "paul", last_name: "Last name">[0m]}]},
+   {[33m:sg_ranking[0m=>[1;34m5[0m,
+    [33m:sg_id[0m=>[1;34m6[0m,
+    [33m:combination[0m=>
+     [[32m#<User id: 20, email: "jacques@boutique.com", created_at: "2018-02-08 15:53:39", updated_at: "2018-02-08 15:53:39", working_hours: 32, is_owner: false, first_name: "jacques", last_name: "Last name">[0m],
+    [33m:overlaps[0m=>
+     [{[33m:sg_id[0m=>[1;34m4[0m,
+       [33m:users[0m=>
+        [[32m#<User id: 20, email: "jacques@boutique.com", created_at: "2018-02-08 15:53:39", updated_at: "2018-02-08 15:53:39", working_hours: 32, is_owner: false, first_name: "jacques", last_name: "Last name">[0m]}]},
+   {[33m:sg_ranking[0m=>[1;34m6[0m,
+    [33m:sg_id[0m=>[1;34m5[0m,
+    [33m:combination[0m=>
+     [[32m#<User id: 19, email: "paul@boutique.com", created_at: "2018-02-08 15:53:37", updated_at: "2018-02-08 15:53:37", working_hours: 37, is_owner: false, first_name: "paul", last_name: "Last name">[0m],
+    [33m:overlaps[0m=>[]},
+   {[33m:sg_ranking[0m=>[1;34m7[0m,
+    [33m:sg_id[0m=>[1;34m2[0m,
+    [33m:combination[0m=>
+     [[32m#<User id: 20, email: "jacques@boutique.com", created_at: "2018-02-08 15:53:39", updated_at: "2018-02-08 15:53:39", working_hours: 32, is_owner: false, first_name: "jacques", last_name: "Last name">[0m],
+    [33m:overlaps[0m=>
+     [{[33m:sg_id[0m=>[1;34m1[0m,
+       [33m:users[0m=>
+        [[32m#<User id: 20, email: "jacques@boutique.com", created_at: "2018-02-08 15:53:39", updated_at: "2018-02-08 15:53:39", working_hours: 32, is_owner: false, first_name: "jacques", last_name: "Last name">[0m]}]},
+   {[33m:sg_ranking[0m=>[1;34m8[0m,
+    [33m:sg_id[0m=>[1;34m4[0m,
+    [33m:combination[0m=>
+     [[32m#<User id: 20, email: "jacques@boutique.com", created_at: "2018-02-08 15:53:39", updated_at: "2018-02-08 15:53:39", working_hours: 32, is_owner: false, first_name: "jacques", last_name: "Last name">[0m,
+      [32m#<User id: 21, email: "jeannie@boutique.com", created_at: "2018-02-08 15:53:49", updated_at: "2018-02-08 15:53:49", working_hours: 32, is_owner: false, first_name: "jeannie", last_name: "Last name">[0m],
+    [33m:overlaps[0m=>
+     [{[33m:sg_id[0m=>[1;34m6[0m,
+       [33m:users[0m=>
+        [[32m#<User id: 20, email: "jacques@boutique.com", created_at: "2018-02-08 15:53:39", updated_at: "2018-02-08 15:53:39", working_hours: 32, is_owner: false, first_name: "jacques", last_name: "Last name">[0m]}]},
+   {[33m:sg_ranking[0m=>[1;34m9[0m,
+    [33m:sg_id[0m=>[1;34m3[0m,
+    [33m:combination[0m=>
+     [[32m#<User id: 20, email: "jacques@boutique.com", created_at: "2018-02-08 15:53:39", updated_at: "2018-02-08 15:53:39", working_hours: 32, is_owner: false, first_name: "jacques", last_name: "Last name">[0m,
+      [32m#<User id: 21, email: "jeannie@boutique.com", created_at: "2018-02-08 15:53:49", updated_at: "2018-02-08 15:53:49", working_hours: 32, is_owner: false, first_name: "jeannie", last_name: "Last name">[0m],
+    [33m:overlaps[0m=>[]}],
+ [33m:nb_conflicts[0m=>[1;36mnil[0m}

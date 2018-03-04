@@ -70,6 +70,7 @@
                 <div class="sol-status label label-caplan">#<%= index + 1 %></div>
                 <div class="sol-details">
                   <strong> Indice de pertinence <span class="badge badge-blue" ><%= solution.relevance %></span></strong> (<%= solution.nb_extra_hours %>heures sup et <%= solution.relevance %> heures d'ubiquité)
+                    <span class="badge badge-red <%= "badge-red-hide" if (solution.nb_conflicts.nil? or solution.nb_conflicts.zero?) %> "><%= solution.nb_conflicts %> <%= "problème".pluralize(solution.nb_conflicts)%></span>
                 </div>
                 <div class="action-group">
                     <%= link_to change_effectivity_planning_solution_path(id: solution) do %>

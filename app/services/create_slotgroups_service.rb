@@ -88,7 +88,7 @@ class CreateSlotgroupsService
   def determine_overlapping_users
     # list users which have no options but to be selected on 2 overlapping sg
     slotgroups_array.each do |slotgroup|
-      next if slotgroup.nb_required < slotgroup.nb_available
+      next if slotgroup.nb_required != slotgroup.nb_available
       slotgroup.overlaps.each do |overlapping_slotgroups_array|
         overlapping_slotgroup_id = overlapping_slotgroups_array[:slotgroup_id]
         s = find_slotgroup_by_id(overlapping_slotgroup_id)

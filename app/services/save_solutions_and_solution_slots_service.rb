@@ -4,8 +4,8 @@ class SaveSolutionsAndSolutionSlotsService
 
   def initialize(slotgroups_array,
     slots_array, planning, compute_solution_instance = nil, list_of_solutions = nil)
-    @slotgroups_array = slotgroups_array
-    @slots_array = slots_array
+    @slotgroups_array = slotgroups_array # contains also slotgroups not simulated
+    @slots_array = slots_array # contains also slotgroups not simulated
     @planning = planning
     @compute_solution = compute_solution_instance
     @list_of_solutions = list_of_solutions
@@ -15,18 +15,21 @@ class SaveSolutionsAndSolutionSlotsService
   def perform
     if !@list_of_solutions.nil?
       @list_of_solutions.each do |solution|
-        solution_instance = create_solution(@compute_solution, solution[:nb_overlaps], solution[:nb_conflicts])
+        solution_instance = create_solution(@compute_solution, solution[:nb_overlaps])
         create_solution_slots(@slotgroups_array, solution[:planning_possibility], solution_instance)
+        # calculate nb of conflicts now that the solution_lots have been created + determine relevance
+        solution_instance.evaluate_relevance
       end
     else
       solution_instance = create_solution(@compute_solution)
       create_solution_slots_for_a_group_of_slots(@planning.slots.map(&:id), solution_instance)
+      # calculate nb of conflicts now that the slots have been created
+      solution_instance.evaluate_relevance
     end
   end
 
-  def create_solution(compute_solution, nb_overlaps = nil, nb_conflicts = nil)
-    status = !nb_overlaps.nil? && nb_overlaps.zero? ? :optimal : :partial
-    Solution.create(planning: @planning, compute_solution: compute_solution, nb_overlaps: nb_overlaps, relevance: status, nb_conflicts: nb_conflicts)
+  def create_solution(compute_solution, nb_overlaps = nil)
+    Solution.create(planning: @planning, compute_solution: compute_solution, nb_overlaps: nb_overlaps)
   end
 
   def create_solution_slots(slotgroups_array, planning_possibility, solution_instance)
