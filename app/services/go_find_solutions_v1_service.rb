@@ -23,18 +23,10 @@ class GoFindSolutionsV1Service
     self.nb_slotgroups = slotgroups_array.count
     # iterate through planning possibilities to extract solutions
     self.build_solutions = go_through_plannings
-    fix_overlaps(build_solutions[:solutions_array].first(5))
-    # calculate number of conflicts for each solution
-    evaluate_nb_conflicts_for_a_group_of_solutions(build_solutions[:solutions_array])
     # select the best solutions
-    build_solutions[:best_solution] = pick_best_solutions(build_solutions[:solutions_array].first(5), 15)
+    build_solutions[:best_solution] = pick_best_solutions(build_solutions[:solutions_array], 15)
     # return
     build_solutions
-  end
-
-  def testing(solutions_array)
-    x = solutions_array.select{ |x| x[:nb_overlaps] == 2 }.first
-    solutions_array.index(x)
   end
 
   def determine_number_of_trees
@@ -115,27 +107,32 @@ class GoFindSolutionsV1Service
 
 def pick_best_solutions(solutions_array, how_many_solutions_do_we_store)
     # Selects X solutions from a collection of solutions.
-    # several solutions with 0 conflicts? => pick the last X ones
-    # else, we pick the last X ones
-    collection_no_conflicts = collect_solutions_with_no_conflicts(solutions_array)
+    # several solutions with 0 overlaps? => pick the last X ones
+    # else, we pick the last X ones and update the overlaps == 'no solution'
+    collection_no_overlaps = collect_solutions_with_no_overlap(solutions_array)
     size_selection_solutions = how_many_solutions_do_we_store
-    if collection_no_conflicts.count.positive?
+    if collection_no_overlaps.count.positive?
       # if more optimal solutions than size of our top => pick the last size_selection_solutions ones
-      if collection_no_conflicts.count >= size_selection_solutions
-        return collection_no_conflicts.last(size_selection_solutions)
+      if collection_no_overlaps.count >= size_selection_solutions
+        return collection_no_overlaps.last(size_selection_solutions)
       else
         # pick the 1..size_selection_solutions ones
-        return collection_no_conflicts
+        return collection_no_overlaps
       end
     else # if no optimal solutions
-      # classer solutions par ordre croissant de conflicts
-      solutions_array #.sort_by!{ |x| x[:nb_conflicts] }
       # if more solutions than size of our top
       if solutions_array.count >= size_selection_solutions
-        # select the last X ones qui ont le moins de conflicts
-        return solutions_array.first(size_selection_solutions)
+        # select the last X ones
+        solutions_array.last(size_selection_solutions).each do |partial_solution|
+          # fix overlaps => assign user according to slotgroups priority
+          # assign_no_solution_user_for_sg_with_overlaps(partial_solution) => non, fait dans un autre service
+        end
+        return solutions_array.last(size_selection_solutions)
       else # less than 'size_selection_solutions' partial solutions
-        # select as many solutions as there are
+        # select as many solutions as there are, and fix them
+        solutions_array.each do |partial_solution|
+          # assign_no_solution_user_for_sg_with_overlaps(partial_solution) => non, fait dans un autre service
+        end
         return solutions_array
       end
     end
@@ -279,10 +276,6 @@ def pick_best_solutions(solutions_array, how_many_solutions_do_we_store)
     solutions_array.select { |x| x[:nb_overlaps].zero? }
   end
 
-  def collect_solutions_with_no_conflicts(solutions_array)
-    solutions_array.select { |solution_hash| solution_hash[:nb_conflicts].zero? }
-  end
-
   def calculate_nb_solutions
     solutions_array.count
   end
@@ -303,142 +296,27 @@ def pick_best_solutions(solutions_array, how_many_solutions_do_we_store)
     nb_possibilities
   end
 
-  def fix_overlaps(solutions_array)
-    # solutions_array = [ { :solution_id, :possibility_id, :nb_overlaps, :planning_possibility, :nb_conflicts }, {} , ... ]
-    solutions_array.each do |solution_hash|
-      # skip si pas d'overlaps
-      next if solution_hash[:nb_overlaps].zero?
-      # sélectionner que les slotgroups qui contiennent des overlaps
-      slotgroups_with_overlaps = solution_hash[:planning_possibility].select{ |poss_hash| poss_hash[:overlaps].count.positive? } # Array of hashes
-      # on gère les overlaps de ces slotgroups à pb
-      fix_overlaps_for_a_planning_possibility(slotgroups_with_overlaps, solutions_array, solution_hash[:solution_id])
-      # binding.pry
-    end
-  end
-
-  def fix_overlaps_for_a_planning_possibility(possibility_array, solutions_array, solution_id)
-    # we have a solution_array which contains overlaps.
-    # Il faut arbitrer ces conflits et affecter les ressources dispos aux slots.
-    # possibility_array = extrait de :planning_possibility
-    # :planning_possibility => [ {:sg_ranking, :sg_id, :combination, :overlaps}, {}, ... ]
-    # On itère via ranking_id croissant
-    possibility_array.each do |possibility_sg_hash|
-      # on passe au suivant si les overlaps de ce possibility_sg_hash sont déjà réglés
-      next if overlaps_are_fixed?([possibility_sg_hash])
-      # on sort si les overlaps ne concernent que des 'no_solution'
-      next if overlaps_are_fixed?(possibility_array)
-      # sur chaque overlap
-      possibility_sg_hash[:overlaps].each do |overlap_hash|
-        # on passe au suivant si overlap déjà réglé (vide ou no_solution uniquement)
-        next if overlap_hash[:users].empty? or overlap_is_no_solution?(overlap_hash[:users])
-        # overlap = [ { sg_id: overlapped_slotgroup_id, users: array of users }, {...} ]
-        overlapped_slotgroup_possibility_hash = nil # init
-        # récupérer le possibility_hash du slotgroup overlappé
-        overlapped_slotgroup_possibility_hash = get_poss_hash_of_specific_solution(overlap_hash[:sg_id], solutions_array, solution_id)
-        # récupérer sa combination
-        combination_overlapped_slotgroup = overlapped_slotgroup_possibility_hash[:combination]
-        # => mettre ces users en no solution dans la combination du slotgroup overlappé
-        overlap_hash[:users].each do |user|
-          next if user == determine_no_solution_user
-          # replace
-          pos = -1
-          combination_overlapped_slotgroup.each do |user_of_combination|
-            pos += 1
-            if user_of_combination == user
-              binding.pry
-              combination_overlapped_slotgroup[pos] = determine_no_solution_user
-              binding.pry
-            end
+  def assign_no_solution_user_for_sg_with_overlaps(solutions_array)
+    # we have a solution_array which contains overlaps. This solution has been
+    # selected as one of the best ones. We need to update the combinations so that the
+    # one which is in overlap => no solution
+    # solutions_array = [ {:solution_id, :possibility_id, :nb_overlaps, :planning_possibility} ]
+    # :planning_possibility => {:sg_ranking, :sg_id, :combination, :overlaps}
+    solutions_array[:planning_possibility].each do |possibility_hash|
+      combination = possibility_hash[:combination]
+      possibility_hash[:overlaps].each do |overlap|
+        # sur chacun des overlaps, on passe chacun des users en overlap en 'no solution'.
+        # TODO, il faudrait stocker qqpart pourquoi ce slot n'a pas de solution
+        # en notant le sg avec lequel il est en overlap + le user concerné.
+        overlap[:users].each do |user|
+          if combination.include?(user)
+            position_of_overlapping_user_in_combination = combination.index(user)
+            possibility_hash[:combination][position_of_overlapping_user_in_combination] = determine_no_solution_user
           end
         end
       end
-      # binding.pry
-      # réevaluer les overlaps du slotgroup overlappé puisqu'on a modifié sa combination
-      reevaluate_overlaps_for_a_planning_possibility(possibility_array)
-      # assign_no_solution_user_for_sg_with_overlaps(possibility_array.select{ |poss_hash| poss_hash[:overlaps].count.positive? }) unless possibility_array.select{ |poss_hash| poss_hash[:overlaps].count.positive? }.empty?
-      # binding.pry
     end
-  end
-
-  def overlaps_are_fixed?(possibility_array)
-    # renvoie true si tous les overlaps restants ne concernent que 'no solution user'
-    # possibility_array = [ {:sg_ranking, sg_id, :combination, :overlaps}, {},... ]
-    all_users_in_overlaps = [] # init
-    possibility_array.each do |poss_hash|
-      poss_hash[:overlaps].each do |overlap_hash|
-        all_users_in_overlaps << overlap_hash[:users]
-      end
-    end
-    # 0 overlaps ou que des overlaps avec no solution
-    true if all_users_in_overlaps.uniq.flatten.empty? or overlap_is_no_solution?(all_users_in_overlaps.uniq.flatten)
-  end
-
-  def overlap_is_no_solution?(overlap_hash_users_values)
-    # renvoie true si tous les users de l'overlap sont 'no solution' <=> contient au moins 1 no solution et rien d'autre
-    # Cela signifie que l'overlap a été réglé
-    true if overlap_hash_users_values.select{ |x| x == determine_no_solution_user }.count.positive? && overlap_hash_users_values.select{ |x| x != determine_no_solution_user }.count.zero?
-  end
-
-  def reevaluate_overlaps_for_a_planning_possibility(possibility_array)
-    # pour chaque slotgroup, réevaluer ses overlaps
-    # réinitialiser tous les overlaps
-    possibility_array.each do |slotgroup_possibility|
-      slotgroup_possibility[:overlaps] = []
-    end
-    # binding.pry
-    possibility_array.each do |slotgroup_possibility|
-      # does this slotgroup_possibility overlap other slotgroups? are there
-      # any users working simultaneously on those slotgroups?
-      slotgroup = find_slotgroup_by_id(slotgroup_possibility[:sg_id])
-      slotgroup_possibility_combination = slotgroup_possibility[:combination]
-      # init
-      nb_overlaps_slotgroup = 0
-      users_in_overlap = []
-      slotgroup_possibility_overlaps_array = []
-      # check for each theoretical overlap if it is the case in pratice
-      slotgroup.overlaps.each do |overlapping_slotgroup_hash|
-        users_in_overlap = [] # reinit
-        overlapped_slotgroup_id = overlapping_slotgroup_hash[:slotgroup_id]
-        # on passe au suivant si l'overlap concerne un slotgroup qui n'est pas simulé
-        # càd que l'on ne trouve pas ce slotgroup.
-        next if get_poss_hash(possibility_array, overlapped_slotgroup_id).nil?
-        overlapped_slotgroup_possibility = get_poss_hash(possibility_array, overlapped_slotgroup_id)
-        users_in_overlap = slotgroup_possibility_combination & overlapped_slotgroup_possibility[:combination]
-        # binding.pry
-        unless users_in_overlap.nil? || users_in_overlap.empty?
-          nb_overlaps_slotgroup += users_in_overlap.flatten.count
-          slotgroup_possibility[:overlaps] << { sg_id: overlapped_slotgroup_id, users: users_in_overlap.flatten }
-        end
-      end
-    end
-  end
-
-  def get_overlap_hash(slotgroup_possibility_hash, sg_id_of_initial_sg)
-    slotgroup_possibility_hash[:overlaps].select{ |overlap_hash| overlap_hash[:sg_id] == sg_id_of_initial_sg }.first
-  end
-
-  def get_poss_hash_of_specific_solution(sg_id, solutions_array, solution_id)
-    get_the_solution_hash_related_to_a_solution_id = solutions_array.select{|sol_hash| sol_hash[:solution_id] == solution_id }.first[:planning_possibility]
-    get_poss_hash_among_it = get_the_solution_hash_related_to_a_solution_id.select{  |x| x[:sg_id] == sg_id }.first
-  end
-
-  def get_poss_hash(possibility_array, sg_id)
-    possibility_array.select{  |planning_poss_hash| planning_poss_hash[:sg_id] == sg_id }.first
-  end
-
-  def evaluate_nb_conflicts_for_a_group_of_solutions(solutions_array)
-    solutions_array.each do |solution_hash|
-      evaluate_nb_conflicts_for_a_solution(solution_hash)
-    end
-  end
-
-  def evaluate_nb_conflicts_for_a_solution(solution_hash)
-    nb_conflicts = 0 # init
-    solution_hash[:planning_possibility].each do |possibility_hash|
-      nb_conflicts += possibility_hash[:combination].count{ |combination| combination == determine_no_solution_user }
-    end
-    solution_hash[:nb_conflicts] = nb_conflicts
-  end
+end
 
   def determine_no_solution_user
     User.find_by(first_name: 'no solution')

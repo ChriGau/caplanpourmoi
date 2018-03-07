@@ -61,8 +61,11 @@ class CalculSolutionV1 < ApplicationRecord
     SaveSolutionsAndSolutionSlotsService.new( calcul_arrays[:slotgroups_array],
       calcul_arrays[:slots_array], planning, compute_solution, list_of_solutions ).perform
     puts 'SaveSolutionsAndSolutionSlotsService --> done'
-    puts 'fix overlaps'
-
+    # mettre à jour les solutions en résolvant les overlaps
+    FixOverlapsService.new(CalculSolutionV1.last.compute_solution,
+      calcul_arrays[:slotgroups_array]).perform
+    puts 'FixOverlapsService --> done'
+    # pick best solutions again / reorder solutions_list
 
     { calcul_arrays: calcul_arrays,
       test_possibilities: test_possibilities,
