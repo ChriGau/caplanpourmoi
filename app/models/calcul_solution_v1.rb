@@ -65,7 +65,10 @@ class CalculSolutionV1 < ApplicationRecord
     FixOverlapsService.new(CalculSolutionV1.last.compute_solution,
       calcul_arrays[:slotgroups_array]).perform
     puts 'FixOverlapsService --> done'
-    # pick best solutions again / reorder solutions_list
+    # reeavaluate nb conflicts of each solution
+    evaluate_nb_conflicts_for_a_group_of_solutions(CalculSolutionV1.last.compute_solution.solutions)
+    update_relevance(CalculSolutionV1.last.compute_solution.solutions)
+    # reorder solutions_list
 
     { calcul_arrays: calcul_arrays,
       test_possibilities: test_possibilities,
@@ -84,6 +87,30 @@ class CalculSolutionV1 < ApplicationRecord
       a << slotgroup if slotgroup.simulation_status == true
     end
     a
+  end
+
+  def evaluate_nb_conflicts_for_a_group_of_solutions(solutions_array)
+    solutions_array.each do |solution|
+      solution.solution_slots.each do |solution_slot|
+        if solution_slot.user_id == determine_no_solution_user.id
+          if !solution.nb_conflicts.nil?
+            solution.nb_conflicts = 1
+          else
+            solution.nb_conflicts += 1
+          end
+        end
+      end
+    end
+  end
+
+  def determine_no_solution_user
+    User.find_by(first_name: 'no solution')
+  end
+
+  def update_relevance(solutions_array)
+    solutions_array.each do |solution|
+      solution.evaluate_relevance
+    end
   end
 end
 

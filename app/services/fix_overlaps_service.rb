@@ -56,7 +56,7 @@ class FixOverlapsService
         # sur chaque solution_slot initial
         solution_slots_initial_sg.each do |sol_slot_initial|
           solution_slots_overlapped_sg.each do |sol_slot_overlapped|
-            if sol_slot_initial.user_id = sol_slot_overlapped.user_id && sol_slot_initial.user_id != determine_no_solution_user.id
+            if sol_slot_initial.user_id == sol_slot_overlapped.user_id && sol_slot_initial.user_id != determine_no_solution_user.id
               overlaps_information << {  solution_slot_id: sol_slot_initial.id, solution_slot_overlapped_id: sol_slot_overlapped.id }
             end
           end
@@ -84,19 +84,5 @@ class FixOverlapsService
 
   def determine_no_solution_user
     User.find_by(first_name: 'no solution')
-  end
-
-  def evaluate_nb_conflicts_for_a_group_of_solutions(solutions_array)
-    solutions_array.each do |solution_hash|
-      evaluate_nb_conflicts_for_a_solution(solution_hash)
-    end
-  end
-
-  def evaluate_nb_conflicts_for_a_solution(solution_hash)
-    nb_conflicts = 0 # init
-    solution_hash[:planning_possibility].each do |possibility_hash|
-      nb_conflicts += possibility_hash[:combination].count{ |combination| combination == determine_no_solution_user }
-    end
-    solution_hash[:nb_conflicts] = nb_conflicts
   end
 end
