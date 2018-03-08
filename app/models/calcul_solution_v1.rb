@@ -46,7 +46,7 @@ class CalculSolutionV1 < ApplicationRecord
     if need_a_calcul # there are some sg to simulate (case 1)
       # step 4: go through plannings possibilities, assess them, select best solution. (2 cases)
       puts 'GoFindSolutionsV1Service --> initiated'
-      build_solutions = GoFindSolutionsV1Service.new(planning, self, to_simulate_slotgroups_array).perform
+      build_solutions = GoFindSolutionsV1Service.new(planning, to_simulate_slotgroups_array).perform
       puts 'GoFindSolutionsV1Service --> done. --> storing best solution'
       # update return variables
       test_possibilities = build_solutions[:test_possibilities]
@@ -61,14 +61,6 @@ class CalculSolutionV1 < ApplicationRecord
     SaveSolutionsAndSolutionSlotsService.new( calcul_arrays[:slotgroups_array],
       calcul_arrays[:slots_array], planning, compute_solution, list_of_solutions ).perform
     puts 'SaveSolutionsAndSolutionSlotsService --> done'
-    # mettre à jour les solutions en résolvant les overlaps
-    FixOverlapsService.new(CalculSolutionV1.last.compute_solution,
-      calcul_arrays[:slotgroups_array]).perform
-    puts 'FixOverlapsService --> done'
-    # reeavaluate nb conflicts of each solution
-    evaluate_nb_conflicts_for_a_group_of_solutions(CalculSolutionV1.last.compute_solution.solutions)
-    update_relevance(CalculSolutionV1.last.compute_solution.solutions)
-    # reorder solutions_list
 
     { calcul_arrays: calcul_arrays,
       test_possibilities: test_possibilities,

@@ -4,16 +4,16 @@
 # rubocop:disable LineLength, MethodLength, AbcSize, ClassLength
 
 class GoFindSolutionsV1Service
-  attr_accessor :planning, :calcul, :slotgroups_array, :users,
+  attr_accessor :planning, :users,
                 :nb_trees, :nb_branches, :nb_slotgroups,
-                :build_solutions, :planning_possibility,
                 :iteration_id, :solutions_array
 
-  def initialize(planning, calcul_solution_v1_instance, slotgroups_array)
-    @planning = planning
-    @calcul = calcul_solution_v1_instance
+  attr_reader :slotgroups_array
+
+  def initialize(planning, slotgroups_array)
     @slotgroups_array = slotgroups_array
-    @users = @planning.users
+    @planning = planning
+    @planning_possibility = []
   end
 
   def perform
@@ -22,7 +22,7 @@ class GoFindSolutionsV1Service
     self.nb_branches = determine_number_of_branches
     self.nb_slotgroups = slotgroups_array.count
     # iterate through planning possibilities to extract solutions
-    self.build_solutions = go_through_plannings
+    build_solutions = go_through_plannings
     # select the best solutions
     build_solutions[:best_solution] = pick_best_solutions(build_solutions[:solutions_array], 20)
     # return
@@ -51,6 +51,7 @@ class GoFindSolutionsV1Service
     solution_id = 0
     self.solutions_array = []
     overlaps_best_scoring = init_overlaps_best_scoring
+    nb_conflicts_best_scoring = init_overlaps_best_scoring
     possibility_id = 0
     iteration_id = 0
     nb_cuts_within_tree = 0
@@ -58,42 +59,52 @@ class GoFindSolutionsV1Service
     next_branch = nil
     for tree in 1..nb_trees
       for branch in 1..nb_branches
-        self.planning_possibility = []
+        @planning_possibility = []
+        # self.planning_possibility = []
         # next if solution_id ==  1000  # pour stopper les itérations au bout de la nième solution
         # we skip this branch if we must
-        next if must_we_jump_to_another_branch?(tree, next_tree, branch, next_branch)
+        # next if must_we_jump_to_another_branch?(tree, next_tree, branch, next_branch)
         # let's build a planning possibility
         for sg_ranking in 1..nb_slotgroups # slotgroups rankings
           position = identify_position(tree, branch, sg_ranking)
           combination = identify_slotgroup_combination(position, sg_ranking)
           slotgroup_id = find_slotgroup_by_ranking(sg_ranking).id
-          planning_possibility << { sg_ranking: sg_ranking,
+          @planning_possibility << { sg_ranking: sg_ranking,
                                     sg_id: slotgroup_id,
                                     combination: combination,
                                     overlaps: nil }
         end
         # *** now we have a planning_possibility which contains a possibility of planning ***
         possibility_id += 1
-        result_overlaps_check = evaluate_overlaps_for_a_planning(planning_possibility, overlaps_best_scoring)
-        if result_overlaps_check[:success]
-          overlaps_best_scoring = result_overlaps_check[:nb_overlaps_of_a_planning]
+        # evaluate overlaps for a planning_possibility
+        result_overlaps_check = evaluate_overlaps_for_a_planning(@planning_possibility, overlaps_best_scoring)
+        # fix_overlaps of this planning_possibility
+        planning_possibility = fix_overlaps(@planning_possibility,
+                                            result_overlaps_check)
+        # update overlaps
+        evaluate_overlaps_for_a_planning(planning_possibility, overlaps_best_scoring)
+        # evaluate nb conflicts for this planning
+        result_conflicts_check = evaluate_nb_conflicts_for_a_planning_possibility(@planning_possibility, nb_conflicts_best_scoring)
+        if result_conflicts_check[:success]
+          nb_conflicts_best_scoring = result_conflicts_check[:nb_conflicts]
           # TODO, evaluate weekly hours respect
           # store solution
           solution_id += 1
           solutions_array << { solution_id: solution_id,
                                possibility_id: possibility_id,
                                nb_overlaps: overlaps_best_scoring,
-                               planning_possibility: planning_possibility,
-                               nb_conflicts: nil }
+                               planning_possibility: @planning_possibility,
+                               nb_conflicts: nb_conflicts_best_scoring }
         else
           # cut off all similar possibilities
-          next_knot_caracteristics = go_to_next_knot(tree, branch, result_overlaps_check[:sg_ranking_where_overlap_evaluation_is_lower_than_best])
+          next_knot_caracteristics = go_to_next_knot(tree, branch,
+            result_conflicts_check[:sg_ranking_where_conflicts_evaluation_is_lower_than_best])
           next_tree = next_knot_caracteristics[:tree]
           next_branch = next_knot_caracteristics[:branch]
           nb_cuts_within_tree += 1
         end
         iteration_id += 1
-        test_possibilities << planning_possibility
+        test_possibilities << @planning_possibility
       end
     end
     calculation_abstract = determine_calculation_abstract(iteration_id, nb_cuts_within_tree)
@@ -107,32 +118,26 @@ class GoFindSolutionsV1Service
 
 def pick_best_solutions(solutions_array, how_many_solutions_do_we_store)
     # Selects X solutions from a collection of solutions.
-    # several solutions with 0 overlaps? => pick the last X ones
-    # else, we pick the last X ones and update the overlaps == 'no solution'
-    collection_no_overlaps = collect_solutions_with_no_overlap(solutions_array)
-    size_selection_solutions = how_many_solutions_do_we_store
-    if collection_no_overlaps.count.positive?
+    # several solutions with 0 conflicts? => pick the last X ones
+    # else, we pick the last X ones
+    collection_no_conflicts = collect_solutions_with_no_conflicts(solutions_array)
+    if collection_no_conflicts.count.positive?
       # if more optimal solutions than size of our top => pick the last size_selection_solutions ones
-      if collection_no_overlaps.count >= size_selection_solutions
-        return collection_no_overlaps.last(size_selection_solutions)
+      if collection_no_conflicts.count >= how_many_solutions_do_we_store
+        return collection_no_conflicts.last(how_many_solutions_do_we_store)
       else
-        # pick the 1..size_selection_solutions ones
-        return collection_no_overlaps
+        # pick the 1..how_many_solutions_do_we_store ones
+        return collection_no_conflicts
       end
     else # if no optimal solutions
+      # TODO => classer solutions par ordre croissant de conflicts
+      # solutions_array.sort_by!{ |x| x[:nb_conflicts] }
       # if more solutions than size of our top
-      if solutions_array.count >= size_selection_solutions
-        # select the last X ones
-        solutions_array.last(size_selection_solutions).each do |partial_solution|
-          # fix overlaps => assign user according to slotgroups priority
-          # assign_no_solution_user_for_sg_with_overlaps(partial_solution) => non, fait dans un autre service
-        end
-        return solutions_array.last(size_selection_solutions)
+      if solutions_array.count >= how_many_solutions_do_we_store
+        # select the last X ones qui ont le moins de conflicts
+        return solutions_array.last(how_many_solutions_do_we_store)
       else # less than 'size_selection_solutions' partial solutions
-        # select as many solutions as there are, and fix them
-        solutions_array.each do |partial_solution|
-          # assign_no_solution_user_for_sg_with_overlaps(partial_solution) => non, fait dans un autre service
-        end
+        # select as many solutions as there are
         return solutions_array
       end
     end
@@ -164,7 +169,7 @@ def pick_best_solutions(solutions_array, how_many_solutions_do_we_store)
 
   def init_overlaps_best_scoring
     # max of overlaps = all users are in overlap for all sg
-    users.count * nb_slotgroups
+    @planning.users.count * nb_slotgroups
   end
 
   def must_we_jump_to_another_branch?(tree, next_tree, branch, next_branch)
@@ -198,11 +203,11 @@ def pick_best_solutions(solutions_array, how_many_solutions_do_we_store)
   # rubocop:enable UselessAssignment, Cyclomaticomplexity
 
   def find_slotgroup_by_id(slotgroup_id)
-    slotgroups_array.find { |x| x.id == slotgroup_id }
+    @slotgroups_array.find { |x| x.id == slotgroup_id }
   end
 
   def find_slotgroup_by_ranking(ranking)
-    slotgroups_array.find { |x| x.ranking_algo == ranking }
+    @slotgroups_array.find { |x| x.ranking_algo == ranking }
   end
 
   def identify_slotgroup_combination(position, sg_ranking)
@@ -218,7 +223,7 @@ def pick_best_solutions(solutions_array, how_many_solutions_do_we_store)
     sg_ranking_where_overlap_evaluation_is_lower_than_best = nil
     planning.each do |slotgroup_possibility|
       # result = { :nb_overlaps_slotgroup, :slotgroup_possibility }
-      result = evaluate_overlaps_for_a_slotgroup_possibility(slotgroup_possibility)
+      result = evaluate_overlaps_for_a_slotgroup_possibility(slotgroup_possibility, planning)
       overlaps += result[:nb_overlaps_slotgroup]
       if overlaps_equal_zero_or_lower_than_best?(overlaps, overlaps_best_scoring)
         success = true
@@ -236,7 +241,7 @@ def pick_best_solutions(solutions_array, how_many_solutions_do_we_store)
       sg_ranking_where_overlap_evaluation_is_lower_than_best }
   end
 
-  def evaluate_overlaps_for_a_slotgroup_possibility(slotgroup_possibility)
+  def evaluate_overlaps_for_a_slotgroup_possibility(slotgroup_possibility, planning_possibility)
     # does this slotgroup_possibility overlap other slotgroups? are there
     # any users working simultaneously on those slotgroups?
     slotgroup = find_slotgroup_by_id(slotgroup_possibility[:sg_id])
@@ -251,8 +256,8 @@ def pick_best_solutions(solutions_array, how_many_solutions_do_we_store)
       overlapped_slotgroup_id = overlapping_slotgroup_hash[:slotgroup_id]
       # on passe au suivant si l'overlap concerne un slotgroup qui n'est pas simulé
       # càd que l'on ne trouve pas ce slotgroup.
-      next if find_slotgroup_possibility_by_id(overlapped_slotgroup_id).nil?
-      overlapped_slotgroup_possibility = find_slotgroup_possibility_by_id(overlapped_slotgroup_id)
+      next if find_slotgroup_possibility_by_id(overlapped_slotgroup_id, planning_possibility).nil?
+      overlapped_slotgroup_possibility = find_slotgroup_possibility_by_id(overlapped_slotgroup_id, planning_possibility)
       users_in_overlap = slotgroup_possibility_combination & overlapped_slotgroup_possibility[:combination]
       unless users_in_overlap.nil? || users_in_overlap.empty?
         nb_overlaps_slotgroup += users_in_overlap.flatten.count
@@ -264,7 +269,7 @@ def pick_best_solutions(solutions_array, how_many_solutions_do_we_store)
     { nb_overlaps_slotgroup: nb_overlaps_slotgroup, slotgroup_possibility: slotgroup_possibility }
   end
 
-  def find_slotgroup_possibility_by_id(slotgroup_id)
+  def find_slotgroup_possibility_by_id(slotgroup_id, planning_possibility)
     planning_possibility.find { |x| x[:sg_id] == slotgroup_id }
   end
 
@@ -273,8 +278,8 @@ def pick_best_solutions(solutions_array, how_many_solutions_do_we_store)
     overlaps.zero? || overlaps <= overlaps_best_scoring
   end
 
-  def collect_solutions_with_no_overlap(solutions_array)
-    solutions_array.select { |x| x[:nb_overlaps].zero? }
+  def collect_solutions_with_no_conflicts(solutions_array)
+    solutions_array.select { |x| x[:nb_conflicts].zero? }
   end
 
   def calculate_nb_solutions
@@ -289,7 +294,7 @@ def pick_best_solutions(solutions_array, how_many_solutions_do_we_store)
 
   def calculate_nb_possibilities_below_this_knot(sg_ranking)
     nb_possibilities = 1
-    slotgroups_array.each do |slotgroup|
+    @slotgroups_array.each do |slotgroup|
       if slotgroup.ranking_algo > sg_ranking && (slotgroup.simulation_status == true)
         nb_possibilities *= slotgroup.nb_combinations_available_users
       end
@@ -322,4 +327,53 @@ end
   def determine_no_solution_user
     User.find_by(first_name: 'no solution')
   end
+
+  def fix_overlaps(planning_possibility, result_overlaps_check)
+    # régler les pbs d'overlap pour une planning_possibility
+    # s'il existe >0 overlaps
+    unless result_overlaps_check[:nb_overlaps_of_a_planning].zero?
+      @slotgroups_array.each do |sg_hash|
+        # skip si pas d'overlap pour ce sg
+        unless sg_hash.overlaps.empty?
+          # si overlap
+          sg_hash.overlaps.each do |overlap_hash|
+            # mettre les users du sg overlappé en overlap à no solution
+            users_overlapped_sg = planning_possibility.select{ |h| h[:sg_id] == overlap_hash[:slotgroup_id] }.first[:combination]
+            users_overlapped_sg.each do |user|
+              index_user_to_replace = nil # init
+              index_overlap_user_to_delete = nil # init
+              if planning_possibility.select{ |h| h[:sg_id] == sg_hash.id }.first[:combination].include?(user) # ce user est en overlap
+                # get index of user in overlapped sg combination
+                index_user_to_replace = planning_possibility.select{ |h| h[:sg_id] == overlap_hash[:slotgroup_id] }.first[:combination].index(user)
+                binding.pry
+                planning_possibility.select{ |h| h[:sg_id] == overlap_hash[:slotgroup_id] }.first[:combination][index_user_to_replace] = determine_no_solution_user
+                evaluate_overlaps_for_a_planning(planning_possibility, 0)
+                binding.pry
+              end
+            end
+          end
+        end
+      end
+    end
+    evaluate_overlaps_for_a_planning(planning_possibility, 0)
+    return planning_possibility
+  end
+
+  def evaluate_nb_conflicts_for_a_planning_possibility(planning_possibility, nb_conflicts_best_scoring)
+    # => nb of users = no solution
+    nb_conflicts = 0
+    success = true
+    sg_ranking = nil
+    planning_possibility.each do |poss_hash|
+      nb_conflicts += poss_hash[:combination].select{ |u| u == determine_no_solution_user }.count
+      if nb_conflicts > nb_conflicts_best_scoring
+        success = false
+        sg_ranking = poss_hash[:sg_ranking]
+      end
+    end
+    return { success: success,
+             nb_conflicts: nb_conflicts,
+             sg_ranking_where_conflicts_evaluation_is_lower_than_best: sg_ranking }
+  end
+
 end
