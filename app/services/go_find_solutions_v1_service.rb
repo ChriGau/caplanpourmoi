@@ -24,7 +24,7 @@ class GoFindSolutionsV1Service
     # iterate through planning possibilities to extract solutions
     self.build_solutions = go_through_plannings
     # select the best solutions
-    build_solutions[:best_solution] = pick_best_solutions(build_solutions[:solutions_array], 15)
+    build_solutions[:best_solution] = pick_best_solutions(build_solutions[:solutions_array], 20)
     # return
     build_solutions
   end
@@ -269,6 +269,7 @@ def pick_best_solutions(solutions_array, how_many_solutions_do_we_store)
   end
 
   def overlaps_equal_zero_or_lower_than_best?(overlaps, overlaps_best_scoring)
+    # if true => success
     overlaps.zero? || overlaps <= overlaps_best_scoring
   end
 
