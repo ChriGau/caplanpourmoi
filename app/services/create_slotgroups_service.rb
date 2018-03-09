@@ -135,7 +135,8 @@ class CreateSlotgroupsService
     slotgroups_array.each do |slotgroup|
       slotgroup.nb_combinations_available_users = 0
       combinations_size = slotgroup.determine_nb_slots_to_simulate
-      slotgroup.combinations_of_available_users = slotgroup.list_available_users.combination(combinations_size).to_a
+      combi_intermediate = slotgroup.list_available_users.map{|u| u.id}
+      slotgroup.combinations_of_available_users = combi_intermediate.combination(combinations_size).to_a
       slotgroup.nb_combinations_available_users = slotgroup.combinations_of_available_users.count unless slotgroup.combinations_of_available_users[0].empty?
     end
   end

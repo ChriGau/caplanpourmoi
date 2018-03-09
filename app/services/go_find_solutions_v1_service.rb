@@ -4,8 +4,7 @@
 # rubocop:disable LineLength, MethodLength, AbcSize, ClassLength
 
 class GoFindSolutionsV1Service
-  attr_accessor :planning, :users,
-                :nb_trees, :nb_branches, :nb_slotgroups,
+  attr_accessor :nb_trees, :nb_branches, :nb_slotgroups,
                 :iteration_id, :solutions_array
 
   attr_reader :slotgroups_array
@@ -13,14 +12,13 @@ class GoFindSolutionsV1Service
   def initialize(planning, slotgroups_array)
     @slotgroups_array = slotgroups_array
     @planning = planning
-    @planning_possibility = []
   end
 
   def perform
     # calculate pre-requisites to plannings iterating
     self.nb_trees = determine_number_of_trees
     self.nb_branches = determine_number_of_branches
-    self.nb_slotgroups = slotgroups_array.count
+    self.nb_slotgroups = @slotgroups_array.count
     # iterate through planning possibilities to extract solutions
     build_solutions = go_through_plannings
     # select the best solutions
@@ -30,12 +28,12 @@ class GoFindSolutionsV1Service
   end
 
   def determine_number_of_trees
-    slotgroups_array.find { |x| x.ranking_algo == 1 }.nb_combinations_available_users
+    @slotgroups_array.find { |x| x.ranking_algo == 1 }.nb_combinations_available_users
   end
 
   def determine_number_of_branches
     nb_branches = 1
-    slotgroups_array.each do |slotgroup|
+    @slotgroups_array.each do |slotgroup|
       unless slotgroup.take_into_calculation_nb_branches_account
         nb_branches *= slotgroup.nb_combinations_available_users
       end
@@ -46,7 +44,7 @@ class GoFindSolutionsV1Service
   # rubocop:disable For
 
   def go_through_plannings
-    # @planning_possibility = [ {sg_id: 1, combi: [combination of users]} , {...} ]
+    # planning_possibility = [ {sg_id: 1, combi: [combination of users_ids]} , {...} ]
     test_possibilities = []
     solution_id = 0
     self.solutions_array = []
@@ -59,7 +57,7 @@ class GoFindSolutionsV1Service
     next_branch = nil
     for tree in 1..nb_trees
       for branch in 1..nb_branches
-        @planning_possibility = []
+        planning_possibility = []
         # self.planning_possibility = []
         # next if solution_id ==  1000  # pour stopper les itérations au bout de la nième solution
         # we skip this branch if we must
@@ -69,7 +67,7 @@ class GoFindSolutionsV1Service
           position = identify_position(tree, branch, sg_ranking)
           combination = identify_slotgroup_combination(position, sg_ranking)
           slotgroup_id = find_slotgroup_by_ranking(sg_ranking).id
-          @planning_possibility << { sg_ranking: sg_ranking,
+          planning_possibility << { sg_ranking: sg_ranking,
                                     sg_id: slotgroup_id,
                                     combination: combination,
                                     overlaps: nil }
@@ -77,14 +75,14 @@ class GoFindSolutionsV1Service
         # *** now we have a planning_possibility which contains a possibility of planning ***
         possibility_id += 1
         # evaluate overlaps for a planning_possibility
-        result_overlaps_check = evaluate_overlaps_for_a_planning(@planning_possibility, overlaps_best_scoring)
+        result_overlaps_check = evaluate_overlaps_for_a_planning(planning_possibility, overlaps_best_scoring)
         # fix_overlaps of this planning_possibility
-        planning_possibility = fix_overlaps(@planning_possibility,
+        planning_possibility = fix_overlaps(planning_possibility,
                                             result_overlaps_check)
         # update overlaps
         evaluate_overlaps_for_a_planning(planning_possibility, overlaps_best_scoring)
         # evaluate nb conflicts for this planning
-        result_conflicts_check = evaluate_nb_conflicts_for_a_planning_possibility(@planning_possibility, nb_conflicts_best_scoring)
+        result_conflicts_check = evaluate_nb_conflicts_for_a_planning_possibility(planning_possibility, nb_conflicts_best_scoring)
         if result_conflicts_check[:success]
           nb_conflicts_best_scoring = result_conflicts_check[:nb_conflicts]
           # TODO, evaluate weekly hours respect
@@ -93,7 +91,7 @@ class GoFindSolutionsV1Service
           solutions_array << { solution_id: solution_id,
                                possibility_id: possibility_id,
                                nb_overlaps: overlaps_best_scoring,
-                               planning_possibility: @planning_possibility,
+                               planning_possibility: planning_possibility,
                                nb_conflicts: nb_conflicts_best_scoring }
         else
           # cut off all similar possibilities
@@ -104,7 +102,7 @@ class GoFindSolutionsV1Service
           nb_cuts_within_tree += 1
         end
         iteration_id += 1
-        test_possibilities << @planning_possibility
+        test_possibilities << planning_possibility
       end
     end
     calculation_abstract = determine_calculation_abstract(iteration_id, nb_cuts_within_tree)
@@ -245,7 +243,7 @@ def pick_best_solutions(solutions_array, how_many_solutions_do_we_store)
     # does this slotgroup_possibility overlap other slotgroups? are there
     # any users working simultaneously on those slotgroups?
     slotgroup = find_slotgroup_by_id(slotgroup_possibility[:sg_id])
-    slotgroup_possibility_combination = slotgroup_possibility[:combination]
+    slotgroup_possibility_combination = slotgroup_possibility[:combination] # [user_id1, user_id2,...]
     # init
     nb_overlaps_slotgroup = 0
     users_in_overlap = []
@@ -258,7 +256,7 @@ def pick_best_solutions(solutions_array, how_many_solutions_do_we_store)
       # càd que l'on ne trouve pas ce slotgroup.
       next if find_slotgroup_possibility_by_id(overlapped_slotgroup_id, planning_possibility).nil?
       overlapped_slotgroup_possibility = find_slotgroup_possibility_by_id(overlapped_slotgroup_id, planning_possibility)
-      users_in_overlap = slotgroup_possibility_combination & overlapped_slotgroup_possibility[:combination]
+      users_in_overlap = slotgroup_possibility_combination & overlapped_slotgroup_possibility[:combination] # => Array of users in overlap's ids
       unless users_in_overlap.nil? || users_in_overlap.empty?
         nb_overlaps_slotgroup += users_in_overlap.flatten.count
         slotgroup_possibility_overlaps_array << { sg_id: overlapped_slotgroup_id, users: users_in_overlap.flatten }
@@ -302,28 +300,6 @@ def pick_best_solutions(solutions_array, how_many_solutions_do_we_store)
     nb_possibilities
   end
 
-  def assign_no_solution_user_for_sg_with_overlaps(solutions_array)
-    # we have a solution_array which contains overlaps. This solution has been
-    # selected as one of the best ones. We need to update the combinations so that the
-    # one which is in overlap => no solution
-    # solutions_array = [ {:solution_id, :possibility_id, :nb_overlaps, :planning_possibility} ]
-    # :planning_possibility => {:sg_ranking, :sg_id, :combination, :overlaps}
-    solutions_array[:planning_possibility].each do |possibility_hash|
-      combination = possibility_hash[:combination]
-      possibility_hash[:overlaps].each do |overlap|
-        # sur chacun des overlaps, on passe chacun des users en overlap en 'no solution'.
-        # TODO, il faudrait stocker qqpart pourquoi ce slot n'a pas de solution
-        # en notant le sg avec lequel il est en overlap + le user concerné.
-        overlap[:users].each do |user|
-          if combination.include?(user)
-            position_of_overlapping_user_in_combination = combination.index(user)
-            possibility_hash[:combination][position_of_overlapping_user_in_combination] = determine_no_solution_user
-          end
-        end
-      end
-    end
-end
-
   def determine_no_solution_user
     User.find_by(first_name: 'no solution')
   end
@@ -338,17 +314,20 @@ end
           # si overlap
           sg_hash.overlaps.each do |overlap_hash|
             # mettre les users du sg overlappé en overlap à no solution
-            users_overlapped_sg = planning_possibility.select{ |h| h[:sg_id] == overlap_hash[:slotgroup_id] }.first[:combination]
-            users_overlapped_sg.each do |user|
-              index_user_to_replace = nil # init
-              index_overlap_user_to_delete = nil # init
-              if planning_possibility.select{ |h| h[:sg_id] == sg_hash.id }.first[:combination].include?(user) # ce user est en overlap
+            users_overlapped_sg = planning_possibility.select{ |h| h[:sg_id] == overlap_hash[:slotgroup_id] }.first[:combination] # => Array of users'ids
+            users_overlapped_sg.each do |user_id|
+              index_user_id_to_replace = nil # init
+              index_overlap_user_id_to_delete = nil # init
+              if planning_possibility.select{ |h| h[:sg_id] == sg_hash.id }.first[:combination].include?(user_id) # ce user est en overlap
+                planning_possibility_hash = planning_possibility.select{ |h| h[:sg_id] == overlap_hash[:slotgroup_id] }.first
                 # get index of user in overlapped sg combination
-                index_user_to_replace = planning_possibility.select{ |h| h[:sg_id] == overlap_hash[:slotgroup_id] }.first[:combination].index(user)
+                index_user_id_to_replace = planning_possibility_hash[:combination].index(user_id)
+                sg_hash_combination_snapshot = @slotgroups_array.select{|x| x.id == overlap_hash[:slotgroup_id]}.first.combinations_of_available_users.freeze
+                b = sg_hash_combination_snapshot.clone
+                replace_user_in_planning_possibility_hash(planning_possibility_hash, index_user_id_to_replace)
+                @slotgroups_array.select{|x| x.id == overlap_hash[:slotgroup_id]}.first.combinations_of_available_users = b
                 binding.pry
-                planning_possibility.select{ |h| h[:sg_id] == overlap_hash[:slotgroup_id] }.first[:combination][index_user_to_replace] = determine_no_solution_user
                 evaluate_overlaps_for_a_planning(planning_possibility, 0)
-                binding.pry
               end
             end
           end
@@ -357,6 +336,11 @@ end
     end
     evaluate_overlaps_for_a_planning(planning_possibility, 0)
     return planning_possibility
+  end
+
+  def replace_user_in_planning_possibility_hash(planning_possibility_hash, index_of_user_id)
+    planning_possibility_hash[:combination].delete_at(index_of_user_id)
+    planning_possibility_hash[:combination] << determine_no_solution_user.id
   end
 
   def evaluate_nb_conflicts_for_a_planning_possibility(planning_possibility, nb_conflicts_best_scoring)

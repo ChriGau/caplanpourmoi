@@ -1,6 +1,6 @@
 class Slotgroup
-  include ActiveModel::Validations # using ActiveModel to enable features
-  include ActiveModel::Serialization
+  # include ActiveModel::Validations # using ActiveModel to enable features
+  # include ActiveModel::Serialization
 
   attr_accessor :id, :start_at, :end_at, :role_id, :role_name, :planning_id,
                 :nb_required, :nb_available, :list_available_users,
