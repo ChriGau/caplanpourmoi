@@ -16,7 +16,7 @@ class Slotgroup
     @role_id = slot_instance.role_id
     @role_name = Role.find(slot_instance.role_id).name
     @planning_id = slot_instance.planning_id
-    @priority = rand(5) # faked for now
+    @priority = 1 # for now
   end
 
   # rubocop:disable LineLength

@@ -31,6 +31,7 @@ class ComputeSolution < ApplicationRecord
   belongs_to :planning
   has_one :calcul_solution_v1, dependent: :destroy
   has_many :solutions,  -> { order(created_at: :asc) }, dependent: :destroy
+  has_many :overlaps
   serialize :p_nb_hours_roles
   serialize :team, Hash
 

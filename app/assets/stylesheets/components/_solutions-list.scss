@@ -94,8 +94,15 @@ h3 {
   &-white {
     color: $mygrey;
     background-color: white;
-
   }
+  &-red {
+    color: white;
+    background-color: $myred;
+  }
+}
+
+.badge-red-hide {
+  visibility: hidden;
 }
 
 .action-group {
