@@ -88,13 +88,13 @@ class GoFindSolutionsV1Service
         if result_conflicts_check[:success]
           nb_conflicts_best_scoring = result_conflicts_check[:nb_conflicts]
           # TODO, evaluate weekly hours respect
-          # store solution
+          # store solution if doesnt already exist
           solution_id += 1
           solutions_array << { solution_id: solution_id,
                                possibility_id: possibility_id,
                                nb_overlaps: overlaps_best_scoring,
                                planning_possibility: planning_possibility,
-                               nb_conflicts: nb_conflicts_best_scoring }
+                               nb_conflicts: nb_conflicts_best_scoring } unless solutions_array.select{|x| x[:planning_possibility] == planning_possibility}.count.positive?
         else
           # cut off all similar possibilities
           next_knot_caracteristics = go_to_next_knot(tree, branch,
