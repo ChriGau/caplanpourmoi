@@ -37,6 +37,8 @@ class Solution < ApplicationRecord
   enum effectivity: [:not_chosen, :chosen]
   enum relevance: [:optimal, :partial]
 
+
+
   def evaluate_relevance
     nb_conflicts = 0 # init
     solution_slots.each do |solution_slot|

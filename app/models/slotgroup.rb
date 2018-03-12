@@ -1,6 +1,6 @@
 class Slotgroup
-  # include ActiveModel::Validations # using ActiveModel to enable features
-  # include ActiveModel::Serialization
+  include ActiveModel::Validations # using ActiveModel to enable features
+  include ActiveModel::Serialization
 
   attr_accessor :id, :start_at, :end_at, :role_id, :role_name, :planning_id,
                 :nb_required, :nb_available, :list_available_users,
@@ -16,7 +16,7 @@ class Slotgroup
     @role_id = slot_instance.role_id
     @role_name = Role.find(slot_instance.role_id).name
     @planning_id = slot_instance.planning_id
-    @priority = 1 # rand (5) faked for now
+    @priority = 1 # for now
   end
 
   # rubocop:disable LineLength
