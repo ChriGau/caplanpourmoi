@@ -9,9 +9,10 @@ class GoFindSolutionsV1Service
 
   attr_reader :slotgroups_array
 
-  def initialize(planning, slotgroups_array)
+  def initialize(planning, slotgroups_array, compute_solution_instance)
     @slotgroups_array = slotgroups_array
     @planning = planning
+    @compute_solution = compute_solution_instance
   end
 
   def perform
@@ -61,7 +62,7 @@ class GoFindSolutionsV1Service
         # self.planning_possibility = []
         # next if solution_id ==  1000  # pour stopper les itérations au bout de la nième solution
         # we skip this branch if we must
-        # next if must_we_jump_to_another_branch?(tree, next_tree, branch, next_branch)
+        next if must_we_jump_to_another_branch?(tree, next_tree, branch, next_branch)
         # let's build a planning possibility
         for sg_ranking in 1..nb_slotgroups # slotgroups rankings
           position = identify_position(tree, branch, sg_ranking)
@@ -75,7 +76,8 @@ class GoFindSolutionsV1Service
         # *** now we have a planning_possibility which contains a possibility of planning ***
         possibility_id += 1
         # evaluate overlaps for a planning_possibility
-        result_overlaps_check = evaluate_overlaps_for_a_planning(planning_possibility, overlaps_best_scoring)
+        result_overlaps_check = evaluate_overlaps_for_a_planning(planning_possibility,
+                                                                 overlaps_best_scoring)
         # fix_overlaps of this planning_possibility
         planning_possibility = fix_overlaps(planning_possibility,
                                             result_overlaps_check)
@@ -210,8 +212,7 @@ def pick_best_solutions(solutions_array, how_many_solutions_do_we_store)
 
   def identify_slotgroup_combination(position, sg_ranking)
     # we need the combination of users #position for this sg
-    slotgroup = find_slotgroup_by_ranking(sg_ranking)
-    slotgroup.combinations_of_available_users[position - 1]
+    @compute_solution.calcul_solution_v1.slotgroups_array.find{ |x| x.ranking_algo == sg_ranking }.combinations_of_available_users[position - 1].clone
   end
 
   def evaluate_overlaps_for_a_planning(planning, overlaps_best_scoring)
@@ -308,27 +309,20 @@ def pick_best_solutions(solutions_array, how_many_solutions_do_we_store)
     # régler les pbs d'overlap pour une planning_possibility
     # s'il existe >0 overlaps
     unless result_overlaps_check[:nb_overlaps_of_a_planning].zero?
-      @slotgroups_array.each do |sg_hash|
-        # skip si pas d'overlap pour ce sg
-        unless sg_hash.overlaps.empty?
-          # si overlap
-          sg_hash.overlaps.each do |overlap_hash|
-            # mettre les users du sg overlappé en overlap à no solution
-            users_overlapped_sg = planning_possibility.select{ |h| h[:sg_id] == overlap_hash[:slotgroup_id] }.first[:combination] # => Array of users'ids
-            users_overlapped_sg.each do |user_id|
-              index_user_id_to_replace = nil # init
-              index_overlap_user_id_to_delete = nil # init
-              if planning_possibility.select{ |h| h[:sg_id] == sg_hash.id }.first[:combination].include?(user_id) # ce user est en overlap
-                planning_possibility_hash = planning_possibility.select{ |h| h[:sg_id] == overlap_hash[:slotgroup_id] }.first
-                # get index of user in overlapped sg combination
-                index_user_id_to_replace = planning_possibility_hash[:combination].index(user_id)
-                sg_hash_combination_snapshot = @slotgroups_array.select{|x| x.id == overlap_hash[:slotgroup_id]}.first.combinations_of_available_users.freeze
-                b = sg_hash_combination_snapshot.clone
-                replace_user_in_planning_possibility_hash(planning_possibility_hash, index_user_id_to_replace)
-                @slotgroups_array.select{|x| x.id == overlap_hash[:slotgroup_id]}.first.combinations_of_available_users = b
-                binding.pry
-                evaluate_overlaps_for_a_planning(planning_possibility, 0)
-              end
+      # TODO : order @compute_solution.overlaps par ordre de slotgroup du + au - prioritaire
+      @compute_solution.calcul_solution_v1.slotgroups_array.each do |slotgroup|
+        slotgroup.overlaps.each do |overlaps| # overlaps => [ {}, {},... ]
+          # mettre les users du sg overlappé en overlap à no solution
+          users_overlapped_sg = planning_possibility.select{ |h| h[:sg_id] == overlaps[:slotgroup_id] }.first[:combination] # => Array of users'ids
+          users_initial_sg = planning_possibility.select{ |h| h[:sg_id] == slotgroup.id }.first[:combination]
+          users_overlapped_sg.each do |user|
+            if users_initial_sg.include?(user) # ce user est en overlap
+              planning_possibility_hash = planning_possibility.select{ |h| h[:sg_id] == overlaps[:slotgroup_id] }.first
+              # get index of user in overlapped sg combination
+              index_user_to_replace = planning_possibility_hash[:combination].index(user)
+              replace_user_in_planning_possibility_hash(planning_possibility_hash, index_user_to_replace)
+              # binding.pry
+              evaluate_overlaps_for_a_planning(planning_possibility, 0)
             end
           end
         end
@@ -338,9 +332,9 @@ def pick_best_solutions(solutions_array, how_many_solutions_do_we_store)
     return planning_possibility
   end
 
-  def replace_user_in_planning_possibility_hash(planning_possibility_hash, index_of_user_id)
-    planning_possibility_hash[:combination].delete_at(index_of_user_id)
-    planning_possibility_hash[:combination] << determine_no_solution_user.id
+  def replace_user_in_planning_possibility_hash(planning_possibility_hash, index_of_user_to_replace)
+    planning_possibility_hash[:combination][index_of_user_to_replace] = determine_no_solution_user
+    # script bis = .delete_at(pos) puis planning_possibility_hash[:combination] << determine_no_solution_user.id
   end
 
   def evaluate_nb_conflicts_for_a_planning_possibility(planning_possibility, nb_conflicts_best_scoring)

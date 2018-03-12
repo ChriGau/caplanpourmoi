@@ -21,6 +21,7 @@
 
 class CalculSolutionV1 < ApplicationRecord
   belongs_to :compute_solution
+  serialize :slotgroups_array
 
   attr_accessor :planning, :calcul_arrays, :build_solutions, :solution
 
@@ -46,7 +47,9 @@ class CalculSolutionV1 < ApplicationRecord
     if need_a_calcul # there are some sg to simulate (case 1)
       # step 4: go through plannings possibilities, assess them, select best solution. (2 cases)
       puts 'GoFindSolutionsV1Service --> initiated'
-      build_solutions = GoFindSolutionsV1Service.new(planning, to_simulate_slotgroups_array).perform
+      build_solutions = GoFindSolutionsV1Service.new(planning,
+                                                     to_simulate_slotgroups_array,
+                                                     self.compute_solution).perform
       puts 'GoFindSolutionsV1Service --> done. --> storing best solution'
       # update return variables
       test_possibilities = build_solutions[:test_possibilities]

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180216151653) do
+ActiveRecord::Schema.define(version: 20180309104834) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -65,6 +65,14 @@ ActiveRecord::Schema.define(version: 20180216151653) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_constraints_on_user_id", using: :btree
+  end
+
+  create_table "overlaps", force: :cascade do |t|
+    t.integer "slotgroup_id"
+    t.integer "overlapped_slotgroup_id"
+    t.text    "combinations_available_users"
+    t.integer "compute_solution_id"
+    t.index ["compute_solution_id"], name: "index_overlaps_on_compute_solution_id", using: :btree
   end
 
   create_table "plannings", force: :cascade do |t|
@@ -160,6 +168,7 @@ ActiveRecord::Schema.define(version: 20180216151653) do
   add_foreign_key "calcul_solution_v1s", "compute_solutions"
   add_foreign_key "compute_solutions", "plannings"
   add_foreign_key "constraints", "users"
+  add_foreign_key "overlaps", "compute_solutions"
   add_foreign_key "role_users", "roles"
   add_foreign_key "role_users", "users"
   add_foreign_key "slots", "plannings"

@@ -31,6 +31,7 @@ class CreateSlotgroupsService
     determine_ranking_algo # step 5.1.
     determine_calculation_interval # step 5.2.2.
     save_calcul_items(calcul)
+    save_overlapping_information_into_overlaps_table(slotgroups_array) # save overlapping information
     { slotgroups_array: slotgroups_array, slots_array: slots_array }
   end
 
@@ -135,8 +136,7 @@ class CreateSlotgroupsService
     slotgroups_array.each do |slotgroup|
       slotgroup.nb_combinations_available_users = 0
       combinations_size = slotgroup.determine_nb_slots_to_simulate
-      combi_intermediate = slotgroup.list_available_users.map{|u| u.id}
-      slotgroup.combinations_of_available_users = combi_intermediate.combination(combinations_size).to_a
+      slotgroup.combinations_of_available_users = slotgroup.list_available_users.combination(combinations_size).to_a
       slotgroup.nb_combinations_available_users = slotgroup.combinations_of_available_users.count unless slotgroup.combinations_of_available_users[0].empty?
     end
   end
@@ -207,5 +207,19 @@ class CreateSlotgroupsService
     # overlap if (start1 - end2) * (start1 - end2) > 0
     ((slotgroup_one.start_at - slotgroup_two.end_at) *
     (slotgroup_two.start_at - slotgroup_one.end_at)).positive?
+  end
+
+  def save_overlapping_information_into_overlaps_table(slotgroups_array)
+    slotgroups_array.each do |slotgroup_hash|
+      slotgroup_hash.overlaps.each do |overlap_hash|
+        # overlap_hash = { :slotgroup_id, :users }
+        # get initial_slotgroup_id
+        initial_slotgroup_id = slotgroup_hash.id
+        overlapped_slotgroup_id = overlap_hash[:slotgroup_id]
+        Overlap.create(slotgroup_id: initial_slotgroup_id,
+                       overlapped_slotgroup_id: overlapped_slotgroup_id,
+                       compute_solution_id: @calcul.compute_solution.id)
+      end
+    end
   end
 end
