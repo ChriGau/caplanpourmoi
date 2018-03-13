@@ -117,7 +117,27 @@
 
     },
 
-
+    eventResize: function( event, delta, revertFunc, jsEvent, ui, view ) {
+      var planning_id = <%= @planning.id %>;
+      var slot_id = event.id;
+      var build_url = "/plannings/" + planning_id + "/slots/" + slot_id;
+      var slot_role_name = event.title;
+       event_data = {
+        slot: {
+            id: slot_id,
+            role_id: event.role_id,
+            start: event.start.format(),
+            end: event.end.format(),
+            start_at: event.start.format(),
+            end_at: event.end.format()
+          }
+      };
+      $.ajax({
+        url: build_url,
+        data: event_data,
+        type: 'PATCH'
+      });
+     },
 
     eventClick: function( calEvent, jsEvent, view) {
       $(this).css('border-color', 'red');
