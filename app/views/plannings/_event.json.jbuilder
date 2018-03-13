@@ -1,5 +1,5 @@
 # rubocop:disable LineLength
-json.extract! slot, :id, :role_id, :created_at, :updated_at, :planning_id
+json.extract! slot, :id, :role_id, :created_at, :updated_at, :planning_id, :start_at, :end_at
 json.start slot.start_at
 json.end slot.end_at
 json.title slot.role.name

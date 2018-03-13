@@ -41,8 +41,10 @@
     <div class="col-xs-12">
       <div class="form-group button-group">
           <%= f.submit "Valider", class: "btn btn-success create_slot" %>
+          <%= f.button :button, "Modifier", type: :reset, class: "btn btn-success update_slot" %>
           <%= f.button :button, "Cancel", type: :reset, class: "btn btn-none cancel-button" %>
           <%= f.button :button, "Supprimer", type: :reset, class: "btn btn-none delete_slot" %>
+
       </div>
     </div>
     <% end %>

@@ -90,7 +90,7 @@ class SlotsController < ApplicationController
   end
 
   def slot_params
-    params.require(:slot).permit(:start_at, :end_at, :role_id, :user_id)
+    params.require(:slot).permit(:start_at, :end_at, :role_id)
   end
 
   private

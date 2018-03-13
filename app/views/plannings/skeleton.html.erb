@@ -57,6 +57,7 @@
     editable: true, // events on the calendar can be modified
     droppable: true, // allows things to be dropped onto the calendar
     selectable: true,
+    eventLimit: true,
     minTime: "07:00:00", // starting time, even when scrolled all the way up
     maxTime: "22:00:00",
     defaultView: "agendaWeek",
@@ -90,23 +91,48 @@
       var date = (new Date(end.format()).getDay());
       $('input:checkbox[value='+date+']')[0].disabled= true;
       $('input:checkbox[value='+date+']').parent().parent().addClass('unselectable');
+    },
 
+    eventDrop: function(event, delat, revertFunc){
+      var planning_id = <%= @planning.id %>;
+      var slot_id = event.id;
+      var build_url = "/plannings/" + planning_id + "/slots/" + slot_id;
+      var slot_role_name = event.title;
+      console.log(event.role_id);
+       event_data = {
+        slot: {
+            id: slot_id,
+            role_id: event.role_id,
+            start: event.start.format(),
+            end: event.end.format(),
+            start_at: event.start.format(),
+            end_at: event.end.format()
+          }
+      };
+      $.ajax({
+        url: build_url,
+        data: event_data,
+        type: 'PATCH'
+      });
 
     },
+
+
+
     eventClick: function( calEvent, jsEvent, view) {
       $(this).css('border-color', 'red');
       $(this).css('border-width', 'thick');
       $(".slot_form").show();
-      // disable 'Valider' button
-      $('.create_slot').prop('disabled', true);
+      // $('.create_slot').prop('disabled', true); // disable le bouton Valider du slot_form
+      $('.create_slot').hide();
       // get variables
       var planning_id = <%= @planning.id %>;
       var slot_id = calEvent.id;
       var role_id = calEvent.role_id;
       var start_date = new Date(calEvent.start.format());
-      var start_date = new Date(start_date.setHours(start_date.getHours() -2));
+      var start_date = new Date(start_date.setHours(start_date.getHours() ));
       var end_date = new Date(calEvent.end.format());
-      var end_date = new Date(end_date.setHours(end_date.getHours() -2));
+      var end_date = new Date(end_date.setHours(end_date.getHours() ));
       // set default values to the form
       $('#datetimepicker1 .form-control').val(start_date.toLocaleDateString('fr-FR', {timezone: 'UTC', hour: '2-digit', minute: '2-digit'}));
       $("#datetimepicker1").datetimepicker({
@@ -119,6 +145,9 @@
       $('#slot_role_id').val(role_id);
       // Ajax request to delete a slot
       var build_url = "/plannings/" + planning_id + "/slots/" + slot_id;
+      $(".update_slot").click( function(){
+
+      });
       $(".delete_slot").click( function (){
         $.ajax({
           type: "DELETE",
