@@ -19,10 +19,11 @@ class SaveSolutionsAndSolutionSlotsService
         create_solution_slots(@slotgroups_array, solution[:planning_possibility], solution_instance)
         # calculate nb of conflicts now that the solution_lots have been created + determine relevance
         solution_instance.evaluate_relevance
+        solution_instance.total_over_time
       end
     else
       solution_instance = create_solution(@compute_solution)
-      create_solution_slots_for_a_group_of_slots(@planning.slots.map(&:id), solution_instance)
+      create_solution_slots_for_a_group_of_slots(@planning.slots.pluck(:id), solution_instance)
       # calculate nb of conflicts now that the slots have been created
       solution_instance.evaluate_relevance
     end
