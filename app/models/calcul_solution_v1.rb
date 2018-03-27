@@ -21,6 +21,7 @@
 
 class CalculSolutionV1 < ApplicationRecord
   belongs_to :compute_solution
+  serialize :slotgroups_array
 
   attr_accessor :planning, :calcul_arrays, :build_solutions, :solution
 
@@ -46,7 +47,9 @@ class CalculSolutionV1 < ApplicationRecord
     if need_a_calcul # there are some sg to simulate (case 1)
       # step 4: go through plannings possibilities, assess them, select best solution. (2 cases)
       puts 'GoFindSolutionsV1Service --> initiated'
-      build_solutions = GoFindSolutionsV1Service.new(planning, self, to_simulate_slotgroups_array).perform
+      build_solutions = GoFindSolutionsV1Service.new(planning,
+                                                     to_simulate_slotgroups_array,
+                                                     self.compute_solution).perform
       puts 'GoFindSolutionsV1Service --> done. --> storing best solution'
       # update return variables
       test_possibilities = build_solutions[:test_possibilities]
@@ -61,7 +64,6 @@ class CalculSolutionV1 < ApplicationRecord
     SaveSolutionsAndSolutionSlotsService.new( calcul_arrays[:slotgroups_array],
       calcul_arrays[:slots_array], planning, compute_solution, list_of_solutions ).perform
     puts 'SaveSolutionsAndSolutionSlotsService --> done'
-
 
     { calcul_arrays: calcul_arrays,
       test_possibilities: test_possibilities,
@@ -80,6 +82,30 @@ class CalculSolutionV1 < ApplicationRecord
       a << slotgroup if slotgroup.simulation_status == true
     end
     a
+  end
+
+  def evaluate_nb_conflicts_for_a_group_of_solutions(solutions_array)
+    solutions_array.each do |solution|
+      solution.solution_slots.each do |solution_slot|
+        if solution_slot.user_id == determine_no_solution_user.id
+          if !solution.nb_conflicts.nil?
+            solution.nb_conflicts = 1
+          else
+            solution.nb_conflicts += 1
+          end
+        end
+      end
+    end
+  end
+
+  def determine_no_solution_user
+    User.find_by(first_name: 'no solution')
+  end
+
+  def update_relevance(solutions_array)
+    solutions_array.each do |solution|
+      solution.evaluate_relevance
+    end
   end
 end
 
