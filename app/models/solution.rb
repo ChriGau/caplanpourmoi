@@ -39,9 +39,8 @@ class Solution < ApplicationRecord
 
   def evaluate_relevance
     nb_conflicts = solution_slots.where(user: User.find_by(first_name: 'no solution')).count
-    self.nb_conflicts = nb_conflicts
-    self.relevance = !nb_conflicts.nil? && nb_conflicts.zero? ? :optimal : :partial
-    self.save!
+    relevance = !nb_conflicts.nil? && nb_conflicts.zero? ? :optimal : :partial
+    update(relevance: relevance, nb_conflicts: nb_conflicts)
   end
 
 end
