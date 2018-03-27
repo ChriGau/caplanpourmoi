@@ -25,7 +25,7 @@ class Slot < ApplicationRecord
   belongs_to :planning, optional: true
   belongs_to :role
   validates :role_id, presence: true
-  after_save :set_planning_status
+  after_save :set_status
   has_many :solution_slots, dependent: :destroy
   has_many :solutions, through: :solution_slots
 
@@ -35,6 +35,10 @@ class Slot < ApplicationRecord
       slot_templates << Slot.new(role_id: role.id)
     end
     slot_templates
+  end
+
+  def chosen_solution
+    solutions.find_by(effectivity: :chosen)
   end
 
   def initialize_slot_hash
@@ -68,7 +72,8 @@ class Slot < ApplicationRecord
 
   private
 
-  def set_planning_status
+  def set_status
+    planning&.chosen_solution&.not_chosen!
     planning&.set_status
   end
 end

@@ -35,5 +35,4 @@ class Solution < ApplicationRecord
 
   enum effectivity: [:not_chosen, :chosen]
   enum relevance: [:optimal, :partial]
-
 end

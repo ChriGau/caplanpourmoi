@@ -15,7 +15,8 @@ class SaveSolutionsAndSolutionSlotsService
   def perform
     if !@list_of_solutions.nil?
       @list_of_solutions.each do |solution|
-        solution_instance = create_solution(@compute_solution, solution[:nb_overlaps],)
+        complete = !@slotgroups_array.map(&:simulation_status).include?(false)
+        solution_instance = create_solution(@compute_solution, solution[:nb_overlaps], complete)
         create_solution_slots(@slotgroups_array, solution[:planning_possibility], solution_instance)
       end
     else
@@ -24,8 +25,8 @@ class SaveSolutionsAndSolutionSlotsService
     end
   end
 
-  def create_solution(compute_solution, nb_overlaps = nil)
-    status = !nb_overlaps.nil? && nb_overlaps.zero? ? :optimal : :partial
+  def create_solution(compute_solution, nb_overlaps = nil, complete = false)
+    status = !nb_overlaps.nil? && nb_overlaps.zero? && complete ? :optimal : :partial
     Solution.create(planning: @planning, compute_solution: compute_solution, nb_overlaps: nb_overlaps, relevance: status)
   end
 
