@@ -165,9 +165,6 @@
       $('#slot_role_id').val(role_id);
       // Ajax request to delete a slot
       var build_url = "/plannings/" + planning_id + "/slots/" + slot_id;
-      $(".update_slot").click( function(){
-
-      });
       $(".delete_slot").click( function (){
         $.ajax({
           type: "DELETE",
@@ -189,9 +186,6 @@
         var start_chosen = $("#datetimepicker1").find("input").val();
         var end_chosen = $("#datetimepicker2").find("input").val();
         var role_id = $("#slot_role_id").val();
-        console.log(start_chosen);
-        console.log(end_chosen);
-        console.log(role_id);
         event_data = {
               slot: {
                   id: calEvent.id,
@@ -205,8 +199,9 @@
         $.ajax({
           url: build_url,
           data: event_data,
-          type: 'PATCH'
+          type: 'PATCH',
         });
+        location.reload();
       });
 
     }
