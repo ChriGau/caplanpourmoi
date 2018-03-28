@@ -28,6 +28,9 @@
               <div class="first-name">
                 <%= user.first_name.capitalize! %>
               </div>
+              <div class="working-hours">
+                <%= user.working_hours %> h/semaine
+              </div>
               <div class="roles">
                 <p class="user-role">
                   <% user.roles.each do |role|  %>

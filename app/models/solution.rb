@@ -12,6 +12,7 @@
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
 #  nb_conflicts        :integer
+#  nb_under_hours      :integer
 #
 # Indexes
 #
@@ -48,4 +49,46 @@ class Solution < ApplicationRecord
     self.relevance = !nb_conflicts.nil? && nb_conflicts.zero? ? :optimal : :partial
     self.save!
   end
+
+  def employees_involved
+    solution_slots.map(&:user).uniq
+  end
+
+  def employees_names
+    employees_involved.pluck(:first_name).reject{|name| name == "no solution"}
+  end
+
+  def employees_overtime
+    employees_overtime = {}
+    employees_involved.each do |employee|
+      seconds = self.solution_slots.where(user: employee).map{|ss| ss.slot.end_at - ss.slot.start_at}.reduce(:+).to_i
+      employees_overtime[employee.first_name.capitalize] = seconds - (employee.working_hours * 3600)
+    end
+    employees_overtime
+  end
+
+  def total_over_time
+    overtime = undertime = 0
+    employees_overtime.values.each do |value|
+      overtime += value if value > 0
+      undertime += value if value < 0
+    end
+    update(nb_extra_hours: overtime, nb_under_hours: undertime)
+  end
+
+  def employees_nb_days
+    employees_nb_days = {}
+    employees_involved.each do |employee|
+      days = []
+      solution_slots.where(user: employee).map do |solution_slot|
+        day_number = solution_slot.start_at.strftime("%u")
+        days.push(day_number) unless days.include?(day_number)
+
+      end
+      employees_nb_days[employee.first_name] = days.length
+    end
+    employees_nb_days
+  end
+
+
 end
