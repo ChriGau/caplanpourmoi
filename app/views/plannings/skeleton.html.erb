@@ -185,6 +185,30 @@
           }
         });
       });
+      $(".update_slot").click( function (){
+        var start_chosen = $("#datetimepicker1").find("input").val();
+        var end_chosen = $("#datetimepicker2").find("input").val();
+        var role_id = $("#slot_role_id").val();
+        console.log(start_chosen);
+        console.log(end_chosen);
+        console.log(role_id);
+        event_data = {
+              slot: {
+                  id: calEvent.id,
+                  role_id: role_id,
+                  start: start_chosen,
+                  end: end_chosen,
+                  start_at: start_chosen,
+                  end_at: end_chosen
+                }
+            };
+        $.ajax({
+          url: build_url,
+          data: event_data,
+          type: 'PATCH'
+        });
+      });
+
     }
   });
 
