@@ -26,6 +26,10 @@ class Planning < ApplicationRecord
     self.status ||= :not_started
   end
 
+  def chosen_solution
+    solutions.find_by(effectivity: :chosen)
+  end
+
   def valid_compute_solutions
     compute_solutions.where('created_at > ?', self.slots.map(&:updated_at).max).order(created_at: :desc)
   end
@@ -37,9 +41,9 @@ class Planning < ApplicationRecord
   def set_status
     if slots.empty?
       not_started!
-    elsif solutions.exists?(relevance: :optimal)
+    elsif !chosen_solution.nil? && chosen_solution&.optimal?
       complete!
-    elsif solutions.exists?(relevance: :partial)
+    elsif !chosen_solution.nil? && chosen_solution&.partial?
       with_conflicts!
     else
       in_progress!
