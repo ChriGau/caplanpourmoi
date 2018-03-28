@@ -70,7 +70,13 @@
                 <div class="sol-status label label-caplan">#<%= index + 1 %></div>
                 <div class="sol-details">
                   <strong> Indice de pertinence <span class="badge badge-blue" ><%= solution.relevance %></span></strong> (<%= solution.nb_extra_hours %>heures sup et <%= solution.relevance %> heures d'ubiquité)
+                  <% unless (solution.nb_conflicts.nil? || solution.nb_conflicts.zero?)  %>
                     <span class="badge badge-orange <%= "badge-red-hide" if (solution.nb_conflicts.nil? or solution.nb_conflicts.zero?) %> "><%= pluralize(solution.nb_conflicts, "créneau vide", "créneaux vides") %></span>
+                  <% end %>
+                  <% @employees_nb_days = solution.employees_nb_days %>
+                  <% solution.employees_overtime.each do |e, s| %>
+                    <%= e %> (<%= s > 0 ? "extra #{s_in_h(s)}" : "manque #{s_in_h(-s)}" %> en <%= @employees_nb_days[e.downcase] %> jours)
+                  <% end %>
                 </div>
                 <div class="action-group">
                     <%= link_to change_effectivity_planning_solution_path(id: solution) do %>
