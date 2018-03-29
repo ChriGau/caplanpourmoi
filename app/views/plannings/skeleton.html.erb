@@ -66,11 +66,11 @@
     height: "auto", // implique pas de scroll à l'intérieur du calendrier
     aspectRatio: 4,
     events: '<%= events_planning_path(@planning.id, format: :json) %>',
+
     // what happens when we select a time period on the calendar
     select: function( start, end, jsEvent, view ) {
-
       $(".slot_form").show();
-      $('.create_slot').prop('disabled', false);
+      $('.create_slot').show(); // au cas où action effectuée avant qui cache cet item (delete ou update par exemple)
       // get form to create a new slot
       var planning_id = <%= @planning.id %>;
       // set default value of the date inputs (inside simple form)
@@ -98,7 +98,6 @@
       var slot_id = event.id;
       var build_url = "/plannings/" + planning_id + "/slots/" + slot_id;
       var slot_role_name = event.title;
-      console.log(event.role_id);
        event_data = {
         slot: {
             id: slot_id,
@@ -112,7 +111,16 @@
       $.ajax({
         url: build_url,
         data: event_data,
-        type: 'PATCH'
+        format: 'js',
+        type: 'PATCH',
+        success: function(data) {
+          console.log(Event);
+          console.log("sucess - PATCH de eventDrop");
+        },
+        error: function(jqXHR) {
+          console.log("ajax echec - PATCH de eventDrop");
+          console.log(jqXHR.responseText);
+        }
       });
 
     },
@@ -121,7 +129,6 @@
       var planning_id = <%= @planning.id %>;
       var slot_id = event.id;
       var build_url = "/plannings/" + planning_id + "/slots/" + slot_id;
-      var slot_role_name = event.title;
        event_data = {
         slot: {
             id: slot_id,
@@ -135,7 +142,17 @@
       $.ajax({
         url: build_url,
         data: event_data,
-        type: 'PATCH'
+        format: 'js',
+        type: 'PATCH',
+        success: function(data) {
+          console.log(event);
+          console.log("requete PATCH reSize Event effectuée");
+        },
+        error: function(jqXHR) {
+          console.log("ajax echec - PATCH de eventResize");
+          console.log(event_data);
+          console.log(jqXHR.responseText);
+        }
       });
      },
 
@@ -143,7 +160,6 @@
       $(this).css('border-color', 'red');
       $(this).css('border-width', 'thick');
       $(".slot_form").show();
-      // $('.create_slot').prop('disabled', true); // disable le bouton Valider du slot_form
       $('.create_slot').hide();
       // get variables
       var planning_id = <%= @planning.id %>;
@@ -163,29 +179,40 @@
         locale: 'FR'
       });
       $('#slot_role_id').val(role_id);
+
       // Ajax request to delete a slot
       var build_url = "/plannings/" + planning_id + "/slots/" + slot_id;
       $(".delete_slot").click( function (){
+        event_data = {
+          slot: {
+              id: calEvent.id,
+              role_id: role_id,
+              start: start_date,
+              end: end_date,
+              start_at: start_date,
+              end_at: end_date
+            }
+        };
         $.ajax({
-          type: "DELETE",
           url: build_url,
+          data: event_data,
           format: 'js',
+          type: "DELETE",
           success: function(data) {
             console.log(Event);
-            // recharger la page
-            location.reload();
+            console.log(event_data);
           },
           error: function(jqXHR) {
             console.log("ajax echec");
             console.log(jqXHR.responseText);
-            location.reload();
           }
         });
       });
+
       $(".update_slot").click( function (){
         var start_chosen = $("#datetimepicker1").find("input").val();
         var end_chosen = $("#datetimepicker2").find("input").val();
-        var role_id = $("#slot_role_id").val();
+        var role_id = Number($("#slot_role_id").val());
         event_data = {
               slot: {
                   id: calEvent.id,
@@ -199,12 +226,22 @@
         $.ajax({
           url: build_url,
           data: event_data,
+          format: 'js',
           type: 'PATCH',
+          success: function(data) {
+            console.log(Event);
+          },
+          error: function(jqXHR) {
+            console.log("ajax echec - PATCH de .update_slot");
+            console.log(jqXHR.responseText);
+            console.log(event_data);
+            $(".slot_form").hide();
+            $('#calendar').fullCalendar( 'refetchEvents' );
+          }
         });
-        location.reload();
       });
 
-    }
+    } // fin de eventClick
   });
 
   </script>

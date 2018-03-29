@@ -12,11 +12,6 @@ $(document).ready(function() {
   });
   // assign default event data to draggable elements
   $('.draggable').data('duration', '03:00');
-  // hide slot_form + reload page when clicking on the 'Valider' button
-  $('.create_slot').click(function(){
-    $(".slot_form").hide();
-    location.reload();
-  });
   // when clicking on its 'Cancel' button
   $(".cancel-button").click(function(){
     $(".slot_form").hide();
@@ -25,4 +20,5 @@ $(document).ready(function() {
     // 2. reload page
     $('#calendar').fullCalendar( 'refetchEvents' );
   });
+
 });
