@@ -6,6 +6,7 @@
         <div class="triangle" style= "left:<%= @triangle_position %>" ></div>
       </div>
     </div>
+
     <div class="row tamere">
       <div class="slot_form">
         <%= render 'slots/form', locals: {planning: @planning, slot: @slot} %>
@@ -57,6 +58,7 @@
     editable: true, // events on the calendar can be modified
     droppable: true, // allows things to be dropped onto the calendar
     selectable: true,
+    unselectAuto: true,
     eventLimit: true,
     minTime: "07:00:00", // starting time, even when scrolled all the way up
     maxTime: "22:00:00",
@@ -180,9 +182,45 @@
       });
       $('#slot_role_id').val(role_id);
 
+      $('.update_slot').off('click', function() {
+      });
+      // when clicking on update_slot
+      $(".update_slot").click( function (){
+        var start_chosen = $("#datetimepicker1").find("input").val();
+        var end_chosen = $("#datetimepicker2").find("input").val();
+        var role_id = Number($("#slot_role_id").val());
+        event_data_bis = {
+              slot: {
+                  id: calEvent.id,
+                  role_id: role_id,
+                  start: start_chosen,
+                  end: end_chosen,
+                  start_at: start_chosen,
+                  end_at: end_chosen
+                }
+            };
+        $.ajax({
+          url: build_url,
+          data: event_data_bis,
+          format: 'js',
+          type: 'PATCH',
+          success: function(data) {
+            console.log(Event);
+            $('.update_slot').unbind();
+            $('.delete_slot').unbind();
+          },
+          error: function(jqXHR) {
+            console.log("ajax echec - PATCH de .update_slot");
+            console.log(jqXHR.responseText);
+            $(".slot_form").hide();
+            $('#calendar').fullCalendar( 'refetchEvents' );
+          }
+        }); // fin ajax request
+      }); // fin de update_slot
+
       // Ajax request to delete a slot
       var build_url = "/plannings/" + planning_id + "/slots/" + slot_id;
-      $(".delete_slot").click( function (){
+      $(".delete_slot").click( function (data){
         event_data = {
           slot: {
               id: calEvent.id,
@@ -200,7 +238,7 @@
           type: "DELETE",
           success: function(data) {
             console.log(Event);
-            console.log(event_data);
+            $('.delete_slot').unbind();
           },
           error: function(jqXHR) {
             console.log("ajax echec");
@@ -208,41 +246,10 @@
           }
         });
       });
-
-      $(".update_slot").click( function (){
-        var start_chosen = $("#datetimepicker1").find("input").val();
-        var end_chosen = $("#datetimepicker2").find("input").val();
-        var role_id = Number($("#slot_role_id").val());
-        event_data = {
-              slot: {
-                  id: calEvent.id,
-                  role_id: role_id,
-                  start: start_chosen,
-                  end: end_chosen,
-                  start_at: start_chosen,
-                  end_at: end_chosen
-                }
-            };
-        $.ajax({
-          url: build_url,
-          data: event_data,
-          format: 'js',
-          type: 'PATCH',
-          success: function(data) {
-            console.log(Event);
-          },
-          error: function(jqXHR) {
-            console.log("ajax echec - PATCH de .update_slot");
-            console.log(jqXHR.responseText);
-            console.log(event_data);
-            $(".slot_form").hide();
-            $('#calendar').fullCalendar( 'refetchEvents' );
-          }
-        });
-      });
-
     } // fin de eventClick
   });
+
+
 
   </script>
   <% end %>
