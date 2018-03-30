@@ -7,27 +7,33 @@
       </div>
     </div>
 
-    <div class="row tamere">
-      <div class="slot_form">
-        <%= render 'slots/form', locals: {planning: @planning, slot: @slot} %>
-      </div>
-    </div>
-
-    <div class="row spacing">
-      <ul class="list-inline dragndrop-metiers">
-        <% @slot_templates.each do |slot| %>
-        <li style="background-color: <%= slot.role.role_color %>; <%= background_text_color(slot) %>"> <%= slot.role.name.capitalize %></li>
-        <% end %>
-      </ul>
-    </div>
-
-    <div class="row">
-      <div class="col-xs-12 le_calendrier">
-        <div id = "calendar">
+    <div class="modal fade modal_events slot_form" tabindex="-1" role="dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">Propriétés du créneau</h4>
+        </div>
+        <div class="modal-body">
+            <%= render 'slots/form', locals: {planning: @planning, slot: @slot} %>
         </div>
       </div>
     </div>
+
+  <div class="row spacing">
+    <ul class="list-inline dragndrop-metiers">
+      <% @slot_templates.each do |slot| %>
+      <li style="background-color: <%= slot.role.role_color %>; <%= background_text_color(slot) %>"> <%= slot.role.name.capitalize %></li>
+      <% end %>
+    </ul>
   </div>
+
+  <div class="row">
+    <div class="col-xs-12 le_calendrier">
+      <div id = "calendar">
+      </div>
+    </div>
+  </div>
+</div>
 
 <!--  _______________________ CSS Calendar specific skeleton ___________________________ -->
 
@@ -71,8 +77,7 @@
 
     // what happens when we select a time period on the calendar
     select: function( start, end, jsEvent, view ) {
-      $(".slot_form").show();
-      $('.create_slot').show(); // au cas où action effectuée avant qui cache cet item (delete ou update par exemple)
+      $(".modal_events").modal('show');
       // get form to create a new slot
       var planning_id = <%= @planning.id %>;
       // set default value of the date inputs (inside simple form)
@@ -161,7 +166,7 @@
     eventClick: function( calEvent, jsEvent, view) {
       $(this).css('border-color', 'red');
       $(this).css('border-width', 'thick');
-      $(".slot_form").show();
+      $(".modal_events").modal('show');
       $('.create_slot').hide();
       // get variables
       var planning_id = <%= @planning.id %>;
