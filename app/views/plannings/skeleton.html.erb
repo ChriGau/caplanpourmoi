@@ -7,7 +7,7 @@
       </div>
     </div>
 
-    <div class="modal fade modal_events slot_form" tabindex="-1" role="dialog">
+    <div class="modal fade modal-events slot_form" tabindex="-1" role="dialog">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -43,12 +43,6 @@
    display: none;
  }
 
- .modal_events{
-   width: 700px;
-   height: 800px;
-   position: absolute;
-   text-align: center;
-}
 </style>
 
 <!-- ___________________________ JS __________________________________ -->
@@ -57,6 +51,10 @@
 
 <%= content_for(:after_js) do %>
 <script type="text/javascript">
+
+  $(".modal-events").draggable({
+    handle: ".modal-header"
+});
 
   $('#calendar').fullCalendar({
     //calendar attributes
@@ -84,7 +82,7 @@
 
     // what happens when we select a time period on the calendar
     select: function( start, end, jsEvent, view ) {
-      $(".modal_events").modal('show');
+      $(".modal-events").modal('show');
       $('.create_slot').show();
       $('.update_slot').hide();
       $('.delete_slot').hide();
@@ -177,7 +175,7 @@
     eventClick: function( calEvent, jsEvent, view) {
       $(this).css('border-color', 'red');
       $(this).css('border-width', 'thick');
-      $(".modal_events").modal('show');
+      $(".modal-events").modal('show');
       $('.create_slot').hide();
       $('.update_slot').show();
       $('.delete_slot').show();
