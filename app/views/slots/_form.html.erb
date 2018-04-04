@@ -3,7 +3,7 @@
 <%= simple_form_for [@planning, @slot],remote: true do |f| %>
   <%= f.error_notification %>
     <div class="row">
-      <div class="col-xs-6">
+      <div class="col-xs-8">
         <div class="form-group dates-input">
           <div class='input-group date' id='datetimepicker1'>
             <input name="slot[start_at]" type='text' value="<%= @slot.start_at %>" class="form-control" />
@@ -26,7 +26,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-xs-4">
+      <div class="col-xs-6">
         <div class="form-group">
           <ul class="list-inline" >
             <% [1,2,3,4,5,6].each do |daynum| %>
