@@ -5,12 +5,7 @@ class UsersController < ApplicationController
 
   # rubocop:disable AbcSize, MethodLength
   def show
-    @plannings = Planning.all.order(:week_number)
-    @roles = Role.all
-    @users = User.where.not(first_name: 'no solution')
-    @slot_templates = Slot.slot_templates # liste des roles
     @user = User.find(params[:id])
-    @planning = Planning.first
     @constraints = @user.constraints
     @constraints_array = []
     @constraints.each do |constraint|

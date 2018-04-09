@@ -1,0 +1,36 @@
+
+<div class="infos">
+  <div class="row">
+    <div class="col-xs-6">
+      <ul class="list-group">
+        <li class="list-group-item justify-content-between">
+          <%= @user.email %> <br>
+        </li>
+        <li class="list-group-item justify-content-between">
+          +33 6 89 90 95 26<br>
+        </li>
+        <li class="list-group-item justify-content-between">
+          Contrat :
+          <span class="badge badge-default badge-pill"><%= @user.working_hours %>h/semaine</span>
+        </li>
+      </ul>
+      <% @user.roles.each do |role| %>
+        <button class="btn" style="width: 130px; margin: 5px; border-color: $mygrey; background-color: <%=  role.role_color %>; border-radius: 6px; <%= background_text_color_role(role)%>"> <%= role.name.capitalize %> </button>
+        <% end %>
+    </div>
+    <div class="col-xs-6">
+      <li class="list-group-item justify-content-between">
+          Jours non travaillés (2017) :
+          <span class="badge badge-default badge-pill">12</span>
+        </li>
+        <li class="list-group-item justify-content-between">
+          Jours de congés restants :
+          <span class="badge badge-default badge-pill">25</span>
+        </li>
+        <li class="list-group-item justify-content-between">
+          Préférences
+          <span class="badge badge-default badge-pill">pas mercredi matin</span>
+        </li>
+    </div>
+  </div>
+</div>
