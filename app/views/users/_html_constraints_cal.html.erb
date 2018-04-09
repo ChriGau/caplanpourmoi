@@ -1,0 +1,11 @@
+<div id = "calendar">
+</div>
+
+<%= javascript_include_tag "components/calendar" %>
+<%= content_for(:after_js) do %>
+  <script>
+    var events = <%= raw @constraints_array.to_json %> ;
+    var defaultDate = "<%= Date.today %>" ;
+    displayCalendar(events, defaultDate);
+  </script>
+<% end %>

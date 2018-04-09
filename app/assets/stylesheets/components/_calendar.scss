@@ -1,6 +1,5 @@
 
-.conflicts .row #calendar {
-
+#calendar {
   /*override le theme par defaut*/
   /*noms des jours*/
   .fc-day-header {
@@ -43,5 +42,8 @@
   .fc-button-group {
     font-family: "Oswald";
   }
+}
 
-  }
+#plannings-skeleton #calendar .fc-title {
+    display:none;
+}

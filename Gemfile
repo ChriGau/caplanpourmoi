@@ -30,6 +30,7 @@ gem 'faker'
 
 #Authentification Devise
 gem 'devise'
+gem 'devise_invitable'
 
 #Sly for sliders
 gem 'rails-assets-sly', source: 'https://rails-assets.org'
@@ -60,6 +61,7 @@ group :development, :test do
   gem 'annotate'
   gem 'factory_bot_rails'
   gem 'minitest-reporters'
+  gem 'letter_opener_web'
 end
 
 group :development do
