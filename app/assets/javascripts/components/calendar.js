@@ -24,6 +24,12 @@ $('#calendar').fullCalendar({
 
 
 var modifyCalendar = function(events, defaultDate) {
+
+  var modalContent = document.querySelector(".modal-content");
+  var modalPosition = function(modal, position) {
+    modal.style.setProperty('--postop', position -300 + "px");
+  }
+
   $('#calendar').fullCalendar({
     //calendar attributes
     header: {
@@ -47,8 +53,7 @@ var modifyCalendar = function(events, defaultDate) {
     events: events,
     // what happens when we select a time period on the calendar
     select: function( start, end, jsEvent, view ) {
-      var modalContent = document.querySelector(".modal-content");
-      modalContent.style.setProperty('--postop', jsEvent.clientY -300 + "px");
+      modalPosition(modalContent, jsEvent.clientY);
       $(".modal-events").modal('show');
       $('.create_slot').show();
       $('.update_slot').hide();
@@ -138,6 +143,7 @@ var modifyCalendar = function(events, defaultDate) {
      },
 
     eventClick: function( calEvent, jsEvent, view) {
+      modalPosition(modalContent, jsEvent.clientY);
       $(this).css('border-color', 'red');
       $(this).css('border-width', 'thick');
       $(".modal-events").modal('show');
