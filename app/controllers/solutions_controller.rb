@@ -8,10 +8,9 @@ class SolutionsController < ApplicationController
   end
 
   def change_effectivity
-    @planning.solutions.chosen.each do |solution|
-      solution.not_chosen!
-    end
+    @planning.chosen_solution&.not_chosen!
     @solution.chosen!
+    @planning.set_status
     redirect_back(fallback_location: planning_conflicts_path(@planning))
   end
 

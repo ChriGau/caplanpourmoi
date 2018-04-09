@@ -30,4 +30,6 @@ class SolutionSlot < ApplicationRecord
   validates :solution_id, :slot_id, :user_id, presence: true
   has_one :planning, through: :solution
   has_one :role, through: :slot
+  delegate :start_at, to: :slot
+  delegate :end_at, to: :slot
 end

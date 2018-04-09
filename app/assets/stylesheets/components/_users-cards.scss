@@ -56,6 +56,13 @@ label {
   text-align: left;
 }
 
+.working-hours {
+  font-size: 0.8em;
+  position: absolute;
+  right: 5px;
+  bottom: 5px;
+}
+
 
 .roles {
   position: absolute;
@@ -63,13 +70,12 @@ label {
   margin-left: 10px;
   .user-role {
     font-weight: 200;
-    color: $mygrey;
-    font-size: 20px;
+    display:flex;
+    flex-direction: column;
     .role-name{
-      display: inline-block;
       border-radius: 25px;
-      margin-right: 3px;
-      padding: 5px 16px;
+      padding: 3px 10px;
+      margin-bottom: 2px;
     }
   }
 }
