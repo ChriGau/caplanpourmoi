@@ -1,7 +1,19 @@
-.modal-events .modal-content{
-      width: 450px;
-      height: 450px;
-      text-align: center;
+:root {
+  --postop: 0px;
+}
+
+#modal-slots {
+  width: 100%;
+  height:100%;
+  outline: none;
+  position:fixed;
+  margin:auto;
+  .modal-content {
+    width:400px;
+    display:table;
+    margin: auto;
+    top: var(--postop);
+
   }
 
-
+}
