@@ -52,8 +52,6 @@ var modifyCalendar = function(events, defaultDate) {
       $('.update_slot').hide();
       $('.delete_slot').hide();
       $('.daysbox').show();
-      // get form to create a new slot
-      var planning_id = calEvent.planning_id;
       // set default value of the date inputs (inside simple form)
       $('#datetimepicker1 .form-control').val(new Date(start.format()).toLocaleDateString('fr-FR', {timezone: 'UTC', hour: '2-digit', minute: '2-digit'}));
       $('#datetimepicker1').datetimepicker({
