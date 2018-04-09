@@ -1,5 +1,4 @@
-
-.conflicts .row #calendar {
+.row #calendar {
 
   /*override le theme par defaut*/
   /*noms des jours*/
@@ -38,7 +37,7 @@
 .fc-state-active {
   color: white;
   font-family: "Oswald";
-  background-color: orange;
+  background-color: $myblue;
   }
   .fc-button-group {
     font-family: "Oswald";

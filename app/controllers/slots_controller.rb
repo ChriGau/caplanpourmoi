@@ -69,7 +69,9 @@ class SlotsController < ApplicationController
     @slot = Slot.find(params[:id])
     respond_to do |format|
       if @slot.update(slot_params)
-        format.html { redirect_to planning_skeleton_path(@planning) } # @slot
+        # do not respond to html format pk sinon on a 2 PATCH requests quand on
+        # clique sur le bouton du form + déclenche l'event click du fullcalendar
+        # format.html { redirect_to planning_skeleton_path(@planning) }
         format.js
         format.json { render json: @slot }
       else
@@ -90,7 +92,7 @@ class SlotsController < ApplicationController
   end
 
   def slot_params
-    params.require(:slot).permit(:start_at, :end_at, :role_id, :user_id)
+    params.require(:slot).permit(:start_at, :end_at, :role_id)
   end
 
   private

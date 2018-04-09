@@ -6,27 +6,34 @@
         <div class="triangle" style= "left:<%= @triangle_position %>" ></div>
       </div>
     </div>
-    <div class="row tamere">
-      <div class="slot_form">
-        <%= render 'slots/form', locals: {planning: @planning, slot: @slot} %>
-      </div>
-    </div>
 
-    <div class="row spacing">
-      <ul class="list-inline dragndrop-metiers">
-        <% @slot_templates.each do |slot| %>
-        <li style="background-color: <%= slot.role.role_color %>; <%= background_text_color(slot) %>"> <%= slot.role.name.capitalize %></li>
-        <% end %>
-      </ul>
-    </div>
-
-    <div class="row">
-      <div class="col-xs-12 le_calendrier">
-        <div id = "calendar">
+    <div class="modal fade modal-events slot_form" tabindex="-1" role="dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">Propriétés du créneau</h4>
+        </div>
+        <div class="modal-body">
+            <%= render 'slots/form', locals: {planning: @planning, slot: @slot} %>
         </div>
       </div>
     </div>
+
+  <div class="row spacing">
+    <ul class="list-inline dragndrop-metiers">
+      <% @slot_templates.each do |slot| %>
+      <li style="background-color: <%= slot.role.role_color %>; <%= background_text_color(slot) %>"> <%= slot.role.name.capitalize %></li>
+      <% end %>
+    </ul>
   </div>
+
+  <div class="row">
+    <div class="col-xs-12 le_calendrier">
+      <div id = "calendar">
+      </div>
+    </div>
+  </div>
+</div>
 
 <!--  _______________________ CSS Calendar specific skeleton ___________________________ -->
 
@@ -35,6 +42,7 @@
  .fc-title {
    display: none;
  }
+
 </style>
 
 <!-- ___________________________ JS __________________________________ -->
@@ -43,6 +51,10 @@
 
 <%= content_for(:after_js) do %>
 <script type="text/javascript">
+
+  $(".modal-events").draggable({
+    handle: ".modal-header"
+});
 
   $('#calendar').fullCalendar({
     //calendar attributes
@@ -57,6 +69,8 @@
     editable: true, // events on the calendar can be modified
     droppable: true, // allows things to be dropped onto the calendar
     selectable: true,
+    unselectAuto: true,
+    eventLimit: true,
     minTime: "07:00:00", // starting time, even when scrolled all the way up
     maxTime: "22:00:00",
     defaultView: "agendaWeek",
@@ -65,11 +79,14 @@
     height: "auto", // implique pas de scroll à l'intérieur du calendrier
     aspectRatio: 4,
     events: '<%= events_planning_path(@planning.id, format: :json) %>',
+
     // what happens when we select a time period on the calendar
     select: function( start, end, jsEvent, view ) {
-
-      $(".slot_form").show();
-      $('.create_slot').prop('disabled', false);
+      $(".modal-events").modal('show');
+      $('.create_slot').show();
+      $('.update_slot').hide();
+      $('.delete_slot').hide();
+      $('.daysbox').show();
       // get form to create a new slot
       var planning_id = <%= @planning.id %>;
       // set default value of the date inputs (inside simple form)
@@ -90,23 +107,87 @@
       var date = (new Date(end.format()).getDay());
       $('input:checkbox[value='+date+']')[0].disabled= true;
       $('input:checkbox[value='+date+']').parent().parent().addClass('unselectable');
+    },
 
+    eventDrop: function(event, delat, revertFunc){
+      var planning_id = <%= @planning.id %>;
+      var slot_id = event.id;
+      var build_url = "/plannings/" + planning_id + "/slots/" + slot_id;
+      var slot_role_name = event.title;
+       event_data = {
+        slot: {
+            id: slot_id,
+            role_id: event.role_id,
+            start: event.start.format(),
+            end: event.end.format(),
+            start_at: event.start.format(),
+            end_at: event.end.format()
+          }
+      };
+      $.ajax({
+        url: build_url,
+        data: event_data,
+        format: 'js',
+        type: 'PATCH',
+        success: function(data) {
+          console.log(Event);
+          console.log("sucess - PATCH de eventDrop");
+        },
+        error: function(jqXHR) {
+          console.log("ajax echec - PATCH de eventDrop");
+          console.log(jqXHR.responseText);
+        }
+      });
 
     },
+
+    eventResize: function( event, delta, revertFunc, jsEvent, ui, view ) {
+      var planning_id = <%= @planning.id %>;
+      var slot_id = event.id;
+      var build_url = "/plannings/" + planning_id + "/slots/" + slot_id;
+       event_data = {
+        slot: {
+            id: slot_id,
+            role_id: event.role_id,
+            start: event.start.format(),
+            end: event.end.format(),
+            start_at: event.start.format(),
+            end_at: event.end.format()
+          }
+      };
+      $.ajax({
+        url: build_url,
+        data: event_data,
+        format: 'js',
+        type: 'PATCH',
+        success: function(data) {
+          console.log(event);
+          console.log("requete PATCH reSize Event effectuée");
+        },
+        error: function(jqXHR) {
+          console.log("ajax echec - PATCH de eventResize");
+          console.log(event_data);
+          console.log(jqXHR.responseText);
+        }
+      });
+     },
+
     eventClick: function( calEvent, jsEvent, view) {
       $(this).css('border-color', 'red');
       $(this).css('border-width', 'thick');
-      $(".slot_form").show();
-      // disable 'Valider' button
-      $('.create_slot').prop('disabled', true);
+      $(".modal-events").modal('show');
+      $('.create_slot').hide();
+      $('.update_slot').show();
+      $('.delete_slot').show();
+      $('.daysbox').hide();
       // get variables
       var planning_id = <%= @planning.id %>;
       var slot_id = calEvent.id;
       var role_id = calEvent.role_id;
       var start_date = new Date(calEvent.start.format());
-      var start_date = new Date(start_date.setHours(start_date.getHours() -2));
+      var start_date = new Date(start_date.setHours(start_date.getHours() ));
       var end_date = new Date(calEvent.end.format());
-      var end_date = new Date(end_date.setHours(end_date.getHours() -2));
+      var end_date = new Date(end_date.setHours(end_date.getHours() ));
       // set default values to the form
       $('#datetimepicker1 .form-control').val(start_date.toLocaleDateString('fr-FR', {timezone: 'UTC', hour: '2-digit', minute: '2-digit'}));
       $("#datetimepicker1").datetimepicker({
@@ -117,27 +198,75 @@
         locale: 'FR'
       });
       $('#slot_role_id').val(role_id);
-      // Ajax request to delete a slot
-      var build_url = "/plannings/" + planning_id + "/slots/" + slot_id;
-      $(".delete_slot").click( function (){
+
+      $('.update_slot').off('click', function() {
+      });
+      // when clicking on update_slot
+      $(".update_slot").click( function (){
+        var start_chosen = $("#datetimepicker1").find("input").val();
+        var end_chosen = $("#datetimepicker2").find("input").val();
+        var role_id = Number($("#slot_role_id").val());
+        event_data_bis = {
+              slot: {
+                  id: calEvent.id,
+                  role_id: role_id,
+                  start: start_chosen,
+                  end: end_chosen,
+                  start_at: start_chosen,
+                  end_at: end_chosen
+                }
+            };
         $.ajax({
-          type: "DELETE",
           url: build_url,
+          data: event_data_bis,
           format: 'js',
+          type: 'PATCH',
           success: function(data) {
             console.log(Event);
-            // recharger la page
-            location.reload();
+            $('.update_slot').unbind();
+            $('.delete_slot').unbind();
+          },
+          error: function(jqXHR) {
+            console.log("ajax echec - PATCH de .update_slot");
+            console.log(jqXHR.responseText);
+
+            $('#calendar').fullCalendar( 'refetchEvents' );
+          }
+        }); // fin ajax request
+      }); // fin de update_slot
+
+      // Ajax request to delete a slot
+      var build_url = "/plannings/" + planning_id + "/slots/" + slot_id;
+      $(".delete_slot").click( function (data){
+        event_data = {
+          slot: {
+              id: calEvent.id,
+              role_id: role_id,
+              start: start_date,
+              end: end_date,
+              start_at: start_date,
+              end_at: end_date
+            }
+        };
+        $.ajax({
+          url: build_url,
+          data: event_data,
+          format: 'js',
+          type: "DELETE",
+          success: function(data) {
+            console.log(Event);
+            $('.delete_slot').unbind();
           },
           error: function(jqXHR) {
             console.log("ajax echec");
             console.log(jqXHR.responseText);
-            location.reload();
           }
         });
       });
-    }
+    } // fin de eventClick
   });
+
+
 
   </script>
   <% end %>
