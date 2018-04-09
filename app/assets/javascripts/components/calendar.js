@@ -47,6 +47,8 @@ var modifyCalendar = function(events, defaultDate) {
     events: events,
     // what happens when we select a time period on the calendar
     select: function( start, end, jsEvent, view ) {
+      var modalContent = document.querySelector(".modal-content");
+      modalContent.style.setProperty('--postop', jsEvent.clientY -300 + "px");
       $(".modal-events").modal('show');
       $('.create_slot').show();
       $('.update_slot').hide();

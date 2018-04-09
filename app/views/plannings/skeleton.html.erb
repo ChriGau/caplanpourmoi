@@ -44,6 +44,9 @@
     var events = '<%= events_planning_path(@planning.id, format: :json) %>';
     var defaultDate = "<%= Date.commercial(@planning.year, @planning.week_number, 1).beginning_of_week %>";
     modifyCalendar(events, defaultDate);
+    $(".modal-content").draggable({
+      handle: ".modal-header"
+    });
   </script>
 <% end %>
 
