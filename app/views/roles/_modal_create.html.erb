@@ -13,3 +13,12 @@
     </div>
   </div>
 </div>
+
+<%= content_for(:after_js) do %>
+
+  <script>
+    var modalPosition = function(modal, position) {
+    modal.style.setProperty('--postop', position -300 + "px");
+  }
+  </script>
+<% end %>
