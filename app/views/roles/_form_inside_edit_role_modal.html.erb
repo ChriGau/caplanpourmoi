@@ -1,0 +1,10 @@
+<%= simple_form_for @role do |f| %>
+  <%= f.error_notification %>
+  <%= f.input :name, placeholder: "Nom", label: false %>
+  <%= f.input :role_color, value: @role_color, label: false, collection: @color_collection%>
+  <%= f.submit "Valider", class: "btn btn-success" %>
+  <!-- Can delete only if no dependancies -->
+  <% if !@role.role_users.count.positive? %>
+    <%= link_to "Supprimer", role_path(@role), method: :delete, class: "btn btn-default"%>
+  <% end %>
+<% end %>

@@ -60,24 +60,44 @@
         <i class="fa fa-suitcase" aria-hidden="true"></i> Métiers
       </h2>
       <div class="list-metiers">
-        <%= link_to new_role_path do %>
+        <%= link_to new_role_path, class: "create-role-link" do %>
           <div class="metier">
               <i class="fa fa-plus" aria-hidden="true"></i>
           </div>
         <% end %>
         <%  @slot_templates.each do |slot| %>
-          <div class="metier" style="background-color: <%= slot.role.role_color %>; <%= background_text_color(slot) %>"> <%= slot.role.name.capitalize %>
-          </div>
+          <%= link_to edit_role_path(slot.role.id), class: "edit-role-link" do %>
+            <div class="metier" style="background-color: <%= slot.role.role_color %>; <%= background_text_color(slot) %>"> <%= slot.role.name.capitalize %>
+            </div>
+          <% end %>
         <% end %>
       </div>
     </div>
   </div>
 </div>
 <div id="modalUserContainer"></div>
+<div id="ModalEditRole"></div>
+<div id="ModalCreateRole"></div>
 
 <%= content_for(:after_js) do %>
   <script>
   $(".show-user-link").on("click", function(event) {
+    event.preventDefault();
+    $.ajax({
+      type: "GET",
+      url: this.href
+    });
+  });
+
+  $(".edit-role-link").on("click", function(event) {
+    event.preventDefault();
+    $.ajax({
+      type: "GET",
+      url: this.href
+    });
+  });
+
+  $(".create-role-link").on("click", function(event) {
     event.preventDefault();
     $.ajax({
       type: "GET",
