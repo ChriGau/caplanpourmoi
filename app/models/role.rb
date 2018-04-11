@@ -4,15 +4,24 @@
 #
 #  id         :integer          not null, primary key
 #  name       :string
-#  role_color :string
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  color_id   :integer
+#
+# Indexes
+#
+#  index_roles_on_color_id  (color_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (color_id => colors.id)
 #
 
 class Role < ApplicationRecord
   has_many :users, through: :role_users
   has_many :solution_slots, through: :slots
   has_many :role_users
+  belongs_to :color
 
 
   # rubocop:disable MethodLength
