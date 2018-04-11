@@ -1,8 +1,7 @@
 class RolesController < ApplicationController
   def new
     @role = Role.new
-    @color_collection = []
-    Role.color_list.each { |key, value| @color_collection << value[:name_fr] }
+    @color_collection = Color.all.map(&:name_fr)
   end
 
   def create
@@ -17,9 +16,8 @@ class RolesController < ApplicationController
 
   def edit
     @role = Role.find(params[:id])
-    @role_color = @role.role_color
-    @color_collection = []
-    Role.color_list.each { |key, value| @color_collection << value[:name_fr] }
+    @role.color = @role.color
+    @color_collection = Color.all.map(&:name_fr)
   end
 
   def update

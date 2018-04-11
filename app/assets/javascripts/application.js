@@ -15,4 +15,5 @@
 //= require planning
 //= require slots
 //= require fr
+//= require jquery.minicolors
 
