@@ -9,9 +9,9 @@
             <% if user.invitation_sent_at.nil? %>
               employé non invité
             <% elsif user.invitation_accepted_at %>
-              employé confirmé le <%= l user.invitation_accepted_at, format: :default_heure %>
+              confirmé le <%= l user.invitation_accepted_at, format: :default_heure %>
             <% else %>
-              employé invité le <%= l user.invitation_sent_at, format: :default_heure %>
+              invité le <%= l user.invitation_sent_at, format: :default_heure %>
             <% end %>
           </div>
           <div class="title">
@@ -20,6 +20,7 @@
               <p>
                 <%= user.email[0, user.email.index('@')]%><wbr><%= user.email[user.email.index('@'), (user.email.length + 1)]%>
               </p>
+              <p> user.phone</p>
             </div>
             <%= profile_picture(user) %>
           </div>
