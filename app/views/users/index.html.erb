@@ -1,8 +1,10 @@
-<br>
+<div class="new-invite">
+  <%= link_to "Inviter un nouvel employé", new_user_invitation_path %>
+</div>
 <div class="row equal">
   <% @users.each do |user| %>
       <div class="col-xs-12 col-sm-6 col-md-3 equal">
-        <div class="users-card-list" style="<%= "opacity: 0.5" if user.invitation_sent_at.nil?%>" >
+        <div class="users-card-list" style="<%= "opacity: 0.5" if user.invitation_accepted_at.nil?%>" >
           <div class="invitation-status <%= invitation_status(user) %>">
             <% if user.invitation_sent_at.nil? %>
               employé non invité
