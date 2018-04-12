@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   def index
-    @users = User.all
+    @users = User.where.not(id: User.find_by(first_name: "no solution")).order(:first_name,)
   end
 
   # rubocop:disable AbcSize, MethodLength

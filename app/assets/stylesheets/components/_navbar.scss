@@ -93,13 +93,13 @@
 
 .btn-primary.btn-nav {
   background-color: #FFC80A;
-  border-radius: 50px;
+  border-radius: 15px;
   border: none;
-  width: 120px;
-  height: 27px;
   text-align: center;
-  margin-left: 30px;
   text-decoration: none;
+  padding: 3px 15px;
+  color: $myblue;
+  font-size:0.9em;
 }
 
 .btn-primary.btn-nav2 {

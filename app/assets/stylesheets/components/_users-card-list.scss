@@ -1,0 +1,85 @@
+a {
+  text-decoration: none;
+  color: black;
+  :hover {
+    color: black;
+  }
+}
+
+.equal{
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.users-card-list {
+  margin-bottom: 30px;
+  position: relative;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
+  flex-grow : 1;
+  margin-bottom: 20px;
+  .invitation-status {
+    width:100%;
+    background-color:$mysuperlightgrey;
+    text-align: center;
+    opacity: 0.7;
+    font-size: 0.7em;
+  }
+  .orange {
+    background-color:$myorange
+  }
+  .green {
+    background-color:$mygreen
+  }
+  .title {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background: white;
+    .name {
+      align-self:center;
+      padding-left: 10px;
+      flex: 1 1 auto;
+      word-break: break-all;
+      h2 {
+        font-size: 1em;
+        color: $myblue ;
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
+      p {
+        font-size: 0.7em;
+        color: $mygrey;
+      }
+    }
+    .avatar {
+      width:100px;
+      height:100px;
+      border-radius: 50%;
+      margin-top:10px;
+      margin-bottom: 10px
+    }
+  }
+  .details {
+    text-align: center;
+    font-size: 0.9em;
+    .time-contract {
+      width: 100%;
+      background-color: $mylightgrey;
+      color: white;
+    }
+    .row {
+      margin: 0px;
+      margin-bottom: 5px;
+      border-top: solid 4px white;
+    }
+  }
+  .link {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    z-index: 2;
+    width:100%;
+  }
+}
