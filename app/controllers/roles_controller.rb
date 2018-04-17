@@ -14,7 +14,7 @@ class RolesController < ApplicationController
   def create
     # if colors does not exist
     if Color.find_by(hexadecimal_code: params_role["intermediate"]).nil?
-      # create a new color /!\ not elegant, a controller should only instanciate 1 object :/
+      # /!\ not elegant, a controller should only instanciate 1 object :/
       @color = Color.create(hexadecimal_code: params_role["intermediate"])
     end
     @color_id = Color.find_by(hexadecimal_code: params_role["intermediate"]).id
@@ -24,29 +24,25 @@ class RolesController < ApplicationController
     else
       render :new
     end
-
   end
 
   def edit
     @role = Role.find(params[:id])
-    @role.color = @role.color
-    @color_collection = Color.all.map(&:name_fr)
+    @color_collection = Color.all.map(&:id) - Role.all.map(&:color_id).uniq
   end
 
   def update
     @role = Role.find(params[:id])
-    # color_role needs to be the hexadecimal color code VS color name_fr
-    if params_role[:role_color].empty?
-      @role.role_color = @role.role_color
-    else
-      color_hexadecimal = Role.color_list.select{ |k,v| v[:name_fr] == params_role[:role_color] }.values.first[:code]
-      @role.role_color = color_hexadecimal
+    # create color if color does not exist
+    if Color.find_by(hexadecimal_code: params_role[:intermediate]).nil?
+      # /!\ not elegant, a controller should only instanciate 1 object
+      @color = Color.create(hexadecimal_code: params_role[:intermediate])
     end
-    @role.name = params_role[:name]
-    if @role.save
-      redirect_to plannings_path, notice: 'Le role a été modifié'
+    @color_id = Color.find_by(hexadecimal_code: params_role[:intermediate]).id
+    if @role.update(name: params_role[:name], intermediate: params_role[:intermediate], color_id: @color_id)
+      redirect_to plannings_path
     else
-      render :update
+      render :new
     end
   end
 
@@ -65,6 +61,6 @@ class RolesController < ApplicationController
   private
 
   def params_role
-    params.require(:role).permit(:name, :intermediate)
+    params.require(:role).permit(:name, :intermediate, :color_id)
   end
 end
