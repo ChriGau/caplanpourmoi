@@ -1,0 +1,15 @@
+<form action="/colors" method="post">
+  <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+  <label for="name_fr">Name: </label>
+  <input type="text" name="color[name_fr]" id="name_fr">
+
+  <label for="address">Address: </label>
+  <input type="text" name="color[name_eng]" id="name_eng">
+
+  <label for="address">Color: </label>
+  <input type="color" name="color[hexadecimal_code]" id="hexadecimal_code">
+
+  <input type="submit">
+</form>
+
+

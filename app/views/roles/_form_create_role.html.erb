@@ -1,21 +1,82 @@
 <div class="col-xs-12">
-<%= simple_form_for @role do |f| %>
-  <%= f.error_notification %>
-  <%= f.input :name, placeholder: "Nom", label: false %>
-  <!-- tableau pour sélectionner parmi les couleur existantes -->
-  <table style="col-xs-12">
-    <%= Color.all.map(&:hexadecimal_code).each do |hex_code| %>
-      <th style= "background-color: <%= hex_code %> ">
-      </th>
-    <% end %>
-  </table>
-  <!-- dernière ligne = choose other color -->
 
-  <!-- possibilité de créer ses propres couleurs -->
-  <h2>Create your own color</h2>
-  <div class="add-color"></div>
+  <form action="/roles" method="post">
+    <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
 
+    <input type="text" name="role[name]" id="name">
 
-  <%= f.submit "Valider", class: "btn btn-success" %>
-<% end %>
+    <h3>Sélectionnez votre couleur</h3>
+      <div class="col-xs-4 add-color" style= "height: 5vh; width: 5vh; border: 2px solid white;">
+        <i class="fa fa-plus" aria-hidden="true"></i>
+      </div>
+      <% @color_collection.each do |color_id| %>
+        <div class="col-xs-4 color-block" id="<%= color_id %>" style= "background-color: <%= Color.find(color_id).hexadecimal_code %>;height: 5vh; width: 5vh; border: 2px solid white;" >
+        </div>
+      <% end %>
+
+    <input type="color" name="role[intermediate]" id="intermediate" class="intermediate-color-input">
+    <br><br>
+
+    <input type="submit" value="Créer le rôle">
+
+  </form>
+
 </div>
+
+
+  <script>
+$(document).ready(function() {
+
+    // by default, hide the add color button
+    $('.intermediate-color-input').hide();
+
+      // 3 functions to convert rgb in hexadecimal
+    function hex(x) {
+      return isNaN(x) ? "00" : hexDigits[(x - x % 16) / 16] + hexDigits[x % 16];
+     }
+
+     var hexDigits = new Array
+            ("0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f");
+
+    function rgbToHex(rgb) {
+     rgb = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+     return "#" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
+    }
+
+    function resetColorBlocksBackground() {
+      var color_blocks = document.getElementsByClassName('color-block');
+      for (var i = 0; i < color_blocks.length; i++ ) {
+        color_blocks[i].style.border = "3px solid white";
+      }
+    }
+
+    // when clicking on a predefined color
+    $(".color-block").click(function(elem) {
+      // get corresponding id
+      var selected_color_id = elem.currentTarget.id;
+
+      // set border (only of the selected one) as red
+      resetColorBlocksBackground();
+      var selected_color_box = document.getElementById(selected_color_id);
+      selected_color_box.style.border = '2px solid red';
+
+      // get rgb color
+      var selected_color_rgb = elem.currentTarget.style.backgroundColor;
+
+      // set to hexadecimal
+      var selected_color_hexadecimal = rgbToHex(selected_color_rgb);
+
+      // set intermediate value to corresponding hex
+      $('.intermediate-color-input').val(selected_color_hexadecimal);
+    });
+
+
+    $(".add-color").on("click", function() {
+      $('.intermediate-color-input').show();
+      resetColorBlocksBackground();
+    });
+
+}); // end of document ready
+
+  </script>
+

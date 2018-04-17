@@ -48,6 +48,7 @@ gem 'sidekiq-failures', '~> 1.0'
 
 # color picker
 gem 'jquery-minicolors-rails'
+gem 'simple_form_extension'
 
 
 source 'https://rails-assets.org' do
