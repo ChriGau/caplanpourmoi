@@ -12,7 +12,7 @@
 
     <% if user_signed_in? %>
        <!-- Avatar with dropdown menu -->
-        <%= link_to "Mes Employés", users_path, class: "form-actions btn-primary btn-nav btn-block"%>
+        <%= link_to "Mes Employés", users_path, class: "btn-primary btn-nav"%>
         <div class="navbar-wagon-item">
           <div class="dropdown">
             <% if current_user.profile_picture? %>

@@ -3,6 +3,29 @@
   padding: 15px;
 }
 
+.checked {
+  background-color: $myyellow;
+  color: $myblue;
+}
+
+.new-user-form {
+  width:50%;
+  text-align:center;
+  margin:auto;
+  .row {
+    margin: 20px 0px;
+    #select-role {
+      .role-checkbox {
+        display:none;
+      }
+      label {
+        width:100%;
+        height:100%;
+        border: solid 2px $mygrey;
+      }
+    }
+  }
+}
 
 
 .card {
@@ -38,6 +61,7 @@ label {
     display: none;
   }
 }
+
 
 .picture{
   width: 75px;

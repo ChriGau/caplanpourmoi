@@ -92,14 +92,18 @@
 }
 
 .btn-primary.btn-nav {
-  background-color: #FFC80A;
+  border: solid 2px $myyellow;
+  background-color: transparent;
   border-radius: 15px;
-  border: none;
   text-align: center;
   text-decoration: none;
   padding: 3px 15px;
-  color: $myblue;
+  color: $myyellow;
   font-size:0.9em;
+  &:hover {
+    background-color: $myyellow;
+    color: $myblue;
+  }
 }
 
 .btn-primary.btn-nav2 {

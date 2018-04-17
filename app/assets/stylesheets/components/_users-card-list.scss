@@ -8,20 +8,13 @@ a {
 }
 
 .new-invite {
-  width:100%;
   text-align:center;
   margin: 10px 0px;
-  background-color: $myyellow;
   a {
   display:block;
-  text-decoration: none;
-  color: $myblue;
-  padding:10px;
-  &:hover {
-    color: $myyellow;
-    text-decoration:none;
-    background-color: $myblue;
-    }
+  border-radius:0px !important;
+  padding:10px !important;
+  font-size: 1.1em !important;
   }
 }
 
@@ -36,70 +29,83 @@ a {
   box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
   flex-grow : 1;
   margin-bottom: 20px;
-  .invitation-status {
-    width:100%;
-    background-color:$mysuperlightgrey;
-    text-align: center;
-    opacity: 0.7;
-    font-size: 0.7em;
-  }
   .orange {
-    background-color:$myorange
+    background-color:$myorange;
   }
   .green {
-    background-color:$mygreen
+    background-color:$mygreen;
   }
-  .title {
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    background: white;
-    .name {
-      align-self:center;
-      padding-left: 10px;
-      flex: 1 1 auto;
-      word-break: break-all;
-      h2 {
-        font-size: 1em;
-        color: $myblue ;
-        margin-top: 10px;
-        margin-bottom: 2px;
+  .invitation-status {
+    display: flex;
+    justify-content: space-between;
+    opacity: 0.7;
+    font-size: 0.7em;
+    .status {
+      width:100%;
+      background-color:$mysuperlightgrey;
+      text-align: center;
+      background-color:transparent;
+    }
+    .invite-link {
+      border: solid 1px $mygrey;
+      background-color:transparent;
+      color: $myblue;
+      padding:0px 5px;
+    }
+  }
+  .content {
+    position: relative;
+    .title {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      background: white;
+      .name {
+        align-self:center;
+        padding-left: 10px;
+        flex: 1 1 auto;
+        word-break: break-all;
+        h2 {
+          font-size: 1em;
+          color: $myblue ;
+          margin-top: 10px;
+          margin-bottom: 2px;
+        }
+        p {
+          font-size: 0.7em;
+          color: $mygrey;
+          margin-bottom: 0px;
+        }
       }
-      p {
-        font-size: 0.7em;
-        color: $mygrey;
-        margin-bottom: 0px;
+      .avatar {
+        width:100px;
+        height:100px;
+        border-radius: 50%;
+        margin-top:10px;
+        margin-bottom: 10px
       }
     }
-    .avatar {
-      width:100px;
-      height:100px;
-      border-radius: 50%;
-      margin-top:10px;
-      margin-bottom: 10px
+    .details {
+      text-align: center;
+      font-size: 0.9em;
+      .time-contract {
+        width: 100%;
+        background-color: $mylightgrey;
+        color: white;
+      }
+      .row {
+        margin: 0px;
+        margin-bottom: 5px;
+        border-top: solid 4px white;
+      }
     }
-  }
-  .details {
-    text-align: center;
-    font-size: 0.9em;
-    .time-contract {
-      width: 100%;
-      background-color: $mylightgrey;
-      color: white;
+
+    .link {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      width:100%;
     }
-    .row {
-      margin: 0px;
-      margin-bottom: 5px;
-      border-top: solid 4px white;
-    }
-  }
-  .link {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    width: 100%;
-    z-index: 2;
-    width:100%;
   }
 }

@@ -1,7 +1,11 @@
 $(document).ready(function() {
   // make roles draggable
-  $("input:checkbox").click(function(){
+  $("input:checkbox.user-select").click(function(){
     $(this).parent().parent().toggleClass("checked");
+  });
+
+  $("input:checkbox.role-checkbox").click(function() {
+    $(this).next().toggleClass("checked");
   });
 
   $('#my-draggable').draggable({

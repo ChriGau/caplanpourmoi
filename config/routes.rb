@@ -54,17 +54,17 @@
 #                          user_dispos GET    /users/:id/dispos(.:format)                                        users#dispos
 #                          sidekiq_web        /sidekiq                                                           Sidekiq::Web
 #                    letter_opener_web        /letter_opener                                                     LetterOpenerWeb::Engine
-# 
+#
 # Routes for Attachinary::Engine:
 #   cors GET  /cors(.:format) attachinary/cors#show {:format=>/json/}
-# 
+#
 # Routes for LetterOpenerWeb::Engine:
 # clear_letters DELETE /clear(.:format)                 letter_opener_web/letters#clear
 # delete_letter DELETE /:id(.:format)                   letter_opener_web/letters#destroy
 #       letters GET    /                                letter_opener_web/letters#index
 #        letter GET    /:id(/:style)(.:format)          letter_opener_web/letters#show
 #               GET    /:id/attachments/:file(.:format) letter_opener_web/letters#attachment
-# 
+#
 
 Rails.application.routes.draw do
 
@@ -89,10 +89,12 @@ Rails.application.routes.draw do
   get 'plannings/:id/users', to: 'plannings#users', as: 'planning_users'
   get 'plannings/:id/skeleton', to: 'plannings#skeleton', as: 'planning_skeleton'
   get 'plannings/:id/conflicts', to: 'plannings#conflicts', as: 'planning_conflicts'
-  resources :users, only: [:index, :show]
+  resources :users, only: [:index, :show, :create, :new]
   resources :roles, only: [:index, :new, :create]
   get 'users/:id/infos', to: 'users#infos', as: 'user_infos'
   get 'users/:id/dispos', to: 'users#dispos', as: 'user_dispos'
+  post 'users/user_invite', to: 'users#user_invite', as: "users_invite"
+  get 'users/:id/reinvite', to: 'users#reinvite', as: "user_reinvite"
 
   # Sidekiq Web UI, only for admins.
   require "sidekiq/web"
