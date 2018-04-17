@@ -63,16 +63,16 @@ puts "4 - Creating roles"
 puts ""
 
 Role.create!(name: "vendeur",
-            role_color: Color.find_by(name: "Bleu ciel couvert")
+            color_id: Color.find_by(name: "Bleu ciel couvert").id
             )
 Role.create!(name: "mécano",
-            role_color: Color.find_by(name: "Rose framboise")
+            color_id: Color.find_by(name: "Rose framboise").id
             )
 Role.create!(name: "barista",
-            role_color: Color.find_by(name: "Or las-vegas")
+            color_id: Color.find_by(name: "Or las-vegas").id
             )
 Role.create!(name: "patron",
-            role_color: Color.find_by(name: "Brun castor")
+            color_id: Color.find_by(name: "Brun castor").id
             )
 
 # un-assigned value : color_role

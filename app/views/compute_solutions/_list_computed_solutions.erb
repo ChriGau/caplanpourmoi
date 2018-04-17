@@ -20,7 +20,7 @@
                   <%= computed_solution.p_nb_slots %> créneaux (<%= computed_solution.p_nb_hours %>heures)
                   <ul>
                   <% computed_solution.p_nb_hours_roles.each do |role, hours|%>
-                    <li><span class="role-name" style="background-color: <%= role_color(role) %>; <%= role_text_color(role) %>"> <%= role.to_s %></span> : <%= hours %>h</li>
+                    <li><span class="role-name" style="background-color: <%= background_color_of_role_symbol(role) %>; <%= role_text_color(role) %>"> <%= role.to_s %></span> : <%= hours %>h</li>
                   <% end %>
                   </ul>
                   </footer>
@@ -33,7 +33,7 @@
                     <%= computed_solution.team.values.flatten.uniq.count %> équipiers :
                     <ul>
                       <% computed_solution.team.each do |role, team| %>
-                      <li> <span class="role-name" style="background-color: <%= role_color(role) %>; <%= role_text_color(role) %>"> <%= role.to_s %></span> :
+                      <li> <span class="role-name" style="background-color: <%= background_color_of_role_symbol(role) %>; <%= role_text_color(role) %>"> <%= role.to_s %></span> :
                         <%= team.join(", ") %>
                       </li>
                       <% end %>

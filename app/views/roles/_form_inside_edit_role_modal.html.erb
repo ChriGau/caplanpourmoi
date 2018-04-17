@@ -33,8 +33,8 @@
     $(".change-color-block").hide();
 
     $(".change-color").click(function() {
-      $(".change-color-block").show();
-      resetColorBlocksBackground();
+        $(".change-color-block").toggle();
+        resetColorBlocksBackground();
     });
 
     // 3 functions to convert rgb in hexadecimal
