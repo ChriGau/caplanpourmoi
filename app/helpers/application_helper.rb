@@ -16,7 +16,7 @@ module ApplicationHelper
   end
 
   def fetch_roles
-    Role.all.order(:name)
+    Role.all.order(:name).each {|role| role.name.capitalize! }
   end
 
   # rubocop:disable AbcSize, LineLength, MethodLength
