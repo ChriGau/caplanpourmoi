@@ -1,6 +1,7 @@
 class UsersController < ApplicationController
+
   def index
-    @users = User.all
+    @users = User.where.not(id: User.find_by(first_name: "no solution")).order(:first_name)
   end
 
   # rubocop:disable AbcSize, MethodLength
@@ -61,10 +62,30 @@ class UsersController < ApplicationController
 
   def new
     @user = User.new
+    @roles = Role.all
   end
 
-  def create
-    @user = User.create(user_params)
+  def user_invite
+    @user = User.new(user_params)
+    @roles = Role.all
+    @user.password = Devise.friendly_token.first(8)
+    if @user.valid?
+      u = User.invite!(user_params)
+      u.update(profile_picture: photo_params[:profile_picture]) if !photo_params[:profile_picture].nil?
+      redirect_to users_path, notice: "#{@user.first_name} fait parti de votre entreprise"
+    else
+      render :new, user: @user, roles: @roles
+    end
+  end
+
+  def reinvite
+    @user = User.find(params[:id])
+    if @user.invitation_token.nil?
+      @user.invitation_token = "provional"
+      @user.save
+    end
+    User.invite!(email: @user.email)
+    redirect_to users_path, notice: "Une nième invitation a été envoyée à #{@user.first_name} !"
   end
 
   # def update
@@ -80,7 +101,11 @@ class UsersController < ApplicationController
   private
 
   def user_params
-    params.require(:user).permit(:first_name, :profile_picture)
+    params.require(:user).permit(:first_name, :last_name, :email, :working_hours, role_ids: [])
+  end
+
+  def photo_params
+    params.require(:user).permit(:profile_picture)
   end
 
   def set_title
