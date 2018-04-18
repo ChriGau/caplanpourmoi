@@ -77,10 +77,19 @@ label {
   }
   .slider {
     width:100% !important;
+
+  .slider-track-high {
+    background-color: $mylightgrey;
+  }
+
+  .slider-selection {
+    background-color:$myblue;
+    background-image: -webkit-gradient(linear, left top, left bottom, from($myblue), to($myblue));
+  }
   }
   .slider-handle {
-    background-image: -webkit-gradient(linear, left top, left bottom, from($myblue), to(#2c2697));
-    background-color: $myblue;
+    background-image: -webkit-gradient(linear, left top, left bottom, from($myyellow), to(#FDC419));
+    background-color: $yellow;
   }
   .tooltip-inner {
     background-color: $myblue;
