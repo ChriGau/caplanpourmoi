@@ -4,7 +4,7 @@
     <%= f.input :name, placeholder: "Nom", label: false %>
 
     <div class="col-xs-4 color-block" id="<%= @role.color_id %>" style= "background-color: <%= Color.find(@role.color_id).hexadecimal_code %>;" ></div>    <a class="btn btn-action change-color">Changer la couleur</a>
-
+    <br>
     <div class="col-xs-12 change-color-block">
       <% @color_collection.each do |color_id| %>
         <div class="col-xs-4 color-block" id="<%= color_id %>" style= "background-color: <%= Color.find(color_id).hexadecimal_code %>;" >
@@ -16,6 +16,7 @@
     <%= f.input :color_id, value: @role.color_id, label: false, as: :hidden %>
     <%= f.input :intermediate, as: :hidden, class: "role-color-input" %>
     <br><br>
+    <input type="color" name="role[:intermediate]" id="intermediate" class="intermediate-color-input">
     <%= f.submit "Valider", class: "btn btn-success" %>
 
 
@@ -31,6 +32,7 @@
 <script>
   $(document).ready(function() {
     $(".change-color-block").hide();
+    $("#intermediate").hide();
 
     $(".change-color").click(function() {
         $(".change-color-block").toggle();
@@ -75,7 +77,17 @@
 
       // set intermediate value to corresponding hex
       document.getElementById("role_intermediate").value = selected_color_hexadecimal;
+    });
 
+    // when clicking on adding a color
+    $(".add-color").click(function(elem){
+      $('#role_intermediate').unbind();
+      $("#intermediate").toggle();
+      // affect to simple_form_input the newly selected color
+      document.getElementById("role_intermediate").value = document.getElementById("intermediate").value;
+      document.getElementById("intermediate").addEventListener('input', function (evt) {
+          document.getElementById("role_intermediate").value = this.value;
+      });
     });
 
   }); // closing document.ready
