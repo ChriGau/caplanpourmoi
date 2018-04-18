@@ -2,11 +2,16 @@ $(document).ready(function() {
   var modal = $(".modal-events");
 
   // make roles draggable
-  $("input:checkbox").click(function(){
+  $("input:checkbox.user-select").click(function(){
     $(this).parent().parent().toggleClass("checked");
   });
 
-  //
+
+  $("input:checkbox.role-checkbox").click(function() {
+    $(this).next().toggleClass("checked");
+  })
+
+
   $(".modal-content").draggable({
     handle: ".modal-header"
   });

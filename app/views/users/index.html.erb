@@ -1,7 +1,50 @@
-<h1> Here are all the users </h1>
-
-<% @users.each do |user| %>
-
-<%= user.first_name  %>
-
-<% end %>
+<div class="new-invite">
+  <%= link_to "Inviter un nouvel employé", new_user_path, class:"btn-primary btn-nav" %>
+</div>
+<div class="row equal">
+  <% @users.each do |user| %>
+      <div class="col-xs-12 col-sm-6 col-md-3 equal">
+        <div class="users-card-list" style="<%= "opacity: 0.5" if user.invitation_accepted_at.nil?%>" >
+          <div class="invitation-status <%= invitation_status(user) %>">
+            <div class="status ">
+              <% if user.invitation_sent_at.nil? %>
+                employé non invité
+              <% elsif user.invitation_accepted_at %>
+                confirmé le <%= l user.invitation_accepted_at, format: :default_heure %>
+              <% else %>
+                invité le <%= l user.invitation_sent_at, format: :default_heure %>
+              <% end %>
+            </div>
+            <div class="invite-link <%= "hide" if user.invitation_accepted_at %>">
+              <%= link_to "Réinviter", user_reinvite_path(user) %>
+            </div>
+          </div>
+          <div class="content">
+            <%= link_to "" ,user_path(user), class:"link" %>
+            <div class="title">
+              <div class="name">
+                <h2><%= "#{user.first_name&.capitalize} #{user.last_name&.capitalize}" %></h2>
+                <p>
+                  <%= user.email[0, user.email.index('@')]%><wbr><%= user.email[user.email.index('@'), (user.email.length + 1)]%>
+                </p>
+                <p> user.phone</p>
+              </div>
+              <%= profile_picture(user) %>
+            </div>
+            <div class="details">
+              <div class="time-contract">
+                <%= user.working_hours%>h/semaine
+              </div>
+              <div class="row">
+                <% user.roles.each do |role| %>
+                  <div class="col-xs-12 col-sm-6 col-md-6" style="background-color: <%= role.role_color %>; <%= role_text_color(role.name) %>">
+                    <%= role.name %>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+</div>
