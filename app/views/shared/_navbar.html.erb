@@ -9,8 +9,10 @@
  <!-- Right Navigation -->
   <div class="navbar-wagon-right hidden-xs hidden-sm">
 
+
     <% if user_signed_in? %>
        <!-- Avatar with dropdown menu -->
+        <%= link_to "Mes Employés", users_path, class: "btn-primary btn-nav"%>
         <div class="navbar-wagon-item">
           <div class="dropdown">
             <% if current_user.profile_picture? %>
