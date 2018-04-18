@@ -1,4 +1,4 @@
-# == Schema Information
+p# == Schema Information
 #
 # Table name: slots
 #

@@ -33,13 +33,25 @@ class RolesController < ApplicationController
 
   def update
     @role = Role.find(params[:id])
+    @old_name = @role.name
     # create color if color does not exist
     if Color.find_by(hexadecimal_code: params_role[:intermediate]).nil?
       # /!\ not elegant, a controller should only instanciate 1 object
       @color = Color.create(hexadecimal_code: params_role[:intermediate])
     end
-    @color_id = Color.find_by(hexadecimal_code: params_role[:intermediate]).id
-    if @role.update(name: params_role[:name], intermediate: params_role[:intermediate], color_id: @color_id)
+    @color_id = Color.find_by(hexadecimal_code: params_role[:intermediate].upcase).id
+    # if name is updated, we need to update all elements relating on the role name
+    # --> the p_nb_hours_roles which belongs to ComputeSolution
+    if @old_name != params_role[:name]
+      list_comp_sol_to_update = ComputeSolution.select{|x| x.p_nb_hours_roles.has_key?(@old_name.to_sym)}
+      list_comp_sol_to_update.each do |compute_solution|
+        # replace old key by new key
+        p_nb_hours_roles = compute_solution.p_nb_hours_roles
+        p_nb_hours_roles[params_role[:name].to_sym] = p_nb_hours_roles.delete @old_name.to_sym
+        compute_solution.save!
+      end
+    end
+    if @role.update(name: params_role[:name], intermediate: params_role[:intermediate].upcase, color_id: @color_id)
       redirect_to plannings_path
     else
       render :new
