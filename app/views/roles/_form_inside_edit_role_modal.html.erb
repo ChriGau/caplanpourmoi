@@ -13,10 +13,8 @@
       <div class="col-xs-4 add-color fa fa-plus list-metiers metier" style="width: 7vh; height: 7vh; border: 3px solid white;"></div>
     </div>
 
-    <%= f.input :color_id, value: @role.color_id, label: false, as: :hidden %>
-    <%= f.input :intermediate, as: :hidden, class: "role-color-input" %>
     <br><br>
-    <input type="color" name="role[:intermediate]" id="intermediate" class="intermediate-color-input">
+    <input type="color" name="hexadecimal_code" id="intermediate">
     <%= f.submit "Valider", class: "btn btn-success" %>
 
 
@@ -76,18 +74,13 @@
       var selected_color_hexadecimal = rgbToHex(selected_color_rgb);
 
       // set intermediate value to corresponding hex
-      document.getElementById("role_intermediate").value = selected_color_hexadecimal;
+      document.getElementById("intermediate").value = selected_color_hexadecimal;
     });
 
     // when clicking on adding a color
     $(".add-color").click(function(elem){
-      $('#role_intermediate').unbind();
+      $('#intermediate').unbind();
       $("#intermediate").toggle();
-      // affect to simple_form_input the newly selected color
-      document.getElementById("role_intermediate").value = document.getElementById("intermediate").value;
-      document.getElementById("intermediate").addEventListener('input', function (evt) {
-          document.getElementById("role_intermediate").value = this.value;
-      });
     });
 
   }); // closing document.ready

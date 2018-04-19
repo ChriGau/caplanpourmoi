@@ -1,8 +1,0 @@
-<div class="col-xs-12">
-  <%= simple_form_for @color do |f| %>
-    <%= f.error_notification %>
-    <%= f.input :hexadecimal_code, as: :colorpicker, label: false %>
-    <%= f.submit "Valider", class: "btn btn-success create_slot" %>
-    <%= f.button :button, "Cancel", type: :reset, class: "btn btn-none cancel-button" %>
-  <% end %>
-</div>

@@ -22,7 +22,6 @@ $('#calendar').fullCalendar({
     });
 };
 
-
 var modifyCalendar = function(events, defaultDate) {
 
   var modalContent = document.querySelector(".modal-content");
@@ -143,6 +142,8 @@ var modifyCalendar = function(events, defaultDate) {
      },
 
     eventClick: function( calEvent, jsEvent, view) {
+      $('.update_slot').unbind();
+      $('.delete_slot').unbind();
       modalPosition(modalContent, jsEvent.clientY);
       $(this).css('border-color', 'red');
       $(this).css('border-width', 'thick');
@@ -172,6 +173,7 @@ var modifyCalendar = function(events, defaultDate) {
 
       $('.update_slot').off('click', function() {
       });
+
       // when clicking on update_slot
       $(".update_slot").click( function (){
         var start_chosen = $("#datetimepicker1").find("input").val();
