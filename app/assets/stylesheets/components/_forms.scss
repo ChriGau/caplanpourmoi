@@ -3,19 +3,37 @@
   justify-content: center;
 }
 
+ul.list-inline {
+  text-align:center;
+}
+
 .daysbox {
-  border: 1px solid $mygrey;
+  border: 1px solid $myblue;
+  background-color: $myblue;
+  color: $myyellow;
   width: 100px;
   height: 30px;
   margin-top: 10px;
+  padding:0px;
+}
+
+.daysbox.checked {
+  background-color: $myyellow;
+  color: $myblue;
 }
 
 .unselectable {
-  background: $mygrey;
+  background-color: $mygrey;
   opacity: 0.5;
   :hover {
     cursor: default;
   }
+}
+
+
+.form-control {
+  font-family: "Muli", "Helvetica", "sans-serif";
+  font-size: 14px;
 }
 
 label {
@@ -44,10 +62,42 @@ label {
   align-items: center;
   justify-content: center;
   .input-group {
-  width: 70%;
+    width: 70%;
   }
   .select {
+    width: 70%;
+  }
+}
+.nb-employees-range {
   width: 70%;
+  margin:auto;
+  p {
+  padding-bottom: 20px;
+  margin-left: -50px;
+  }
+  .slider {
+    width:100% !important;
+
+  .slider-track-high {
+    background-color: $mylightgrey;
+  }
+
+  .slider-selection {
+    background-color:$myblue;
+    background-image: -webkit-gradient(linear, left top, left bottom, from($myblue), to($myblue));
+  }
+  }
+  .slider-handle {
+    background-image: -webkit-gradient(linear, left top, left bottom, from($myyellow), to(#FDC419));
+    background-color: $yellow;
+  }
+  .tooltip-inner {
+    background-color: $myblue;
+    color: $myyellow;
+  }
+  .tooltip {
+    margin-left: -13px !important;
+    z-index: 0;
   }
 }
 
@@ -60,13 +110,4 @@ background-color: white;
 color: #566568;
 border-color: #566568;
 }
-.btn-success {
-background-color: $myblue;
-border-radius: 50px;
-border: none;
-}
-.btn-default {
-background-color: $mylightgrey;
-border-radius: 50px;
-border: none;
-}
+

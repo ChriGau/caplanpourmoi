@@ -1,6 +1,6 @@
 <!-- intégrer du date picker bootstrap dans simple form via gem https://github.com/Eonasdan/bootstrap-datetimepicker -->
 
-<%= simple_form_for [@planning, @slot],remote: true do |f| %>
+<%= simple_form_for [@planning, @slot] do |f| %>
   <%= f.error_notification %>
     <div class="row">
       <div class="col-xs-12">
@@ -22,10 +22,14 @@
             </span>
           </div>
         </div>
-        <%= f.input :role_id, placeholder: "Role", label: false, collection: fetch_roles, class: "slot_role"  %>
+        <%= f.input :role_id, placeholder: "Role", label: false, collection: fetch_roles, required: true, class: "slot_role"  %>
+        <div class="nb-employees-range">
+          <p>Nombre d'employés :</p>
+          <input id="nb-employees" name="nbemployees" data-slider-id='ex1Slider' type="text" data-slider-min="1" data-slider-max="5" data-slider-step="1" data-slider-tooltip="always" data-slider-value="1"/>
+        </div>
       </div>
     </div>
-    <div class="row">
+    <div class="row days-list">
       <div class="col-xs-12">
         <div class="form-group">
           <ul class="list-inline" >
@@ -46,12 +50,13 @@
     <div class="row">
       <div class="col-xs-12">
         <div class="form-group button-group">
-            <%= f.submit "Valider", class: "btn btn-success create_slot" %>
-            <%= f.button :button, "Modifier", type: :reset, class: "btn btn-success update_slot" %>
-            <%= f.button :button, "Cancel", type: :reset, class: "btn btn-none cancel-button" %>
-            <%= f.button :button, "Supprimer", type: :reset, class: "btn btn-none delete_slot" %>
+            <%= f.submit "Valider", class: "mybtn mybtn--medium create_slot" %>
+            <%= f.button :button, "Modifier", type: :reset, class: "mybtn mybtn--medium update_slot" %>
+            <%= f.button :button, "Cancel", type: :reset, class: "mybtn mybtn--medium cancel-button" %>
+            <%= f.button :button, "Supprimer", type: :reset, class: "mybtn mybtn--medium delete_slot" %>
 
         </div>
       </div>
     </div>
     <% end %>
+

@@ -6,21 +6,21 @@ class SlotsController < ApplicationController
   def create
     slot_model = Slot.new(slot_params)
     user_id = User.find_by(first_name: 'no solution').id
-    # slot_model.user_id = user_id
-    slot_list = [slot_model]
-
+    slot_list = []
+    params[:nbemployees].to_i.times {slot_list << slot_model.dup}
     clicked_day = slot_params[:start_at].to_datetime.strftime("%u").to_i
     unless params[:items].nil?
-    params[:items].each do |day|
-      new_slot = slot_model.dup
-      new_slot.start_at = slot_model.start_at + (day.to_i - clicked_day).days
-      new_slot.end_at = slot_model.end_at +  (day.to_i - clicked_day).days
-      slot_list << new_slot
+      params[:items].each do |day|
+        params[:nbemployees].to_i.times do
+          new_slot = slot_model.dup
+          new_slot.start_at = slot_model.start_at + (day.to_i - clicked_day).days
+          new_slot.end_at = slot_model.end_at +  (day.to_i - clicked_day).days
+          slot_list << new_slot
+        end
+      end
     end
-    end
-
-    @slots = @planning.slots
-    @slot_templates = Slot.slot_templates
+      @slots = @planning.slots
+      @slot_templates = Slot.slot_templates
     if @planning.slots << slot_list
       respond_to do |format|
         format.html { redirect_to planning_skeleton_path(@planning) }
