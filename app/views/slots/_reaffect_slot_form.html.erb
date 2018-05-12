@@ -35,7 +35,7 @@
         <!-- line 1 = assigned user -->
           <div class="row first-row">
             <div class="col-xs-2">
-              <i><%= assigned_user.first_name %></i>
+              <%= profile_picture(assigned_user) %>
             </div>
             <div class="col-xs-2">
               <i class="fa fa-check-circle"></i>
@@ -44,7 +44,7 @@
               assigned
             </div>
             <div class="col-xs-2">
-              <%= result.select{|x| x.keys.first == assigned_user.id}.first[assigned_user.id][:nb_hours_day]%>
+              <% result.select{|x| x.keys.first == assigned_user.id}.first[assigned_user.id][:nb_hours_day] %>
             </div>
             <div class="col-xs-2">
               <%= result.select{|x| x.keys.first == assigned_user.id}.first[assigned_user.id][:nb_hours_planning] %>
@@ -56,13 +56,13 @@
           <!-- other lines = unassigned users -->
           <% result.each do |hash| %>
             <% unless hash.keys.first == assigned_user.id %>
-              <div class="row">
+              <div class="row row-user">
                 <div class="col-xs-2">
-                  <i> <%= User.find(hash.keys.first).first_name %></i>
+                   <%= profile_picture(User.find(hash.keys.first)) %>
                 </div>
                 <div class="col-xs-2">
                   <% if hash.values.first[:skilled] == true %>
-                    <i class="fa fa-check-circle"></i>
+                    <i class="fa fa-check-circle" style="color: green;"></i>
                   <% else %>
                     <i class="fa fa-exclamation-triangle"></i>
                   <% end %>

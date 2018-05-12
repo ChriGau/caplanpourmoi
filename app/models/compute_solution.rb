@@ -57,7 +57,7 @@ class ComputeSolution < ApplicationRecord
     team = Hash.new {|hash,key| hash[key] = [] }
     self.planning.users.each do |user|
       user.roles.each do |role|
-        team[role.id.to_sym] << user.first_name.capitalize
+        team[role.id.to_s.to_sym] << user.first_name.capitalize
       end
     end
     self.team = team
