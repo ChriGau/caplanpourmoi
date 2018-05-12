@@ -8,7 +8,7 @@ class PlanningsController < ApplicationController
     @plannings_list = plannings_list
     @roles = Role.all
     @users = User.where.not(first_name: 'no solution').includes(:roles).sort do |a, b|
-      a.roles.first.name <=> b.roles.first.name
+      a.roles.empty? || b.roles.empty? ? 1 : a.roles.first&.name <=> b.roles.first&.name
     end
 
     @slot_templates = Slot.slot_templates # liste des roles

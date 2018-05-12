@@ -1,0 +1,27 @@
+<h1>Inviter un nouvel employé</h1>
+<br>
+
+<div class="new-user-form">
+  <%= simple_form_for(@user, html: { id: "role-id" }, url: users_invite_path, method: :post) do |f| %>
+    <%= f.error_notification %>
+    <%= f.input :first_name, placeholder: "Prénom", label: false %>
+    <%= f.input :last_name, placeholder: "Nom", label: false %>
+    <%= f.input :working_hours, placeholder:"nombre heures semaines", label: false %>
+    <%= f.input :email, placeholder: "email", label: false %>
+    <div class="row">
+      <% @roles.each do |role|%>
+        <div class="col-xs-3" id="select-role">
+            <input id="<%= role.id %>" class="role-checkbox" type="checkbox", name="user[role_ids][]" value="<%= role.id %>"/>
+            <label for="<%= role.id %>"><%= role.name.capitalize %></label>
+        </div>
+      <% end %>
+    </div>
+
+    <%= f.input :profile_picture, as: :attachinary, label: false %>
+
+    <div class="btn-group">
+      <%= f.submit "Valider", class: "btn-primary btn-nav" %>
+      <%= link_to 'Back', users_path, class: "btn-primary btn-nav"  %>
+    </div>
+  <% end %>
+</div>

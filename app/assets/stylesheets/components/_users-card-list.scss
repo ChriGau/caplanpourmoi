@@ -1,0 +1,111 @@
+a {
+  text-decoration: none;
+  color: black;
+  &:hover {
+    color: black;
+    text-decoration:none;
+  }
+}
+
+.new-invite {
+  text-align:center;
+  margin: 10px 0px;
+  a {
+  display:block;
+  border-radius:0px !important;
+  padding:10px !important;
+  font-size: 1.1em !important;
+  }
+}
+
+.equal{
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.users-card-list {
+  margin-bottom: 30px;
+  position: relative;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
+  flex-grow : 1;
+  margin-bottom: 20px;
+  .orange {
+    background-color:$myorange;
+  }
+  .green {
+    background-color:$mygreen;
+  }
+  .invitation-status {
+    display: flex;
+    justify-content: space-between;
+    opacity: 0.7;
+    font-size: 0.7em;
+    .status {
+      width:100%;
+      background-color:$mysuperlightgrey;
+      text-align: center;
+      background-color:transparent;
+    }
+    .invite-link {
+      border: solid 1px $mygrey;
+      background-color:transparent;
+      color: $myblue;
+      padding:0px 5px;
+    }
+  }
+  .content {
+    position: relative;
+    .title {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      background: white;
+      .name {
+        align-self:center;
+        padding-left: 10px;
+        flex: 1 1 auto;
+        word-break: break-all;
+        h2 {
+          font-size: 1em;
+          color: $myblue ;
+          margin-top: 10px;
+          margin-bottom: 2px;
+        }
+        p {
+          font-size: 0.7em;
+          color: $mygrey;
+          margin-bottom: 0px;
+        }
+      }
+      .avatar {
+        width:100px;
+        height:100px;
+        border-radius: 50%;
+        margin-top:10px;
+        margin-bottom: 10px
+      }
+    }
+    .details {
+      text-align: center;
+      font-size: 0.9em;
+      .time-contract {
+        width: 100%;
+        background-color: $mylightgrey;
+        color: white;
+      }
+      .row {
+        margin: 0px;
+        margin-bottom: 5px;
+        border-top: solid 4px white;
+      }
+    }
+
+    .link {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      width:100%;
+    }
+  }
+}

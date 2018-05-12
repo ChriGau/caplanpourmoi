@@ -8,6 +8,7 @@
 //= require jquery-fileupload/basic
 //= require cloudinary/jquery.cloudinary
 //= require attachinary
+//= require bootstrap-slider
 //= require sly
 //= require jquery-ui
 //= require react

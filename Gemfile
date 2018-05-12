@@ -35,6 +35,9 @@ gem 'devise_invitable'
 #Sly for sliders
 gem 'rails-assets-sly', source: 'https://rails-assets.org'
 
+#Bootstrap sliders
+gem 'bootstrap-slider-rails'
+
 # React calendar
 gem 'js-routes', '~> 1.3'
 gem 'react-rails', '~> 1.8'

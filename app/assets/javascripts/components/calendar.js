@@ -29,6 +29,10 @@ var modifyCalendar = function(events, defaultDate) {
     modal.style.setProperty('--postop', position -300 + "px");
   }
 
+
+  var mySlider = $("input#nb-employees").bootstrapSlider();
+
+
   $('#calendar').fullCalendar({
     //calendar attributes
     header: {
@@ -57,7 +61,8 @@ var modifyCalendar = function(events, defaultDate) {
       $('.create_slot').show();
       $('.update_slot').hide();
       $('.delete_slot').hide();
-      $('.daysbox').show();
+      $('.nb-employees-range').show();
+      $('.days-list').show();
       // set default value of the date inputs (inside simple form)
       $('#datetimepicker1 .form-control').val(new Date(start.format()).toLocaleDateString('fr-FR', {timezone: 'UTC', hour: '2-digit', minute: '2-digit'}));
       $('#datetimepicker1').datetimepicker({
@@ -151,7 +156,8 @@ var modifyCalendar = function(events, defaultDate) {
       $('.create_slot').hide();
       $('.update_slot').show();
       $('.delete_slot').show();
-      $('.daysbox').hide();
+      $('.nb-employees-range').hide();
+      $('.days-list').hide();
       // get variables
       var planning_id = calEvent.planning_id;
       var slot_id = calEvent.id;
