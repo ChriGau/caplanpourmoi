@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180329135255) do
+ActiveRecord::Schema.define(version: 20180411153811) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -38,6 +38,14 @@ ActiveRecord::Schema.define(version: 20180329135255) do
     t.text     "information"
     t.integer  "compute_solution_id"
     t.index ["compute_solution_id"], name: "index_calcul_solution_v1s_on_compute_solution_id", using: :btree
+  end
+
+  create_table "colors", force: :cascade do |t|
+    t.text     "name_fr"
+    t.text     "name_eng"
+    t.text     "hexadecimal_code"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
   end
 
   create_table "compute_solutions", force: :cascade do |t|
@@ -86,9 +94,10 @@ ActiveRecord::Schema.define(version: 20180329135255) do
 
   create_table "roles", force: :cascade do |t|
     t.string   "name"
-    t.string   "role_color"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer  "color_id"
+    t.index ["color_id"], name: "index_roles_on_color_id", using: :btree
   end
 
   create_table "slots", force: :cascade do |t|
@@ -175,6 +184,7 @@ ActiveRecord::Schema.define(version: 20180329135255) do
   add_foreign_key "constraints", "users"
   add_foreign_key "role_users", "roles"
   add_foreign_key "role_users", "users"
+  add_foreign_key "roles", "colors"
   add_foreign_key "slots", "plannings"
   add_foreign_key "slots", "roles"
   add_foreign_key "solution_slots", "slots"

@@ -1,0 +1,9 @@
+.color-block {
+  height: 7vh;
+  width: 7vh;
+  border: 2px solid white;
+    &:hover {
+    opacity: 4;
+    border-radius: 6px;
+  }
+}

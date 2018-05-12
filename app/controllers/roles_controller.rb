@@ -1,13 +1,24 @@
 class RolesController < ApplicationController
+  def index
+    @list = Role.all
+    @role = Role.new
+  end
+
   def new
     @role = Role.new
-    @color_collection = []
-    Role.color_list.each { |key, value| @color_collection << value[:name_fr] }
+    # colors not yet chosen for a role
+    @color_collection = Color.all.map(&:id) - Role.all.map(&:color_id).uniq
+    @color = Color.new
   end
 
   def create
-    color_hexadecimal = Role.color_list.select{ |k,v| v[:name_fr] == params_role[:role_color] }.values.first[:code]
-    @role = Role.new(role_color: color_hexadecimal, name: params_role[:name])
+    # if colors does not exist
+    if Color.find_by(hexadecimal_code: params["hexadecimal_code"]).nil?
+      # /!\ not elegant, a controller should only instanciate 1 object :/
+      @color = Color.create(hexadecimal_code: params["hexadecimal_code"].upcase)
+    end
+    @color_id = Color.find_by(hexadecimal_code: params["hexadecimal_code"]).id
+    @role = Role.new(color_id: @color_id, name: params_role["name"])
     if @role.save
       redirect_to plannings_path
     else
@@ -17,21 +28,24 @@ class RolesController < ApplicationController
 
   def edit
     @role = Role.find(params[:id])
-    @role_color = @role.role_color
-    @color_collection = []
-    Role.color_list.each { |key, value| @color_collection << value[:name_fr] }
+    @color_collection = Color.all.map(&:id) - Role.all.map(&:color_id).uniq
   end
 
   def update
     @role = Role.find(params[:id])
-    # color_role needs to be the hexadecimal color code VS color name_fr
-    color_hexadecimal = Role.color_list.select{ |k,v| v[:name_fr] == params_role[:role_color] }.values.first[:code]
-    @role.role_color = color_hexadecimal
-    @role.name = params_role[:name]
-    if @role.save
-      redirect_to plannings_path, notice: 'Le role a été modifié'
+    # create color if color does not exist
+    if params["hexadecimal_code"] != "#000000" && Color.find_by(hexadecimal_code: params["hexadecimal_code"]).nil?
+      @color = Color.create(hexadecimal_code: params["hexadecimal_code"].upcase)
+      color_id = @color.id
+    elsif !Color.find_by(hexadecimal_code: params["hexadecimal_code"]).nil? # color is updated but already exists
+      color_id = Color.find_by(hexadecimal_code: params["hexadecimal_code"]).id
+    else # color is not updated
+      color_id = @role.color.id
+    end
+    if @role.update(name: params_role[:name], color_id: color_id)
+      redirect_to plannings_path
     else
-      render :update
+      render :new
     end
   end
 
@@ -50,6 +64,8 @@ class RolesController < ApplicationController
   private
 
   def params_role
-    params.require(:role).permit(:name, :role_color)
+    params.require(:role).permit(:name, :intermediate, :color_id)
   end
 end
+
+

@@ -5,7 +5,6 @@ class PlanningsController < ApplicationController
   # rubocop:disable AbcSize
 
   def index
-
     @plannings_list = plannings_list
     @roles = Role.all
     @users = User.where.not(first_name: 'no solution').includes(:roles).sort do |a, b|

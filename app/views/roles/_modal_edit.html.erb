@@ -1,0 +1,26 @@
+<div class="modal fade modal-events" tabindex="-1" role="dialog" id="edit_role_modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <h4 class="modal-title">Modifier le métier</h4>
+    </div>
+    <div class="modal-body">
+
+      <div class = "row">
+        <%= render "roles/form_inside_edit_role_modal" %>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<%= content_for(:after_js) do %>
+  <script>
+    var modalPosition = function(modal, position) {
+    modal.style.setProperty('--postop', position -300 + "px");
+  }
+  </script>
+<% end %>
+
+
+

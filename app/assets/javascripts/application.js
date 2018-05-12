@@ -16,4 +16,7 @@
 //= require planning
 //= require slots
 //= require fr
+//= require roles
+
+
 

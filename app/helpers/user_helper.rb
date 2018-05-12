@@ -1,6 +1,6 @@
 module UserHelper
   def avatar_with_border_color(user)
-    color = user.roles[0].role_color if user.roles.any?
+    color = user.roles[0].color.hexadecimal_code if user.roles.any?
     color ||= 'black'
 
     options = { class: 'user-avatar-index', style: "border: solid 6px #{color}" }

@@ -7,6 +7,6 @@
     Total days off (2017): 12 <br>
     Remaing: 25 <br>
     <% @user.roles.each do |role| %>
-    <button class="btn" style="margin: 5px; border-color: grey; background-color: <%= role.role_color %>; border-radius: 6px;"> <%= role.name %> </button>
+    <button class="btn" style="margin: 5px; border-color: grey; background-color: <%= role.color.hexadecimal_code %>; border-radius: 6px;"> <%= role.name %> </button>
     <% end %>
 </ul>

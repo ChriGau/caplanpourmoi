@@ -63,16 +63,16 @@ puts "4 - Creating roles"
 puts ""
 
 Role.create!(name: "vendeur",
-            role_color: Role.color_list[:slotcolor1][:code]
+            color_id: Color.find_by(name: "Bleu ciel couvert").id
             )
 Role.create!(name: "mécano",
-            role_color: Role.color_list[:slotcolor2][:code]
+            color_id: Color.find_by(name: "Rose framboise").id
             )
 Role.create!(name: "barista",
-            role_color: Role.color_list[:slotcolor3][:code]
+            color_id: Color.find_by(name: "Or las-vegas").id
             )
 Role.create!(name: "patron",
-            role_color: Role.color_list[:slotcolor4][:code]
+            color_id: Color.find_by(name: "Brun castor").id
             )
 
 # un-assigned value : color_role
@@ -859,6 +859,7 @@ Slot.create!(
   end_at: "2017-08-29 15:00",
   role_id: Role.find_by_name("barista").id,
   )
+
 
 puts ""
 puts  "  >> #{User.count} users created"
