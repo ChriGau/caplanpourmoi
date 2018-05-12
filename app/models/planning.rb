@@ -30,6 +30,14 @@ class Planning < ApplicationRecord
     solutions.find_by(effectivity: :chosen)
   end
 
+  def chosen_solution_slots
+    chosen_solution.solution_slots
+  end
+
+  def get_chosen_solution_slots_for_a_user(user)
+    chosen_solution_slots.where('user_id = ?', user.id)
+  end
+
   def valid_compute_solutions
     compute_solutions.where('created_at > ?', self.slots.map(&:updated_at).max).order(created_at: :desc)
   end

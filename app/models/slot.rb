@@ -70,6 +70,33 @@ class Slot < ApplicationRecord
     end
   end
 
+  def get_infos_to_reaffect_slot
+    result = []
+    users = planning.users
+    # binding.pry
+    users.each do |user|
+      sub_result = {}
+      # init variables
+      status = nil
+      # compute status
+      if user.available?(start_at, end_at) # means has no constraint
+        status = user.is_on_duty?(planning, self) ? "on duty" : "available"
+      else
+        status = "not available" # has constraints
+      end
+      # computed skilled?
+      skilled = user.skilled?(role_id)
+      # compute nb hours
+      a = user.nb_hours_planning(planning, self)
+      sub_result[user.id] = { status: status,
+                              skilled: skilled,
+                              nb_hours_day: a[:hours_day],
+                              nb_hours_planning: a[:hours_planning] }
+      result << sub_result
+    end
+    return result
+  end
+
   private
 
   def set_status

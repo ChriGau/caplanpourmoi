@@ -2,11 +2,11 @@
 
 <div class="wrap-plan" >
 
-  <div class="modal fade modal-events slot_form" tabindex="-1" role="dialog">
+  <div class="modal fade modal-reassignment" tabindex="-1" role="dialog">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title">Propriétés du créneau</h4>
+        <h4 class="modal-title">Autres possibilités</h4>
       </div>
       <div class="modal-body">
         <%= render 'slots/reaffect_slot_form', locals: {planning: @planning, slot: @slot} %>
@@ -70,7 +70,7 @@
           modalPosition(modalContent, jsEvent.clientY);
           $(this).css('border-color', 'red');
           $(this).css('border-width', 'thick');
-          $(".modal-events").modal('show');
+          $(".modal-reassignment").modal('show');
           // get variables
           var planning_id = calEvent.planning_id;
           var slot_id = calEvent.id;

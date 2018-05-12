@@ -58,4 +58,5 @@ module ApplicationHelper
   def fetch_user_solution
     User.where(first_name: 'jean')
   end
+
 end

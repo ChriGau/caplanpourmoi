@@ -2,17 +2,22 @@
   --postop: 0px;
 }
 
-.modal-events {
+.modal-reassignment {
   width: 100%;
   height:100%;
   outline: none;
   position:fixed;
   margin:auto;
+  .first-row{
+    border: 1px solid $myblue;
+  }
   .modal-content {
-    width:400px;
+    width:700px;
+    height:600px;
     display:table;
     margin: auto;
     top: var(--postop);
   }
 
 }
+

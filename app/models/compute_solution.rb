@@ -80,10 +80,6 @@ class ComputeSolution < ApplicationRecord
     seconds_in_hours(seconds)
   end
 
-  def seconds_in_hours(seconds)
-    [seconds / 3600, seconds / 60 % 60].map { |t| t.to_s.rjust(2,'0') }.join('h')
-  end
-
   def hours_per_role(planning)
     role_hours = {}
     planning.slots.map(&:role).uniq.each do |role|
@@ -91,5 +87,9 @@ class ComputeSolution < ApplicationRecord
       role_hours[role.id] = seconds_in_hours(slots_per_role.map{|slot| slot.end_at - slot.start_at}.reduce(:+).to_i)
     end
     role_hours
+  end
+
+  def seconds_in_hours(seconds)
+    [seconds / 3600, seconds / 60 % 60].map { |t| t.to_s.rjust(2,'0') }.join('h')
   end
 end

@@ -5,22 +5,91 @@
     <div class="row">
       <div class="col-xs-12">
         <!-- creation du tableau -->
+        <% result = Slot.find(182).get_infos_to_reaffect_slot %>
+        <% slot = Slot.find(182) %>
+        <% assigned_user =  User.find(slot.get_solution_slot(Planning.find(24).chosen_solution).user_id) %>
 
+        <div class="col-xs-12">
+        <!-- en-têtes -->
+          <div class="row">
+            <div class="col-xs-2">
+              <b>User</b>
+            </div>
+            <div class="col-xs-2">
+              <b>Skilled?</b>
+            </div>
+            <div class="col-xs-2">
+              <b>Status</b>
+            </div>
+            <div class="col-xs-2">
+              <b>h/day</b>
+            </div>
+            <div class="col-xs-2">
+              <b>h/week</b>
+            </div>
+            <div class="col-xs-2">
+              <b></b>
+            </div>
+          </div>
 
+        <!-- line 1 = assigned user -->
+          <div class="row first-row">
+            <div class="col-xs-2">
+              <i><%= assigned_user.first_name %></i>
+            </div>
+            <div class="col-xs-2">
+              <i class="fa fa-check-circle"></i>
+            </div>
+            <div class="col-xs-2">
+              assigned
+            </div>
+            <div class="col-xs-2">
+              <%= result.select{|x| x.keys.first == assigned_user.id}.first[assigned_user.id][:nb_hours_day]%>
+            </div>
+            <div class="col-xs-2">
+              <%= result.select{|x| x.keys.first == assigned_user.id}.first[assigned_user.id][:nb_hours_planning] %>
+            </div>
+            <div class="col-xs-2">
+            </div>
+          </div>
 
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-xs-12">
-        <div class="form-group button-group">
-            <%= f.submit "Valider", class: "mybtn mybtn--medium create_slot" %>
-            <%= f.button :button, "Modifier", type: :reset, class: "mybtn mybtn--medium update_slot" %>
-            <%= f.button :button, "Cancel", type: :reset, class: "mybtn mybtn--medium cancel-button" %>
-            <%= f.button :button, "Supprimer", type: :reset, class: "mybtn mybtn--medium delete_slot" %>
-
+          <!-- other lines = unassigned users -->
+          <% result.each do |hash| %>
+            <% unless hash.keys.first == assigned_user.id %>
+              <div class="row">
+                <div class="col-xs-2">
+                  <i> <%= User.find(hash.keys.first).first_name %></i>
+                </div>
+                <div class="col-xs-2">
+                  <% if hash.values.first[:skilled] == true %>
+                    <i class="fa fa-check-circle"></i>
+                  <% else %>
+                    <i class="fa fa-exclamation-triangle"></i>
+                  <% end %>
+                </div>
+                <div class="col-xs-2">
+                  <!-- button -->
+                  <%= hash.values.first[:status] %>
+                </div>
+                <div class="col-xs-2">
+                  <!-- nb hours day -->
+                  <%= hash.values.first[:nb_hours_day] %>
+                </div>
+                <div class="col-xs-2">
+                  <!-- nb hours week -->
+                  <%= hash.values.first[:nb_hours_planning] %>
+                </div>
+                <div class="col-xs-2">
+                  <!-- reassign -->
+                  <%= f.submit "assign", class: "mybtn mybtn--medium create_slot" %>
+                </div>
+              </div>
+            <% end %>
+          <% end %>
         </div>
+
       </div>
     </div>
+
     <% end %>
 
