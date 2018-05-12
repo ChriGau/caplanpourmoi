@@ -49,14 +49,19 @@ class PlanningsController < ApplicationController
   # rubocop:enable MethodLength
 
   def users
-    @users = User.where.not(first_name: 'no solution').includes(:roles, :plannings, :teams).sort do |a, b|
-      if a.plannings.include?(@planning) == b.plannings.include?(@planning)
-        a.roles.first.name <=> b.roles.first.name
-      elsif a.plannings.include?(@planning)
-        -1
-      else
-        1
+    # go back to skeleton if no slot created
+    if @planning.slots.count.positive?
+      @users = User.where.not(first_name: 'no solution').includes(:roles, :plannings, :teams).sort do |a, b|
+        if a.plannings.include?(@planning) == b.plannings.include?(@planning)
+          a.roles.first.name <=> b.roles.first.name
+        elsif a.plannings.include?(@planning)
+          -1
+        else
+          1
+        end
       end
+    else
+      redirect_to planning_skeleton_path(@planning), alert: "Ajoutez des créneaux à votre planning"
     end
   end
   # rubocop:enable AbcSize, BlockLength, LineLength
