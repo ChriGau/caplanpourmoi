@@ -63,12 +63,20 @@ class PlanningsController < ApplicationController
 
   def update
     @planning = Planning.find(params[:id])
-    @planning.update(planning_params)
-    @planning.save!
-    compute_solutions = ComputeSolution.create(planning_id: @planning.id)
-    ComputePlanningSolutionsJob.perform_later(@planning, compute_solutions)
-    redirect_to planning_compute_solutions_path(@planning)
-
+    # go back to skeleton if no slots created
+    if !@planning.slots.count.positive?
+      redirect_to planning_skeleton_path(@planning), alert: "Ajoutez des créneaux à votre planning"
+      # need users to save planning and go find a solution
+      # user_ids are part of params => { {...}, {"planning"=> "user_ids" => [] } }
+    elsif params.keys.include?("planning")
+      @planning.update(planning_params)
+      @planning.save!
+      compute_solutions = ComputeSolution.create(planning_id: @planning.id)
+      ComputePlanningSolutionsJob.perform_later(@planning, compute_solutions)
+      redirect_to planning_compute_solutions_path(@planning)
+    else # can't save planning and go find a solution if no user(s)
+      redirect_to planning_users_path(@planning), alert: "Sélectionnez des users"
+    end
   end
 
   def events
