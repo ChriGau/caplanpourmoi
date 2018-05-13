@@ -38,6 +38,11 @@
   .row-user{
     border: 1px solid $mygrey;
     background-color: $mylightgrey;
+    color: white;
+        &:hover {
+      color:$mygrey;
+      background: white;
+    }
   }
   .avatar {
     width:60px;

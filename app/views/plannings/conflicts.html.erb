@@ -9,7 +9,7 @@
         <h4 class="modal-title">Slot - Autres possibilités d'affectation</h4>
       </div>
       <div class="modal-body">
-        <%= render 'slots/reaffect_slot_form', locals: {planning: @planning, slot: @slot} %>
+        <%= render 'solution_slots/reaffect_solution_slot_form', locals: { planning: @planning, solution_slot: @solution_slot } %>
       </div>
     </div>
   </div>
@@ -75,6 +75,42 @@
           var planning_id = calEvent.planning_id;
           var slot_id = calEvent.id;
           var role_id = calEvent.role_id;
+
+          // when clicking on update_slot
+          $(".reassign-slot").click( function (data){
+            console.log(data);
+
+            var role_id = Number($("#slot_role_id").val());
+            event_data_bis = {
+                  slot: {
+                      id: calEvent.id,
+                      role_id: role_id,
+                      start: start_chosen,
+                      end: end_chosen,
+                      start_at: start_chosen,
+                      end_at: end_chosen
+                    }
+                };
+                // patcher le solution slot
+            $.ajax({
+              url: build_url,
+              data: event_data_bis,
+              format: 'js',
+              type: 'PATCH',
+              success: function(data) {
+                console.log(Event);
+                $('.update_slot').unbind();
+                $('.delete_slot').unbind();
+              },
+              error: function(jqXHR) {
+                console.log("ajax echec - PATCH de .update_slot");
+                console.log(jqXHR.responseText);
+
+                $('#calendar').fullCalendar( 'refetchEvents' );
+              }
+            }); // fin ajax request
+          }); // fin de update_slot
+
 
         }, // fin de eventClick
 

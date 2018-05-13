@@ -1,7 +1,6 @@
-<!-- intégrer du date picker bootstrap dans simple form via gem https://github.com/Eonasdan/bootstrap-datetimepicker -->
-
-<%= simple_form_for [@planning, @slot] do |f| %>
+<%= simple_form_for [@planning, @solution_slot] do |f| %>
   <%= f.error_notification %>
+
     <div class="row">
       <div class="col-xs-12">
         <!-- creation du tableau -->
@@ -44,7 +43,7 @@
               assigned
             </div>
             <div class="col-xs-2">
-              <% result.select{|x| x.keys.first == assigned_user.id}.first[assigned_user.id][:nb_hours_day] %>
+              <%= result.select{|x| x.keys.first == assigned_user.id}.first[assigned_user.id][:nb_hours_day] %>
             </div>
             <div class="col-xs-2">
               <%= result.select{|x| x.keys.first == assigned_user.id}.first[assigned_user.id][:nb_hours_planning] %>
@@ -81,7 +80,7 @@
                 </div>
                 <div class="col-xs-2">
                   <!-- reassign -->
-                  <%= f.submit "assign", class: "mybtn mybtn--medium create_slot" %>
+                  <%= link_to "assign", planning_solution_slot_path(@planning, @solution_slot, user_id: User.find(hash.keys.first).id), method: :patch, class: "mybtn mybtn--medium reassign-slot"%>
                 </div>
               </div>
             <% end %>
@@ -91,5 +90,5 @@
       </div>
     </div>
 
-    <% end %>
+ <% end %>
 
