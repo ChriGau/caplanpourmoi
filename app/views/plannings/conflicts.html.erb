@@ -68,39 +68,35 @@
 
         eventClick: function( calEvent, jsEvent, view) {
           modalPosition(modalContent, jsEvent.clientY);
+          $('.reassign-solution_slot').unbind();
           $(this).css('border-color', 'red');
           $(this).css('border-width', 'thick');
           $(".modal-reassignment").modal('show');
+          var solution_slot_id = calEvent.solution_slot_id.id;
           // get variables
           var planning_id = calEvent.planning_id;
-          var slot_id = calEvent.id;
-          var role_id = calEvent.role_id;
+          var solution_slot_id = calEvent.id;
 
           // when clicking on update_slot
-          $(".reassign-slot").click( function (data){
-            console.log(data);
-
-            var role_id = Number($("#slot_role_id").val());
-            event_data_bis = {
-                  slot: {
-                      id: calEvent.id,
-                      role_id: role_id,
-                      start: start_chosen,
-                      end: end_chosen,
-                      start_at: start_chosen,
-                      end_at: end_chosen
+          $(".reassign-solution_slot").click( function (){
+            var user_id = this.id;
+            var build_url = "/plannings/" + planning_id + "/solution_slots/" + solution_slot_id;
+            console.log(user_id);
+            console.log("sol slot id= " + calEvent.solution_slot_id.id);
+            solution_slot_data = {
+                  solution_slot: {
+                      id: calEvent.solution_slot_id.id,
+                      user_id: user_id
                     }
                 };
                 // patcher le solution slot
             $.ajax({
               url: build_url,
-              data: event_data_bis,
+              data: solution_slot_data,
               format: 'js',
               type: 'PATCH',
               success: function(data) {
-                console.log(Event);
-                $('.update_slot').unbind();
-                $('.delete_slot').unbind();
+                $('#calendar').fullCalendar( 'refetchEvents' );
               },
               error: function(jqXHR) {
                 console.log("ajax echec - PATCH de .update_slot");

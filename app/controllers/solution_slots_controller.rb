@@ -9,19 +9,20 @@ class SolutionSlotsController < ApplicationController
 
   def update
     @solution_slot = SolutionSlot.find(params[:id])
-    respond_to do |format|
-      if @solution_slot.update(user_id: params["user_id"].to_i)
+    # respond_to do |format|
+      if @solution_slot.update(user_id: params["user_id"])
         # do not respond to html format pk sinon on a 2 PATCH requests quand on
         # clique sur le bouton du form + déclenche l'event click du fullcalendar
-        format.html { redirect_to planning_conflicts_path(@planning) }
-        format.js
-        format.json { render json: @slot }
+        # format.html { redirect_to planning_conflicts_path(@planning) }
+        # format.js
+        # format.json { render json: @solution_slot }
+        redirect_to planning_conflicts_path(@planning)
       else
-        format.html { render :edit }
+        # format.html { render :edit }
         format.js
-        format.json { render json: @slot.errors, status: :unprocessable_entity }
+        format.json { render json: @solution_slot.errors, status: :unprocessable_entity }
       end
-    end
+    # end
   end
 
   private

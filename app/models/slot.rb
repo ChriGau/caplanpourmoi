@@ -79,7 +79,9 @@ class Slot < ApplicationRecord
       # init variables
       status = nil
       # compute status
-      if user.available?(start_at, end_at) # means has no constraint
+      if get_solution_slot(planning.chosen_solution).user_id == user.id
+        status = "assigned"
+      elsif user.available?(start_at, end_at) # means has no constraint
         status = user.is_on_duty?(planning, self) ? "on duty" : "available"
       else
         status = "not available" # has constraints

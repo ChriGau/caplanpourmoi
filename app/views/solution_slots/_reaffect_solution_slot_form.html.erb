@@ -4,9 +4,9 @@
     <div class="row">
       <div class="col-xs-12">
         <!-- creation du tableau -->
-        <% result = Slot.find(182).get_infos_to_reaffect_slot %>
-        <% slot = Slot.find(182) %>
-        <% assigned_user =  User.find(slot.get_solution_slot(Planning.find(24).chosen_solution).user_id) %>
+        <% result = @solution_slot.slot.get_infos_to_reaffect_slot %>
+        <% slot =  @solution_slot.slot %>
+        <% assigned_user =  User.find(slot.get_solution_slot(@planning.chosen_solution).user_id) %>
 
         <div class="col-xs-12">
         <!-- en-têtes -->
@@ -31,59 +31,36 @@
             </div>
           </div>
 
-        <!-- line 1 = assigned user -->
-          <div class="row first-row">
-            <div class="col-xs-2">
-              <%= profile_picture(assigned_user) %>
-            </div>
-            <div class="col-xs-2">
-              <i class="fa fa-check-circle"></i>
-            </div>
-            <div class="col-xs-2">
-              assigned
-            </div>
-            <div class="col-xs-2">
-              <%= result.select{|x| x.keys.first == assigned_user.id}.first[assigned_user.id][:nb_hours_day] %>
-            </div>
-            <div class="col-xs-2">
-              <%= result.select{|x| x.keys.first == assigned_user.id}.first[assigned_user.id][:nb_hours_planning] %>
-            </div>
-            <div class="col-xs-2">
-            </div>
-          </div>
-
-          <!-- other lines = unassigned users -->
           <% result.each do |hash| %>
-            <% unless hash.keys.first == assigned_user.id %>
-              <div class="row row-user">
-                <div class="col-xs-2">
-                   <%= profile_picture(User.find(hash.keys.first)) %>
-                </div>
-                <div class="col-xs-2">
-                  <% if hash.values.first[:skilled] == true %>
-                    <i class="fa fa-check-circle" style="color: green;"></i>
-                  <% else %>
-                    <i class="fa fa-exclamation-triangle"></i>
-                  <% end %>
-                </div>
-                <div class="col-xs-2">
-                  <!-- button -->
-                  <%= hash.values.first[:status] %>
-                </div>
-                <div class="col-xs-2">
-                  <!-- nb hours day -->
-                  <%= hash.values.first[:nb_hours_day] %>
-                </div>
-                <div class="col-xs-2">
-                  <!-- nb hours week -->
-                  <%= hash.values.first[:nb_hours_planning] %>
-                </div>
-                <div class="col-xs-2">
-                  <!-- reassign -->
-                  <%= link_to "assign", planning_solution_slot_path(@planning, @solution_slot, user_id: User.find(hash.keys.first).id), method: :patch, class: "mybtn mybtn--medium reassign-slot"%>
-                </div>
+            <div class="row row-user">
+              <div class="col-xs-2">
+                 <%= profile_picture(User.find(hash.keys.first)) %>
               </div>
-            <% end %>
+              <div class="col-xs-2">
+                <% if hash.values.first[:skilled] == true %>
+                  <i class="fa fa-check-circle" style="color: green;"></i>
+                <% else %>
+                  <i class="fa fa-exclamation-triangle"></i>
+                <% end %>
+              </div>
+              <div class="col-xs-2">
+                <!-- button -->
+                <%= hash.values.first[:status] %>
+              </div>
+              <div class="col-xs-2">
+                <!-- nb hours day -->
+                <%= hash.values.first[:nb_hours_day] %>
+              </div>
+              <div class="col-xs-2">
+                <!-- nb hours week -->
+                <%= hash.values.first[:nb_hours_planning] %>
+              </div>
+              <div class="col-xs-2">
+                <!-- reassign -->
+
+                <%= link_to "assign", planning_solution_slot_path(@planning, @solution_slot, user_id: User.find(hash.keys.first).id), method: :patch, class: "mybtn mybtn--medium reassign-solution_slot", id:"#{User.find(hash.keys.first).id}" %>
+              </div>
+            </div>
           <% end %>
         </div>
 
