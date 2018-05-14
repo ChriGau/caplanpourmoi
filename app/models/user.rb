@@ -84,7 +84,7 @@ class User < ApplicationRecord
     if slot.nil?
       hours_day_status = false
     else
-      hours_day_status = seconds_day/3600 < 8 ? true : false
+      hours_day_status = is_working_extra_hours_this_day?(seconds_day/3600)
     end
     { hours_planning: hours_planning,
       hours_planning_decimal: seconds_planning/3600,
@@ -109,5 +109,10 @@ class User < ApplicationRecord
     SolutionSlot.select{ |s| s.solution.effectivity == 'chosen' &&
       s.start_at <= end_at && s.end_at >= start_at &&
       s.user == self }.count.positive?
+  end
+
+  def is_working_extra_hours_this_day?(on_duty_hours_decimal)
+    # TODO => add attribute in user model
+    on_duty_hours_decimal < 8 ? true : false
   end
 end
