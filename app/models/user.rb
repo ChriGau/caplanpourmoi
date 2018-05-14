@@ -69,7 +69,7 @@ class User < ApplicationRecord
   end
 
   def nb_hours_planning(planning, slot = nil)
-    # get nb of hours where user is on duty
+    # get nb of hours where user is on duty. Periods = planning, day.
     solution_slots = planning.get_chosen_solution_slots_for_a_user(self)
     seconds_planning = (solution_slots.map{|sol_slot| sol_slot.end_at - sol_slot.start_at}.reduce(:+)).to_i
     unless slot.nil?
@@ -79,8 +79,19 @@ class User < ApplicationRecord
       seconds_day = (solution_slots_day.map{|sol_slot| sol_slot.end_at - sol_slot.start_at}.reduce(:+)).to_i
     end
     hours_planning = seconds_in_hours(seconds_planning)
+    hours_planning_status = seconds_planning/3600 < working_hours ? true : false
     hours_day = slot.nil? ? nil : seconds_in_hours(seconds_day)
-    { hours_planning: hours_planning, hours_day: hours_day }
+    if slot.nil?
+      hours_day_status = false
+    else
+      hours_day_status = seconds_day/3600 < 8 ? true : false
+    end
+    { hours_planning: hours_planning,
+      hours_planning_decimal: seconds_planning/3600,
+      hours_planning_status: hours_planning_status,
+      hours_day: hours_day,
+      hours_day_decimal: seconds_day/3600,
+      hours_day_status: hours_day_status }
   end
 
   def seconds_in_hours(seconds)

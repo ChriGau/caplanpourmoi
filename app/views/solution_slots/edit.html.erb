@@ -28,10 +28,16 @@
           </div>
 
           <% @users_infos.each do |hash| %>
+            <!-- set specific class for assigned user row -->
             <% if User.find(hash.keys.first) == @assigned_user  %>
-              <div class="row assigned-user-row" id="status-user-<%= User.find(hash.keys.first).id %>">
+              <div class="row assigned-user-row">
+            <!-- set specific class if available and skilled -->
+            <% elsif hash.values.first[:skilled] == true && hash.values.first[:status] == "available" %>
+              <div class="row potential-backup">
+            <% elsif hash.values.first[:status] == "available" %>
+              <div class="row available-unskilled">
             <% else %>
-              <div class="row row-user" id="status-user-<%= User.find(hash.keys.first).id %>">
+              <div class="row row-user">
             <% end %>
               <div class="col-xs-2">
                <%= profile_picture(User.find(hash.keys.first)) %>
@@ -49,16 +55,25 @@
               </div>
               <div class="col-xs-2">
                 <!-- nb hours day -->
+                <% if hash.values.first[:nb_hours_day_status] == false %>
+                  <i class="fa fa-exclamation-triangle"></i><br>
+                <% end %>
                 <%= hash.values.first[:nb_hours_day] %>
               </div>
               <div class="col-xs-2">
                 <!-- nb hours week -->
+                <% if hash.values.first[:nb_hours_planning_status] == false %>
+                  <i class="fa fa-exclamation-triangle"></i><br>
+                <% end %>
                 <%= hash.values.first[:nb_hours_planning] %>
               </div>
               <div class="col-xs-2">
                 <!-- reassign -->
+                <% unless User.find(hash.keys.first) == @assigned_user  %>
+                  <%= link_to "assign", planning_solution_slot_path(@planning, @solution_slot, user_id: User.find(hash.keys.first).id), method: :patch, class: "mybtn mybtn--medium reassign-solution_slot", id:"#{User.find(hash.keys.first).id}" %>
+                <% end %>
 
-                <%= link_to "assign", planning_solution_slot_path(@planning, @solution_slot, user_id: User.find(hash.keys.first).id), method: :patch, class: "mybtn mybtn--medium reassign-solution_slot", id:"#{User.find(hash.keys.first).id}" %>
+
               </div>
             </div>
           <% end %>

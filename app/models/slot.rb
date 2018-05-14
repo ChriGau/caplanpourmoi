@@ -93,9 +93,13 @@ class Slot < ApplicationRecord
       sub_result[user.id] = { status: status,
                               skilled: skilled,
                               nb_hours_day: a[:hours_day],
-                              nb_hours_planning: a[:hours_planning] }
+                              nb_hours_day_status: a[:hours_day_status],
+                              nb_hours_planning: a[:hours_planning],
+                              nb_hours_planning_status: a[:hours_planning_status] }
       result << sub_result
     end
+    # tri par ordre alphabétique de status
+    result.sort_by!{ |h| h.values[0][:status] }
     return result
   end
 

@@ -4,7 +4,6 @@ class SlotsController < ApplicationController
   # rubocop:disable AbcSize, MethodLength
   # Too much assignment, condition and branching
   def create
-    raise
     slot_model = Slot.new(slot_params)
     user_id = User.find_by(first_name: 'no solution').id
     slot_list = []

@@ -43,6 +43,7 @@
         modal.style.setProperty('--postop', position -300 + "px");
       }
 
+
       $('#calendar').fullCalendar({
         //calendar attributes
         header: {
@@ -70,6 +71,12 @@
           $('.reassign-solution_slot').unbind();
           $(this).css('border-color', 'red');
           $(this).css('border-width', 'thick');
+
+          // refectch events when modal is closed => no more red border-color
+          $(".modal-reassignment").on("hidden.bs.modal", function () {
+            $('#calendar').fullCalendar( 'refetchEvents' );
+          });
+
           var solution_slot_id = calEvent.solution_slot_id.id;
           // get variables
           var planning_id = calEvent.planning_id;

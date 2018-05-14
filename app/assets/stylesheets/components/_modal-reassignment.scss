@@ -21,13 +21,34 @@
     text-decoration: none;
     }
   }
+  .potential-backup{
+    border: 3px solid $mygreen;
+    background-color: $mygreen;
+    color: $myblue;
+      &:hover {
+    background: white;
+    text-decoration: none;
+    }
+  }
+  .available-unskilled{
+    border: 3px solid $mylightblue;
+    background-color: $mylightblue;
+    color: $myblue;
+      &:hover {
+    background: white;
+    text-decoration: none;
+    }
+  }
+
   .fa-exclamation-triangle{
     color: $myred;
   }
+
   .modal-title{
     text-align: center;
     height: 40px;
   }
+
   .row{
     justify-content: center;
     text-align: center;
@@ -62,16 +83,3 @@
   }
 
 }
-
-
-  .assigned-user-row{
-    border: 5px solid $myyellow;
-    background-color: $myblue;
-    color: $myyellow;
-      &:hover {
-    color:white;
-    background: $myyellow;
-    color: $myblue;
-    text-decoration: none;
-    }
-  }
