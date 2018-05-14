@@ -83,17 +83,3 @@
     </div>
 
  <% end %>
-
-<!-- ___________________________ JS __________________________________ -->
-  <%= content_for(:after_js) do %>
-    <script>
-      // for CSS use => add Class too the assigned user row
-      // on ajoute #status-user-"assigned user id" => Add class .assigned-user-row
-      var assigned_user_id = <%= @assigned_user.id %>
-      console.log("assigned_user_id = " + assigned_user_id);
-      var d = document.getElementById("status-user-" + assigned_user_id);
-      d.className += ".assigned-user-row";
-
-    </script>
-
-  <% end %>
