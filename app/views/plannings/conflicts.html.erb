@@ -9,7 +9,6 @@
         <h4 class="modal-title">Slot - Autres possibilités d'affectation</h4>
       </div>
       <div class="modal-body">
-        <%= render 'solution_slots/reaffect_solution_slot_form', locals: { planning: @planning, solution_slot: @solution_slot } %>
       </div>
     </div>
   </div>
@@ -71,42 +70,29 @@
           $('.reassign-solution_slot').unbind();
           $(this).css('border-color', 'red');
           $(this).css('border-width', 'thick');
-          $(".modal-reassignment").modal('show');
           var solution_slot_id = calEvent.solution_slot_id.id;
           // get variables
           var planning_id = calEvent.planning_id;
-          var solution_slot_id = calEvent.id;
+          console.log("planning id = " + planning_id);
 
-          // when clicking on update_slot
-          $(".reassign-solution_slot").click( function (){
-            var user_id = this.id;
-            var build_url = "/plannings/" + planning_id + "/solution_slots/" + solution_slot_id;
-            console.log(user_id);
-            console.log("sol slot id= " + calEvent.solution_slot_id.id);
-            solution_slot_data = {
-                  solution_slot: {
-                      id: calEvent.solution_slot_id.id,
-                      user_id: user_id
-                    }
-                };
-                // patcher le solution slot
-            $.ajax({
-              url: build_url,
-              data: solution_slot_data,
-              format: 'js',
-              type: 'PATCH',
-              success: function(data) {
-                $('#calendar').fullCalendar( 'refetchEvents' );
-              },
-              error: function(jqXHR) {
-                console.log("ajax echec - PATCH de .update_slot");
-                console.log(jqXHR.responseText);
-
-                $('#calendar').fullCalendar( 'refetchEvents' );
-              }
-            }); // fin ajax request
-          }); // fin de update_slot
-
+          //when clicking on a slot, ajax request to solution_slots#edit
+          var build_url = "/plannings/" + planning_id + "/solution_slots/" + solution_slot_id + "/edit";
+              // requete vers edit du solution slot
+          $.ajax({
+            url: build_url,
+            // data: solution_slot_data,
+            format: 'js',
+            type: 'GET',
+            success: function(data) {
+               $('.modal-body').html(data);
+               $(".modal-reassignment").modal('show');
+               $('.reassign-solution_slot').unbind();
+            },
+            error: function(jqXHR) {
+              console.log("ajax echec - GET de edit solution_slot");
+              console.log(jqXHR.responseText);
+            }
+          }); // fin ajax request
 
         }, // fin de eventClick
 

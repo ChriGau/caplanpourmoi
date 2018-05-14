@@ -44,7 +44,7 @@ class PlanningsController < ApplicationController
     elsif !@planning.solutions.chosen.exists?
       flash.now[:alert] = "Validez une solution pour votre planning"
     end
-    @solution_slot = SolutionSlot.find(params["solution_slot_id"])# to be used in _reaffect_slot_form.html.erb
+    @solution_slot = SolutionSlot.find(25603) # to be used in _reaffect_slot_form.html.erb
   end
 
   # rubocop:enable MethodLength

@@ -10,7 +10,7 @@
   margin:auto;
   align-items: center;
 
-  .first-row{
+  .assigned-user-row{
     border: 5px solid $myyellow;
     background-color: $myblue;
     color: $myyellow;
@@ -63,3 +63,15 @@
 
 }
 
+
+  .assigned-user-row{
+    border: 5px solid $myyellow;
+    background-color: $myblue;
+    color: $myyellow;
+      &:hover {
+    color:white;
+    background: $myyellow;
+    color: $myblue;
+    text-decoration: none;
+    }
+  }

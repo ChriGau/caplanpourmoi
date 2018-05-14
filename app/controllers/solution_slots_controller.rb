@@ -4,7 +4,11 @@ class SolutionSlotsController < ApplicationController
 
   def edit
     @solution = @planning.chosen_solution
-    @solution_slot = SolutionSlot.find(25603)
+    @solution_slot = SolutionSlot.find(params[:id])
+    @users_infos = @solution_slot.slot.get_infos_to_reaffect_slot
+    @slot = @solution_slot.slot
+    @assigned_user = User.find(@solution_slot.user_id)
+    render :layout => 'no_layout'
   end
 
   def update
