@@ -100,6 +100,12 @@ class Slot < ApplicationRecord
     return result
   end
 
+  def overlap_other_slot?(other_slot)
+    # true if 2 slots are overlaping one another
+    # rq : fin de slot à 18h, début other slot à 18h = no overlap
+    start_at < other_slot.end_at && end_at > other_slot.start_at
+  end
+
   private
 
   def set_status

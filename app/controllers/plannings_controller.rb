@@ -69,7 +69,6 @@ class PlanningsController < ApplicationController
     compute_solutions = ComputeSolution.create(planning_id: @planning.id)
     ComputePlanningSolutionsJob.perform_later(@planning, compute_solutions)
     redirect_to planning_compute_solutions_path(@planning)
-
   end
 
   def events

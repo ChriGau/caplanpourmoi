@@ -1,6 +1,7 @@
 class SolutionSlotsController < ApplicationController
 
   before_action :set_planning, only: [:edit, :update]
+  # TODO => after update... + after_create
 
   def edit
     @solution = @planning.chosen_solution
@@ -13,10 +14,12 @@ class SolutionSlotsController < ApplicationController
 
   def update
     @solution_slot = SolutionSlot.find(params[:id])
-    if @solution_slot.update(user_id: params["user_id"])
-        redirect_to planning_conflicts_path(@planning)
-    else
-      render :edit
+    respond_to do |format|
+      if @solution_slot.update(user_id: params["user_id"])
+          format.js
+      else
+        render :edit
+      end
     end
   end
 

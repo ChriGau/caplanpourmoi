@@ -38,6 +38,8 @@ class Solution < ApplicationRecord
   enum effectivity: [:not_chosen, :chosen]
   enum relevance: [:optimal, :partial]
 
+  # Note: Solution get updated when one of its SolutionSlot is saved
+
   def evaluate_relevance
     nb_conflicts = solution_slots.where(user: User.find_by(first_name: 'no solution')).count
     relevance = !nb_conflicts.nil? && nb_conflicts.zero? ? :optimal : :partial
@@ -78,10 +80,36 @@ class Solution < ApplicationRecord
       solution_slots.where(user: employee).map do |solution_slot|
         day_number = solution_slot.start_at.strftime("%u")
         days.push(day_number) unless days.include?(day_number)
-
       end
       employees_nb_days[employee.first_name] = days.length
     end
     employees_nb_days
+  end
+
+  def evaluate_nb_conflicts
+    nb_conflicts = solution_slots.where('user_id = ?', no_solution_user_id).count
+    update(nb_conflicts: nb_conflicts)
+  end
+
+  def evaluate_nb_overlaps
+    # overlap = a user who must be at >1 places at once. User <> 'no solution'.
+    nb_overlaps = 0
+    overlaps_full_details = []
+    list_of_solution_slots = solution_slots.where('user_id != ?', no_solution_user_id)
+    list_of_solution_slots.each do |solution_slot|
+      result = solution_slot.evaluate_overlaps_for_a_solution_slot
+      if result[:nb_overlaps] > 0
+        nb_overlaps += result[:nb_overlaps]
+        overlaps_full_details << result[:overlaps_details]
+      end
+    end
+    update(nb_overlaps: nb_overlaps)
+    { nb_overlaps: nb_overlaps, overlaps_details: overlaps_full_details }
+  end
+
+  private
+
+  def no_solution_user_id
+    User.find_by(first_name: 'no solution').id
   end
 end

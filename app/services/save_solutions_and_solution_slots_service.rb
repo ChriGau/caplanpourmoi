@@ -31,6 +31,7 @@ class SaveSolutionsAndSolutionSlotsService
 
   def create_solution(compute_solution, nb_overlaps = nil)
     Solution.create(planning: @planning, compute_solution: compute_solution, nb_overlaps: nb_overlaps)
+    # TODO add after_create => nb conflicts
   end
 
   def create_solution_slots(slotgroups_array, planning_possibility, solution_instance)
