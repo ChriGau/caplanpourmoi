@@ -1,6 +1,17 @@
 #calendar {
   /*override le theme par defaut*/
   /*noms des jours*/
+
+  // ligne au-dessus des heures pleines
+  .fc-minor{
+    border-bottom: dotted $mysuperlightgrey 3px;
+  }
+
+  // ligne au dessous des heures pleines
+  .fc-widget-content{
+    border-top: dotted white 0px;
+  }
+
   .fc-day-header {
     color: $mygrey;
     font-family: "Oswald";
