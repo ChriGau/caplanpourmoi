@@ -49,26 +49,39 @@ class PlanningsController < ApplicationController
   # rubocop:enable MethodLength
 
   def users
-    @users = User.where.not(first_name: 'no solution').includes(:roles, :plannings, :teams).sort do |a, b|
-      if a.plannings.include?(@planning) == b.plannings.include?(@planning)
-        a.roles.first.name <=> b.roles.first.name
-      elsif a.plannings.include?(@planning)
-        -1
-      else
-        1
+    # go back to skeleton if no slot created
+    if @planning.slots.count.positive?
+      @users = User.where.not(first_name: 'no solution').includes(:roles, :plannings, :teams).sort do |a, b|
+        if a.plannings.include?(@planning) == b.plannings.include?(@planning)
+          a.roles.first.name <=> b.roles.first.name
+        elsif a.plannings.include?(@planning)
+          -1
+        else
+          1
+        end
       end
+    else
+      redirect_to planning_skeleton_path(@planning), alert: "Ajoutez des créneaux à votre planning"
     end
   end
   # rubocop:enable AbcSize, BlockLength, LineLength
 
   def update
     @planning = Planning.find(params[:id])
-    @planning.update(planning_params)
-    @planning.save!
-    compute_solutions = ComputeSolution.create(planning_id: @planning.id)
-    ComputePlanningSolutionsJob.perform_later(@planning, compute_solutions)
-    redirect_to planning_compute_solutions_path(@planning)
-
+    # go back to skeleton if no slots created
+    if !@planning.slots.count.positive?
+      redirect_to planning_skeleton_path(@planning), alert: "Ajoutez des créneaux à votre planning"
+      # need users to save planning and go find a solution
+      # user_ids are part of params => { {...}, {"planning"=> "user_ids" => [] } }
+    elsif params.keys.include?("planning")
+      @planning.update(planning_params)
+      @planning.save!
+      compute_solutions = ComputeSolution.create(planning_id: @planning.id)
+      ComputePlanningSolutionsJob.perform_later(@planning, compute_solutions)
+      redirect_to planning_compute_solutions_path(@planning)
+    else # can't save planning and go find a solution if no user(s)
+      redirect_to planning_users_path(@planning), alert: "Sélectionnez des users"
+    end
   end
 
   def events
