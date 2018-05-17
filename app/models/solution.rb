@@ -99,11 +99,11 @@ class Solution < ApplicationRecord
     list_of_solution_slots.each do |solution_slot|
       result = solution_slot.evaluate_overlaps_for_a_solution_slot
       if result[:nb_overlaps] > 0
-        nb_overlaps += result[:nb_overlaps]/2
+        nb_overlaps += result[:nb_overlaps]
         overlaps_full_details << result[:overlaps_details]
       end
     end
-    update(nb_overlaps: nb_overlaps)
+    update(nb_overlaps: nb_overlaps/2)
     { nb_overlaps: nb_overlaps, overlaps_details: overlaps_full_details }
   end
 

@@ -73,6 +73,12 @@ class ComputeSolution < ApplicationRecord
     self.nb_cuts_within_tree = calculation_abstract[:nb_cuts_within_tree]
   end
 
+  def evaluate_nb_optimal_solutions
+    # this is done when a solution_slot is updated (its user_id is modified)
+    nb = self.solutions.where(nb_overlaps: 0, nb_conflicts: 0).count
+    update(nb_optimal_solutions: nb)
+  end
+
   private
 
   def nb_hours(planning)

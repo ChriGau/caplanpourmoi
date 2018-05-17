@@ -33,14 +33,6 @@ var modifyCalendar = function(events, defaultDate) {
   var mySlider = $("input#nb-employees").bootstrapSlider();
 
 
-    var displayCreateSlotButton = function(data) {
-      console.log("Hello World");
-      $('.create_slot').show();
-  }
-
-    var a = document.getElementsByClassName('slot_role_id')[0];
-    a.addEventListener("change", displayCreateSlotButton);
-
   $('#calendar').fullCalendar({
     //calendar attributes
     header: {
@@ -67,7 +59,7 @@ var modifyCalendar = function(events, defaultDate) {
       modalPosition(modalContent, jsEvent.clientY);
       $('.create_slot').hide();
       $(".modal-events").modal('show');
-      // $('.create_slot').show();
+      $('.create_slot').show();
       $('.update_slot').hide();
       $('.delete_slot').hide();
       $('.nb-employees-range').show();

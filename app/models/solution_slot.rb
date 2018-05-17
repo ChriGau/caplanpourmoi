@@ -68,5 +68,7 @@ class SolutionSlot < ApplicationRecord
     self.solution.evaluate_nb_conflicts
     self.solution.evaluate_nb_overlaps
     # update solution_slot (no attributes to update for now)
+    # update compute_solution (nb_optimal_solutions)
+    self.solution.compute_solution.evaluate_nb_optimal_solutions
   end
 end
