@@ -33,7 +33,7 @@ class SolutionSlot < ApplicationRecord
   delegate :start_at, to: :slot
   delegate :end_at, to: :slot
 
-  after_save :update_solution_and_solution_slot_attributes
+  after_update :update_solution_and_solution_slot_attributes
 
   def evaluate_overlaps_for_a_solution_slot
     nb_overlaps = 0
