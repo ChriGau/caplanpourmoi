@@ -19,10 +19,12 @@ class SlotsController < ApplicationController
         end
       end
     end
-      @slots = @planning.slots
-      @slot_templates = Slot.slot_templates
+    @slot = slot_model
+    @slots = @planning.slots
+    @slot_templates = Slot.slot_templates
     if @planning.slots << slot_list
       respond_to do |format|
+        # binding.pry
         format.html { redirect_to planning_skeleton_path(@planning) }
         format.js
         format.json { render json: @slot }
@@ -42,8 +44,7 @@ class SlotsController < ApplicationController
   end
 
   def edit
-      @slot = Slot.find(params[:id])
-      @user = User.find_by(first_name: 'jean')
+    @slot = Slot.find(params[:id])
   end
 
   # rubocop:disable AbcSize, MethodLength
