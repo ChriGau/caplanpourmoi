@@ -56,6 +56,7 @@ var modifyCalendar = function(events, defaultDate) {
     events: events,
     // what happens when we select a time period on the calendar
     select: function( start, end, jsEvent, view ) {
+      console.log("fire");
       modalPosition(modalContent, jsEvent.clientY);
       $(".modal-events").modal('show');
       $('.create_slot').show();
@@ -73,6 +74,9 @@ var modifyCalendar = function(events, defaultDate) {
         locale: 'FR'
        });
       //behavior of days sélection
+      $("input:checkbox").click(function(){
+        $(this).parent().parent().toggleClass("checked");
+      });
       $('input:checkbox').each(function(){
         $(this)[0].disabled= false;
         $(this)[0].checked= false;

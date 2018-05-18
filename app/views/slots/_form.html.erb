@@ -2,61 +2,61 @@
 
 <%= simple_form_for [@planning, @slot] do |f| %>
   <%= f.error_notification %>
-    <div class="row">
-      <div class="col-xs-12">
-        <div class="form-group dates-input">
-          <div class='input-group date' id='datetimepicker1'>
-            <input name="slot[start_at]" type='text' value="<%= @slot.start_at %>" class="form-control" />
-            <span class="input-group-addon">
-              <span class="glyphicon glyphicon-calendar">
-              </span>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group dates-input">
+        <div class='input-group date' id='datetimepicker1'>
+          <input name="slot[start_at]" type='text' value="<%= @slot.start_at %>" class="form-control" />
+          <span class="input-group-addon">
+            <span class="glyphicon glyphicon-calendar">
             </span>
-          </div>
-        </div>
-        <div class="form-group dates-input">
-          <div class='input-group date' id='datetimepicker2'>
-            <input name="slot[end_at]" type='text' value="<%= @slot.end_at %>" class="form-control" />
-            <span class="input-group-addon">
-              <span class="glyphicon glyphicon-calendar">
-              </span>
-            </span>
-          </div>
-        </div>
-        <%= f.input :role_id, placeholder: "Role", label: false, collection: fetch_roles, required: true, class: "slot_role"  %>
-        <div class="nb-employees-range">
-          <p>Nombre d'employés :</p>
-          <input id="nb-employees" name="nbemployees" data-slider-id='ex1Slider' type="text" data-slider-min="1" data-slider-max="5" data-slider-step="1" data-slider-tooltip="always" data-slider-value="1"/>
+          </span>
         </div>
       </div>
-    </div>
-    <div class="row days-list">
-      <div class="col-xs-12">
-        <div class="form-group">
-          <ul class="list-inline" >
-            <% [1,2,3,4,5,6].each do |daynum| %>
-              <li>
-                <div class="daysbox col-xs-4">
-                  <label>
-                  <%= t("days.#{Date::DAYNAMES[daynum]}") %>
-                  <%= check_box_tag "items[]", daynum, false, class: "hide" %>
-                  </label>
-                </div>
-              </li>
-            <% end %>
-          </ul>
+      <div class="form-group dates-input">
+        <div class='input-group date' id='datetimepicker2'>
+          <input name="slot[end_at]" type='text' value="<%= @slot.end_at %>" class="form-control" />
+          <span class="input-group-addon">
+            <span class="glyphicon glyphicon-calendar">
+            </span>
+          </span>
         </div>
       </div>
+      <%= f.input :role_id, placeholder: "Role", label: false, collection: fetch_roles, required: true, class: "slot_role"  %>
+      <div class="nb-employees-range">
+        <p>Nombre d'employés :</p>
+        <input id="nb-employees" name="nbemployees" data-slider-id='ex1Slider' type="text" data-slider-min="1" data-slider-max="5" data-slider-step="1" data-slider-tooltip="always" data-slider-value="1"/>
+      </div>
     </div>
-    <div class="row">
-      <div class="col-xs-12">
-        <div class="form-group button-group">
-            <%= f.submit "Valider", class: "mybtn mybtn--medium create_slot" %>
-            <%= f.button :button, "Modifier", type: :reset, class: "mybtn mybtn--medium update_slot" %>
-            <%= f.button :button, "Cancel", type: :reset, class: "mybtn mybtn--medium cancel-button" %>
-            <%= f.button :button, "Supprimer", type: :reset, class: "mybtn mybtn--medium delete_slot" %>
+  </div>
+  <div class="row days-list">
+    <div class="col-xs-12">
+      <div class="form-group">
+        <ul class="list-inline" >
+          <% [1,2,3,4,5,6].each do |daynum| %>
+            <li>
+              <div class="daysbox col-xs-4">
+                <label>
+                <%= t("days.#{Date::DAYNAMES[daynum]}") %>
+                <%= check_box_tag "items[]", daynum, false, class: "hide" %>
+                </label>
+              </div>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group button-group">
+          <%= f.submit "Valider", class: "mybtn mybtn--medium create_slot" %>
+          <%= f.button :button, "Modifier", type: :reset, class: "mybtn mybtn--medium update_slot" %>
+          <%= f.button :button, "Cancel", type: :reset, class: "mybtn mybtn--medium cancel-button" %>
+          <%= f.button :button, "Supprimer", type: :reset, class: "mybtn mybtn--medium delete_slot" %>
 
-        </div>
       </div>
     </div>
-    <% end %>
+  </div>
+<% end %>
 

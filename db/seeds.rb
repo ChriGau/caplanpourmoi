@@ -11,9 +11,11 @@ puts ""
 # destroy Slot before planning
 RoleUser.destroy_all
 Constraint.destroy_all
+CalculSolutionV1.destroy_all
 ComputeSolution.destroy_all
 SolutionSlot.destroy_all
 Slot.destroy_all
+Color.destroy_all
 Role.destroy_all
 Team.destroy_all
 Solution.destroy_all
@@ -39,6 +41,22 @@ User.create!(email: "boss@boutique.com",
 puts "3 - Creating Planning"
 puts ""
 
+colors = [
+          ["Rose framboise", "Pink Rasberry", "#89043D"],
+          ["Bleu ciel couvert", "sky blue", "#87BCDE"],
+          ["Or las-vegas", "Vegas gold", "#C6B849"],
+          ["Mauve lavande", "English lavender", "#AD7A99"],
+          ["Gris indépendance", "Independance", "#3E5665"],
+          ["Brun castor", "Beaver", "#8D816F"],
+          ["Bleu nuit", "Midnight blue", "#1D1D75"],
+          ["Jaune maïs", "Maize", "#FFED6E"],
+          ["Jaune ambre", "Ambre", "#CF9700"],
+          ["Violet Aubergine", "Eggplant", "#5F4354"]
+         ]
+colors.each do |color|
+  Color.create!(name_fr: color[0], name_eng: color[1], hexadecimal_code: color[2])
+end
+
 
 
 p = Planning.new
@@ -58,27 +76,32 @@ p.save!
 
 p = Planning.first
 
+puts "4 - Creating colors"
+puts ""
 
-puts "4 - Creating roles"
+
+
+
+puts "5 - Creating roles"
 puts ""
 
 Role.create!(name: "vendeur",
-            color_id: Color.find_by(name: "Bleu ciel couvert").id
+            color_id: Color.find_by(name_fr: "Bleu ciel couvert").id
             )
 Role.create!(name: "mécano",
-            color_id: Color.find_by(name: "Rose framboise").id
+            color_id: Color.find_by(name_fr: "Rose framboise").id
             )
 Role.create!(name: "barista",
-            color_id: Color.find_by(name: "Or las-vegas").id
+            color_id: Color.find_by(name_fr: "Or las-vegas").id
             )
 Role.create!(name: "patron",
-            color_id: Color.find_by(name: "Brun castor").id
+            color_id: Color.find_by(name_fr: "Brun castor").id
             )
 
 # un-assigned value : color_role
 
 
-puts "5 - Creating users (aka team members)"
+puts "6 - Creating users (aka team members)"
 puts ""
 
 User.create!(email: "pierre@boutique.com",
@@ -205,7 +228,7 @@ User.create!(email: "wtf@boutique.com",
   )
 
 
-puts "6 - assigning roles to members"
+puts "7 - assigning roles to members"
 puts ""
 
 a = User.find_by_first_name('pierre')
@@ -300,7 +323,7 @@ b.save!
 
 
 
-puts "7 - assigning constraints to members"
+puts "8 - assigning constraints to members"
 puts ""
 
 # pierre mercredi matin septembre octobre
@@ -417,7 +440,7 @@ Constraint.create!(start_at: "2017-09-01 08:00",
 
 
 
-puts "8 - assigning teams to members"
+puts "9 - assigning teams to members"
 puts ""
 # tous les users de l base
 Team.create!(planning_id: p.id,
@@ -445,7 +468,7 @@ Team.create!(planning_id: p.id,
             user_id: User.find_by_first_name("emma").id
   )
 
-puts "9 - adding SLOTS to planning + solution"
+puts "10 - adding SLOTS to planning + solution"
 puts ""
 
 p = Planning.first # equals planning of week 37
@@ -864,6 +887,7 @@ Slot.create!(
 puts ""
 puts  "  >> #{User.count} users created"
 puts  "  >> #{Role.count} roles created"
+puts  "  >> #{Color.count} colors created"
 puts  "  >> #{Team.count} orders created"
 puts  "  >> #{Slot.count} slots created"
 puts  "  >> #{Planning.count} planning created (for week 37)"
