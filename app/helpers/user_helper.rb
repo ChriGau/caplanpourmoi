@@ -27,4 +27,5 @@ module UserHelper
       "orange"
     end
   end
+
 end

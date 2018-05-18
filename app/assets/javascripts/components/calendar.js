@@ -58,6 +58,7 @@ var modifyCalendar = function(events, defaultDate) {
     select: function( start, end, jsEvent, view ) {
       console.log("fire");
       modalPosition(modalContent, jsEvent.clientY);
+      $('.create_slot').hide();
       $(".modal-events").modal('show');
       $('.create_slot').show();
       $('.update_slot').hide();

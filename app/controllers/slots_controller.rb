@@ -24,6 +24,7 @@ class SlotsController < ApplicationController
     @slot_templates = Slot.slot_templates
     if @planning.slots << slot_list
       respond_to do |format|
+        # binding.pry
         format.html { redirect_to planning_skeleton_path(@planning) }
         format.js
         format.json { render json: @slot }

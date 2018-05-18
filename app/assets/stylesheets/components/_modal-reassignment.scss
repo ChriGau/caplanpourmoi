@@ -1,0 +1,85 @@
+:root {
+  --postop: 0px;
+}
+
+.modal-reassignment {
+  width: 100%;
+  height:100%;
+  outline: none;
+  position:fixed;
+  margin:auto;
+  align-items: center;
+
+  .assigned-user-row{
+    border: 5px solid $myyellow;
+    background-color: $myblue;
+    color: $myyellow;
+      &:hover {
+    color:white;
+    background: $myyellow;
+    color: $myblue;
+    text-decoration: none;
+    }
+  }
+  .potential-backup{
+    border: 3px solid $mygreen;
+    background-color: $mygreen;
+    color: $myblue;
+      &:hover {
+    background: white;
+    text-decoration: none;
+    }
+  }
+  .available-unskilled{
+    border: 3px solid $mylightblue;
+    background-color: $mylightblue;
+    color: $myblue;
+      &:hover {
+    background: white;
+    text-decoration: none;
+    }
+  }
+
+  .fa-exclamation-triangle{
+    color: $myred;
+  }
+
+  .modal-title{
+    text-align: center;
+    height: 40px;
+  }
+
+  .row{
+    justify-content: center;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+   }
+  .row-user{
+    border: 1px solid $mygrey;
+    background-color: $mylightgrey;
+    color: white;
+        &:hover {
+      color:$mygrey;
+      background: white;
+    }
+  }
+  .avatar {
+    width:60px;
+    height:60px;
+    border-radius: 50%;
+    margin-top:10px;
+    margin-bottom: 10px;
+    // box-shadow: 2px 3px $myblue;
+  }
+  .modal-content {
+    width:700px;
+    height:600px;
+    display:table;
+    margin: auto;
+    top: var(--postop);
+    text-align: center;
+  }
+
+}

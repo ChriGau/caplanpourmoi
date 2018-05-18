@@ -1,4 +1,5 @@
 module ApplicationHelper
+
   def resource_name
     :user
   end
@@ -58,4 +59,5 @@ module ApplicationHelper
   def fetch_user_solution
     User.where(first_name: 'jean')
   end
+
 end

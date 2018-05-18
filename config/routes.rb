@@ -75,6 +75,7 @@ Rails.application.routes.draw do
   resources :plannings, only: [:show, :index, :update, :create] do
     resources :slots, only: [:create, :edit, :show, :update, :resolve, :new, :destroy]
     resources :compute_solutions, only: [:index, :create]
+    resources :solution_slots, only: [:edit, :update]
     resources :solutions, only: [:show] do
       member do
         get :change_effectivity
@@ -89,7 +90,7 @@ Rails.application.routes.draw do
   get 'plannings/:id/users', to: 'plannings#users', as: 'planning_users'
   get 'plannings/:id/skeleton', to: 'plannings#skeleton', as: 'planning_skeleton'
   get 'plannings/:id/conflicts', to: 'plannings#conflicts', as: 'planning_conflicts'
-  
+
   resources :users, only: [:index, :show, :create, :new]
   resources :roles, only: [:index, :new, :create, :show, :edit, :update, :destroy]
   resources :colors, only: [:new, :create]

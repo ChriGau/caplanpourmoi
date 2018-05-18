@@ -42,4 +42,5 @@ module PlanningHelper
         s.role_id == slot.role_id
     end
   end
+
 end

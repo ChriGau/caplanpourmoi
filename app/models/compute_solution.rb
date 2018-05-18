@@ -72,15 +72,17 @@ class ComputeSolution < ApplicationRecord
     self.nb_cuts_within_tree = calculation_abstract[:nb_cuts_within_tree]
   end
 
+  def evaluate_nb_optimal_solutions
+    # this is done when a solution_slot is updated (its user_id is modified)
+    nb = self.solutions.where(nb_overlaps: 0, nb_conflicts: 0).count
+    update(nb_optimal_solutions: nb)
+  end
+
   private
 
   def nb_hours(planning)
     seconds = (planning.slots.map{|slot| slot.end_at - slot.start_at}.reduce(:+)).to_i
     seconds_in_hours(seconds)
-  end
-
-  def seconds_in_hours(seconds)
-    [seconds / 3600, seconds / 60 % 60].map { |t| t.to_s.rjust(2,'0') }.join('h')
   end
 
   def hours_per_role(planning)
@@ -90,5 +92,9 @@ class ComputeSolution < ApplicationRecord
       role_hours[role.id] = seconds_in_hours(slots_per_role.map{|slot| slot.end_at - slot.start_at}.reduce(:+).to_i)
     end
     role_hours
+  end
+
+  def seconds_in_hours(seconds)
+    [seconds / 3600, seconds / 60 % 60].map { |t| t.to_s.rjust(2,'0') }.join('h')
   end
 end

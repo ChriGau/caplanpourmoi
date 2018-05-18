@@ -11,3 +11,4 @@ Rails.application.config.assets.version = '1.0'
 # Rails.application.config.assets.precompile += %w( search.js )
 Rails.application.config.assets.precompile += %w(components/calendar.js)
 Rails.application.config.assets.precompile += %w(roles.js)
+Rails.application.config.assets.precompile += %w(components/calendar-conflicts.js)

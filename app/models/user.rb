@@ -67,4 +67,52 @@ class User < ApplicationRecord
   def skilled_and_available?(start_at, end_at, role_id)
     skilled?(role_id) && available?(start_at, end_at)
   end
+
+  def nb_hours_planning(planning, slot = nil)
+    # get nb of hours where user is on duty. Periods = planning, day.
+    solution_slots = planning.get_chosen_solution_slots_for_a_user(self)
+    seconds_planning = (solution_slots.map{|sol_slot| sol_slot.end_at - sol_slot.start_at}.reduce(:+)).to_i
+    unless slot.nil?
+      start_of_the_day = DateTime.new(slot.start_at.year, slot.start_at.month, slot.start_at.day)
+      end_of_the_day = start_of_the_day + 1
+      solution_slots_day = solution_slots.select{ |x| x.start_at <= end_of_the_day && x.end_at >= start_of_the_day }
+      seconds_day = (solution_slots_day.map{|sol_slot| sol_slot.end_at - sol_slot.start_at}.reduce(:+)).to_i
+    end
+    hours_planning = seconds_in_hours(seconds_planning)
+    hours_planning_status = seconds_planning/3600 < working_hours ? true : false
+    hours_day = slot.nil? ? nil : seconds_in_hours(seconds_day)
+    if slot.nil?
+      hours_day_status = false
+    else
+      hours_day_status = is_working_extra_hours_this_day?(seconds_day/3600)
+    end
+    { hours_planning: hours_planning,
+      hours_planning_decimal: seconds_planning/3600,
+      hours_planning_status: hours_planning_status,
+      hours_day: hours_day,
+      hours_day_decimal: seconds_day/3600,
+      hours_day_status: hours_day_status }
+  end
+
+  def seconds_in_hours(seconds)
+    [seconds / 3600, seconds / 60 % 60].map { |t| t.to_s.rjust(2,'0') }.join('h')
+  end
+
+  def is_on_duty?(planning, slot)
+    # true if is assigned to another solution_slot intersecting this slot
+    planning.chosen_solution.solution_slots.select{ |s| s.start_at <= slot.end_at &&
+      s.end_at >= slot.start_at && s.user == self }.count.positive?
+  end
+
+  def is_on_duty_according_to_time_period?(start_at, end_at)
+    # true if user is assigned to >0 slots on a chosen solution
+    SolutionSlot.select{ |s| s.solution.effectivity == 'chosen' &&
+      s.start_at <= end_at && s.end_at >= start_at &&
+      s.user == self }.count.positive?
+  end
+
+  def is_working_extra_hours_this_day?(on_duty_hours_decimal)
+    # TODO => add attribute in user model
+    on_duty_hours_decimal < 8 ? true : false
+  end
 end

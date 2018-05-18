@@ -1,101 +1,44 @@
 <%= render 'shared/planningsteps', locals: {planning: @planning, url: @url, solution: @solution} %>
 
 <div class="wrap-plan" >
-  <div class="row">
-    <div class="col-xs-4 col-xs-offset-7" id="slot_form" style="height=400px; padding: 20px;"></div>
-  </div>
-<% unless @solution.nil? %>
-    <div class="row spacing">
-    <ul class="list-inline dragndrop-metiers">
-      <% @slot_templates.each do |slot| %>
-        <li style="background-color: <%= slot.role.color.hexadecimal_code %>; <%= background_text_color(slot) %>"> <%= slot.role.name.capitalize %></li>
-      <% end %>
-    </ul>
-  </div>
-  <div class="row">
-    <div class="col-xs-12 le_calendrier">
-        <div id = "calendar">
+
+  <div class="modal fade modal-reassignment" tabindex="-1" role="dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Slot - Autres possibilités d'affectation</h4>
+      </div>
+      <div class="modal-body">
       </div>
     </div>
   </div>
+
+  <% unless @solution.nil? %>
+      <div class="row spacing">
+      <ul class="list-inline dragndrop-metiers">
+        <% @slot_templates.each do |slot| %>
+          <li style="background-color: <%= slot.role.color.hexadecimal_code %>; <%= background_text_color(slot) %>"> <%= slot.role.name.capitalize %></li>
+        <% end %>
+      </ul>
+    </div>
+    <div class="row">
+      <div class="col-xs-12 le_calendrier">
+          <div id = "calendar">
+        </div>
+      </div>
+    </div>
+  <% end %>
+
 </div>
 
-<!-- ___________________________ JS __________________________________ -->
-  <%= content_for(:after_js) do %>
+
+<!-- JS part not involving fullcalendar is in slots.js -->
+<%= javascript_include_tag "components/calendar-conflicts" %>
+<%= content_for(:after_js) do %>
+
   <script>
-      // hide slot form
-      $("#slot_form").hide();
-      // make roles draggable
-      $('#my-draggable').draggable({
-        revert: true,      // immediately snap back to original position
-        revertDuration: 0  //
-      });
-      // assign default event data to draggable elements
-      $('.draggable').data('duration', '03:00');
-    </script>
-    <!-- enable bootstrap in simple form -->
-    <script type="text/javascript">
-      $(function () {
-        $('#datetimepicker1').datetimepicker();
-        $('#datetimepicker2').datetimepicker();
-      });
-    </script>
-    <script>
-      $('#calendar').fullCalendar({
-        //calendar attributes
-        header: {
-          left: 'prev, next',
-          center: '', //title
-          right: 'agendaWeek,agendaDay',
-        },
-        themeSystem: 'bootstrap3',
-        allDaySlot: false,
-        locale: "fr",
-        editable: true, // events on the calendar can be modified
-        droppable: true, // allows things to be dropped onto the calendar
-        selectable: true,
-        minTime: "07:00:00", // starting time, even when scrolled all the way up
-        maxTime: "22:00:00",
-        defaultView: "agendaWeek",
-        defaultDate: '<%= Date.commercial(@planning.year, @planning.week_number, 1).beginning_of_week %>', // s'ouvre sur le 1e lundi de la semaine sélectionnée
-        hiddenDays: [ 0], // hider dimanche
-        height: "auto", // implique pas de scroll à l'intérieur du calendrier
-        aspectRatio: 4,
-        events: '<%= resultevents_planning_path(@planning.id, solution_id: @solution.id, format: :json) %>',
-
-        // simulation résolution conflit
-        eventClick: function(calEvent, jsEvent, view) {
-          // récupérer l'id de l'event que l'on clique + planning id
-          var id_slot = calEvent.id // contient id du slot cliqué
-          var planning_id = calEvent.planning_id // contient planning_id du slot cliqué
-          // 1 Requête Ajax: plannings/:id/slots/:id/edit.  > pour injecter event id + planning id dans la requete ajax ==> use react, cf https://karr.lewagon.com/lectures/rails/react#/4/2
-          $.ajax({
-            type: "GET",
-            url: Routes.edit_planning_slot_path(planning_id, id_slot,  { format: 'js' } ),
-            success: function(data) {
-              console.log("ok");
-              console.log(calEvent);
-            },
-            error: function(jqXHR) {
-              console.log(jqXHR.responseText);
-              console.log("nok");
-            }
-          });
-        },
-
-        eventRender: function(event, element) {
-          element.find('.fc-title').html("<br/>" + "<img src= "+event.picture+" alt='' style='border-radius:60px;' >");
-        }
-      });
-
-      function show_image(src, width, height, alt) {
-        var img = document.createElement("img");
-        img.src = src;
-        img.width = width;
-        img.height = height;
-        img.alt = alt;
-      }
-
-    </script>
-  <% end %>
+    var events = '<%= resultevents_planning_path(@planning.id, solution_id: @solution.id, format: :json) %>';
+    var defaultDate = "<%= Date.commercial(@planning.year, @planning.week_number, 1).beginning_of_week %>";
+    modifyCalendar(events, defaultDate);
+  </script>
 <% end %>

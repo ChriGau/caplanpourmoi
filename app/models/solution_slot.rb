@@ -32,4 +32,43 @@ class SolutionSlot < ApplicationRecord
   has_one :role, through: :slot
   delegate :start_at, to: :slot
   delegate :end_at, to: :slot
+
+  after_update :update_solution_and_solution_slot_attributes
+
+  def evaluate_overlaps_for_a_solution_slot
+    nb_overlaps = 0
+    overlaps_details = []
+    solution.solution_slots.where('user_id != ?', no_solution_user_id).each do |solution_slot|
+      next if self == solution_slot
+      if slot_overlap_other_slot?(self.slot_id, solution_slot.slot_id) && self.user_id == solution_slot.user_id# slots in overlap?
+          nb_overlaps += 1
+          overlaps_details << { solution_slot: id,
+                                solution_slot_overlapped: solution_slot.id,
+                                user: user_id }
+      end
+    end
+    return { nb_overlaps: nb_overlaps, overlaps_details: overlaps_details }
+  end
+
+  private
+
+  def no_solution_user_id
+    User.find_by(first_name: 'no solution').id
+  end
+
+  def slot_overlap_other_slot?(slotid1, slotid2)
+    # true if 2 slots are overlaping one another
+    # similar method used in Slot. If you modify one, modify the other
+    Slot.find(slotid1).start_at < Slot.find(slotid2).end_at && Slot.find(slotid1).end_at > Slot.find(slotid2).start_at
+  end
+
+  def update_solution_and_solution_slot_attributes
+    # update solution
+    self.solution.total_over_time
+    self.solution.evaluate_nb_conflicts
+    self.solution.evaluate_nb_overlaps
+    # update solution_slot (no attributes to update for now)
+    # update compute_solution (nb_optimal_solutions)
+    self.solution.compute_solution.evaluate_nb_optimal_solutions
+  end
 end

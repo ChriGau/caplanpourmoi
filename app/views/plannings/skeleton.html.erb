@@ -1,11 +1,7 @@
   <%= render 'shared/planningsteps', locals: {planning: @planning, url: @url} %>
 
-  <div class="wrap-plan" >
-    <div class="row">
-      <div class="col-xs-9">
-        <div class="triangle" style= "left:<%= @triangle_position %>" ></div>
-      </div>
-    </div>
+  <div class="wrap-plan">
+
     <div class="modal fade modal-events slot_form" tabindex="-1" role="dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -18,22 +14,22 @@
       </div>
     </div>
 
+    <div class="row spacing">
+      <ul class="list-inline dragndrop-metiers">
+        <% @slot_templates.each do |slot| %>
+        <li style="background-color: <%= slot.role.color.hexadecimal_code %>; <%= background_text_color(slot) %>"> <%= slot.role.name.capitalize %></li>
+        <% end %>
+      </ul>
+    </div>
 
-  <div class="row spacing">
-    <ul class="list-inline dragndrop-metiers">
-      <% @slot_templates.each do |slot| %>
-      <li style="background-color: <%= slot.role.color.hexadecimal_code %>; <%= background_text_color(slot) %>"> <%= slot.role.name.capitalize %></li>
-      <% end %>
-    </ul>
-  </div>
-
-  <div class="row">
-    <div class="col-xs-12 le_calendrier">
-      <div id = "calendar">
+    <div class="row">
+      <div class="col-xs-12 le_calendrier">
+        <div id = "calendar">
+        </div>
       </div>
     </div>
+
   </div>
-</div>
 
 
 <!-- JS part not involving fullcalendar is in slots.js -->
