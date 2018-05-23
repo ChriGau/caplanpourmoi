@@ -9,6 +9,8 @@ class GoFindSolutionsV1Service
 
   attr_reader :slotgroups_array
 
+  require 'csv'
+
   def initialize(planning, slotgroups_array, compute_solution_instance)
     @slotgroups_array = slotgroups_array
     @planning = planning
@@ -107,6 +109,7 @@ class GoFindSolutionsV1Service
         test_possibilities << planning_possibility
       end
     end
+    store_planning_possibilities_to_csv(solutions_array)
     calculation_abstract = determine_calculation_abstract(iteration_id, nb_cuts_within_tree)
     { test_possibilities: test_possibilities,
       solutions_array: solutions_array,
@@ -352,6 +355,32 @@ def pick_best_solutions(solutions_array, how_many_solutions_do_we_store)
     return { success: success,
              nb_conflicts: nb_conflicts,
              sg_ranking_where_conflicts_evaluation_is_lower_than_best: sg_ranking }
+  end
+
+  def store_planning_possibilities_to_csv(solutions_array)
+    csv_options = { col_sep: ',', force_quotes: true, quote_char: '"' }
+    time = Time.now
+    filepath    = 'algo_test' + time.day.to_s + "-" + time.month.to_s + "-" +time.hour.to_s+"h "+ time.min.to_s+ '.csv'
+
+    CSV.open(filepath, 'wb', csv_options) do |csv|
+      csv << ['solution_id']
+      solutions_array.each do |solutions_array_hash|
+        csv << [solutions_array_hash[:solution_id].to_s]
+        csv << ['', 'sg_ranking', 'sg_id', 'combination', 'overlaps']
+        solutions_array_hash[:planning_possibility].each do |planning_possibility_hash|
+        combination = ""
+        planning_possibility_hash[:combination].each do |user|
+          combination += user.first_name + ', '
+        end
+        csv << [ '',
+                planning_possibility_hash[:sg_ranking].to_s,
+                planning_possibility_hash[:sg_id].to_s,
+                combination,
+                planning_possibility_hash[:overlaps] ]
+        end
+        csv << ['------------------------------------------------']
+      end
+    end
   end
 
 end
