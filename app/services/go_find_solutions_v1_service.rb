@@ -61,7 +61,6 @@ class GoFindSolutionsV1Service
     for tree in 1..nb_trees
       for branch in 1..nb_branches
         planning_possibility = []
-        # self.planning_possibility = []
         # next if solution_id ==  1000  # pour stopper les itérations au bout de la nième solution
         # we skip this branch if we must
         next if must_we_jump_to_another_branch?(tree, next_tree, branch, next_branch)
@@ -109,7 +108,8 @@ class GoFindSolutionsV1Service
         test_possibilities << planning_possibility
       end
     end
-    store_planning_possibilities_to_csv(solutions_array)
+    # FOR TESTING --> storing the planning possibilities in a CSV
+    # store_planning_possibilities_to_csv(solutions_array)
     calculation_abstract = determine_calculation_abstract(iteration_id, nb_cuts_within_tree)
     { test_possibilities: test_possibilities,
       solutions_array: solutions_array,
@@ -350,6 +350,7 @@ def pick_best_solutions(solutions_array, how_many_solutions_do_we_store)
       if nb_conflicts > nb_conflicts_best_scoring
         success = false
         sg_ranking = poss_hash[:sg_ranking]
+        break
       end
     end
     return { success: success,
