@@ -17,6 +17,7 @@
 #  p_nb_hours              :string
 #  p_nb_hours_roles        :text
 #  team                    :text
+#  p_list_of_slots_ids     :text
 #
 # Indexes
 #
@@ -50,6 +51,7 @@ class ComputeSolution < ApplicationRecord
     self.p_nb_slots = planning.slots.count
     self.p_nb_hours = nb_hours(planning)
     self.p_nb_hours_roles = hours_per_role(planning)
+    self.p_list_of_slots_ids = list_of_slots_ids
   end
 
   def build_team
@@ -78,6 +80,10 @@ class ComputeSolution < ApplicationRecord
     update(nb_optimal_solutions: nb)
   end
 
+  def list_of_slots_ids
+    list_of_slots_ids = planning.slots.map(&:id)
+  end
+
   private
 
   def nb_hours(planning)
@@ -97,4 +103,5 @@ class ComputeSolution < ApplicationRecord
   def seconds_in_hours(seconds)
     [seconds / 3600, seconds / 60 % 60].map { |t| t.to_s.rjust(2,'0') }.join('h')
   end
+
 end

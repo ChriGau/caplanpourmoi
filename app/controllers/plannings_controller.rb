@@ -91,7 +91,7 @@ class PlanningsController < ApplicationController
   end
 
   def resultevents
-    @solution = Solution.find(params[:solution_id])
+      @solution = Solution.find(params[:solution_id])
     # renders resultevents.json.jbuilder
   end
 

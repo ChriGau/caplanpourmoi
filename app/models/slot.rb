@@ -112,4 +112,5 @@ class Slot < ApplicationRecord
     planning&.chosen_solution&.not_chosen!
     planning&.set_status
   end
+
 end

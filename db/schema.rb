@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180411153811) do
+ActiveRecord::Schema.define(version: 20180524140744) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -63,6 +63,7 @@ ActiveRecord::Schema.define(version: 20180411153811) do
     t.string   "p_nb_hours"
     t.text     "p_nb_hours_roles"
     t.text     "team"
+    t.text     "p_list_of_slots_ids"
     t.index ["planning_id"], name: "index_compute_solutions_on_planning_id", using: :btree
   end
 
