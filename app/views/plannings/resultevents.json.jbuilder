@@ -7,6 +7,7 @@ if !@solution.nil? && @solution.solution_slots.count != @planning.slots.count
       solution_slot_id: slot.get_solution_slot(@solution),
       solution_slot_user_id: slot.get_solution_slot(@solution).user_id
   end
+  # afficher une solution <=> skeleton actuel
 elsif !@solution.nil?
   json.array! @planning.slots do |slot|
     json.partial! 'plannings/resultevent',
@@ -15,6 +16,7 @@ elsif !@solution.nil?
       solution_slot_id: slot.get_solution_slot(@solution),
       solution_slot_user_id: slot.get_solution_slot(@solution).user_id
   end
+  # cas où pas de solution à afficher
 else
   json.array! @planning.slots do |slot|
     json.partial! 'plannings/resultevent',

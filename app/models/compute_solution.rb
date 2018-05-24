@@ -103,5 +103,4 @@ class ComputeSolution < ApplicationRecord
   def seconds_in_hours(seconds)
     [seconds / 3600, seconds / 60 % 60].map { |t| t.to_s.rjust(2,'0') }.join('h')
   end
-
 end
