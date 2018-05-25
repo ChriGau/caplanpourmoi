@@ -2,17 +2,21 @@
 #
 # Table name: solutions
 #
-#  id                  :integer          not null, primary key
-#  nb_overlaps         :integer
-#  nb_extra_hours      :integer
-#  planning_id         :integer
-#  compute_solution_id :integer
-#  effectivity         :integer          default("not_chosen")
-#  relevance           :integer
-#  created_at          :datetime         not null
-#  updated_at          :datetime         not null
-#  nb_conflicts        :integer
-#  nb_under_hours      :integer
+#  id                            :integer          not null, primary key
+#  nb_overlaps                   :integer
+#  nb_extra_hours                :integer
+#  planning_id                   :integer
+#  compute_solution_id           :integer
+#  effectivity                   :integer          default("not_chosen")
+#  relevance                     :integer
+#  created_at                    :datetime         not null
+#  updated_at                    :datetime         not null
+#  nb_conflicts                  :integer
+#  nb_under_hours                :integer
+#  nb_users_six_consec_days_fail :integer
+#  nb_users_daily_hours_fail     :integer
+#  compactness                   :integer
+#  nb_users_in_overtime          :integer
 #
 # Indexes
 #
@@ -38,7 +42,7 @@ class Solution < ApplicationRecord
   enum effectivity: [:not_chosen, :chosen]
   enum relevance: [:optimal, :partial]
 
-  # Note: Solution get updated when one of its SolutionSlot is saved
+  # Note: Solution gets updated when one of its SolutionSlot is updated
 
   def evaluate_relevance
     nb_conflicts = solution_slots.where(user: User.find_by(first_name: 'no solution')).count
@@ -107,9 +111,50 @@ class Solution < ApplicationRecord
     { nb_overlaps: nb_overlaps, overlaps_details: overlaps_full_details }
   end
 
+  def evaluate_nb_users_six_consec_days_fail
+    # => number of users who work more than 6 consecutive days
+    # timeframe = range of dates to test (take W-1 and W+1 if have a chosen_solution)
+    timeframe = planning.evaluate_timeframe_to_test_nb_users_six_consec_days_fail
+    nb_users = 0
+    users.each do |user|
+    array_of_consec_days = [] # init
+      timeframe.first.each do |date|
+        solution = solution_to_take_into_account(date, planning, self)
+        if user.works_today?(date, solution)
+          array_of_consec_days << date
+        elsif array_of_consec_days.count > 6
+          nb_users += 1 if consecutive_days_intersect_planning_week?(array_of_consec_days, planning)
+          array_of_consec_days = [] # re init
+        end
+      end # on a balayé toutes les dates pour ce user
+      if array_of_consec_days.count > 6 && consecutive_days_intersect_planning_week?(array_of_consec_days, planning)
+        nb_users += 1
+      end
+    end
+    update(nb_users_six_consec_days_fail: nb_users)
+  end
+
   private
 
   def no_solution_user_id
     User.find_by(first_name: 'no solution').id
   end
+
+  def consecutive_days_intersect_planning_week?(array_of_consec_days, planning)
+    start_time = get_first_date_of_a_week(planning.year, planning.week_number)
+    array_of_consec_days & [start_time .. start_time + 6].count.positive?
+  end
+
+  def solution_to_take_into_account(date, planning_W, examined_solution)
+    if get_planning_related_to_a_date(date) == planning_W
+      self
+    else
+      get_planning_related_to_a_date(date).chosen_solution
+    end
+  end
+
+  def get_planning_related_to_a_date(date)
+    Planning.find_by(year: date.year, week_number: date.cweek)
+  end
+
 end

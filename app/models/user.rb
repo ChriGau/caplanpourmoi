@@ -100,8 +100,14 @@ class User < ApplicationRecord
 
   def is_on_duty?(planning, slot)
     # true if is assigned to another solution_slot intersecting this slot
-    planning.chosen_solution.solution_slots.select{ |s| s.start_at <= slot.end_at &&
-      s.end_at >= slot.start_at && s.user == self }.count.positive?
+    planning.chosen_solution.solution_slots.select{ |s| s.user == self &&
+      s.start_at <= slot.end_at && s.end_at >= slot.start_at }.count.positive?
+  end
+
+  def works_today?(date, solution)
+    # true if the user is on duty for a specific day and solution
+    solution.solution_slots.select{ |s| s.user == self && s.start_at <= date.to_datetime &&
+      s.end_at >= date.to_datetime + 1 }.count.positive?
   end
 
   def is_on_duty_according_to_time_period?(start_at, end_at)

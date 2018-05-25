@@ -17,6 +17,7 @@
 #  p_nb_hours              :string
 #  p_nb_hours_roles        :text
 #  team                    :text
+#  p_list_of_slots_ids     :text
 #
 # Indexes
 #
