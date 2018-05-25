@@ -103,6 +103,11 @@ class Planning < ApplicationRecord
     return [start_time .. end_time]
   end
 
+  def timeframe
+    [get_first_date_of_a_week(year, week_number) .. get_last_date_of_a_week(year, week_number)]
+
+  end
+
   private
 
   def get_latest_week_number_of_a_year(year)

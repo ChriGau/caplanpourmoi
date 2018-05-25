@@ -68,6 +68,7 @@ class SolutionSlot < ApplicationRecord
     self.solution.evaluate_nb_conflicts
     self.solution.evaluate_nb_overlaps
     self.solution.evaluate_nb_users_six_consec_days_fail
+    self.evaluate_nb_users_daily_hours_fail
     # update solution_slot (no attributes to update for now)
     # update compute_solution (nb_optimal_solutions)
     self.solution.compute_solution.evaluate_nb_optimal_solutions

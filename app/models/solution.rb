@@ -42,6 +42,9 @@ class Solution < ApplicationRecord
   enum effectivity: [:not_chosen, :chosen]
   enum relevance: [:optimal, :partial]
 
+  after_create :evaluate_relevance, :evaluate_nb_conflicts,:evaluate_nb_users_six_consec_days_fail, :evaluate_nb_users_daily_hours_fail
+  # nb_overlaps already given as a parameter when algo creates a solution
+
   # Note: Solution gets updated when one of its SolutionSlot is updated
 
   def evaluate_relevance
@@ -113,10 +116,9 @@ class Solution < ApplicationRecord
 
   def evaluate_nb_users_six_consec_days_fail
     # => number of users who work more than 6 consecutive days
-    # timeframe = range of dates to test (take W-1 and W+1 if have a chosen_solution)
     timeframe = planning.evaluate_timeframe_to_test_nb_users_six_consec_days_fail
     nb_users = 0
-    users.each do |user|
+    employees_involved.each do |user|
     array_of_consec_days = [] # init
       timeframe.first.each do |date|
         solution = solution_to_take_into_account(date, planning, self)
@@ -132,6 +134,25 @@ class Solution < ApplicationRecord
       end
     end
     update(nb_users_six_consec_days_fail: nb_users)
+  end
+
+  def evaluate_nb_users_daily_hours_fail
+    # TODO /!\ le nombre d'heure max par jour est en dur (8), à ajouter aux attributs de... team?entreprise?role?
+    # est prévue la liste des cas où on a un fail - peut servir + tard...
+    list = []
+    nb_fails = 0
+    employees_involved.each do |employee|
+      dates = []
+      planning.timeframe.first.each do |date| # sur toutes les dates du planning
+      binding.pry
+        if employee.nb_seconds_on_duty_today(date, self)/3600 > 8 # travaille > 8h?
+          dates << date
+          nb_fails += 1
+        end
+      end
+      list << { employee: employee, dates: dates } unless dates.empty?
+    end
+    update(nb_users_daily_hours_fail: nb_fails)
   end
 
   private
@@ -156,5 +177,7 @@ class Solution < ApplicationRecord
   def get_planning_related_to_a_date(date)
     Planning.find_by(year: date.year, week_number: date.cweek)
   end
+
+
 
 end

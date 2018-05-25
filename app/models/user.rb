@@ -110,6 +110,12 @@ class User < ApplicationRecord
       s.end_at >= date.to_datetime + 1 }.count.positive?
   end
 
+  def nb_seconds_on_duty_today(date, solution)
+    # number of seconds during which the user is on duty (for a given solution)
+    solution.solution_slots.select{ |s| s.user == self && s.start_at <= date.to_datetime + 1 &&
+      s.end_at >= date.to_datetime }.map{|ss| ss.slot.end_at - ss.slot.start_at}.reduce(:+).to_i
+  end
+
   def is_on_duty_according_to_time_period?(start_at, end_at)
     # true if user is assigned to >0 slots on a chosen solution
     SolutionSlot.select{ |s| s.solution.effectivity == 'chosen' &&
