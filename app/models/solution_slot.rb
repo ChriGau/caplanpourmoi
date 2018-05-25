@@ -72,6 +72,7 @@ class SolutionSlot < ApplicationRecord
     # update planning status (maybe you resolved all conflicts)
     self.planning.set_status
     # update solution_slot (no attributes to update for now)
+    self.evaluate_nb_users_daily_hours_fail
     # update compute_solution (nb_optimal_solutions)
     self.solution.compute_solution.evaluate_nb_optimal_solutions
   end

@@ -45,6 +45,7 @@ class Solution < ApplicationRecord
   enum relevance: [:optimal, :partial]
 
   after_create :evaluate_relevance, :evaluate_nb_conflicts,:evaluate_nb_users_six_consec_days_fail, :evaluate_nb_users_daily_hours_fail, :evaluate_compactness, :evaluate_nb_users_in_overtime
+
   # nb_overlaps already given as a parameter when algo creates a solution
 
   # Note: Solution gets updated when one of its SolutionSlot is updated
@@ -232,5 +233,7 @@ class Solution < ApplicationRecord
   def get_planning_related_to_a_date(date)
     Planning.find_by(year: date.year, week_number: date.cweek)
   end
+
+
 
 end
