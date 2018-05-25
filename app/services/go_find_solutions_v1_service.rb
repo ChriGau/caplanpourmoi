@@ -109,7 +109,7 @@ class GoFindSolutionsV1Service
       end
     end
     # FOR TESTING --> storing the planning possibilities in a CSV
-    # store_planning_possibilities_to_csv(solutions_array)
+    store_planning_possibilities_to_csv(solutions_array) if Rails.env.test?
     calculation_abstract = determine_calculation_abstract(iteration_id, nb_cuts_within_tree)
     { test_possibilities: test_possibilities,
       solutions_array: solutions_array,
