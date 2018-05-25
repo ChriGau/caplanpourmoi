@@ -68,6 +68,7 @@ class SolutionSlot < ApplicationRecord
     self.solution.evaluate_nb_conflicts
     self.solution.evaluate_nb_overlaps
     self.solution.evaluate_relevance
+    self.solution.evaluate_nb_users_six_consec_days_fail
     # update planning status (maybe you resolved all conflicts)
     self.planning.set_status
     # update solution_slot (no attributes to update for now)
