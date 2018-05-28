@@ -15,8 +15,8 @@ CalculSolutionV1.destroy_all
 ComputeSolution.destroy_all
 SolutionSlot.destroy_all
 Slot.destroy_all
-Color.destroy_all
 Role.destroy_all
+Color.destroy_all
 Team.destroy_all
 Solution.destroy_all
 Planning.destroy_all
