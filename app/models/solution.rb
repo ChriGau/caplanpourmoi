@@ -69,7 +69,8 @@ class Solution < ApplicationRecord
     # { name: seconds, ... } => contractual working hours - on duty hours
     employees_overtime = {}
     employees_involved.each do |employee|
-      employees_overtime[employee.first_name.capitalize] = employee.overtime(self)
+      seconds = self.solution_slots.where(user: employee).map{|ss| ss.slot.end_at - ss.slot.start_at}.reduce(:+).to_i
+      employees_overtime[employee.first_name.capitalize] = seconds - (employee.working_hours * 3600)
     end
     employees_overtime
   end
@@ -202,13 +203,14 @@ class Solution < ApplicationRecord
     # dispos = (working_hours des employés) – (h de contraintes dures)
     # sur une plage d'ouverture (pour l'instant 9h - 20h mais TODO à renseigner par le manager)
     # calculate heures dispos
-      users.each do |user|
-        user.evaluate_nb_hours_available()
     # calculate heures du planning
     # est-ce que le planning peut être fit? hplanning <= dispos
       # sinon, calculer la deviation (%) = dispos / planning
     # calcul de planning_fitness = overtime + |undertime| / nb heures planning
     # resultat si prise en compte de la deviation ou non
+      # calculate nb_days_theory (integer)
+      # compare with nb of days_real
+      # si |real - theory| > 0, ne pas prendre en compte, sinon prendre en compte
   end
 
   private
@@ -233,7 +235,5 @@ class Solution < ApplicationRecord
   def get_planning_related_to_a_date(date)
     Planning.find_by(year: date.year, week_number: date.cweek)
   end
-
-
 
 end
