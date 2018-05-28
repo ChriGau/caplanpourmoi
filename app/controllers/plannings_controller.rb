@@ -40,10 +40,11 @@ class PlanningsController < ApplicationController
     # variables pour fullcalendar
 
     if !@planning.solutions.exists?
-      flash.now[:alert] = "Générez des solutions pour votre planning"
+      redirect_to planning_users_path(@planning)
     elsif !@planning.solutions.chosen.exists?
-      flash.now[:alert] = "Validez une solution pour votre planning"
+      redirect_to planning_compute_solutions_path(@planning)
     end
+
     @solution_slot = SolutionSlot.first # to be used in _reaffect_slot_form.html.erb
   end
 
