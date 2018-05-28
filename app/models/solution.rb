@@ -83,14 +83,20 @@ class Solution < ApplicationRecord
   def employees_nb_days
     employees_nb_days = {}
     employees_involved.each do |employee|
-      days = []
-      solution_slots.where(user: employee).map do |solution_slot|
-        day_number = solution_slot.start_at.strftime("%u")
-        days.push(day_number) unless days.include?(day_number)
-      end
-      employees_nb_days[employee.first_name] = days.length
+      nb_days = employee_nb_days(employee)
+      employees_nb_days[employee.first_name] = nb_days
     end
     employees_nb_days
+  end
+
+  def employee_nb_days(employee)
+    # get number of days worked by an employee (integer)
+    days = []
+    solution_slots.where(user: employee).map do |solution_slot|
+      day_number = solution_slot.start_at.strftime("%u")
+      days.push(day_number) unless days.include?(day_number)
+    end
+    days.length
   end
 
   def evaluate_nb_conflicts
@@ -158,19 +164,20 @@ class Solution < ApplicationRecord
     # number of users where weekly hours > contract
     result = 0
     employees_involved.each do |employee|
-      result += 1 if nb_seconds_worked(self, employee)/3600 > employee.working_hours ?
+      result += 1 if nb_seconds_worked(self, employee)/3600 > employee.working_hours
     end
     update(nb_users_in_overtime: nb)
   end
 
   def evaluate_compactness
-    employess_involved.each do |employee|
-      # calculate nb_days_theory (integer)
+    # integer => pour chq user, sum (nb_days_real - nb_days_theory) if real > theory
+    compactness = 0
+    employees_involved.each do |employee|
       nb_days_theory = (employee.working_hours/8.0).ceil
-      # compare with nb of days_real
-      # si |real - theory| > 0, ne pas prendre en compte, sinon prendre en compte
+      nb_days_real = self.employee_nb_days(employee)
+      compactness += (nb_days_real - nb_days_theory) if nb_days_real > nb_days_theory
     end
-    update(compactness: result)
+    update(compactness: compactness)
   end
 
   private
@@ -195,7 +202,5 @@ class Solution < ApplicationRecord
   def get_planning_related_to_a_date(date)
     Planning.find_by(year: date.year, week_number: date.cweek)
   end
-
-
 
 end
