@@ -74,6 +74,7 @@ class SolutionSlot < ApplicationRecord
     self.evaluate_nb_users_daily_hours_fail
     self.evaluate_nb_users_in_overtime
     self.evaluate_compactness
+    self.evaluate_nb_users_in_overtime
     # update solution_slot (no attributes to update for now)
     self.evaluate_nb_users_daily_hours_fail
     # update compute_solution (nb_optimal_solutions)

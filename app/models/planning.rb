@@ -106,8 +106,9 @@ class Planning < ApplicationRecord
   end
 
   def evaluate_timeframe_to_test_nb_users_six_consec_days_fail
-    if get_previous_week_planning.has_a_chosen_solution?
-      if get_next_week_planning.has_a_chosen_solution?
+
+    if !get_previous_week_planning.nil? && get_previous_week_planning.has_a_chosen_solution?
+      if !get_next_week_planning.nil? && get_next_week_planning.has_a_chosen_solution?
         start_time = get_first_date_of_a_week(get_previous_week_planning.year,
           get_previous_week_planning.week_number)
         end_time = get_last_date_of_a_week(get_next_week_planning.year,
@@ -117,7 +118,7 @@ class Planning < ApplicationRecord
           get_previous_week_planning.week_number)
         end_time = get_last_date_of_a_week(planning.year, planning.week_number)
       end
-    elsif get_next_week_planning.has_a_chosen_solution?
+    elsif !get_next_week_planning.nil? && get_next_week_planning.has_a_chosen_solution?
       start_time = get_first_date_of_a_week(year, week_number)
       end_time = get_last_date_of_a_week(get_next_week_planning.year,
           get_next_week_planning.week_number)

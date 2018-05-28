@@ -120,6 +120,12 @@ class User < ApplicationRecord
     solution.solution_slots.where(user: user).map{|ss| ss.slot.end_at - ss.slot.start_at}.reduce(:+).to_i
   end
 
+  def overtime(solution)
+    # overtime for a user and a solution (integer, seconds)
+    seconds = nb_seconds_worked(solution, self)
+    seconds - (self.working_hours * 3600)
+  end
+
   def is_on_duty_according_to_time_period?(start_at, end_at)
     # true if user is assigned to >0 slots on a chosen solution
     SolutionSlot.select{ |s| s.solution.effectivity == 'chosen' &&
