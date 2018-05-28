@@ -17,6 +17,7 @@
 #  p_nb_hours              :string
 #  p_nb_hours_roles        :text
 #  team                    :text
+#  p_list_of_slots_ids     :text
 #
 # Indexes
 #
@@ -50,6 +51,7 @@ class ComputeSolution < ApplicationRecord
     self.p_nb_slots = planning.slots.count
     self.p_nb_hours = nb_hours(planning)
     self.p_nb_hours_roles = hours_per_role(planning)
+    self.p_list_of_slots_ids = list_of_slots_ids
   end
 
   def build_team
@@ -76,6 +78,10 @@ class ComputeSolution < ApplicationRecord
     # this is done when a solution_slot is updated (its user_id is modified)
     nb = self.solutions.where(nb_overlaps: 0, nb_conflicts: 0).count
     update(nb_optimal_solutions: nb)
+  end
+
+  def list_of_slots_ids
+    list_of_slots_ids = planning.slots.map(&:id)
   end
 
   private

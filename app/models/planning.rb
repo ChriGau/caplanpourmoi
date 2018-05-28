@@ -39,11 +39,13 @@ class Planning < ApplicationRecord
   end
 
   def valid_compute_solutions
-    compute_solutions.where('created_at > ?', self.slots.map(&:updated_at).max).order(created_at: :desc)
+    compute_solutions.select{ |c| c.p_list_of_slots_ids != nil && c.p_list_of_slots_ids[1..-2].split(',').collect! {|x| x.to_i} == self.slots.map(&:id) &&
+      c.created_at > self.slots.map(&:updated_at).max }.sort
   end
 
   def outdated_compute_solutions
-    compute_solutions.where('created_at < ?', self.slots.map(&:updated_at).max).order(created_at: :desc)
+    compute_solutions.select{ |c| c.p_list_of_slots_ids == nil || c.p_list_of_slots_ids[1..-2].split(',').collect! {|x| x.to_i} != self.slots.map(&:id) ||
+      c.created_at < self.slots.map(&:updated_at).max }.sort
   end
 
   def set_status
