@@ -42,7 +42,7 @@ class Solution < ApplicationRecord
   enum effectivity: [:not_chosen, :chosen]
   enum relevance: [:optimal, :partial]
 
-  after_create :evaluate_relevance, :evaluate_nb_conflicts,:evaluate_nb_users_six_consec_days_fail, :evaluate_nb_users_daily_hours_fail
+  after_create :evaluate_relevance, :evaluate_nb_conflicts,:evaluate_nb_users_six_consec_days_fail, :evaluate_nb_users_daily_hours_fail, :evaluate_compactness, :evaluate_nb_users_in_overtime
   # nb_overlaps already given as a parameter when algo creates a solution
 
   # Note: Solution gets updated when one of its SolutionSlot is updated
@@ -63,10 +63,10 @@ class Solution < ApplicationRecord
   end
 
   def employees_overtime
+    # { name: seconds, ... } => contractual working hours - on duty hours
     employees_overtime = {}
     employees_involved.each do |employee|
-      seconds = nb_seconds_worked(self, employee)
-      employees_overtime[employee.first_name.capitalize] = seconds - (employee.working_hours * 3600)
+      employees_overtime[employee.first_name.capitalize] = employee.overtime(self)
     end
     employees_overtime
   end
@@ -178,6 +178,14 @@ class Solution < ApplicationRecord
       compactness += (nb_days_real - nb_days_theory) if nb_days_real > nb_days_theory
     end
     update(compactness: compactness)
+  end
+
+  def evaluate_nb_users_in_overtime
+    n = 0
+    employees_involved.each do |employee|
+      n += 1 if employee.overtime(self).positive?
+    end
+    update(nb_users_in_overtime: n)
   end
 
   private
