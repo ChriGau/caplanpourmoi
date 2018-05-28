@@ -65,7 +65,7 @@ class Solution < ApplicationRecord
   def employees_overtime
     employees_overtime = {}
     employees_involved.each do |employee|
-      seconds = self.solution_slots.where(user: employee).map{|ss| ss.slot.end_at - ss.slot.start_at}.reduce(:+).to_i
+      seconds = nb_seconds_worked(self, employee)
       employees_overtime[employee.first_name.capitalize] = seconds - (employee.working_hours * 3600)
     end
     employees_overtime
@@ -144,7 +144,6 @@ class Solution < ApplicationRecord
     employees_involved.each do |employee|
       dates = []
       planning.timeframe.first.each do |date| # sur toutes les dates du planning
-      binding.pry
         if employee.nb_seconds_on_duty_today(date, self)/3600 > 8 # travaille > 8h?
           dates << date
           nb_fails += 1
@@ -153,6 +152,25 @@ class Solution < ApplicationRecord
       list << { employee: employee, dates: dates } unless dates.empty?
     end
     update(nb_users_daily_hours_fail: nb_fails)
+  end
+
+  def evaluate_nb_users_in_overtime
+    # number of users where weekly hours > contract
+    result = 0
+    employees_involved.each do |employee|
+      result += 1 if nb_seconds_worked(self, employee)/3600 > employee.working_hours ?
+    end
+    update(nb_users_in_overtime: nb)
+  end
+
+  def evaluate_compactness
+    employess_involved.each do |employee|
+      # calculate nb_days_theory (integer)
+      nb_days_theory = (employee.working_hours/8.0).ceil
+      # compare with nb of days_real
+      # si |real - theory| > 0, ne pas prendre en compte, sinon prendre en compte
+    end
+    update(compactness: result)
   end
 
   private
