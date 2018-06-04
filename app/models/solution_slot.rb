@@ -67,6 +67,9 @@ class SolutionSlot < ApplicationRecord
     self.solution.total_over_time
     self.solution.evaluate_nb_conflicts
     self.solution.evaluate_nb_overlaps
+    self.solution.evaluate_relevance
+    # update planning status (maybe you resolved all conflicts)
+    self.planning.set_status
     # update solution_slot (no attributes to update for now)
     # update compute_solution (nb_optimal_solutions)
     self.solution.compute_solution.evaluate_nb_optimal_solutions
