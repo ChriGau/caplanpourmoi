@@ -8,8 +8,9 @@ class ComputeSolutionsController < ApplicationController
     @solution = @planning.solutions.chosen.first
     if !@planning.slots.count.positive?
       flash.now[:alert] = "#{view_context.link_to("Ajoutez des créneaux à votre planning",
-      planning_skeleton_path(@planning))}".html_safe
+      planning_skeleton_path(@planning))}"
     end
+    flash.now[:alert] = "Sélectionnez une solution" if !@planning.solutions.chosen.exists?
   end
 
   def create
