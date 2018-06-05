@@ -1,0 +1,21 @@
+:root {
+  --postop: 0px;
+}
+
+.modal-use-template {
+  width: 60%;
+  height:60%;
+  outline: none;
+  position:fixed;
+  margin:auto;
+  .modal-content {
+    // width:2px;
+    display:table;
+    margin: auto;
+    top: var(--postop);
+  }
+  .planning-block{
+    background-color: $mylightgrey;
+    border-radius: 6px;
+  }
+}

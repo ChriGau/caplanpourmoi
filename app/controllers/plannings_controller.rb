@@ -29,6 +29,8 @@ class PlanningsController < ApplicationController
     @slots = @planning.slots.order(:id)
     @slot = Slot.new
     @slot_templates = Slot.slot_templates # liste des roles (Array)
+    # plannings qui ont des slots, utilisés pour use_template
+    @plannings = Planning.select{ |p| p.slots.count.positive? }
   end
 
   # rubocop:disable AbcSize, BlockLength, LineLength, MethodLength
