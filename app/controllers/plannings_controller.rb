@@ -30,7 +30,7 @@ class PlanningsController < ApplicationController
     @slot = Slot.new
     @slot_templates = Slot.slot_templates # liste des roles (Array)
     # plannings qui ont des slots, utilisés pour use_template
-    @plannings = Planning.select{ |p| p.slots.count.positive? }
+    @plannings = Planning.select{ |p| p.slots.count.positive? }.sort_by{ |p| p.start_date }.reverse
   end
 
   # rubocop:disable AbcSize, BlockLength, LineLength, MethodLength
@@ -98,6 +98,20 @@ class PlanningsController < ApplicationController
     # renders resultevents.json.jbuilder
   end
 
+  def use_template
+    planning = Planning.find(params[:id])
+    template = Planning.find(params[:planning_id])
+    template.slots.each do |slot|
+      Slot.create!(
+        planning_id: planning.id,
+        start_at: get_date(slot.start_at.strftime("%u").to_i, planning.start_date, planning.end_date, slot.start_at),
+        end_at: get_date(slot.end_at.strftime("%u").to_i, planning.start_date, planning.end_date, slot.end_at),
+        role_id: slot.role.id,
+      )
+    end
+  redirect_to planning_skeleton_path
+  end
+
   private
 
   def plannings_list
@@ -134,6 +148,12 @@ class PlanningsController < ApplicationController
       slotgroups << slot.slotgroup_id unless slot.slotgroup_id.nil?
     end
     slotgroups.uniq # get rid of duplicates
+  end
+
+  def get_date(weekday_integer, date_range_start, date_range_end, slot_date )
+    [date_range_start..date_range_end].first.each do |date|
+      return DateTime.new(date.year,date.month, date.day, slot_date.hour, slot_date.min) if date.cwday == weekday_integer
+    end
   end
 end
 # rubocop:enable Metrics/ClassLength

@@ -24,7 +24,7 @@
 class Slot < ApplicationRecord
   belongs_to :planning, optional: true
   belongs_to :role
-  validates :role_id, presence: true
+  validates :role_id, :start_at, :end_at, presence: true
   after_save :set_status
   has_many :solution_slots, dependent: :destroy
   has_many :solutions, through: :solution_slots

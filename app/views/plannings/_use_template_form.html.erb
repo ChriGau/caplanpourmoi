@@ -1,20 +1,23 @@
-<div class="col-xs-12">
-
-  <form action="/use_template" method="post">
-    <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+<%= simple_form_for [@planning] do |f| %>
+  <%= f.error_notification %>
     <div class="row">
       <% @plannings.each do |planning| %>
-        <div class="col-xs-12 col-sm-4 planning-block" >
-          <h4>S<%= planning.week_number %></h4><p><%= planning.start_date.day %>-<%= planning.end_date.day %>/<%= planning.end_date.month %>/<%= planning.end_date.year %></p>
-          <% planning.hours_per_role.each do |role_id_symbol, hours| %>
-            <span class="role-name" style="background-color: <%= background_color_of_role(role_id_symbol.to_s.to_i) %>; <%= role_text_color(role_id_symbol.to_s.to_i) %>"> <%= Role.find(role_id_symbol.to_s.to_i).name %></span> : <%= hours %> <br>
-          <% end %>
+        <div class="row planning-block " >
+          <div class="col-xs-2">
+            S<%= planning.week_number %>
+          </div>
+          <div class="col-xs-4">
+            <%= planning.start_date.day %>-<%= planning.end_date.day %> <%= planning.end_date.strftime("%b") %> <%= planning.end_date.year %>
+          </div>
+          <div class="col-xs-4 template_roles">
+            <% planning.hours_per_role.each do |role_id_symbol, hours| %>
+              <span class="role-name" style="background-color: <%= background_color_of_role(role_id_symbol.to_s.to_i) %>; <%= role_text_color(role_id_symbol.to_s.to_i) %>"> <%= Role.find(role_id_symbol.to_s.to_i).name %></span> <%= hours %> <br>
+            <% end %>
+          </div>
+          <div class="col-xs-2">
+            <%= link_to "Valider", planning_use_template_path(@planning, planning_id: planning.id), method: :get, class: "btn-success" %>
+          </div>
         </div>
       <% end %>
-      <%= link_to "Valider", planning_use_template_path, class: "btn-success"%>
     </div>
-
-  </form>
-
-</div>
-
+  <% end %>

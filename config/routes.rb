@@ -90,7 +90,7 @@ Rails.application.routes.draw do
   get 'plannings/:id/users', to: 'plannings#users', as: 'planning_users'
   get 'plannings/:id/skeleton', to: 'plannings#skeleton', as: 'planning_skeleton'
   get 'plannings/:id/conflicts', to: 'plannings#conflicts', as: 'planning_conflicts'
-  get 'plannings/:id/use_template', to: 'plannings#use_template', as: 'planning_use_template'
+  get 'plannings/:id/use_template/:planning_id', to: 'plannings#use_template', as: 'planning_use_template'
 
   resources :users, only: [:index, :show, :create, :new]
   resources :roles, only: [:index, :new, :create, :show, :edit, :update, :destroy]

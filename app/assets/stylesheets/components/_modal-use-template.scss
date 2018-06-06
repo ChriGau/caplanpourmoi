@@ -2,20 +2,28 @@
   --postop: 0px;
 }
 
-.modal-use-template {
-  width: 60%;
-  height:60%;
+.modal-use-template .modal-content {
+  width: 50%;
+  height:50%;
   outline: none;
-  position:fixed;
   margin:auto;
-  .modal-content {
-    // width:2px;
-    display:table;
-    margin: auto;
-    top: var(--postop);
-  }
+  top: var(--postop);
+  display:table;
   .planning-block{
-    background-color: $mylightgrey;
-    border-radius: 6px;
+    display:flex;
+    justify-content: center;
+    text-align: center;
+    border: 3px solid $myyellow;
+    background-color: $myblue;
+    color: $myyellow;
+    border-radius: 8px;
+      &:hover {
+    background: $myyellow;
+    color: $myblue;
+    text-decoration: none;
+    }
+    .template_roles{
+      text-align: justify;
+    }
   }
 }
