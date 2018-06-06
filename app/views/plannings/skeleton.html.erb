@@ -56,18 +56,7 @@
     var defaultDate = "<%= @planning.start_date %>";
     modifyCalendar(events, defaultDate);
 
-    var modalContent = document.querySelector(".this");
-    console.log(modalContent);
-    var modalPosition = function(modal, position) {
-    modal.style.setProperty('--postop', position -100 + "px");
-  }
 
-    $(".use_template").click(function(jsEvent){
-      console.log("here");
-        console.log(jsEvent.clientY);
-        modalPosition(modalContent, jsEvent.clientY);
-        $(".modal-use-template").modal('show');
-      });
   </script>
 <% end %>
 

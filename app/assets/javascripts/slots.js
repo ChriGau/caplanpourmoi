@@ -33,6 +33,16 @@ $(document).ready(function() {
     $(".fc-time-grid-event").css('border-width', '');
   });
 
+  var modalContent = document.querySelector(".this");
+    console.log(modalContent);
+    var modalPosition = function(modal, position) {
+    modal.style.setProperty('--postop', position -100 + "px");
+  }
+
+    $(".use_template").click(function(jsEvent){
+      modalPosition(modalContent, jsEvent.clientY);
+      $(".modal-use-template").modal('show');
+    });
 
 
 });
