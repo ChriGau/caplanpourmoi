@@ -30,7 +30,7 @@ class PlanningsController < ApplicationController
     @slot = Slot.new
     @slot_templates = Slot.slot_templates # liste des roles (Array)
     # plannings qui ont des slots, utilisés pour use_template
-    @plannings = Planning.select{ |p| p.slots.count.positive? }.sort_by{ |p| p.start_date }.reverse
+    @plannings = Planning.select{ |p| p.slots.count.positive? }.sort_by{ |p| p.start_date }.reverse.last(30)
   end
 
   # rubocop:disable AbcSize, BlockLength, LineLength, MethodLength

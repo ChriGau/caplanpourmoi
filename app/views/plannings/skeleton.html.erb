@@ -14,8 +14,8 @@
       </div>
     </div>
 
-    <div class="modal fade modal-use-template" tabindex="-1" role="dialog">
-      <div class="modal-content">
+    <div class="modal fade modal-use-template ui-draggable" tabindex="-1" role="dialog">
+      <div class="modal-content this">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
           <h4 class="modal-title">Utiliser un template</h4>
@@ -26,8 +26,10 @@
       </div>
     </div>
 
+    <div class="row" style="height: 60px;">
+      <span class="btn-action use_template">Dupliquer</span>
+    </div>
     <div class="row spacing">
-      <span class="badge badge-green use_template">Utiliser template</span>
       <ul class="list-inline dragndrop-metiers">
         <% @slot_templates.each do |slot| %>
         <li style="background-color: <%= slot.role.color.hexadecimal_code %>; <%= background_text_color(slot) %>"> <%= slot.role.name.capitalize %></li>
@@ -54,13 +56,16 @@
     var defaultDate = "<%= @planning.start_date %>";
     modifyCalendar(events, defaultDate);
 
-    var modalContent = document.querySelector(".modal-content");
+    var modalContent = document.querySelector(".this");
+    console.log(modalContent);
     var modalPosition = function(modal, position) {
-    modal.style.setProperty('--postop', position -300 + "px");
+    modal.style.setProperty('--postop', position -100 + "px");
   }
 
-    $(".use_template").click(function(){
-        // modalPosition(modalContent, jsEvent.clientY);
+    $(".use_template").click(function(jsEvent){
+      console.log("here");
+        console.log(jsEvent.clientY);
+        modalPosition(modalContent, jsEvent.clientY);
         $(".modal-use-template").modal('show');
       });
   </script>
