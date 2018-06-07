@@ -65,6 +65,7 @@ ActiveRecord::Schema.define(version: 20180607085013) do
     t.text     "team"
     t.text     "p_list_of_slots_ids"
     t.text     "timestamps_algo"
+    t.integer  "launching_source"
     t.index ["planning_id"], name: "index_compute_solutions_on_planning_id", using: :btree
   end
 

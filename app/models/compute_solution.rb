@@ -19,6 +19,7 @@
 #  team                    :text
 #  p_list_of_slots_ids     :text
 #  timestamps_algo         :text
+#  launching_source        :integer
 #
 # Indexes
 #
@@ -38,6 +39,7 @@ class ComputeSolution < ApplicationRecord
   serialize :timestamps_algo, Array
 
   enum status: [:pending, :ready, :error]
+  enum launching_source: [:localhost, :heroku_staging, :heroku_prod]
   before_create :default_status, :planning_props, :build_team
 
   def default_status

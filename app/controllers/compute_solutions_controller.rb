@@ -1,6 +1,7 @@
 
 class ComputeSolutionsController < ApplicationController
   before_action :set_planning, only: [:index, :create, :show_calculation_details]
+require 'uri'
 
   def index
     @valid_compute_solutions = @planning.valid_compute_solutions
@@ -29,6 +30,7 @@ class ComputeSolutionsController < ApplicationController
               "start pick_best_solution",
               "start SaveSolutionsAndSolutionSlotsService",
               "end SaveSolutionsAndSolutionSlotsService"]
+    # raise
   end
 
   private

@@ -81,6 +81,8 @@ class PlanningsController < ApplicationController
       # Timestamp #1 : creation du ComputeSolution
       t1 = ["t1", Time.now]
       compute_solutions = ComputeSolution.create(planning_id: @planning.id)
+      # get launching_source
+      get_launching_source(url_for(:only_path => false), compute_solutions)
       compute_solutions.update(timestamps_algo: [t1])
       ComputePlanningSolutionsJob.perform_later(@planning, compute_solutions)
       redirect_to planning_compute_solutions_path(@planning)
@@ -135,6 +137,16 @@ class PlanningsController < ApplicationController
       slotgroups << slot.slotgroup_id unless slot.slotgroup_id.nil?
     end
     slotgroups.uniq # get rid of duplicates
+  end
+
+  def get_launching_source(full_url, compute_solution)
+    if full_url[0..21] == "http://localhost:3000/"
+      compute_solution.update(launching_source: :localhost)
+    elsif full_url[0..55] == "https://caplanpourmoi-staging.herokuapp.com/"
+      compute_solution.update(launching_source: :heroku_staging)
+    elsif full_url[0..29] == "http://www.caplanpourmoi.org/"
+      compute_solution_update(launching_source: :heroku_prod)
+    end
   end
 end
 # rubocop:enable Metrics/ClassLength
