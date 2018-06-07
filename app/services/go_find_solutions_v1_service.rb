@@ -18,6 +18,9 @@ class GoFindSolutionsV1Service
   end
 
   def perform
+    # timestamps t4
+    t = @compute_solution.timestamps_algo << ["t4", Time.now]
+    @compute_solution.update(timestamps_algo: t)
     # calculate pre-requisites to plannings iterating
     self.nb_trees = determine_number_of_trees
     self.nb_branches = determine_number_of_branches
@@ -25,6 +28,9 @@ class GoFindSolutionsV1Service
     # iterate through planning possibilities to extract solutions
     build_solutions = go_through_plannings
     # select the best solutions
+    # timestamps t5 - begin pick best solutions
+    t = @compute_solution.timestamps_algo << ["t5", Time.now]
+    @compute_solution.update(timestamps_algo: t)
     build_solutions[:best_solution] = pick_best_solutions(build_solutions[:solutions_array], 20)
     # return
     build_solutions

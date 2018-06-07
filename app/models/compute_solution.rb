@@ -18,6 +18,7 @@
 #  p_nb_hours_roles        :text
 #  team                    :text
 #  p_list_of_slots_ids     :text
+#  timestamps_algo         :text
 #
 # Indexes
 #
@@ -34,6 +35,7 @@ class ComputeSolution < ApplicationRecord
   has_many :solutions,  -> { order(nb_extra_hours: :asc, nb_under_hours: :desc) }, dependent: :destroy
   serialize :p_nb_hours_roles
   serialize :team, Hash
+  serialize :timestamps_algo, Array
 
   enum status: [:pending, :ready, :error]
   before_create :default_status, :planning_props, :build_team

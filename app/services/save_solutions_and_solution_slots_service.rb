@@ -13,6 +13,9 @@ class SaveSolutionsAndSolutionSlotsService
   end
 
   def perform
+    # timestamp t6
+    t = @compute_solution.timestamps_algo << ["t6", Time.now]
+    @compute_solution.update(timestamps_algo: t)
     if !@list_of_solutions.nil?
       @list_of_solutions.each do |solution|
         solution_instance = create_solution(@compute_solution, solution[:nb_overlaps])
@@ -27,6 +30,9 @@ class SaveSolutionsAndSolutionSlotsService
       # calculate nb of conflicts now that the slots have been created
       solution_instance.evaluate_relevance
     end
+    # timestamp t7
+    t = @compute_solution.timestamps_algo << ["t7", Time.now]
+    @compute_solution.update(timestamps_algo: t)
   end
 
   def create_solution(compute_solution, nb_overlaps = nil)
