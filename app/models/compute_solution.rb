@@ -66,6 +66,11 @@ class ComputeSolution < ApplicationRecord
     self.team = team
   end
 
+  def calculate_calculation_length
+    # from the timestamps_algo, get total length of the algo (seconds)
+    update(calculation_length: timestamps_algo.last[1] - timestamps_algo.select{ |x| x.first == "t1"}.first[1])
+  end
+
   def save_calculation_abstract(calculation_abstract)
     # stores calculation properties.
     self.nb_solutions = calculation_abstract[:nb_solutions]

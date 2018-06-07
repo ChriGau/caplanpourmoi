@@ -12,6 +12,9 @@
               </span> <br>
               <small><%= l computed_solution.created_at, format: :default_heure %></small>
             </div>
+            <div class="btn-action">
+              <%= link_to "details", show_cs_details_path(@planning, computed_solution) %>
+            </div>
             <div class="compute-props">
               <div class="infos">
                 <blockquote>
