@@ -30,7 +30,7 @@ require 'uri'
               "start pick_best_solution",
               "start SaveSolutionsAndSolutionSlotsService",
               "end SaveSolutionsAndSolutionSlotsService"]
-    # raise
+    @timestamps_length = get_timestamps_length(@timestamps)
   end
 
   private
@@ -39,4 +39,25 @@ require 'uri'
     @planning = Planning.find(params[:planning_id])
   end
 
+  def get_timestamps_length(timestamps)
+    # from timestamps_algo, calculate length of each block
+    i = 0
+    timestamps_length = []
+    timestamps.each do |timestamp|
+      if i.positive?
+        # if diff in seconds = 0
+        if timestamp[1] - timestamps[i-1][1] == 0
+          b = timestamp[1].strftime("%L").to_i - timestamps[i-1][1].strftime("%L").to_i
+          length = b/1000
+        else # more than 1 second time difference
+          length =  timestamp[1] - @timestamps[i-1][1]
+        end
+      else
+        length = 0
+      end
+      timestamps_length << length
+      i += 1
+    end
+    timestamps_length
+  end
 end

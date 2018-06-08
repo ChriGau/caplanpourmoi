@@ -1,12 +1,18 @@
-
 <div class="row">
-  <div class="col-xs-3">
+  <div class="col-xs-6">
     <h3> <b>Number of possibilities - theory : </b><%= @compute_solution.nb_possibilities_theory %></h2>
-    <h3>Number of iterations : <%= @compute_solution.nb_iterations %></h3>
-    <h3>Number of cuts within tree : <%= @compute_solution.nb_cuts_within_tree %></h3>
-    <h3>%tree covered : <%= number_to_percentage((@compute_solution.nb_iterations.to_f / @compute_solution.nb_possibilities_theory)*100, precision: 2) %></h3>
+    <% if @compute_solution.nb_iterations.nil? %>
+      <h3>Number of iterations, number of cuts within tree, %tree covered ==> <b>Unable to calculate</b></h3>
+    <% else %>
+      <h3>Number of iterations : <%= @compute_solution.nb_iterations %></h3>
+      <h3>Number of cuts within tree : <%= @compute_solution.nb_cuts_within_tree %></h3>
+      <h3>%tree covered : <%= number_to_percentage((@compute_solution.nb_iterations.to_f / @compute_solution.nb_possibilities_theory)*100, precision: 2) %></h3>
+    <% end %>
   </div>
-    <div class="col-xs-9">
+  <div class="col-xs-6">
+    <div id="chart"></div>
+  </div>
+    <div class="col-xs-12">
       <!-- creation du tableau -->
       <div class="col-xs-12" style="text-align: center;">
       <!-- en-têtes -->
@@ -49,7 +55,7 @@
               <!-- durée avec l'étape précédente -->
               <% if i != 0  %>
                 <!-- si diff in seconds = 0 -->
-                <% if timestamp[1] - @timestamps[-1][1] == 0 %>
+                <% if timestamp[1] - @timestamps[i-1][1] == 0 %>
                   <% b = timestamp[1].strftime("%L").to_i - @timestamps[i-1][1].strftime("%L").to_i %>
                   <%= "0." + b.round(4).to_s %>
                   <% durée = b/1000 %>
@@ -87,3 +93,41 @@
     </div>
   </div>
 </div>
+
+<script type="text/javascript">
+
+      // Load the Visualization API and the corechart package.
+      google.charts.load('current', {'packages':['corechart']});
+
+      // Set a callback to run when the Google Visualization API is loaded.
+      google.charts.setOnLoadCallback(drawChart);
+
+      // Callback that creates and populates a data table,
+      // instantiates the pie chart, passes in the data and
+      // draws it.
+      function drawChart() {
+
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'T');
+        data.addColumn('number', 'Length');
+        data.addRows([
+          ['T1-create ComputeSolution', <%= @timestamps_length[0] if @timestamps.length.positive? %>],
+          ['T2-start CreateSlotgroupsService',<%= @timestamps_length[1] if @timestamps.length > 1 %>],
+          ['T3-end CreateSlotgroupsService', <%= @timestamps_length[2] if @timestamps.length > 2%>],
+          ['T4-start GoFindSolutionsService', <%= @timestamps_length[3] if @timestamps.length > 3%>],
+          ['T5-start pick_best_solution', <%= @timestamps_length[4] if @timestamps.length > 4 %>],
+          ['T6-start SaveSolutionsAndSolutionSlotsService', <%= @timestamps_length[5] if @timestamps.length > 5 %>],
+          ['T7-end SaveSolutionsAndSolutionSlotsService', <%= @timestamps_length[6] if @timestamps.length > 6 %>]
+        ]);
+
+        // Set chart options
+        var options = {'title':'ALGO - Responses Times',
+                       'width':400,
+                       'height':300};
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.PieChart(document.getElementById('chart'));
+        chart.draw(data, options);
+      }
+    </script>

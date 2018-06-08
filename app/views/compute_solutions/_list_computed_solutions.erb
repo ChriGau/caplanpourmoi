@@ -4,16 +4,15 @@
       <a data-toggle="collapse" data-parent="#accordion" href="#<%=computed_solution.id%>">
         <div class="panel-heading sol-head">
           <div class="panel-title" id="sol-list">
-
+            <div class="btn-success">
+              <%= link_to "details", show_cs_details_path(@planning, computed_solution), { :class=>"btn-success" } %>
+            </div>
             <div class="sol-status label label-<%= computed_solution.ready? ? "success" : computed_solution.error? ? "danger" : "info" %>">
               <%= t("computed_solutionution.status.#{computed_solution.status}")%>
               <span class="badge badge-white">
                 <%= computed_solution.nb_optimal_solutions %>
               </span> <br>
               <small><%= l computed_solution.created_at, format: :default_heure %></small>
-            </div>
-            <div class="btn-action">
-              <%= link_to "details", show_cs_details_path(@planning, computed_solution) %>
             </div>
             <div class="compute-props">
               <div class="infos">
