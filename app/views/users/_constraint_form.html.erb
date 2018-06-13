@@ -1,0 +1,68 @@
+<%= simple_form_for [@user], :url => user_constraints_path(@user), :method => :post do |f| %>
+  <%= f.error_notification %>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group dates-input">
+        <div class='input-group date' id='datetimepicker1'>
+          <input name="constraint[start_at]" type='text' class="form-control" />
+          <span class="input-group-addon">
+            <span class="glyphicon glyphicon-calendar">
+            </span>
+          </span>
+        </div>
+      </div>
+      <div class="form-group dates-input">
+        <div class='input-group date' id='datetimepicker2'>
+          <input name="constraint[end_at]" type='text'  class="form-control" />
+          <span class="input-group-addon">
+            <span class="glyphicon glyphicon-calendar">
+            </span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <ul class="list-inline categories">
+      <% @constraint_categories.each do |type, number| %>
+      <li>
+        <div class="daysbox col-xs-3 category" id=<%= number %>>
+          <label>
+            <%= type %>
+            <%= radio_button_tag "category[]", number, false, class: "hide", required: true %>
+          </label>
+        </div>
+      </li>
+      <% end %>
+    </ul>
+  </div>
+  <div class="row days-list">
+    <div class="col-xs-12">
+      <div class="form-group">
+        <ul class="list-inline" >
+          <% [1,2,3,4,5,6].each do |daynum| %>
+            <li>
+              <div class="daysbox col-xs-4">
+                <label>
+                <%= t("days.#{Date::DAYNAMES[daynum]}") %>
+                <%= check_box_tag "items[]", daynum, false, class: "hide" %>
+                </label>
+              </div>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group button-group">
+          <%= f.submit "Valider", class: "mybtn mybtn--medium create_constraint", format: :js %>
+          <%= f.button :button, "Modifier", type: :reset, class: "mybtn mybtn--medium update_constraint" %>
+          <%= f.button :button, "Cancel", type: :reset, class: "mybtn mybtn--medium cancel-button" %>
+          <%= f.button :button, "Supprimer", type: :reset, class: "mybtn mybtn--medium delete_constraint" %>
+
+      </div>
+    </div>
+  </div>
+<% end %>
