@@ -59,15 +59,14 @@ class UsersController < ApplicationController
     redirect_to users_path, notice: "Une nième invitation a été envoyée à #{@user.first_name} !"
   end
 
-  # def update
-  #   @user = User.find(params[:id])
-
-  #   if @user.update(user_params)
-  #     redirect_to plannings_path
-  #   else
-  #     render :edit
-  #   end
-  # end
+  def update
+    @user = User.find(params[:id])
+    if @user.update(user_params)
+      redirect_to user_path(@user)
+    else
+      render :edit
+    end
+  end
 
   private
 

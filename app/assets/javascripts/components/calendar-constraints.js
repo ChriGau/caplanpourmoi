@@ -58,6 +58,11 @@ var modifyCalendar = function(events, defaultDate) {
     });
   });
 
+  // edit de working_hours
+  $('.modify-working-hours').click(function(data){
+    $(".modal-edit-working-hours").modal('show');
+  });
+
   $('#calendar').fullCalendar({
     //calendar attributes
     header: {

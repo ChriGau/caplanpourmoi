@@ -91,7 +91,7 @@ Rails.application.routes.draw do
   get 'plannings/:id/skeleton', to: 'plannings#skeleton', as: 'planning_skeleton'
   get 'plannings/:id/conflicts', to: 'plannings#conflicts', as: 'planning_conflicts'
 
-  resources :users, only: [:index, :show, :create, :new] do
+  resources :users, only: [:index, :show, :create, :new, :update] do
     resources :constraints, only: [:new, :create, :edit, :update, :destroy]
     resources :role_users, only: [:new, :create, :edit, :update, :destroy]
   end

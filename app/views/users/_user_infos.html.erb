@@ -22,8 +22,16 @@
   </div>
 </div>
 
-<div class="row">
-  <a class="btn btn-action change-color">Demande de congés</a>
+<div class="modal fade modal-edit-working-hours modal-events" tabindex="-1" role="dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <h4 class="modal-title">Modifier les h/semaine</h4>
+    </div>
+    <div class="modal-body">
+        <%= render 'users/edit_working_hours' %>
+    </div>
+  </div>
 </div>
 
 <div class="row">
@@ -37,13 +45,19 @@
           +33 6 89 90 95 26<br>
         </li>
         <li class="list-group-item justify-content-between">
-          Contrat :
-          <span class="badge badge-default badge-pill"><%= @user.working_hours %>h/semaine</span>
+          <div class="col-xs-4">
+            Contrat :
+          </div>
+          <div class="col-xs-4">
+            <span class="badge badge-default badge-pill"><%= @user.working_hours %>h/semaine</span>
+          </div>
+          <div class="col-xs-4">
+            <span class="badge-default fa fa-pencil modify-working-hours" style="font-size:28px; align-items: center;"></span>
+          </div>
+          <br>
         </li>
       </ul>
     </div>
-
-
 
     <div class="col-xs-4">
 
