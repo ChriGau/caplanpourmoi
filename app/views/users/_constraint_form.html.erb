@@ -57,7 +57,7 @@
   <div class="row">
     <div class="col-xs-12">
       <div class="form-group button-group">
-          <%= f.submit "Valider", class: "mybtn mybtn--medium create_constraint", format: :js %>
+          <%= f.submit "Valider", class: "mybtn mybtn--medium create_constraint", format: :js, :html => {:remote => true } %>
           <%= f.button :button, "Modifier", type: :reset, class: "mybtn mybtn--medium update_constraint" %>
           <%= f.button :button, "Cancel", type: :reset, class: "mybtn mybtn--medium cancel-button" %>
           <%= f.button :button, "Supprimer", type: :reset, class: "mybtn mybtn--medium delete_constraint" %>

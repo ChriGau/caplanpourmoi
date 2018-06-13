@@ -93,6 +93,7 @@ Rails.application.routes.draw do
 
   resources :users, only: [:index, :show, :create, :new] do
     resources :constraints, only: [:new, :create, :edit, :update, :destroy]
+    resources :role_users, only: [:new, :create, :edit, :update, :destroy]
   end
   resources :roles, only: [:index, :new, :create, :show, :edit, :update, :destroy]
   resources :colors, only: [:new, :create]

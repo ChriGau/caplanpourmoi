@@ -1,0 +1,28 @@
+<%= simple_form_for [@role_user], :url => user_role_users_path(@user), :method => :post do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-group">
+    <ul class="list-inline categories">
+      <% count = 0 %>
+      <% list_of_roles_ids = Role.all.map(&:id) - User.find(33).role_users.map(&:role_id) %>
+      <% list_of_roles_ids.each do |role| %>
+      <li>
+        <div class="col-xs-3 role metier" id=<%= Role.find(role).name %> style="background-color: <%= Role.find(role).color.hexadecimal_code%>;">
+          <label>
+            <%= Role.find(role).name %>
+            <%= check_box_tag "roles[]", Role.find(role).name, false, class: "hide", required: true %>
+          </label>
+        </div>
+      </li>
+      <%  count += 1 %>
+      <% end %>
+    </ul>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group button-group">
+          <%= f.submit "Valider", class: "mybtn mybtn--medium create_constraint", format: :js, :html => {:remote => true } %>
+      </div>
+    </div>
+  </div>
+<% end %>

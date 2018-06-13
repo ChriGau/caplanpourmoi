@@ -1,14 +1,29 @@
 
   <div class="row">
     <% @user.roles.each do |role| %>
-      <button class="btn" style="width: 130px; margin: 5px; border-color: $mygrey; background-color: <%=  role.color.hexadecimal_code %>; border-radius: 6px; <%= background_text_color_role(role)%>"> <%= role.name.capitalize %> </button>
+      <button class="btn" style="width: 130px; margin: 5px; border-color: $mygrey; background-color: <%=  role.color.hexadecimal_code %>; border-radius: 6px; <%= background_text_color_role(role)%>"> <%= role.name.capitalize %>
+       <button class="btn" aria-hidden="true" id=<%= role.id %>>-</button>
+      </button>
       <% end %>
-    <i class="fa fa-plus" aria-hidden="true"></i>
+    <% if @user.roles.count != Role.all.count %>
+      <i class="fa fa-plus" aria-hidden="true"></i>
+    <% end %>
   </div>
+
+<div class="modal fade modal-role-user modal-events" tabindex="-1" role="dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <h4 class="modal-title">Ajouter un rôle</h4>
+    </div>
+    <div class="modal-body">
+        <%= render 'role_users/form' %>
+    </div>
+  </div>
+</div>
 
 <div class="row">
   <a class="btn btn-action change-color">Demande de congés</a>
-  <a class="btn btn-action change-color">Ajout de préférences</a>
 </div>
 
 <div class="row">

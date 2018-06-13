@@ -10,7 +10,6 @@ class ConstraintsController < ApplicationController
 
   # rubocop:disable AbcSize, MethodLength
   def create
-    raise
     @user = User.find(params[:user_id])
     constraint_model = Constraint.new(constraint_params)
     constraint_model.update(user_id: @user.id, category: params[:category].first.to_i)

@@ -7,14 +7,23 @@ var modifyCalendar = function(events, defaultDate) {
 
   var mySlider = $("input#nb-employees").bootstrapSlider();
 
+  // comportement lors de la sélection d'une catégorie
   $('.category').click( function (data){
-    // récupérer l'élement cliqué
     var a = '#' + data.toElement.value;
-
-    $('#0').removeClass("checked");
+    $('#0').toggleClass("checked");
     $('#1').removeClass("checked");
     $('#2').removeClass("checked");
     $(a).addClass("checked");
+  });
+
+  // Ajout de roles au user
+  $('.fa-plus').click(function(data){
+    $(".modal-role-user").modal('show');
+  });
+    $('.metier').click( function (data){
+    var a = '#' + data.toElement.value;
+    console.log(a);
+    $(a).toggleClass("checked");
   });
 
   $('#calendar').fullCalendar({
