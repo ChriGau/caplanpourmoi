@@ -110,4 +110,5 @@ class UsersController < ApplicationController
     end
     array
   end
+
 end

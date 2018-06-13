@@ -33,10 +33,17 @@ class RoleUsersController < ApplicationController
       end
     else
       respond_to do |format|
-        puts "NOK"
         format.html { render :edit }
         format.js
       end
+    end
+  end
+
+  def destroy
+    @user = User.find(params[:user_id])
+    RoleUser.destroy(params[:id])
+    respond_to do |format|
+      format.js {render inline: "location.reload();" }
     end
   end
 

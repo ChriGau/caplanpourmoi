@@ -85,7 +85,6 @@ class SlotsController < ApplicationController
   # rubocop:enable AbcSize, MethodLength
 
   def destroy
-    # @slot = Slot.find(params[:id])
     @slot = Slot.destroy(params[:id])
     respond_to do |format|
       format.js  # <-- will render `app/views/slots/destroy.js.erb`

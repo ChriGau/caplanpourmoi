@@ -22,8 +22,40 @@ var modifyCalendar = function(events, defaultDate) {
   });
     $('.metier').click( function (data){
     var a = '#' + data.toElement.value;
-    console.log(a);
     $(a).toggleClass("checked");
+  });
+
+  // Suppression de roles au user
+  $('.delete-role').click(function(data){
+    var role_id = data.toElement.id;
+    var list_of_classes = data.toElement.classList;
+    var user_id = list_of_classes[2].substring(4);
+    var roleuser_id = list_of_classes[3].substring(8);
+    var role_id = list_of_classes[4].substring(4);
+
+    var role_user_data = {
+      role_user: {
+        id: roleuser_id,
+        role_id: role_id,
+        user_id: user_id
+                }
+      };
+    var build_url = "/users/" + user_id + "/role_users/" + roleuser_id;
+    console.log("URL => " + build_url);
+
+      $.ajax({
+        url: build_url,
+        data: role_user_data,
+        format: 'js',
+        type: "DELETE",
+        success: function(data) {
+          console.log(Event);
+        },
+        error: function(jqXHR) {
+          console.log("ajax echec");
+          console.log(jqXHR.responseText);
+        }
+    });
   });
 
   $('#calendar').fullCalendar({
