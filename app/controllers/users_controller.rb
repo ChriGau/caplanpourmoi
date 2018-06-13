@@ -11,6 +11,7 @@ class UsersController < ApplicationController
     @constraint_categories = Constraint.categories
     @constraints_array = get_constraints_array(@constraints)
     @role_user = RoleUser.new
+    @constraint = Constraint.new
     respond_to do |format|
       format.js
       format.html

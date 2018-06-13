@@ -26,7 +26,7 @@
     <ul class="list-inline categories">
       <% @constraint_categories.each do |type, number| %>
       <li>
-        <div class="daysbox col-xs-3 category" id=<%= number %>>
+        <div class="daysbox col-xs-3 category <%= type %>" id=<%= number %>>
           <label>
             <%= type %>
             <%= radio_button_tag "category[]", number, false, class: "hide", required: true %>
@@ -57,7 +57,7 @@
   <div class="row">
     <div class="col-xs-12">
       <div class="form-group button-group">
-          <%= f.submit "Valider", class: "mybtn mybtn--medium create_constraint", format: :js, :html => {:remote => true } %>
+          <%= f.submit "Valider", class: "mybtn mybtn--medium create_constraint", format: :js %>
           <%= f.button :button, "Modifier", type: :reset, class: "mybtn mybtn--medium update_constraint" %>
           <%= f.button :button, "Cancel", type: :reset, class: "mybtn mybtn--medium cancel-button" %>
           <%= f.button :button, "Supprimer", type: :reset, class: "mybtn mybtn--medium delete_constraint" %>
