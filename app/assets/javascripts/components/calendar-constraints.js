@@ -7,12 +7,6 @@ var modalPosition = function(modal, position) {
 
 var mySlider = $("input#nb-employees").bootstrapSlider();
 
-// Show modal edit_user_registration
-$('.edit-user-registration').click( function (data){
-  $('.modal-edit-user').modal('show');
-  $('.modal-edit-user').load('registrations/edit');
-});
-
 // comportement lors de la sélection d'une catégorie
 $('.category').click( function (data){
   var a = '#' + data.toElement.value;
@@ -25,6 +19,7 @@ $('.category').click( function (data){
 // Ajout de roles au user
 $('.fa-plus').click(function(data){
   $(".modal-role-user").modal('show');
+  modalPosition(modalContent, data.clientY + 350);
 });
   $('.metier').click( function (data){
   var a = '#' + data.toElement.value;
@@ -67,6 +62,8 @@ $('.delete-role').click(function(data){
 // edit de working_hours
 $('.modify-working-hours').click(function(data){
   $(".modal-edit-working-hours").modal('show');
+  var modalContent = document.querySelector(".modal-edit-working-hours");
+  modalPosition(modalContent, data.clientY + 300);
 });
 
 $('#calendar').fullCalendar({
@@ -92,6 +89,7 @@ $('#calendar').fullCalendar({
   events: events,
   // what happens when we select a time period on the calendar
   select: function( start, end, jsEvent, view ) {
+    var modalContent = document.querySelector(".modal-constraint");
     modalPosition(modalContent, jsEvent.clientY);
     $(".modal-constraint").modal('show');
     $('.constraint_form').show();
@@ -156,6 +154,7 @@ $('#calendar').fullCalendar({
       $('.update_constraint').unbind();
       $('.delete_constraint').unbind();
       $('.category').removeClass("checked");
+      var modalContent = document.querySelector(".modal-update-constraint");
       modalPosition(modalContent, jsEvent.clientY);
       $(this).css('border-color', 'red');
       $(this).css('border-width', 'thick');
