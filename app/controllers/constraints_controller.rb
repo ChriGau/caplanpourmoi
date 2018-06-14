@@ -48,7 +48,6 @@ class ConstraintsController < ApplicationController
         format.js
         format.json { render json: @constraint }
       else
-        format.html { render :edit }
         format.js
         format.json { render json: @constraint.errors, status: :unprocessable_entity }
       end

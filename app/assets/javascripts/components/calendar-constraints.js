@@ -7,6 +7,12 @@ var modalPosition = function(modal, position) {
 
 var mySlider = $("input#nb-employees").bootstrapSlider();
 
+// Show modal edit_user_registration
+$('.edit-user-registration').click( function (data){
+  $('.modal-edit-user').modal('show');
+  $('.modal-edit-user').load('registrations/edit');
+});
+
 // comportement lors de la sélection d'une catégorie
 $('.category').click( function (data){
   var a = '#' + data.toElement.value;
@@ -218,16 +224,17 @@ $('#calendar').fullCalendar({
       var user_id = event.user_id;
       var constraint_id = event.id;
       var build_url = "/users/" + user_id + "/constraints/" + constraint_id;
-      var category_selected = event.category;
-      var start_chosen = $("#datetimepicker1").find("input").val();
-      var end_chosen = $("#datetimepicker2").find("input").val();
+      var category = event.title;
+      var start = event.start;
+      var end = event.end;
+      console.log("user_id: "+user_id+ ", constraint_id: "+ constraint_id+ " category: "+category+" start: " +start + " end: "+end);
       constraint_data = {
             constraint: {
                 id: constraint_id,
                 user_id: user_id,
-                start_at: start_chosen,
-                end_at: end_chosen,
-                category: category_selected
+                start_at: start.format(),
+                end_at: end.format(),
+                category: category
               }
           };
       $.ajax({
