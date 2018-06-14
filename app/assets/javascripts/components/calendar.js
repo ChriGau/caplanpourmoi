@@ -116,8 +116,7 @@ var modifyCalendar = function(events, defaultDate) {
           console.log(jqXHR.responseText);
         }
       });
-
-    },
+    }, // fin eventDrop
 
     eventResize: function( event, delta, revertFunc, jsEvent, ui, view ) {
       var planning_id = event.planning_id;

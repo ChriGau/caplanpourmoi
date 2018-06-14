@@ -212,36 +212,38 @@ $('#calendar').fullCalendar({
           }
         }); // fin ajax request
       }); // fin de update_slot
+    }, // fin de eventClick
 
-      // Ajax request to delete a slot
-      // var build_url = "/plannings/" + planning_id + "/slots/" + slot_id;
-      // $(".delete_slot").click( function (data){
-      //   event_data = {
-      //     slot: {
-      //         id: calEvent.id,
-      //         role_id: role_id,
-      //         start: start_date,
-      //         end: end_date,
-      //         start_at: start_date,
-      //         end_at: end_date
-      //       }
-      //   };
-      //   $.ajax({
-      //     url: build_url,
-      //     data: event_data,
-      //     format: 'js',
-      //     type: "DELETE",
-      //     success: function(data) {
-      //       console.log(Event);
-      //       $('.delete_slot').unbind();
-      //     },
-      //     error: function(jqXHR) {
-      //       console.log("ajax echec");
-      //       console.log(jqXHR.responseText);
-      //     }
-      //   });
-      // });
-    } // fin de eventClick
+    eventDrop: function(event, delat, revertFunc){
+      var user_id = event.user_id;
+      var constraint_id = event.id;
+      var build_url = "/users/" + user_id + "/constraints/" + constraint_id;
+      var category_selected = event.category;
+      var start_chosen = $("#datetimepicker1").find("input").val();
+      var end_chosen = $("#datetimepicker2").find("input").val();
+      constraint_data = {
+            constraint: {
+                id: constraint_id,
+                user_id: user_id,
+                start_at: start_chosen,
+                end_at: end_chosen,
+                category: category_selected
+              }
+          };
+      $.ajax({
+        url: build_url,
+        data: constraint_data,
+        format: 'js',
+        type: 'PATCH',
+        success: function(data) {
+          console.log(Event);
+        },
+        error: function(jqXHR) {
+          console.log("ajax echec - PATCH de eventDrop");
+          console.log(jqXHR.responseText);
+        }
+      });
+    }, // fin eventDrop
 
 
   });
