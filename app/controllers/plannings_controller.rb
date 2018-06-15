@@ -99,13 +99,14 @@ class PlanningsController < ApplicationController
   end
 
   def use_template
-    planning = Planning.find(params[:id])
-    template = Planning.find(params[:planning_id])
+    template = Planning.find(params[:planning_id]) #planning_copied
+    planning = Planning.find(params[:id]) #planning receiving the copy
+    gap = gap_in_days_between_two_dates(planning.start_date, template.start_date)
     template.slots.each do |slot|
       Slot.create!(
         planning_id: planning.id,
-        start_at: get_date(slot.start_at.strftime("%u").to_i, planning.start_date, planning.end_date, slot.start_at),
-        end_at: get_date(slot.end_at.strftime("%u").to_i, planning.start_date, planning.end_date, slot.end_at),
+        start_at: slot.start_at += gap.days,
+        end_at: slot.end_at += gap.days,
         role_id: slot.role.id,
       )
     end
@@ -150,10 +151,9 @@ class PlanningsController < ApplicationController
     slotgroups.uniq # get rid of duplicates
   end
 
-  def get_date(weekday_integer, date_range_start, date_range_end, slot_date )
-    [date_range_start..date_range_end].first.each do |date|
-      return DateTime.new(date.year,date.month, date.day, slot_date.hour, slot_date.min) if date.cwday == weekday_integer
-    end
+  def gap_in_days_between_two_dates(date1, date2)
+    # => gap in days, integer (>0 id date2 < date1)
+    (date1 - date2).to_i
   end
 end
 # rubocop:enable Metrics/ClassLength

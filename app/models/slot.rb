@@ -28,18 +28,9 @@ class Slot < ApplicationRecord
   validates_each :end_at do |record, attr, value|
     record.errors.add(attr, 'end date must be after start date') if value <= record.start_at
   end
-  validates_each :start_at, :end_at do |record, attr, value|
-    record.errors.add(attr, 'dates must belong to the planning\'s week')
-    if record.start_at < record.planning.start_date && record.end_at > record.planning.end_date
-    end
-  end
   after_save :set_status
   has_many :solution_slots, dependent: :destroy
   has_many :solutions, through: :solution_slots
-
-  def end_at_is_after_start_at?
-    start_at < end_at
-  end
 
   def self.slot_templates
     slot_templates = []

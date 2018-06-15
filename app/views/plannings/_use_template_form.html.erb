@@ -1,13 +1,16 @@
 <%= simple_form_for [@planning] do |f| %>
   <%= f.error_notification %>
+    <div class="row">
       <% @plannings.each do |planning| %>
-          <div class="col-xs-3 boxes">
-          <%= link_to planning_use_template_path(@planning, planning.id), method: :get do %>
-            <div class="" style="text-align: center;">
-            S<%= planning.week_number %> - <%= planning.end_date.year %><br>
-            <p> <%= planning.start_date.day %>-<%= planning.end_date.day %> <%= planning.end_date.strftime("%b") %> </p>
-            </div>
-          <% end %>
-        </div>
+        <%= link_to planning_use_template_path(@planning, planning.id), method: :get do %>
+          <div class="col-xs-3 boxes list-inline <%= planning.status %>">
+            <b><%= "S#{planning.week_number}" %></b>-<%= planning.year %><br>
+            <%= planning_status_label(planning) %>
+            <p><%= parse_week_number(planning.week_number, planning.year) %></p>
+          </div>
+        <% end %>
       <% end  %>
+    </div>
   <% end %>
+
+
