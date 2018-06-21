@@ -1,11 +1,12 @@
-$(".slot_form").hide();
-$('#calendar').fullCalendar( 'refetchEvents');
-$(".modal-events").modal('hide');
-
-var truc = '<%= @errors %>';
-if (truc) {
-  alert ('Cannot create slot because ' + truc);
+var errors = '<%= @errors %>';
+if (errors) {
+  $('.modal-body').prepend("<b style='color: red;'>Can't save slot because: " + errors+ "</b>");
+} else {
+  $(".slot_form").hide();
+  $('#calendar').fullCalendar( 'refetchEvents');
+  $(".modal-events").modal('hide');
 }
+
 
 
 
