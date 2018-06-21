@@ -49,6 +49,9 @@ gem 'jquery-ui-rails'
 gem 'sidekiq'
 gem 'sidekiq-failures', '~> 1.0'
 
+# displaying validations errors messages
+gem 'dynamic_form'
+
 source 'https://rails-assets.org' do
   gem 'rails-assets-classnames'
 end
