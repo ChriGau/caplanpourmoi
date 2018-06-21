@@ -91,6 +91,49 @@ class ComputeSolution < ApplicationRecord
     list_of_slots_ids = planning.slots.map(&:id)
   end
 
+  def get_timestamps_details
+    result = []
+    i = 0
+    self.timestamps_algo.each do |timestamp|
+      row = []
+      # timestamp
+      row << timestamp[1].strftime("%k:%M:%S:%L")
+      # length (sec)
+      if i != 0
+        if timestamp[1] - self.timestamps_algo[i-1][1] == 0
+          b = timestamp[1].strftime("%L").to_i - self.timestamps_algo[i-1][1].strftime("%L").to_i
+          "0." + b.round(4).to_s
+          length = b/1000
+        else
+          (timestamp[1] - self.timestamps_algo[i-1][1]).round(4)
+          length = timestamp[1] - self.timestamps_algo[i-1][1]
+        end
+        row << length.round(4)
+      end
+      # length//start (sec)
+      if i != 0
+        # si diff en seconds = 0 => calculate diff in milliseconds
+        if timestamp[1] - self.timestamps_algo[0][1] == 0
+          a = timestamp[1].strftime("%L").to_i -  self.timestamps_algo[0][1].strftime("%L").to_i
+          row << "0." + a.round(4).to_s
+        else
+          row << (timestamp[1] - self.timestamps_algo[0][1]).round(4)
+        end
+      end
+      # %total length
+      if i != 0
+        if self.calculation_length.nil?
+          row << "no total length"
+        else
+          row << ((length / self.calculation_length.to_f)*100).round(3)
+        end
+      end
+      result << row
+      i += 1
+    end
+    return result
+  end
+
   private
 
   def nb_hours(planning)

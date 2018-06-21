@@ -1,4 +1,4 @@
-      // Load the Visualization API and the corechart package.
+// Load the Visualization API and the corechart package.
       google.charts.load('current', {'packages':['corechart']});
 
       // Set a callback to run when the Google Visualization API is loaded.
@@ -31,4 +31,24 @@
         // Instantiate and draw our chart, passing in some options.
         var chart = new google.visualization.PieChart(document.getElementById('chart'));
         chart.draw(data, options);
+      }
+
+      google.charts.load('current', {'packages':['table']});
+      google.charts.setOnLoadCallback(drawTable);
+
+      function drawTable() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'when');
+        data.addColumn('string', 'what');
+        data.addColumn('string', 'Timestamp');
+        data.addColumn('number', 'Length(sec)');
+        data.addColumn('number', 'Length//start (sec)');
+        data.addColumn('number', '% of total length');
+        data.addRows([
+          row1, row2, row3, row4, row5, row6, row7
+        ]);
+
+        var table = new google.visualization.Table(document.getElementById('table_div'));
+
+        table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
       }

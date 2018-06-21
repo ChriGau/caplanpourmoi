@@ -23,20 +23,7 @@ require 'uri'
   def show_calculation_details
     @compute_solution = ComputeSolution.find(params[:compute_solution_id])
     @timestamps = @compute_solution.timestamps_algo
-    @column1 = ["create ComputeSolution",
-              "start CreateSlotgroupsService",
-              "end CreateSlotgroupsService",
-              "start GoFindSolutionsService",
-              "start pick_best_solution",
-              "start SaveSolutionsAndSolutionSlotsService",
-              "end SaveSolutionsAndSolutionSlotsService"]
-    @column2 = ["",
-                "ComputeSolution creation",
-                "CreateSlotgroupsService",
-                "Choice: run through branches?",
-                "GoFindSolutionsService - tree exploration",
-                "GoFindSolutionsService - pick best",
-                "Saving of solutions"]
+    @timestamps_details = @compute_solution.get_timestamps_details
     @timestamps_length = get_timestamps_length(@timestamps)
   end
 
