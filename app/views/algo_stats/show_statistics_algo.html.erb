@@ -99,6 +99,10 @@
   </div>
   <div class="row panel">
     <div class="col-xs-6">
+      <div id="curve_chart">
+      </div>
+    </div>
+    <div class="col-xs-6">
       <div id="columnchart_values">
       </div>
     </div>
@@ -114,6 +118,7 @@
     var tree_covered = <%= @algo_stat.tree_covered_mean %>;
     var rows_table = <%= @table_rows %>;
     var rows_chart = <%= @bar_chart_rows %>;
+    var rows_curve_chart = <%= @curve_chart_rows %>
 
   </script>
 <% end %>

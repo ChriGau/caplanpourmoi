@@ -50,16 +50,17 @@ function drawTable() {
   table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
 }
 
-// bar chart
+// column chart
 
 google.charts.load("current", {packages:['corechart']});
-google.charts.setOnLoadCallback(drawChart);
-function drawChart() {
+google.charts.setOnLoadCallback(drawColumnChart);
+function drawColumnChart() {
   rows_chart[0] = ["week number", "number of calculations"];
+  console.log(rows_chart);
   var data = google.visualization.arrayToDataTable(rows_chart);
   var view = new google.visualization.DataView(data);
   var options = {
-    title: "Nombre de calculs lancés",
+    title: "Nombre de calculs lancés par semaine",
     width: 600,
     height: 400,
     bar: {groupWidth: "95%"},
@@ -67,4 +68,26 @@ function drawChart() {
   };
   var chart = new google.visualization.ColumnChart(document.getElementById("columnchart_values"));
   chart.draw(view, options);
+}
+
+// line chart - evolution total mean time
+
+google.charts.load('current', {'packages':['corechart']});
+google.charts.setOnLoadCallback(drawChart);
+
+function drawChart() {
+  rows_curve_chart[0] = ["AlgoStat ID", "length (seconds)"];
+  var data = google.visualization.arrayToDataTable(
+    rows_curve_chart
+  );
+
+  var options = {
+    title: 'Temps moyen de recherche de solution par slot (par AlgoStat)',
+    curveType: 'function',
+    legend: { position: 'bottom' },
+  };
+
+  var curve_chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+
+  curve_chart.draw(data, options);
 }
