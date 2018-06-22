@@ -34,7 +34,7 @@ class SaveSolutionsAndSolutionSlotsService
     t = @compute_solution.timestamps_algo << ["t7", Time.now]
     @compute_solution.update(timestamps_algo: t)
     # evaluate calculation_length
-    @compute_solution.calculate_calculation_length
+    @compute_solution.evaluate_statistics
   end
 
   def create_solution(compute_solution, nb_overlaps = nil)

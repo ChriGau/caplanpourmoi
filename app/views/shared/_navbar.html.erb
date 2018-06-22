@@ -9,6 +9,9 @@
  <!-- Right Navigation -->
   <div class="navbar-wagon-right hidden-xs hidden-sm">
 
+    <div>
+      <%= link_to "stats algo", statistics_algo_path, { :class=>"btn-primary btn-nav" } %>
+    </div>
 
     <% if user_signed_in? %>
        <!-- Avatar with dropdown menu -->

@@ -2,23 +2,28 @@
 #
 # Table name: compute_solutions
 #
-#  id                      :integer          not null, primary key
-#  status                  :integer
-#  planning_id             :integer
-#  created_at              :datetime         not null
-#  updated_at              :datetime         not null
-#  nb_solutions            :integer
-#  nb_optimal_solutions    :integer
-#  nb_iterations           :integer
-#  nb_possibilities_theory :integer
-#  calculation_length      :decimal(, )
-#  nb_cuts_within_tree     :integer
-#  p_nb_slots              :integer
-#  p_nb_hours              :string
-#  p_nb_hours_roles        :text
-#  team                    :text
-#  p_list_of_slots_ids     :text
-#  timestamps_algo         :text
+#  id                                      :integer          not null, primary key
+#  status                                  :integer
+#  planning_id                             :integer
+#  created_at                              :datetime         not null
+#  updated_at                              :datetime         not null
+#  nb_solutions                            :integer
+#  nb_optimal_solutions                    :integer
+#  nb_iterations                           :integer
+#  nb_possibilities_theory                 :integer
+#  calculation_length                      :decimal(, )
+#  nb_cuts_within_tree                     :integer
+#  p_nb_slots                              :integer
+#  p_nb_hours                              :string
+#  p_nb_hours_roles                        :text
+#  team                                    :text
+#  p_list_of_slots_ids                     :text
+#  timestamps_algo                         :text
+#  go_through_solutions_mean_time_per_slot :float
+#  solution_storing_mean_time_per_slot     :float
+#  mean_time_per_slot                      :float
+#  fail_level                              :text
+#  percent_tree_covered                    :float
 #
 # Indexes
 #
@@ -66,9 +71,30 @@ class ComputeSolution < ApplicationRecord
     self.team = team
   end
 
+  def evaluate_statistics
+    # go_through_solutions_mean_time_per_slot (seconds) => (T5 - T4) / nbslots
+    # solution_storing_mean_time_per_slot (seconds) => (T7 - T6) / nbslots
+    # mean_time_per_slot (seconds) = (T7 - T1)/nbslots
+    # %tree_covered (float) = nb_iterations / nb_possibilities_theory
+    unless timestamps_algo.length < 7
+      nb_slots = planning.slots.count
+      a = (timestamps_algo[4][1] - timestamps_algo[3][1]) / nb_slots
+      b = (timestamps_algo[6][1] - timestamps_algo[5][1]) / nb_slots
+      calculate_calculation_length
+      c = calculation_length / nb_slots
+      d = nb_iterations / nb_possibilities_theory
+      update(solution_storing_mean_time_per_slot: a,
+        go_through_solutions_mean_time_per_slot: b,
+        mean_time_per_slot: c,
+        percent_tree_covered: d)
+    else
+      calculate_fail_level
+    end
+  end
+
   def calculate_calculation_length
     # from the timestamps_algo, get total length of the algo (seconds)
-    update(calculation_length: timestamps_algo.last[1] - timestamps_algo.select{ |x| x.first == "t1"}.first[1])
+      update(calculation_length: timestamps_algo.last[1] - timestamps_algo.first[1])
   end
 
   def save_calculation_abstract(calculation_abstract)
@@ -89,6 +115,13 @@ class ComputeSolution < ApplicationRecord
 
   def list_of_slots_ids
     list_of_slots_ids = planning.slots.map(&:id)
+  end
+
+  def calculate_fail_level
+    # => t# if fail occurs (text)
+    unless self.timestamps_algo.empty?
+      update(fail_level: self.timestamps_algo.last[0])
+    end
   end
 
   def get_timestamps_details

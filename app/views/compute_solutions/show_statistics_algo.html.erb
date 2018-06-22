@@ -1,0 +1,31 @@
+<h1>Statistiques générales</h1>
+<div class="row">
+  <div class="col-xs-6">
+    <li>Nombre de calculs effectués: <%= ComputeSolution.all.count %></li>
+    <b> dont suivis: <%= @nb_calculs_suivis %>
+    Soit <%= number_to_percentage(@nb_calculs_suivis / ComputeSolution.all.count * 100) %> </b>
+    <br><br>
+    <li>Nombre de solutions stockées: <%= Solution.all.count %></li>
+    <li>Nombre de solution_slots stockés: <%= SolutionSlot.all.count %></li>
+  </div>
+  <div class="col-xs-6">
+    %Algorithme réussi:
+    <br>
+    <b><%= number_to_percentage(@percent_success*100) %></b>
+  </div>
+</div>
+
+<h1>Temps d'exécution</h1>
+<div class="row">
+  <div class="col-xs-6">
+    <li>Temps moyen d'exécution de l'algo par slot: </li>
+    <li>Temps moyen de recherche de solutions: </li>
+    <li>%moyen de balayage du champs des solutions: </li>
+    <li>Temps moyen de stockage des solutions: </li>
+  </div>
+  <div class="col-xs-6">
+    Simulateur de durée:
+
+  </div>
+</div>
+

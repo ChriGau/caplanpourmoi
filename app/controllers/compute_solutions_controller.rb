@@ -27,6 +27,11 @@ require 'uri'
     @timestamps_length = get_timestamps_length(@timestamps)
   end
 
+  def show_statistics_algo
+    @nb_calculs_suivis = ComputeSolution.select{|c| !c.timestamps_algo.empty?}.count
+    @percent_success = ComputeSolution.select{|c| c.timestamps_algo.length == 7}.count / @nb_calculs_suivis
+  end
+
   private
 
   def set_planning

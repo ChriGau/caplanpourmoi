@@ -101,6 +101,8 @@ Rails.application.routes.draw do
   get 'users/:id/reinvite', to: 'users#reinvite', as: "user_reinvite"
   resources :colors, only: [:new, :create]
 
+  get 'statistics_algo', to: 'compute_solutions#show_statistics_algo', as: 'statistics_algo'
+
   # Sidekiq Web UI, only for admins.
   require "sidekiq/web"
   authenticate :user, lambda { |u| u.is_owner } do
