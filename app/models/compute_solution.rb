@@ -154,17 +154,18 @@ class ComputeSolution < ApplicationRecord
         end
       end
       # %total length
-      if i != 0
-        if self.calculation_length.nil?
-          row << "no total length"
-        else
-          row << ((length / self.calculation_length.to_f)*100).round(3)
-        end
+      unless i == 0
+        self.calculation_length.nil? ? row << "no total length" : row << ((length / self.calculation_length.to_f)*100).round(3)
       end
       result << row
       i += 1
     end
     return result
+  end
+
+  def build_row_for_statistics_display
+    row = [id, planning.week_number, self.calculation_length.to_f.round(4), self.planning.slots.count, self.planning.users.count, nb_iterations, percent_tree_covered]
+    timestamps_algo.length == 7 ? row.insert(3, 1) : row.insert(3, 0)
   end
 
   private
