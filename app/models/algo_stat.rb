@@ -15,4 +15,5 @@
 #
 
 class AlgoStat < ApplicationRecord
+
 end

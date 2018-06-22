@@ -1,0 +1,52 @@
+<div>
+  <%= link_to "Mettre à jour les statistiques", reload_statistics_path, { :class=>"btn-primary btn-nav" } %>
+</div>
+
+<h1>Statistiques générales</h1>
+<div class="row">
+  <div class="col-xs-6">
+    <li>Nombre de calculs effectués suivis: <%= @algo_stat.nb_compute_solutions %></li>
+    dont total: <%= ComputeSolution.all.count %>
+    <br><br>
+    <li>Nombre de solutions stockées: <%= @algo_stat.nb_solutions %></li>
+
+  </div>
+  <div class="col-xs-6">
+    %Algorithme réussi:
+    <br>
+    <b><%= number_to_percentage((@algo_stat.nb_compute_solutions - @algo_stat.nb_fail) / @algo_stat.nb_compute_solutions*100)  %></b>
+  </div>
+</div>
+
+<h1>Temps d'exécution</h1>
+<div class="row">
+  <div class="col-xs-6">
+    <li>Temps moyen d'exécution de l'algo (secondes): <%= @algo_stat.total_mean_time.round(4) %></li>
+    <br><br>
+    <li>Temps moyen de recherche de solutions (secondes par slot): <%= @algo_stat.go_through_solutions_mean_time_per_slot.round(4) %></li>
+    <li>%moyen de balayage du champs des solutions: <%= @algo_stat.tree_covered_mean.round(4) %></li>
+    <li>Temps moyen de stockage des solutions (secondes par slot): <%= @algo_stat.solutions_storing_mean_time.round(4) %></li>
+  </div>
+  <div class="col-xs-6">
+    Simulateur de durée:
+      <label for="nb_slots">Nombre de slots: </label>
+      <input type="text" name="nb_slots" id="name">
+      <class class="btn-action">Simuler</class>
+  <div class="result">
+  </div>
+  </div>
+</div>
+
+<%= content_for(:after_js) do %>
+
+  <script>
+    $('.btn-action').click( function(){
+      var go_through = <%= @algo_stat.go_through_solutions_mean_time_per_slot %>;
+      var storing = <%= @algo_stat.solutions_storing_mean_time %>;
+      var tree_covered = <%= @algo_stat.tree_covered_mean %>;
+      var nb_slots = parseInt($("#name").val());
+      length =  go_through * nb_slots * tree_covered + storing * nb_slots;
+      $(".result").html(Math.round(length, 6) + " seconds");
+    })
+  </script>
+<% end %>
