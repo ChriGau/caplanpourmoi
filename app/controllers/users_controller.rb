@@ -63,9 +63,10 @@ class UsersController < ApplicationController
   def update
     @user = User.find(params[:id])
     # update working hours only
-    if photo_params.keys.empty? && params[:user].keys.length == 1
+    if params[:user].keys[0] == "working_hours"
       if @user.update(working_hours: params[:user][:working_hours].to_i)
         redirect_to user_path(@user)
+      end
       # update profile_picture only
       elsif @user.update(photo_params)
         redirect_to user_path(@user)
@@ -74,7 +75,6 @@ class UsersController < ApplicationController
         redirect_to user_path(@user)
       else
         render :edit, {ressource: @user}
-      end
     end
   end
 
