@@ -109,7 +109,6 @@ $('#calendar').fullCalendar({
       $('#1').removeClass("checked");
       $('#2').removeClass("checked");
       $(this).addClass("checked");
-      console.log("done");
     });
     //behavior of days sélection
     $("input:checkbox").click(function(){
@@ -177,6 +176,13 @@ $('#calendar').fullCalendar({
       var start_date = new Date(start_date.setHours(start_date.getHours() ));
       var end_date = new Date(calEvent.end.format());
       var end_date = new Date(end_date.setHours(end_date.getHours() ));
+      // comportement lors de la sélection d'une catégorie
+      $('.category').click( function (data){
+        $('#0').removeClass("checked");
+        $('#1').removeClass("checked");
+        $('#2').removeClass("checked");
+        $(this).addClass("checked");
+      });
       // set default values to the form
       $('#datetimepicker1 .form-control').val(start_date.toLocaleDateString('fr-FR', {timezone: 'UTC', hour: '2-digit', minute: '2-digit'}));
       $("#datetimepicker1").datetimepicker({
