@@ -98,8 +98,8 @@
       <li class="list-group-item justify-content-between">
         Dernière connexion :
         <span class="badge badge-default badge-pill">
-        <% unless @user.current_sign_in_at.nil? %>
-          <%= @user.current_sign_in_at.strftime("%D %R") %>
+        <% unless @user.last_sign_in_at.nil? %>
+          <%= @user.last_sign_in_at.strftime("%D %R") %>
         <% else %>
           Ne s'est jamais connecté
         <% end %>
