@@ -1,5 +1,3 @@
-
-
 var modifyConstraintsCalendar = function(events, defaultDate) {
 
 var modalContent = document.querySelector(".modal-content");
@@ -8,8 +6,6 @@ var modalPosition = function(modal, position) {
 }
 
 var mySlider = $("input#nb-employees").bootstrapSlider();
-
-
 
 // Ajout de roles au user
 $('.fa-plus').click(function(data){
@@ -52,6 +48,13 @@ $('.delete-role').click(function(data){
         console.log(jqXHR.responseText);
       }
   });
+});
+
+// update de la profile picture
+$('.edit-profile-picture').click(function(data){
+  $(".modal-update-profile-picture").modal('show');
+  var modalContent = document.querySelector(".modal-update-profile-picture");
+  modalPosition(modalContent, data.clientY + 300);
 });
 
 // edit de working_hours

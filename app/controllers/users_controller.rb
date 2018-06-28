@@ -62,10 +62,14 @@ class UsersController < ApplicationController
 
   def update
     @user = User.find(params[:id])
-    if @user.update(user_params)
+    if @user.update(photo_params)
       redirect_to user_path(@user)
     else
-      render :edit, {ressource: @user}
+      if @user.update(user_params)
+        redirect_to user_path(@user)
+      else
+        render :edit, {ressource: @user}
+      end
     end
   end
 
