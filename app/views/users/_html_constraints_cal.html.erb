@@ -19,6 +19,7 @@
     var events = <%= raw @constraints_array.to_json %> ;
     var defaultDate = "<%= Date.today %>" ;
 
-    modifyCalendar(events, defaultDate);
+    modifyConstraintsCalendar(events, defaultDate);
+
   </script>
 <% end %>

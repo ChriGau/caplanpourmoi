@@ -1,4 +1,6 @@
-var modifyCalendar = function(events, defaultDate) {
+
+
+var modifyConstraintsCalendar = function(events, defaultDate) {
 
 var modalContent = document.querySelector(".modal-content");
 var modalPosition = function(modal, position) {
@@ -7,14 +9,7 @@ var modalPosition = function(modal, position) {
 
 var mySlider = $("input#nb-employees").bootstrapSlider();
 
-// comportement lors de la sélection d'une catégorie
-$('.category').click( function (data){
-  var a = '#' + data.toElement.value;
-  $('#0').removeClass("checked");
-  $('#1').removeClass("checked");
-  $('#2').removeClass("checked");
-  $(a).addClass("checked");
-});
+
 
 // Ajout de roles au user
 $('.fa-plus').click(function(data){
@@ -105,6 +100,14 @@ $('#calendar').fullCalendar({
     $('#datetimepicker2').datetimepicker({
       locale: 'FR'
      });
+    // comportement lors de la sélection d'une catégorie
+    $('.category').click( function (data){
+      $('#0').removeClass("checked");
+      $('#1').removeClass("checked");
+      $('#2').removeClass("checked");
+      $(this).addClass("checked");
+      console.log("done");
+    });
     //behavior of days sélection
     $("input:checkbox").click(function(){
       $(this).parent().parent().toggleClass("checked");
@@ -226,7 +229,6 @@ $('#calendar').fullCalendar({
       var category = event.title;
       var start = event.start;
       var end = event.end;
-      console.log("user_id: "+user_id+ ", constraint_id: "+ constraint_id+ " category: "+category+" start: " +start + " end: "+end);
       constraint_data = {
             constraint: {
                 id: constraint_id,
