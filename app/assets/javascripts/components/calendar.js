@@ -57,6 +57,7 @@ var modifyCalendar = function(events, defaultDate) {
     // what happens when we select a time period on the calendar
     select: function( start, end, jsEvent, view ) {
       modalPosition(modalContent, jsEvent.clientY);
+      $('.errors').hide();
       $('.create_slot').hide();
       $(".modal-events").modal('show');
       $('.create_slot').show();

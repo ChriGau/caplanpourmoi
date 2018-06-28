@@ -31,7 +31,7 @@ class SlotsController < ApplicationController
     else
       respond_to do |format|
         format.html
-        @errors = slot_list.select{|s| s.errors.messages != nil}.first.errors.messages.values.flatten
+        @errors = slot_list.select{|s| s.errors.messages != nil}.first.errors.messages.values.flatten.join(" + ")
         format.js
         format.json { render json: @slot.errors, status: :unprocessable_entity }
       end
