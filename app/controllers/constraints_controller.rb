@@ -54,6 +54,13 @@ class ConstraintsController < ApplicationController
     end
   end
 
+  def destroy
+    @constraint = Constraint.destroy(params[:id])
+    respond_to do |format|
+      format.js  # <-- will render `app/views/constraints/destroy.js.erb`
+    end
+  end
+
   # rubocop:enable AbcSize, MethodLength
 
   def constraint_params

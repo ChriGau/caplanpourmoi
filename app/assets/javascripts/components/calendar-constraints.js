@@ -229,6 +229,31 @@ $('#calendar').fullCalendar({
           }
         }); // fin ajax request
       }); // fin de update_slot
+      $(".delete_constraint").click( function (){
+        var user_id = calEvent.user_id;
+        var constraint_id = calEvent.id;
+        var build_url = "/users/" + user_id + "/constraints/" + constraint_id;
+        constraint_data = {
+              constraint: {
+                  id: constraint_id,
+                  user_id: calEvent.user_id
+                }
+            };
+
+        $.ajax({
+          url: build_url,
+          data: constraint_data,
+          format: 'js',
+          type: 'DELETE',
+          success: function(data) {
+            location.reload();
+          },
+          error: function(jqXHR) {
+            console.log("ajax echec - PATCH de Constraint");
+            console.log(jqXHR.responseText);
+          }
+        }); // fin ajax request
+      }); // fin de delete_slot
     }, // fin de eventClick
 
     eventDrop: function(event, delat, revertFunc){
