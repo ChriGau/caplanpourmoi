@@ -1,0 +1,117 @@
+<%= link_to "Retour aux solutions", planning_compute_solutions_path(@planning), { :class=>"btn-success" } %>
+
+<div class="row">
+  <div class="col-xs-6">
+    <h3> <b>Number of possibilities - theory : </b><%= @compute_solution.nb_possibilities_theory %></h2>
+    <% if @compute_solution.nb_iterations.nil? %>
+      <h3>Number of iterations, number of cuts within tree, %tree covered ==> <b>Unable to calculate</b></h3>
+    <% else %>
+      <h3>Number of iterations : <%= @compute_solution.nb_iterations %></h3>
+      <h3>Number of cuts within tree : <%= @compute_solution.nb_cuts_within_tree %></h3>
+      <h3>%tree covered : <%= number_to_percentage((@compute_solution.nb_iterations.to_f / @compute_solution.nb_possibilities_theory)*100, precision: 2) %></h3>
+    <% end %>
+  </div>
+  <div class="col-xs-6">
+    <div id="chart"></div>
+  </div>
+    <div class="col-xs-12">
+      <!-- creation du tableau -->
+      <div class="col-xs-12" style="text-align: center;">
+      <!-- en-têtes -->
+        <div class="row" style="border-bottom-style: solid; border-bottom-color: $myblue; background-color: grey; color: white;text-align: center;">
+          <div class="col-xs-1">
+            <b>T#</b>
+          </div>
+          <div class="col-xs-4" style="border-right-color: $mylightblue; border-right-style: solid;">
+            <b>What</b>
+          </div>
+          <div class="col-xs-2">
+            <b>Timestamp</b>
+          </div>
+          <div class="col-xs-2">
+            <b>Length (sec)</b>
+          </div>
+          <div class="col-xs-2">
+            <b>Length//start(sec)</b>
+          </div>
+          <div class="col-xs-1">
+            <b>%Total length</b>
+          </div>
+        </div>
+
+        <!-- création des lignes -->
+        <% i = 0 %>
+        <% @timestamps.each do |timestamp| %>
+          <div class="row" style="border-bottom-style: dashed; border-bottom-color: $myblue;">
+            <div class="col-xs-1 machin" style="border: 3px solid $myblue;">
+              <%= timestamp[0] %>
+            </div>
+            <div class="col-xs-2" style="border-right-color: $mylightblue; border-right-style: solid;">
+              <%= @column1[i] %>
+            </div>
+            <div class="col-xs-2" style="border-right-color: $mylightblue; border-right-style: solid;">
+              <%= @column2[i] %>
+            </div>
+            <div class="col-xs-2">
+              <!-- timestamp -->
+              <%= timestamp[1].strftime("%k:%M:%S:%L") %>
+            </div>
+            <div class="col-xs-2">
+              <!-- durée avec l'étape précédente -->
+              <% if i != 0  %>
+                <!-- si diff in seconds = 0 -->
+                <% if timestamp[1] - @timestamps[i-1][1] == 0 %>
+                  <% b = timestamp[1].strftime("%L").to_i - @timestamps[i-1][1].strftime("%L").to_i %>
+                  <%= "0." + b.round(4).to_s %>
+                  <% durée = b/1000 %>
+                <% else %>
+                  <%= (timestamp[1] - @timestamps[i-1][1]).round(4) %>
+                  <% durée =  timestamp[1] - @timestamps[i-1][1] %>
+                <% end %>
+              <% end %>
+            </div>
+            <div class="col-xs-2" style="border: 1px solid $myblue;">
+              <!-- durée // start -->
+              <% if i != 0  %>
+                <!-- si diff en seconds = 0 => calculate diff in milliseconds -->
+                <% if timestamp[1] - @timestamps[0][1] == 0 %>
+                  <% a = timestamp[1].strftime("%L").to_i -  @timestamps[0][1].strftime("%L").to_i %>
+                  <%= "0." + a.round(4).to_s %>
+                <% else %>
+                  <%= (timestamp[1] - @timestamps[0][1]).round(4) %>
+                <% end %>
+              <% end %>
+            </div>
+            <div class="col-xs-1" style="border: 1px solid $myblue;">
+              <!-- %durée totale -->
+              <% if i != 0  %>
+                <% if @compute_solution.calculation_length.nil? %>
+                  no total length
+                <% else %>
+                  <%= number_to_percentage((durée / @compute_solution.calculation_length.to_f)*100, precision: 3) %>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+        <% i += 1 %>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+
+
+<%= javascript_include_tag "dataviz/calculation_details" %>
+<%= content_for(:after_js) do %>
+
+  <script>
+    var t1 = <%= @timestamps_length[0] if @timestamps.length.positive? %>;
+    var t2 = <%= @timestamps_length[1] if @timestamps.length > 1 %>;
+    var t3 = <%= @timestamps_length[2] if @timestamps.length > 2%>;
+    var t4 = <%= @timestamps_length[3] if @timestamps.length > 3%>;
+    var t5 = <%= @timestamps_length[4] if @timestamps.length > 4 %>;
+    var t6 = <%= @timestamps_length[5] if @timestamps.length > 5 %>;
+    var t7 = <%= @timestamps_length[6] if @timestamps.length > 6 %>;
+
+  </script>
+<% end %>

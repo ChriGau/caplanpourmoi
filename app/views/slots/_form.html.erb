@@ -2,6 +2,19 @@
 
 <%= simple_form_for [@planning, @slot], :html => {:remote => true } do |f| %>
   <%= f.error_notification %>
+
+  <% if @slot.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@slot.errors.count, "error") %> prohibited this article from being saved:</h2>
+
+      <ul>
+      <% @slot.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
   <div class="row">
     <div class="col-xs-12">
       <div class="form-group dates-input">
