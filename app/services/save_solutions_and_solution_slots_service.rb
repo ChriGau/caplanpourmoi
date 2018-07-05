@@ -9,7 +9,7 @@ class SaveSolutionsAndSolutionSlotsService
     @planning = planning
     @compute_solution = compute_solution_instance
     @list_of_solutions = list_of_solutions
-    @no_solution_user = [User.find_by(first_name: 'no solution')]
+    @no_solution_user = [User.find_by(first_name: 'no solution').id]
   end
 
   def perform
@@ -87,14 +87,14 @@ class SaveSolutionsAndSolutionSlotsService
   end
 
   def get_array_of_slots_ids_related_to_slotgroup_id_according_to_simulation_status(simulation_status, slotgroup_id, slots_array)
-    get_slots_related_to_slotgroup_id_according_to_simulation_status(simulation_status, slotgroup_id, slots_array).map { |x| x[:slot_instance].id }
+    get_slots_related_to_slotgroup_id_according_to_simulation_status(simulation_status, slotgroup_id, slots_array).map { |x| x[:slot_id] }
   end
 
   def get_slots_related_to_slotgroup_id_according_to_simulation_status(simulation_status, slotgroup_id, slots_array)
     slots_array.select { |x| x[:slotgroup_id] == slotgroup_id && x[:simulation_status] == simulation_status }
   end
 
-  def create_solution_slots_for_a_group_of_slots(slots_id_array, solution_instance, users = @no_solution_user.id, sequence = 0)
+  def create_solution_slots_for_a_group_of_slots(slots_id_array, solution_instance, users = @no_solution_user, sequence = 0)
       return if sequence == slots_id_array.length
       create_solution_slot_instance(slots_id_array[sequence], users[sequence], solution_instance)
       create_solution_slots_for_a_group_of_slots(slots_id_array, solution_instance, users, sequence +=1)

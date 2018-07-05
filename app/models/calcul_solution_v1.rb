@@ -22,6 +22,7 @@
 class CalculSolutionV1 < ApplicationRecord
   belongs_to :compute_solution
   serialize :slotgroups_array
+  serialize :slots_array
 
   attr_accessor :planning, :calcul_arrays, :build_solutions, :solution
 
@@ -65,8 +66,8 @@ class CalculSolutionV1 < ApplicationRecord
     SaveSolutionsAndSolutionSlotsService.new( self.slotgroups_array,
       self.slots_array, planning, compute_solution, list_of_solutions ).perform
     puts 'SaveSolutionsAndSolutionSlotsService --> done'
-    a = self.slots_array.bytesize
-    puts ' --->  Slots array SIZE = ' + a.to_s
+    # a = self.slots_array.bytesize
+    # puts ' --->  Slots array SIZE = ' + a.to_s
     { calcul_arrays: calcul_arrays,
       test_possibilities: test_possibilities,
       solutions_array: solutions_array,
