@@ -44,7 +44,7 @@ class Slot < ApplicationRecord
   def initialize_slot_hash
     { slotgroup_id: nil,
       simulation_status: false,
-      slot_instance: self }
+      slot_id: self.id }
   end
 
   def similar_slots

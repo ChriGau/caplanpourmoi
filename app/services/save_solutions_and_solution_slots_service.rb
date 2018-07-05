@@ -26,6 +26,7 @@ class SaveSolutionsAndSolutionSlotsService
       create_solution_slots_for_a_group_of_slots(@planning.slots.pluck(:id), solution_instance)
       # calculate nb of conflicts now that the slots have been created
       solution_instance.evaluate_relevance
+
     end
   end
 
@@ -73,7 +74,7 @@ class SaveSolutionsAndSolutionSlotsService
   private
 
   def get_array_of_ids_of_slots_related_to_a_slotgroup(slotgroup_id, slots_array)
-    get_slots_related_to_a_slotgroup(slotgroup_id, slots_array).map { |x| x[:slot_instance].id }
+    get_slots_related_to_a_slotgroup(slotgroup_id, slots_array).map { |x| x[:slot_id] }
   end
 
   def get_slots_related_to_a_slotgroup(slotgroup_id, slots_array)
@@ -93,14 +94,14 @@ class SaveSolutionsAndSolutionSlotsService
     slots_array.select { |x| x[:slotgroup_id] == slotgroup_id && x[:simulation_status] == simulation_status }
   end
 
-  def create_solution_slots_for_a_group_of_slots(slots_id_array, solution_instance, users = @no_solution_user, sequence = 0)
+  def create_solution_slots_for_a_group_of_slots(slots_id_array, solution_instance, users = @no_solution_user.id, sequence = 0)
       return if sequence == slots_id_array.length
       create_solution_slot_instance(slots_id_array[sequence], users[sequence], solution_instance)
       create_solution_slots_for_a_group_of_slots(slots_id_array, solution_instance, users, sequence +=1)
   end
 
-  def create_solution_slot_instance(slot_id, user, solution_instance)
-    s = SolutionSlot.create(solution: solution_instance, :slot_id => slot_id, user: user)
+  def create_solution_slot_instance(slot_id, user_id, solution_instance)
+    s = SolutionSlot.create(solution: solution_instance, :slot_id => slot_id, user_id: user_id)
     # TODO, s.extra_hours
   end
 end

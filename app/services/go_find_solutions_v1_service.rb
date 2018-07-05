@@ -67,9 +67,10 @@ class GoFindSolutionsV1Service
         # let's build a planning possibility
         for sg_ranking in 1..nb_slotgroups # slotgroups rankings
           position = identify_position(tree, branch, sg_ranking)
-          combination = identify_slotgroup_combination(position, sg_ranking)
+          combination = identify_slotgroup_combination(position, sg_ranking) # Array of user ids
           slotgroup_id = find_slotgroup_by_ranking(sg_ranking).id
-          planning_possibility << { sg_ranking: sg_ranking,
+          planning_possibility << {
+                                    # sg_ranking: sg_ranking,
                                     sg_id: slotgroup_id,
                                     combination: combination,
                                     overlaps: nil }
@@ -92,7 +93,7 @@ class GoFindSolutionsV1Service
           # store solution if doesnt already exist
           solution_id += 1
           solutions_array << { solution_id: solution_id,
-                               possibility_id: possibility_id,
+                               # possibility_id: possibility_id,
                                nb_overlaps: overlaps_best_scoring,
                                planning_possibility: planning_possibility,
                                nb_conflicts: nb_conflicts_best_scoring } unless solutions_array.select{|x| x[:planning_possibility] == planning_possibility}.count.positive?
@@ -105,13 +106,15 @@ class GoFindSolutionsV1Service
           nb_cuts_within_tree += 1
         end
         iteration_id += 1
-        test_possibilities << planning_possibility
+        # Let's do not store all the possibilities to make this LEANER
+        # test_possibilities << planning_possibility
       end
     end
     # FOR TESTING --> storing the planning possibilities in a CSV
     store_planning_possibilities_to_csv(solutions_array) if Rails.env.test?
     calculation_abstract = determine_calculation_abstract(iteration_id, nb_cuts_within_tree)
-    { test_possibilities: test_possibilities,
+    {
+      # test_possibilities: test_possibilities,
       solutions_array: solutions_array,
       best_solution: nil,
       calculation_abstract: calculation_abstract }
@@ -154,7 +157,7 @@ def pick_best_solutions(solutions_array, how_many_solutions_do_we_store)
       nb_iterations: iteration_id,
       nb_possibilities_theory: nb_trees * nb_branches,
       nb_cuts_within_tree: nb_cuts_within_tree,
-      calculation_length_seconds: 'todo' }
+    }
   end
 
   def go_to_next_knot(tree, branch, sg_ranking)
@@ -318,11 +321,11 @@ def pick_best_solutions(solutions_array, how_many_solutions_do_we_store)
           # mettre les users du sg overlappé en overlap à no solution
           users_overlapped_sg = planning_possibility.select{ |h| h[:sg_id] == overlaps[:slotgroup_id] }.first[:combination] # => Array of users'ids
           users_initial_sg = planning_possibility.select{ |h| h[:sg_id] == slotgroup.id }.first[:combination]
-          users_overlapped_sg.each do |user|
+          users_overlapped_sg.each do |user_id|
             if users_initial_sg.include?(user) # ce user est en overlap
               planning_possibility_hash = planning_possibility.select{ |h| h[:sg_id] == overlaps[:slotgroup_id] }.first
               # get index of user in overlapped sg combination
-              index_user_to_replace = planning_possibility_hash[:combination].index(user)
+              index_user_to_replace = planning_possibility_hash[:combination].index(user_id)
               replace_user_in_planning_possibility_hash(planning_possibility_hash, index_user_to_replace)
               # binding.pry
               evaluate_overlaps_for_a_planning(planning_possibility, 0)
@@ -336,7 +339,7 @@ def pick_best_solutions(solutions_array, how_many_solutions_do_we_store)
   end
 
   def replace_user_in_planning_possibility_hash(planning_possibility_hash, index_of_user_to_replace)
-    planning_possibility_hash[:combination][index_of_user_to_replace] = determine_no_solution_user
+    planning_possibility_hash[:combination][index_of_user_to_replace] = determine_no_solution_user.id
     # script bis = .delete_at(pos) puis planning_possibility_hash[:combination] << determine_no_solution_user.id
   end
 
@@ -346,7 +349,7 @@ def pick_best_solutions(solutions_array, how_many_solutions_do_we_store)
     success = true
     sg_ranking = nil
     planning_possibility.each do |poss_hash|
-      nb_conflicts += poss_hash[:combination].select{ |u| u == determine_no_solution_user }.count
+      nb_conflicts += poss_hash[:combination].select{ |u| u == determine_no_solution_user.id }.count
       if nb_conflicts > nb_conflicts_best_scoring
         success = false
         sg_ranking = poss_hash[:sg_ranking]
