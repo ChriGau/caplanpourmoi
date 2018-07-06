@@ -22,4 +22,12 @@
 
 class Constraint < ApplicationRecord
   belongs_to :user
+
+  validates :start_at, presence: true
+  validates :end_at, presence: true
+  validates :user_id, presence: true
+  validates :category, presence: true
+
+  enum status: [:submitted, :validated, :refused]
+  enum category: [:conge_annuel, :maladie, :preference]
 end

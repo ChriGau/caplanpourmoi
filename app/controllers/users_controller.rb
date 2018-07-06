@@ -8,23 +8,10 @@ class UsersController < ApplicationController
   def show
     @user = User.find(params[:id])
     @constraints = @user.constraints
-    @constraints_array = []
-    @constraints.each do |constraint|
-      title = set_title
-      a = {
-        id:  constraint.id,
-        start:  constraint.start_at,
-        end: constraint.end_at,
-        title: title,
-        created_at: constraint.created_at,
-        updated_at: constraint.updated_at,
-        color: constraint_color(title),
-        user_id: constraint.user_id
-      }
-      # construire le BASIC hashs
-      @constraints_array << a
-    end
-
+    @constraint_categories = Constraint.categories
+    @constraints_array = get_constraints_array(@constraints)
+    @role_user = RoleUser.new
+    @constraint = Constraint.new
     respond_to do |format|
       format.js
       format.html
@@ -41,22 +28,7 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     @planning = Planning.first
     @constraints = @user.constraints
-    @constraints_array = []
-    @constraints.each do |constraint|
-      title = set_title
-      a = {
-        id:  constraint.id,
-        start:  constraint.start_at,
-        end: constraint.end_at,
-        title: title,
-        created_at: constraint.created_at,
-        updated_at: constraint.updated_at,
-        color: constraint_color(title),
-        user_id: constraint.user_id
-      }
-      # construire le BASIC hashs
-      @constraints_array << a
-    end
+    @constraints_array =  get_constraints_array(@constraints)
   end
   # rubocop:enable AbcSize, MethodLength
 
@@ -88,15 +60,23 @@ class UsersController < ApplicationController
     redirect_to users_path, notice: "Une nième invitation a été envoyée à #{@user.first_name} !"
   end
 
-  # def update
-  #   @user = User.find(params[:id])
-
-  #   if @user.update(user_params)
-  #     redirect_to plannings_path
-  #   else
-  #     render :edit
-  #   end
-  # end
+  def update
+    @user = User.find(params[:id])
+    # update working hours only
+    if params[:user].keys[0] == "working_hours"
+      if @user.update(working_hours: params[:user][:working_hours].to_i)
+        redirect_to user_path(@user)
+      end
+      # update profile_picture only
+      elsif @user.update(photo_params)
+        redirect_to user_path(@user)
+      # update more items
+      elsif @user.update(user_params)
+        redirect_to user_path(@user)
+      else
+        render :edit, {ressource: @user}
+    end
+  end
 
   private
 
@@ -112,13 +92,32 @@ class UsersController < ApplicationController
     ['Congé  annuel', 'Congé maladie', 'Préférence'].sample
   end
 
-  def constraint_color(title)
-    if title == 'Congé annuel'
-      'red'
-    elsif title == 'Congé maladie'
+  def constraint_color(category)
+    if category == :conge_annuel.to_s
       'blue'
+    elsif category == :maladie.to_s
+      'red'
     else
       'orange'
     end
   end
+
+  def get_constraints_array(constraints)
+    array = []
+    constraints.each do |constraint|
+      a = {
+        id:  constraint.id,
+        start:  constraint.start_at,
+        end: constraint.end_at,
+        title: constraint.category,
+        created_at: constraint.created_at,
+        updated_at: constraint.updated_at,
+        color: constraint_color(constraint.category),
+        user_id: constraint.user_id
+      }
+      array << a
+    end
+    array
+  end
+
 end

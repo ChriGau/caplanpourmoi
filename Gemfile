@@ -52,6 +52,9 @@ gem 'sidekiq-failures', '~> 1.0'
 # datavisualisation
 gem 'google_charts'
 
+# displaying validations errors messages
+gem 'dynamic_form'
+
 source 'https://rails-assets.org' do
   gem 'rails-assets-classnames'
 end

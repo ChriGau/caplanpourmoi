@@ -29,6 +29,8 @@ class PlanningsController < ApplicationController
     @slots = @planning.slots.order(:id)
     @slot = Slot.new
     @slot_templates = Slot.slot_templates # liste des roles (Array)
+    # plannings qui ont des slots, utilisés pour use_template
+    @plannings = Planning.select{ |p| p.slots.count.positive? }.sort_by{ |p| p.start_date }.reverse.last(30)
   end
 
   # rubocop:disable AbcSize, BlockLength, LineLength, MethodLength
@@ -99,6 +101,21 @@ class PlanningsController < ApplicationController
     # renders resultevents.json.jbuilder
   end
 
+  def use_template
+    template = Planning.find(params[:planning_id]) #planning_copied
+    planning = Planning.find(params[:id]) #planning receiving the copy
+    gap = gap_in_days_between_two_dates(planning.start_date, template.start_date)
+    template.slots.each do |slot|
+      Slot.create!(
+        planning_id: planning.id,
+        start_at: slot.start_at += gap.days,
+        end_at: slot.end_at += gap.days,
+        role_id: slot.role.id,
+      )
+    end
+  redirect_to planning_skeleton_path
+  end
+
   private
 
   def plannings_list
@@ -135,6 +152,11 @@ class PlanningsController < ApplicationController
       slotgroups << slot.slotgroup_id unless slot.slotgroup_id.nil?
     end
     slotgroups.uniq # get rid of duplicates
+  end
+
+  def gap_in_days_between_two_dates(date1, date2)
+    # => gap in days, integer (>0 id date2 < date1)
+    (date1 - date2).to_i
   end
 end
 # rubocop:enable Metrics/ClassLength

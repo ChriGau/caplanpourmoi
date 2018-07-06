@@ -111,7 +111,7 @@ class GoFindSolutionsV1Service
           nb_cuts_within_tree += 1
         end
         iteration_id += 1
-        test_possibilities << planning_possibility
+        # test_possibilities << planning_possibility
       end
     end
     # FOR TESTING --> storing the planning possibilities in a CSV

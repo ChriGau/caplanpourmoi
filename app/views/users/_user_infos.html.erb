@@ -1,7 +1,65 @@
-
-<div class="infos">
   <div class="row">
-    <div class="col-xs-6">
+    <% @user.roles.each do |role| %>
+      <button class="btn" style="width: 130px; margin: 5px; border-color: $mygrey; background-color: <%=  role.color.hexadecimal_code %>; border-radius: 6px; <%= background_text_color_role(role)%>"> <%= role.name.capitalize %>
+       <button class="btn delete-role <%= "user"+@user.id.to_s %> <%= "roleuser"+RoleUser.find_by(user_id: @user.id, role_id: role.id).id.to_s %> <%= "role"+role.id.to_s %>" aria-hidden="true">-</button>
+      </button>
+      <% end %>
+    <% if @user.roles.count != Role.all.count %>
+      <i class="fa fa-plus" aria-hidden="true"></i>
+    <% end %>
+  </div>
+
+<div class="modal fade modal-role-user modal-events" tabindex="-1" role="dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <h4 class="modal-title">Ajouter un rôle</h4>
+    </div>
+    <div class="modal-body">
+        <%= render 'role_users/form', user: @user %>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade modal-edit-working-hours modal-events" tabindex="-1" role="dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <h4 class="modal-title">Modifier les h/semaine</h4>
+    </div>
+    <div class="modal-body">
+        <%= render 'users/edit_working_hours' %>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade modal-update-constraint modal-events" tabindex="-1" role="dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <h4 class="modal-title">Modifier une contrainte</h4>
+    </div>
+    <div class="modal-body">
+        <%= render 'constraints/form' %>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade modal-update-profile-picture modal-events" tabindex="-1" role="dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <h4 class="modal-title">Modifier la photo</h4>
+    </div>
+    <div class="modal-body">
+        <%= render 'users/form_profile_picture', resource: @user %>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+
+    <div class="col-xs-4">
       <ul class="list-group">
         <li class="list-group-item justify-content-between">
           <%= @user.email %> <br>
@@ -10,27 +68,48 @@
           +33 6 89 90 95 26<br>
         </li>
         <li class="list-group-item justify-content-between">
-          Contrat :
-          <span class="badge badge-default badge-pill"><%= @user.working_hours %>h/semaine</span>
+          <div class="col-xs-4">
+            Contrat :
+          </div>
+          <div class="col-xs-4">
+            <span class="badge badge-default badge-pill"><%= @user.working_hours %>h/semaine</span>
+          </div>
+          <div class="col-xs-4">
+            <span class="badge-default fa fa-pencil modify-working-hours" style="font-size:28px; align-items: center;"></span>
+          </div>
+          <br>
         </li>
       </ul>
-      <% @user.roles.each do |role| %>
-        <button class="btn" style="width: 130px; margin: 5px; border-color: $mygrey; background-color: <%=  role.color.hexadecimal_code %>; border-radius: 6px; <%= background_text_color_role(role)%>"> <%= role.name.capitalize %> </button>
-        <% end %>
     </div>
-    <div class="col-xs-6">
+
+    <div class="col-xs-4">
+
       <li class="list-group-item justify-content-between">
-          Jours non travaillés (2017) :
-          <span class="badge badge-default badge-pill">12</span>
-        </li>
-        <li class="list-group-item justify-content-between">
-          Jours de congés restants :
-          <span class="badge badge-default badge-pill">25</span>
-        </li>
-        <li class="list-group-item justify-content-between">
-          Préférences
-          <span class="badge badge-default badge-pill">pas mercredi matin</span>
-        </li>
+        Jours de congés en cours de validation :
+        <span class="badge badge-default badge-orange">25</span>
+      </li>
+      <li class="list-group-item justify-content-between">
+        Jours de congés pris
+        <span class="badge badge-default badge-pill">25</span>
+      </li>
     </div>
-  </div>
+
+    <div class="col-xs-4">
+      <li class="list-group-item justify-content-between">
+        Dernière connexion :
+        <span class="badge badge-default badge-pill">
+        <% unless @user.last_sign_in_at.nil? %>
+          <%= @user.last_sign_in_at.strftime("%D %R") %>
+        <% else %>
+          Ne s'est jamais connecté
+        <% end %>
+        </span>
+      </li>
+    </div>
+
 </div>
+
+<div class="row">
+</div>
+
+

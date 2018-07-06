@@ -1,4 +1,9 @@
-
-<h1> <%= @user.first_name.capitalize %> <%= @user.last_name.capitalize %></h1>
+<br>
+<div class="col-xs-2 edit-profile-picture">
+  <%= avatar_with_border_color(@user) %>
+</div>
+<div class="col-xs-10">
+  <h1> <%= @user.first_name.capitalize %> <%= @user.last_name.capitalize %></h1>
+</div>
 <%= render "user_infos" %>
 <%= render "html_constraints_cal" %>

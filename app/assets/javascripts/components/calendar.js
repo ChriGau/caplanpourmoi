@@ -56,8 +56,8 @@ var modifyCalendar = function(events, defaultDate) {
     events: events,
     // what happens when we select a time period on the calendar
     select: function( start, end, jsEvent, view ) {
-      console.log("fire");
       modalPosition(modalContent, jsEvent.clientY);
+      $('.errors').hide();
       $('.create_slot').hide();
       $(".modal-events").modal('show');
       $('.create_slot').show();
@@ -117,8 +117,7 @@ var modifyCalendar = function(events, defaultDate) {
           console.log(jqXHR.responseText);
         }
       });
-
-    },
+    }, // fin eventDrop
 
     eventResize: function( event, delta, revertFunc, jsEvent, ui, view ) {
       var planning_id = event.planning_id;

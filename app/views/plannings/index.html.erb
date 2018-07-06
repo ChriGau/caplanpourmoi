@@ -75,7 +75,6 @@
     </div>
   </div>
 </div>
-<div id="modalUserContainer"></div>
 <div id="ModalEditRole"></div>
 <div id="ModalCreateRole"></div>
 
@@ -85,14 +84,6 @@
     var modalPosition = function(modal, position) {
       modal.style.setProperty('--postop', position -300 + "px");
       };
-
-    $(".show-user-link").on("click", function(event) {
-      event.preventDefault();
-      $.ajax({
-        type: "GET",
-        url: this.href
-      });
-    });
 
     $(".edit-role-link").on("click", function(event) {
       event.preventDefault();

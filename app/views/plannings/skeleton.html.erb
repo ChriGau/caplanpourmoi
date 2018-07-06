@@ -14,6 +14,21 @@
       </div>
     </div>
 
+    <div class="modal fade modal-use-template ui-draggable" tabindex="-1" role="dialog">
+      <div class="modal-content this">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">Utiliser un template</h4>
+        </div>
+        <div class="modal-body">
+            <%= render 'use_template_form' %>
+        </div>
+      </div>
+    </div>
+
+    <div class="row" style="height: 60px;">
+      <span class="btn-action use_template">Dupliquer</span>
+    </div>
     <div class="row spacing">
       <ul class="list-inline dragndrop-metiers">
         <% @slot_templates.each do |slot| %>
@@ -38,8 +53,9 @@
 
   <script>
     var events = '<%= events_planning_path(@planning.id, format: :json) %>';
-    var defaultDate = "<%= Date.commercial(@planning.year, @planning.week_number, 1).beginning_of_week %>";
+    var defaultDate = "<%= @planning.start_date %>";
     modifyCalendar(events, defaultDate);
+
   </script>
 <% end %>
 

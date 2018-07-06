@@ -20,12 +20,16 @@
   }
 }
 
+.metier.checked {
+  background-color: $myyellow !important;
+  color: $myblue;
+}
+
 .metier {
   height : 45px;
   padding: 10px;
   border-radius: 6px;
   margin-bottom: 10px;
-
 }
 
 .spacing {
