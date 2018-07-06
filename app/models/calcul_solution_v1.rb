@@ -51,28 +51,29 @@ class CalculSolutionV1 < ApplicationRecord
       build_solutions = GoFindSolutionsV1Service.new(planning,
                                                      to_simulate_slotgroups_array,
                                                      self.compute_solution).perform
+      # build_solutions = [ {calculation_abstract}, [ [:sg_id, :combination], [...] ] ]
       puts 'GoFindSolutionsV1Service --> done. --> storing best solution'
       # update return variables
-      # Let's not memorize test_possibilities to make the Algo LEANER
+      # Let's not memorize this to make the Algo LEANER
       # test_possibilities = build_solutions[:test_possibilities]
-      solutions_array = build_solutions[:solutions_array]
-      best_solution = build_solutions[:best_solution]
-      calculation_abstract = build_solutions[:calculation_abstract]
+      # Let's not memorize this to make the Algo LEANER
+      # solutions_array = build_solutions[:solutions_array]
+      # best_solution = build_solutions[1]
+      calculation_abstract = build_solutions[0]
       # save calculation abstract in ComputeSolution instance
       compute_solution.save_calculation_abstract(calculation_abstract)
     end
     # Créer Solutions et SolutionSlots associées
-    list_of_solutions = need_a_calcul ? build_solutions[:best_solution] : nil
+    list_of_solutions = need_a_calcul ? build_solutions[1] : nil
     SaveSolutionsAndSolutionSlotsService.new( self.slotgroups_array,
       self.slots_array, planning, compute_solution, list_of_solutions ).perform
     puts 'SaveSolutionsAndSolutionSlotsService --> done'
-    # a = self.slots_array.bytesize
-    # puts ' --->  Slots array SIZE = ' + a.to_s
-    { calcul_arrays: calcul_arrays,
-      test_possibilities: test_possibilities,
-      solutions_array: solutions_array,
-      best_solution: best_solution,
-      calculation_abstract: calculation_abstract }
+    # Let's not memorize this to make the Algo LEANER
+    # { calcul_arrays: calcul_arrays,
+    #   test_possibilities: test_possibilities,
+    #   solutions_array: solutions_array,
+    #   best_solution: best_solution,
+    #   calculation_abstract: calculation_abstract }
   end
 
   def initialize_slots_array(slots)

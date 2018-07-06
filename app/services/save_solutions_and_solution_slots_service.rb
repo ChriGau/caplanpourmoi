@@ -15,8 +15,9 @@ class SaveSolutionsAndSolutionSlotsService
   def perform
     if !@list_of_solutions.nil?
       @list_of_solutions.each do |solution|
-        solution_instance = create_solution(@compute_solution, solution[:nb_overlaps])
-        create_solution_slots(@slotgroups_array, solution[:planning_possibility], solution_instance)
+        # solution_instance = create_solution(@compute_solution, solution[:nb_overlaps])
+        solution_instance = create_solution(@compute_solution) # le'ts not store nb_overlaps car 'fixé' par go_through_plannings
+        create_solution_slots(@slotgroups_array, solution, solution_instance)
         # calculate nb of conflicts now that the solution_lots have been created + determine relevance
         solution_instance.evaluate_relevance
         solution_instance.total_over_time
@@ -35,19 +36,19 @@ class SaveSolutionsAndSolutionSlotsService
     # TODO add after_create => nb conflicts
   end
 
-  def create_solution_slots(slotgroups_array, planning_possibility, solution_instance)
+  def create_solution_slots(slotgroups_array, solution, solution_instance)
     # on reprend tous les slotgroups (même à ne pas simuler)
     slotgroups_array.each do |slotgroup_instance|
       # si simulation_status = false, user = no solution
       if slotgroup_instance.simulation_status == false
         # récupérer les id des slots liés à ce slotgroup
-        slots_id_array = get_array_of_ids_of_slots_related_to_a_slotgroup(slotgroup_instance.id, @slots_array)
+        slots_id_array = get_array_of_ids_of_slots_related_to_a_slotgroup(slotgroup_instance.id, slotgroups_array)
         # créer les instances de slot_solutions avec user_id = 'no solution'
         create_solution_slots_for_a_group_of_slots(slots_id_array, solution_instance)
       # si required >= available => affecter à chacun des slots les users de la combination
       elsif slotgroup_instance.nb_available >= slotgroup_instance.nb_required
-        slots_id_array = get_array_of_ids_of_slots_related_to_a_slotgroup(slotgroup_instance.id, @slots_array)
-        combination = get_slotgroup_combination(planning_possibility, slotgroup_instance)
+        slots_id_array = get_array_of_ids_of_slots_related_to_a_slotgroup(slotgroup_instance.id, slotgroups_array)
+        combination = get_slotgroup_combination(solution, slotgroup_instance)
         create_solution_slots_for_a_group_of_slots(slots_id_array, solution_instance, combination)
       # sinon (il y a des slots à simuler et d'autres non)
       else
@@ -55,7 +56,7 @@ class SaveSolutionsAndSolutionSlotsService
         slots_id_array_false = get_array_of_slots_ids_related_to_slotgroup_id_according_to_simulation_status(false, slotgroup_instance.id, @slots_array)
         slots_id_array_true = get_array_of_slots_ids_related_to_slotgroup_id_according_to_simulation_status(true, slotgroup_instance.id, @slots_array)
         # leur affecter les users de la combination
-        combination = get_slotgroup_combination(planning_possibility, slotgroup_instance)
+        combination = get_slotgroup_combination(solution, slotgroup_instance)
         create_solution_slots_for_a_group_of_slots(slots_id_array_true, solution_instance, combination)
         create_solution_slots_for_a_group_of_slots(slots_id_array_false, solution_instance)
       end
@@ -73,8 +74,9 @@ class SaveSolutionsAndSolutionSlotsService
 
   private
 
-  def get_array_of_ids_of_slots_related_to_a_slotgroup(slotgroup_id, slots_array)
-    get_slots_related_to_a_slotgroup(slotgroup_id, slots_array).map { |x| x[:slot_id] }
+  def get_array_of_ids_of_slots_related_to_a_slotgroup(slotgroup_id, slotgroups_array)
+    slotgroups_array.select { |x| x.id == slotgroup_id }.first.slots_to_simulate.map{ |x| x[:slot_id] }
+    # get_slots_related_to_a_slotgroup(slotgroup_id, slots_array).map { |x| x[:slot_id] }
   end
 
   def get_slots_related_to_a_slotgroup(slotgroup_id, slots_array)
@@ -82,8 +84,8 @@ class SaveSolutionsAndSolutionSlotsService
     slots_array.select { |x| x[:slotgroup_id] == slotgroup_id }
   end
 
-  def get_slotgroup_combination(planning_possibility, slotgroup_instance)
-    planning_possibility.select { |x| x[:sg_id] == slotgroup_instance.id }.first[:combination]
+  def get_slotgroup_combination(solution, slotgroup_instance)
+    solution.select { |x| x[:sg_id] == slotgroup_instance.id }.first[:combination]
   end
 
   def get_array_of_slots_ids_related_to_slotgroup_id_according_to_simulation_status(simulation_status, slotgroup_id, slots_array)

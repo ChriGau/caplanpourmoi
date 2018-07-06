@@ -25,9 +25,9 @@ class GoFindSolutionsV1Service
     # iterate through planning possibilities to extract solutions
     build_solutions = go_through_plannings
     # select the best solutions
-    build_solutions[:best_solution] = pick_best_solutions(build_solutions[:solutions_array], 20)
+    list_of_solutions = pick_best_solutions(build_solutions[:solutions_array], 20)
     # return
-    build_solutions
+    [ build_solutions[:calculation_abstract], list_of_solutions ]
   end
 
   def determine_number_of_trees
@@ -70,7 +70,7 @@ class GoFindSolutionsV1Service
           combination = identify_slotgroup_combination(position, sg_ranking) # Array of user ids
           slotgroup_id = find_slotgroup_by_ranking(sg_ranking).id
           planning_possibility << {
-                                    # sg_ranking: sg_ranking,
+                                    sg_ranking: sg_ranking,
                                     sg_id: slotgroup_id,
                                     combination: combination,
                                     overlaps: nil }
@@ -90,13 +90,23 @@ class GoFindSolutionsV1Service
         if result_conflicts_check[:success]
           nb_conflicts_best_scoring = result_conflicts_check[:nb_conflicts]
           # TODO, evaluate weekly hours respect
-          # store solution if doesnt already exist
+          # store solution if doesnt already exist - storing of solution is leaner
           solution_id += 1
-          solutions_array << { solution_id: solution_id,
+          solution = planning_possibility_leaner_version(planning_possibility)
+          #  où planning_possibility = [:sg_id, :combination = [id1, id2,...] ]
+          # on enlèvera les doublons de solutions + tard car sinon la ligne ci-dessous est très consommatrice
+          solutions_array << solution # unless solutions_array.select{|x| x == solution}.count.positive?
+
+                               # {
+                               # solution_id: solution_id,
                                # possibility_id: possibility_id,
-                               nb_overlaps: overlaps_best_scoring,
-                               planning_possibility: planning_possibility,
-                               nb_conflicts: nb_conflicts_best_scoring } unless solutions_array.select{|x| x[:planning_possibility] == planning_possibility}.count.positive?
+                               # nb_overlaps: overlaps_best_scoring,
+                               # planning_possibility: planning_possibility,
+                               # nb_conflicts: nb_conflicts_best_scoring
+                               # }
+          # toutes les 1000 solutions, on enlève les doublons de solutions
+          # (les doublons peuvent apparaître lorsque l'on résout les conflits)
+          solutions_array.uniq! if solution_id % 1000 == 0
         else
           # cut off all similar possibilities
           next_knot_caracteristics = go_to_next_knot(tree, branch,
@@ -106,7 +116,8 @@ class GoFindSolutionsV1Service
           nb_cuts_within_tree += 1
         end
         iteration_id += 1
-        # Let's do not store all the possibilities to make this LEANER
+        puts '...... iteration ' + iteration_id.to_s
+        # Let's not store all the possibilities to make this LEANER
         # test_possibilities << planning_possibility
       end
     end
@@ -116,7 +127,7 @@ class GoFindSolutionsV1Service
     {
       # test_possibilities: test_possibilities,
       solutions_array: solutions_array,
-      best_solution: nil,
+      # best_solution: nil,
       calculation_abstract: calculation_abstract }
   end
 
@@ -171,7 +182,16 @@ def pick_best_solutions(solutions_array, how_many_solutions_do_we_store)
     { branch: branch, tree: tree }
   end
 
+  def planning_possibility_leaner_version(planning_possibility)
+    # [ {:sg_ranking, :sg_id, :combination, :overlaps}, {...} ] => [ {:sg_id, :combination}, {...} ]
+    planning_possibility.each do |sg_hash|
+      sg_hash.delete(:sg_ranking)
+      sg_hash.delete(:overlaps)
+    end
+    return planning_possibility
+  end
   private
+
 
   def init_overlaps_best_scoring
     # max of overlaps = all users are in overlap for all sg
@@ -284,7 +304,11 @@ def pick_best_solutions(solutions_array, how_many_solutions_do_we_store)
   end
 
   def collect_solutions_with_no_conflicts(solutions_array)
-    solutions_array.select { |x| x[:nb_conflicts].zero? }
+    solutions_array.select { |x| calculate_nb_conflicts(x).zero? }
+  end
+
+  def calculate_nb_conflicts_for_a_solution(solution_array)
+    solution_array[:combination].select{ |c| c == determine_no_solution_user.id }.count
   end
 
   def calculate_nb_solutions
@@ -292,9 +316,14 @@ def pick_best_solutions(solutions_array, how_many_solutions_do_we_store)
   end
 
   def calculate_nb_optimal_solutions
-    # count nb of items with no overlaps
+    # count nb of solutions with no conflicts
     # TODO, update this method when weekly hours check will be set up
-    solutions_array.select { |x| x[:nb_overlaps].zero? }.count
+    solutions_array.select { |x| calculate_nb_conflicts(x).zero? }.count
+  end
+
+  def calculate_nb_conflicts(solution_array)
+    # => nombre de conflicts pour 1 solution
+    solution_array.map{ |x| x[:combination] }.flatten.count(determine_no_solution_user.id)
   end
 
   def calculate_nb_possibilities_below_this_knot(sg_ranking)
@@ -319,7 +348,7 @@ def pick_best_solutions(solutions_array, how_many_solutions_do_we_store)
       @compute_solution.calcul_solution_v1.slotgroups_array.each do |slotgroup|
         slotgroup.overlaps.each do |overlaps| # overlaps => [ {}, {},... ]
           # mettre les users du sg overlappé en overlap à no solution
-          binding.pry
+          # binding.pry
           users_overlapped_sg = planning_possibility.select{ |h| h[:sg_id] == overlaps[:slotgroup_id] }.first[:combination] # => Array of users'ids
           users_initial_sg = planning_possibility.select{ |h| h[:sg_id] == slotgroup.id }.first[:combination]
           users_overlapped_sg.each do |user_id|
