@@ -1,0 +1,12 @@
+<%= simple_form_for(@user) do |f| %>
+  <%= f.error_notification %>
+  <%= f.input :working_hours, label: false, required: true %>
+
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group button-group">
+          <%= f.submit "Valider", class: "mybtn mybtn--medium"%>
+      </div>
+    </div>
+  </div>
+<% end %>

@@ -98,6 +98,7 @@ GEM
       devise (>= 4.0.0)
     domain_name (0.5.20170404)
       unf (>= 0.0.5, < 1.0.0)
+    dynamic_form (1.1.4)
     erubis (2.7.0)
     execjs (2.7.0)
     factory_bot (4.8.2)
@@ -317,6 +318,7 @@ DEPENDENCIES
   coffee-rails
   devise
   devise_invitable
+  dynamic_form
   factory_bot_rails
   faker
   figaro

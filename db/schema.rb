@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180524140744) do
+ActiveRecord::Schema.define(version: 20180612133352) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -64,6 +64,7 @@ ActiveRecord::Schema.define(version: 20180524140744) do
     t.text     "p_nb_hours_roles"
     t.text     "team"
     t.text     "p_list_of_slots_ids"
+    t.text     "timestamps_algo"
     t.index ["planning_id"], name: "index_compute_solutions_on_planning_id", using: :btree
   end
 
@@ -73,6 +74,8 @@ ActiveRecord::Schema.define(version: 20180524140744) do
     t.integer  "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer  "category"
+    t.integer  "status"
     t.index ["user_id"], name: "index_constraints_on_user_id", using: :btree
   end
 
@@ -128,12 +131,16 @@ ActiveRecord::Schema.define(version: 20180524140744) do
     t.integer  "nb_extra_hours"
     t.integer  "planning_id"
     t.integer  "compute_solution_id"
-    t.integer  "effectivity",         default: 0
+    t.integer  "effectivity",                   default: 0
     t.integer  "relevance"
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
+    t.datetime "created_at",                                null: false
+    t.datetime "updated_at",                                null: false
     t.integer  "nb_conflicts"
     t.integer  "nb_under_hours"
+    t.integer  "nb_users_six_consec_days_fail"
+    t.integer  "nb_users_daily_hours_fail"
+    t.integer  "compactness"
+    t.integer  "nb_users_in_overtime"
     t.index ["compute_solution_id"], name: "index_solutions_on_compute_solution_id", using: :btree
     t.index ["planning_id"], name: "index_solutions_on_planning_id", using: :btree
   end

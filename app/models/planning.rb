@@ -48,6 +48,23 @@ class Planning < ApplicationRecord
       c.created_at < self.slots.map(&:updated_at).max }.sort
   end
 
+  def start_date
+    Date.commercial(year, week_number, 1).beginning_of_week
+  end
+
+  def end_date
+    Date.commercial(year, week_number, 1).end_of_week
+  end
+
+  def hours_per_role
+    role_hours = {}
+    slots.map(&:role).uniq.each do |role|
+      slots_per_role = slots.where(role_id: role.id)
+      role_hours[role.id] = seconds_in_hours(slots_per_role.map{|slot| slot.end_at - slot.start_at}.reduce(:+).to_i)
+    end
+    role_hours
+  end
+
   def set_status
     if slots.empty?
       not_started!
@@ -59,4 +76,11 @@ class Planning < ApplicationRecord
       in_progress!
     end
   end
+
+  private
+
+  def seconds_in_hours(seconds)
+    [seconds / 3600, seconds / 60 % 60].map { |t| t.to_s.rjust(2,'0') }.join('h')
+  end
+
 end

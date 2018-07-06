@@ -24,14 +24,14 @@ class SlotsController < ApplicationController
     @slot_templates = Slot.slot_templates
     if @planning.slots << slot_list
       respond_to do |format|
-        # binding.pry
         format.html { redirect_to planning_skeleton_path(@planning) }
         format.js
         format.json { render json: @slot }
       end
     else
       respond_to do |format|
-        format.html { render :edit }
+        format.html
+        @errors = slot_list.select{|s| s.errors.messages != nil}.first.errors.messages.values.flatten.join(" + ")
         format.js
         format.json { render json: @slot.errors, status: :unprocessable_entity }
       end
@@ -85,7 +85,6 @@ class SlotsController < ApplicationController
   # rubocop:enable AbcSize, MethodLength
 
   def destroy
-    # @slot = Slot.find(params[:id])
     @slot = Slot.destroy(params[:id])
     respond_to do |format|
       format.js  # <-- will render `app/views/slots/destroy.js.erb`

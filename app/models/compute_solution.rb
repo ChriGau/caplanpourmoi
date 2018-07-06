@@ -18,6 +18,7 @@
 #  p_nb_hours_roles        :text
 #  team                    :text
 #  p_list_of_slots_ids     :text
+#  timestamps_algo         :text
 #
 # Indexes
 #

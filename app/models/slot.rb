@@ -24,10 +24,21 @@
 class Slot < ApplicationRecord
   belongs_to :planning, optional: true
   belongs_to :role
-  validates :role_id, presence: true
+  validates :role_id, :start_at, :end_at, presence: true
+  validate :end_is_after_start, :dates_belong_to_the_planning
   after_save :set_status
   has_many :solution_slots, dependent: :destroy
   has_many :solutions, through: :solution_slots
+
+  def end_is_after_start
+    message = 'slot-s end date must be after start date'
+    errors.add(:slot, message) if end_at <= start_at
+  end
+
+  def dates_belong_to_the_planning
+    message = 'slot must belong to the planning-s dates interval'
+    errors.add(:slot, message) unless start_at >= Planning.find(planning_id).start_date && end_at <= Planning.find(planning_id).end_date
+  end
 
   def self.slot_templates
     slot_templates = []

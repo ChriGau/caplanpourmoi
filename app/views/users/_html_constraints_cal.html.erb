@@ -1,11 +1,25 @@
 <div id = "calendar">
 </div>
 
-<%= javascript_include_tag "components/calendar" %>
+<div class="modal fade modal-constraint modal-events constraint_form" tabindex="-1" role="dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <h4 class="modal-title">Ajouter une contrainte</h4>
+    </div>
+    <div class="modal-body">
+        <%= render 'constraints/form', locals: {planning: @planning, slot: @slot} %>
+    </div>
+  </div>
+</div>
+
+<%= javascript_include_tag "components/calendar-constraints" %>
 <%= content_for(:after_js) do %>
   <script>
     var events = <%= raw @constraints_array.to_json %> ;
     var defaultDate = "<%= Date.today %>" ;
-    displayCalendar(events, defaultDate);
+
+    modifyConstraintsCalendar(events, defaultDate);
+
   </script>
 <% end %>
