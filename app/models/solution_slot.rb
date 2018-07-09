@@ -50,6 +50,11 @@ class SolutionSlot < ApplicationRecord
     return { nb_overlaps: nb_overlaps, overlaps_details: overlaps_details }
   end
 
+  def get_related_slot
+    # Slot instance related to this SolutionSlot
+    Slot.find(slot_id)
+  end
+
   private
 
   def no_solution_user_id
