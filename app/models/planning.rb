@@ -130,6 +130,24 @@ class Planning < ApplicationRecord
     [get_first_date_of_a_week(year, week_number) .. get_last_date_of_a_week(year, week_number)]
   end
 
+  def get_previous_week_planning
+    # => id du planning de la semaine précédente
+    if week_number == 1
+      Planning.find_by(year: year - 1, week_number: get_latest_week_number_of_a_year(year - 1))
+    else
+      Planning.find_by(year: year, week_number: week_number)
+    end
+  end
+
+  def get_next_week_planning
+    # => id du planning de la semaine suivante
+    if week_number == get_latest_week_number_of_a_year(year)
+      Planning.find_by(year: year + 1, week_number: 1)
+    else
+      Planning.find_by(year: year, week_number: week_number + 1)
+    end
+  end
+
   def evaluate_timeframe_to_test_nb_users_six_consec_days_fail
 
     if !get_previous_week_planning.nil? && get_previous_week_planning.has_a_chosen_solution?

@@ -47,6 +47,7 @@ class Solution < ApplicationRecord
 
   after_create :total_over_time, :evaluate_relevance, :evaluate_nb_conflicts, :evaluate_conflicts_percentage, :evaluate_nb_users_six_consec_days_fail, :evaluate_nb_users_daily_hours_fail, :evaluate_compactness, :evaluate_nb_users_in_overtime, :evaluate_fitness
   after_create :rate_solution
+
   # nb_overlaps already given as a parameter when algo creates a solution
 
   # Note: Solution gets updated when one of its SolutionSlot is updated
@@ -69,8 +70,7 @@ class Solution < ApplicationRecord
     # { name: seconds, ... } => contractual working hours - on duty hours
     employees_overtime = {}
     employees_involved.each do |employee|
-      seconds = self.solution_slots.where(user: employee).map{|ss| ss.slot.end_at - ss.slot.start_at}.reduce(:+).to_i
-      employees_overtime[employee.first_name.capitalize] = seconds - (employee.working_hours * 3600)
+      employees_overtime[employee.first_name.capitalize] = employee.overtime(self)
     end
     employees_overtime
   end
