@@ -45,12 +45,24 @@ class Solution < ApplicationRecord
   enum effectivity: [:not_chosen, :chosen]
   enum relevance: [:optimal, :partial]
 
-  after_create :total_over_time, :evaluate_relevance, :evaluate_nb_conflicts, :evaluate_conflicts_percentage, :evaluate_nb_users_six_consec_days_fail, :evaluate_nb_users_daily_hours_fail, :evaluate_compactness, :evaluate_nb_users_in_overtime, :evaluate_fitness
-  after_create :rate_solution
+  after_create :initialize
 
   # nb_overlaps already given as a parameter when algo creates a solution
 
   # Note: Solution gets updated when one of its SolutionSlot is updated
+  def initialize
+    # evaluate attributes and grade
+    total_over_time
+    evaluate_relevance
+    evaluate_nb_conflicts
+    evaluate_conflicts_percentage
+    evaluate_nb_users_six_consec_days_fail
+    evaluate_nb_users_daily_hours_fail
+    evaluate_compactness
+    evaluate_nb_users_in_overtime
+    evaluate_fitness
+    rate_solution
+  end
 
   def evaluate_relevance
     nb_conflicts = solution_slots.where(user: User.find_by(first_name: 'no solution')).count
