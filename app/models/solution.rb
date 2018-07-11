@@ -19,6 +19,7 @@
 #  nb_users_in_overtime          :integer
 #  conflicts_percentage          :decimal(, )
 #  fitness                       :decimal(, )
+#  grade                         :decimal(, )
 #
 # Indexes
 #
@@ -44,8 +45,8 @@ class Solution < ApplicationRecord
   enum effectivity: [:not_chosen, :chosen]
   enum relevance: [:optimal, :partial]
 
-  after_create :evaluate_relevance, :evaluate_nb_conflicts, :evaluate_conflicts_percentage, :evaluate_nb_users_six_consec_days_fail, :evaluate_nb_users_daily_hours_fail, :evaluate_compactness, :evaluate_nb_users_in_overtime
-
+  after_create :total_over_time, :evaluate_relevance, :evaluate_nb_conflicts, :evaluate_conflicts_percentage, :evaluate_nb_users_six_consec_days_fail, :evaluate_nb_users_daily_hours_fail, :evaluate_compactness, :evaluate_nb_users_in_overtime, :evaluate_fitness
+  after_create :rate_solution
   # nb_overlaps already given as a parameter when algo creates a solution
 
   # Note: Solution gets updated when one of its SolutionSlot is updated
@@ -55,7 +56,6 @@ class Solution < ApplicationRecord
     relevance = !nb_conflicts.nil? && nb_conflicts.zero? ? :optimal : :partial
     update(relevance: relevance, nb_conflicts: nb_conflicts)
   end
-
 
   def employees_involved
     solution_slots.map(&:user).uniq
@@ -204,8 +204,40 @@ class Solution < ApplicationRecord
     # |under + overtime| / hplanning, modulo deviation. ratio (295 <=> 295%)
     working_hours = users.map(&:working_hours).inject(:+).to_f
     nb_extra_hours.zero? && nb_under_hours.zero? ? fitness = 100 : fitness = ((nb_extra_hours/3600 + nb_under_hours.abs/3600) / working_hours)*100
-    binding.pry
     update(fitness: fitness.round(1).to_f)
+  end
+
+  def rate_solution
+    points = 0
+    # conflicts_percentage
+    if conflicts_percentage == 0
+      points += 10
+    elsif conflicts_percentage <= 0.05
+      points += 5
+    elsif conflicts_percentage > 0.05 && conflicts_percentage <= 0.1
+      points += 3
+    end
+    # 6 days rule
+    points += 10 if nb_users_six_consec_days_fail == 0
+    # daily hours respect
+    points += 10 if nb_users_daily_hours_fail
+    if fitness <= 0.02
+      points += 10
+    elsif fitness > 0.02 && fitness <= 0.04
+      points += 7
+    elsif fitness > 0.04 && fitness <= 0.06
+      points += 4
+    end
+    # compactness
+    if compactness == 0
+      points += 2
+    elsif compactness <= users.count
+      points += 1
+    end
+    # turn points into grade /100
+    total_points = 42.0 # points max étant doné le bareme actuel
+    grade = (points / total_points * 100).round(0)
+    update(grade: grade)
   end
 
   private
