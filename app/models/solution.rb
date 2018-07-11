@@ -17,8 +17,8 @@
 #  nb_users_daily_hours_fail     :integer
 #  compactness                   :integer
 #  nb_users_in_overtime          :integer
-#  conficts_percentage           :decimal(, )
-#  planning_fitness              :decimal(, )
+#  conflicts_percentage          :decimal(, )
+#  fitness                       :decimal(, )
 #
 # Indexes
 #
@@ -44,7 +44,7 @@ class Solution < ApplicationRecord
   enum effectivity: [:not_chosen, :chosen]
   enum relevance: [:optimal, :partial]
 
-  after_create :evaluate_relevance, :evaluate_nb_conflicts,:evaluate_nb_users_six_consec_days_fail, :evaluate_nb_users_daily_hours_fail, :evaluate_compactness, :evaluate_nb_users_in_overtime
+  after_create :evaluate_relevance, :evaluate_nb_conflicts, :evaluate_conflicts_percentage, :evaluate_nb_users_six_consec_days_fail, :evaluate_nb_users_daily_hours_fail, :evaluate_compactness, :evaluate_nb_users_in_overtime
 
   # nb_overlaps already given as a parameter when algo creates a solution
 
@@ -112,7 +112,8 @@ class Solution < ApplicationRecord
     # decimal => nb hours where conflicts / total hours planning
     nb_hours_conflicts = solution_slots.where('user_id = ?', no_solution_user_id).map(&:slot).map(&:length).inject(:+)
     nb_hours_total = solution_slots.map(&:slot).map(&:length).inject(:+)
-    nb_hours_conflicts / nb_hours_total
+    nb_hours_conflicts.nil? ? conflicts_percentage = 0 : conflicts_percentage = nb_hours_conflicts / nb_hours_total
+    update(conflicts_percentage: conflicts_percentage)
   end
 
   def evaluate_nb_overlaps
@@ -199,18 +200,12 @@ class Solution < ApplicationRecord
     update(nb_users_in_overtime: n)
   end
 
-  def evaluate_planning_fitness
-    # dispos = (working_hours des employés) – (h de contraintes dures)
-    # sur une plage d'ouverture (pour l'instant 9h - 20h mais TODO à renseigner par le manager)
-    # calculate heures dispos
-    # calculate heures du planning
-    # est-ce que le planning peut être fit? hplanning <= dispos
-      # sinon, calculer la deviation (%) = dispos / planning
-    # calcul de planning_fitness = overtime + |undertime| / nb heures planning
-    # resultat si prise en compte de la deviation ou non
-      # calculate nb_days_theory (integer)
-      # compare with nb of days_real
-      # si |real - theory| > 0, ne pas prendre en compte, sinon prendre en compte
+  def evaluate_fitness
+    # |under + overtime| / hplanning, modulo deviation. ratio (295 <=> 295%)
+    working_hours = users.map(&:working_hours).inject(:+).to_f
+    nb_extra_hours.zero? && nb_under_hours.zero? ? fitness = 100 : fitness = ((nb_extra_hours/3600 + nb_under_hours.abs/3600) / working_hours)*100
+    binding.pry
+    update(fitness: fitness.round(1).to_f)
   end
 
   private

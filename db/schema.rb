@@ -158,8 +158,8 @@ ActiveRecord::Schema.define(version: 20180709084812) do
     t.integer  "nb_users_daily_hours_fail"
     t.integer  "compactness"
     t.integer  "nb_users_in_overtime"
-    t.decimal  "conficts_percentage"
-    t.decimal  "planning_fitness"
+    t.decimal  "conflicts_percentage"
+    t.decimal  "fitness"
     t.index ["compute_solution_id"], name: "index_solutions_on_compute_solution_id", using: :btree
     t.index ["planning_id"], name: "index_solutions_on_planning_id", using: :btree
   end
