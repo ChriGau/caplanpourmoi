@@ -81,6 +81,11 @@ class Slot < ApplicationRecord
     end
   end
 
+  def length
+    # slot duration in seconds
+    end_at - start_at
+  end
+
   def get_infos_to_reaffect_slot
     # => get infos to display in modal-reassignment
     result = []

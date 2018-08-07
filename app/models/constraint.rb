@@ -30,4 +30,9 @@ class Constraint < ApplicationRecord
 
   enum status: [:submitted, :validated, :refused]
   enum category: [:conge_annuel, :maladie, :preference]
+
+  def length
+    # duration in seconds
+    end_at - start_at
+  end
 end
