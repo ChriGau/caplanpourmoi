@@ -1,0 +1,31 @@
+.card-statistics{
+  color: $myblue;
+  border: 2px solid $myblue;
+  opacity:0.9;
+  border-radius: 10px;
+  text-align: center;
+  background: $myblue;
+  color: white;
+   &:hover {
+    background: white;
+    color: $myblue;
+  }
+}
+
+.statistics-header{
+  background-color: #eee;
+  color: #444;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+}
+
+.maj {
+  background-color: $myred;
+  padding: 5px;
+  text-align: center;
+}

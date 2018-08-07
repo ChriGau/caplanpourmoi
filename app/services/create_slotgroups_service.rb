@@ -17,6 +17,10 @@ class CreateSlotgroupsService
   # rubocop:disable AbcSize
 
   def perform
+    #timestamps t2
+    t = @calcul.compute_solution.timestamps_algo << ["t2", Time.now]
+    @calcul.compute_solution.update(timestamps_algo: t)
+    # suite
     self.slotgroups_array = create_slotgroups # step 1.1.
     calculate_caracteristics_slotgroups # step 1.2. & 2
     determine_slots_simulation_status # step 2.
@@ -31,6 +35,9 @@ class CreateSlotgroupsService
     determine_ranking_algo # step 5.1.
     determine_calculation_interval # step 5.2.2.
     save_calcul_items(calcul, slotgroups_array)
+    # timestamps t3
+    t = @calcul.compute_solution.timestamps_algo << ["t3", Time.now]
+    @calcul.compute_solution.update(timestamps_algo: t)
     # { slotgroups_array: slotgroups_array, slots_array: slots_array }
   end
 

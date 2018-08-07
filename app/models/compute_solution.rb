@@ -40,6 +40,7 @@ class ComputeSolution < ApplicationRecord
   has_many :solutions,  -> { order(nb_extra_hours: :asc, nb_under_hours: :desc) }, dependent: :destroy
   serialize :p_nb_hours_roles
   serialize :team, Hash
+  serialize :timestamps_algo, Array
 
   enum status: [:pending, :ready, :error]
   before_create :default_status, :planning_props, :build_team
@@ -70,6 +71,32 @@ class ComputeSolution < ApplicationRecord
     self.team = team
   end
 
+  def evaluate_statistics
+    # go_through_solutions_mean_time_per_slot (seconds) => (T5 - T4) / nbslots
+    # solution_storing_mean_time_per_slot (seconds) => (T7 - T6) / nbslots
+    # mean_time_per_slot (seconds) = (T7 - T1)/nbslots
+    # %tree_covered (float) = nb_iterations / nb_possibilities_theory
+    unless timestamps_algo.length < 7
+      nb_slots = planning.slots.count
+      a = (timestamps_algo[4][1] - timestamps_algo[3][1]) / nb_slots
+      b = (timestamps_algo[6][1] - timestamps_algo[5][1]) / nb_slots
+      calculate_calculation_length
+      c = calculation_length / nb_slots
+      d = nb_iterations / nb_possibilities_theory
+      update(solution_storing_mean_time_per_slot: a,
+        go_through_solutions_mean_time_per_slot: b,
+        mean_time_per_slot: c,
+        percent_tree_covered: d)
+    else
+      calculate_fail_level
+    end
+  end
+
+  def calculate_calculation_length
+    # from the timestamps_algo, get total length of the algo (seconds)
+      update(calculation_length: timestamps_algo.last[1] - timestamps_algo.first[1])
+  end
+
   def save_calculation_abstract(calculation_abstract)
     # stores calculation properties.
     self.nb_solutions = calculation_abstract[:nb_solutions]
@@ -89,6 +116,60 @@ class ComputeSolution < ApplicationRecord
 
   def list_of_slots_ids
     list_of_slots_ids = planning.slots.map(&:id)
+  end
+
+  def calculate_fail_level
+    # => t# if fail occurs (text)
+    unless self.timestamps_algo.empty?
+      update(fail_level: self.timestamps_algo.last[0])
+    end
+  end
+
+  def get_timestamps_details
+    result = []
+    i = 0
+    self.timestamps_algo.each do |timestamp|
+      row = []
+      # timestamp
+      row << timestamp[1].strftime("%k:%M:%S:%L")
+      # length (sec)
+      if i != 0
+        if timestamp[1] - self.timestamps_algo[i-1][1] == 0
+          b = timestamp[1].strftime("%L").to_i - self.timestamps_algo[i-1][1].strftime("%L").to_i
+          "0." + b.round(4).to_s
+          length = b/1000
+        else
+          (timestamp[1] - self.timestamps_algo[i-1][1]).round(4)
+          length = timestamp[1] - self.timestamps_algo[i-1][1]
+        end
+        row << length.round(4)
+      end
+      # length//start (sec)
+      if i != 0
+        # si diff en seconds = 0 => calculate diff in milliseconds
+        if timestamp[1] - self.timestamps_algo[0][1] == 0
+          a = timestamp[1].strftime("%L").to_i -  self.timestamps_algo[0][1].strftime("%L").to_i
+          row << "0." + a.round(4).to_s
+        else
+          row << (timestamp[1] - self.timestamps_algo[0][1]).round(4)
+        end
+      end
+      # %total length
+      unless i == 0
+        self.calculation_length.nil? ? row << "no total length" : row << ((length / self.calculation_length.to_f)*100).round(3)
+      end
+      result << row
+      i += 1
+    end
+    return result
+  end
+
+  def build_row_for_statistics_display
+    row = [id, planning.week_number, self.planning.slots.count, self.planning.users.count]
+    self.calculation_length.nil? ? row.insert(2, 0) : row.insert(2, self.calculation_length.to_f.round(4))
+    timestamps_algo.length == 7 ? row.insert(3, 10) : row.insert(3, 0)
+    nb_iterations.nil? ? row.insert(row.length, 0) : row.insert(row.length, nb_iterations)
+    percent_tree_covered.nil? ? row.insert(row.length, 0) : row.insert(row.length, percent_tree_covered.round(3)*100)
   end
 
   private

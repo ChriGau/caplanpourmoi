@@ -80,7 +80,10 @@ class PlanningsController < ApplicationController
     elsif params.keys.include?("planning")
       @planning.update(planning_params)
       @planning.save!
+      # Timestamp #1 : creation du ComputeSolution
+      t1 = ["t1", Time.now]
       compute_solutions = ComputeSolution.create(planning_id: @planning.id)
+      compute_solutions.update(timestamps_algo: [t1])
       ComputePlanningSolutionsJob.perform_later(@planning, compute_solutions)
       redirect_to planning_compute_solutions_path(@planning)
     else # can't save planning and go find a solution if no user(s)

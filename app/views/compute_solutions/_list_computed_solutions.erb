@@ -4,7 +4,9 @@
       <a data-toggle="collapse" data-parent="#accordion" href="#<%=computed_solution.id%>">
         <div class="panel-heading sol-head">
           <div class="panel-title" id="sol-list">
-
+            <div class="btn-success">
+              <%= link_to "details", show_cs_details_path(@planning, computed_solution), { :class=>"btn-success" } %>
+            </div>
             <div class="sol-status label label-<%= computed_solution.ready? ? "success" : computed_solution.error? ? "danger" : "info" %>">
               <%= t("computed_solutionution.status.#{computed_solution.status}")%>
               <span class="badge badge-white">

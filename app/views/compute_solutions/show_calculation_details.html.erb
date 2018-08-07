@@ -11,8 +11,12 @@
       <h3>%tree covered : <%= number_to_percentage((@compute_solution.nb_iterations.to_f / @compute_solution.nb_possibilities_theory)*100, precision: 2) %></h3>
     <% end %>
   </div>
+
   <div class="col-xs-6">
     <div id="chart"></div>
+  </div>
+  <div class="col-xs-12">
+    <div id="table_div"></div>
   </div>
     <div class="col-xs-12">
       <!-- creation du tableau -->
@@ -112,6 +116,13 @@
     var t5 = <%= @timestamps_length[4] if @timestamps.length > 4 %>;
     var t6 = <%= @timestamps_length[5] if @timestamps.length > 5 %>;
     var t7 = <%= @timestamps_length[6] if @timestamps.length > 6 %>;
+    var row1 = ['create ComputeSolution', '' , "<%= @timestamps_details[0][0] %>", 0, 0, 0];
+    var row2 = ['start CreateSlotgroupsService','ComputeSolution creation', "<%= @timestamps_details[1][0]%>", <%= @timestamps_details[1][1] %>,<%= @timestamps_details[1][2] %>, <%=  @timestamps_details[1][3]%> ];
+    var row3 = ['end CreateSlotgroupsService', 'Initialisation algo', "<%= @timestamps_details[2][0]%>", <%= @timestamps_details[2][1] %>,<%= @timestamps_details[2][2] %>, <%=  @timestamps_details[2][3]%> ];
+    var row4 = ['start GoFindSolutionsService', 'Choix algo yes/no', "<%= @timestamps_details[3][0]%>", <%= @timestamps_details[3][1] %>,<%= @timestamps_details[3][2] %>, <%=  @timestamps_details[3][3]%> ];
+    var row5 = ['start pick_best_solution', 'Balayage Arbre', "<%= @timestamps_details[4][0]%>", <%= @timestamps_details[4][1] %>,<%= @timestamps_details[4][2] %>, <%=  @timestamps_details[4][3]%> ];
+    var row6 = ['start SaveSolutionsAndSolutionSlotsService', 'Tri des solutions', "<%= @timestamps_details[5][0]%>", <%= @timestamps_details[5][1] %>,<%= @timestamps_details[5][2] %>, <%=  @timestamps_details[5][3]%> ];
+    var row7 = ['end SaveSolutionsAndSolutionSlotsService', 'Stockage solutions', "<%= @timestamps_details[6][0]%>", <%= @timestamps_details[6][1] %>,<%= @timestamps_details[6][2] %>, <%=  @timestamps_details[6][3]%> ];
 
   </script>
 <% end %>
