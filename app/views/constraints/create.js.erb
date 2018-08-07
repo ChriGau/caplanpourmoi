@@ -1,2 +1,10 @@
-$(".constraint_form").hide();
 $('#calendar').fullCalendar( 'refetchEvents');
+
+var errors = '<%= @errors %>';
+if (errors) {
+  $('.modal-body').prepend("<b class='errors' style='color: red;'>Can't create constraint because: " + errors+ "</b>");
+} else {
+  $(".constraint_form").hide();
+  $('#calendar').fullCalendar( 'refetchEvents');
+  $(".modal-events").modal('hide');
+}

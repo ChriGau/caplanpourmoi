@@ -10,10 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180612133352) do
+ActiveRecord::Schema.define(version: 20180709084812) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "algo_stats", force: :cascade do |t|
+    t.integer  "nb_compute_solutions"
+    t.integer  "nb_solutions"
+    t.integer  "nb_fail"
+    t.float    "go_through_solutions_mean_time_per_slot"
+    t.float    "solutions_storing_mean_time"
+    t.float    "tree_covered_mean"
+    t.float    "total_mean_time"
+    t.datetime "created_at",                              null: false
+    t.datetime "updated_at",                              null: false
+  end
 
   create_table "attachinary_files", force: :cascade do |t|
     t.string   "attachinariable_type"
@@ -51,8 +63,8 @@ ActiveRecord::Schema.define(version: 20180612133352) do
   create_table "compute_solutions", force: :cascade do |t|
     t.integer  "status"
     t.integer  "planning_id"
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
+    t.datetime "created_at",                              null: false
+    t.datetime "updated_at",                              null: false
     t.integer  "nb_solutions"
     t.integer  "nb_optimal_solutions"
     t.integer  "nb_iterations"
@@ -65,6 +77,11 @@ ActiveRecord::Schema.define(version: 20180612133352) do
     t.text     "team"
     t.text     "p_list_of_slots_ids"
     t.text     "timestamps_algo"
+    t.float    "go_through_solutions_mean_time_per_slot"
+    t.float    "solution_storing_mean_time_per_slot"
+    t.float    "mean_time_per_slot"
+    t.text     "fail_level"
+    t.float    "percent_tree_covered"
     t.index ["planning_id"], name: "index_compute_solutions_on_planning_id", using: :btree
   end
 
@@ -141,6 +158,9 @@ ActiveRecord::Schema.define(version: 20180612133352) do
     t.integer  "nb_users_daily_hours_fail"
     t.integer  "compactness"
     t.integer  "nb_users_in_overtime"
+    t.decimal  "conflicts_percentage"
+    t.decimal  "fitness"
+    t.decimal  "grade"
     t.index ["compute_solution_id"], name: "index_solutions_on_compute_solution_id", using: :btree
     t.index ["planning_id"], name: "index_solutions_on_planning_id", using: :btree
   end

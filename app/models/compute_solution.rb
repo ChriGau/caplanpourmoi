@@ -2,23 +2,28 @@
 #
 # Table name: compute_solutions
 #
-#  id                      :integer          not null, primary key
-#  status                  :integer
-#  planning_id             :integer
-#  created_at              :datetime         not null
-#  updated_at              :datetime         not null
-#  nb_solutions            :integer
-#  nb_optimal_solutions    :integer
-#  nb_iterations           :integer
-#  nb_possibilities_theory :integer
-#  calculation_length      :decimal(, )
-#  nb_cuts_within_tree     :integer
-#  p_nb_slots              :integer
-#  p_nb_hours              :string
-#  p_nb_hours_roles        :text
-#  team                    :text
-#  p_list_of_slots_ids     :text
-#  timestamps_algo         :text
+#  id                                      :integer          not null, primary key
+#  status                                  :integer
+#  planning_id                             :integer
+#  created_at                              :datetime         not null
+#  updated_at                              :datetime         not null
+#  nb_solutions                            :integer
+#  nb_optimal_solutions                    :integer
+#  nb_iterations                           :integer
+#  nb_possibilities_theory                 :integer
+#  calculation_length                      :decimal(, )
+#  nb_cuts_within_tree                     :integer
+#  p_nb_slots                              :integer
+#  p_nb_hours                              :string
+#  p_nb_hours_roles                        :text
+#  team                                    :text
+#  p_list_of_slots_ids                     :text
+#  timestamps_algo                         :text
+#  go_through_solutions_mean_time_per_slot :float
+#  solution_storing_mean_time_per_slot     :float
+#  mean_time_per_slot                      :float
+#  fail_level                              :text
+#  percent_tree_covered                    :float
 #
 # Indexes
 #
