@@ -71,6 +71,9 @@
               <div class="list-group-item sol-item <%= "chosen" if solution.chosen? %>">
                 <div class="sol-status label label-caplan">#<%= index + 1 %></div>
                 <div class="sol-details">
+                  <% unless solution.grade.nil? %>
+                  <strong>Note: <span class="badge badge-red"><%= solution.grade %></span></strong>
+                  <% end %>
                   <strong> Indice de pertinence <span class="badge badge-blue" ><%= solution.relevance %></span></strong>
                   <% unless (solution.nb_conflicts.nil? || solution.nb_conflicts.zero?)  %>
 

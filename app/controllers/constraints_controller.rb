@@ -12,7 +12,9 @@ class ConstraintsController < ApplicationController
   def create
     @user = User.find(params[:user_id])
     constraint_model = Constraint.new(constraint_params)
-    constraint_model.update(user_id: @user.id, category: params[:category].first.to_i)
+    unless params[:category].nil?
+      constraint_model.update(user_id: @user.id, category: params[:category].first.to_i)
+    end
     constraint_list = []
     @constraints
     clicked_day = constraint_params[:start_at].to_datetime.strftime("%u").to_i
@@ -34,8 +36,10 @@ class ConstraintsController < ApplicationController
       end
     else
       respond_to do |format|
-        format.html { render :edit }
+        @errors = constraint_list.select{|s| s.errors.messages != nil}.first.errors.messages.values.flatten.join(" + ")
+        @constraint = Constraint.new
         format.js
+        format.html
       end
     end
   end

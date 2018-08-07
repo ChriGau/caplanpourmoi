@@ -9,13 +9,13 @@ class Slotgroup
                 :nb_combinations_available_users, :priority, :ranking_algo,
                 :calculation_interval, :users_solution
 
-  def initialize(id, slot_instance)
+  def initialize(id, slot_id)
     @id = id
-    @start_at = slot_instance.start_at
-    @end_at = slot_instance.end_at
-    @role_id = slot_instance.role_id
-    @role_name = Role.find(slot_instance.role_id).name
-    @planning_id = slot_instance.planning_id
+    @start_at = Slot.find(slot_id).start_at
+    @end_at = Slot.find(slot_id).end_at
+    @role_id = Slot.find(slot_id).role_id
+    # @role_name = Role.find(Slot.find(slot_id).role_id).name
+    # @planning_id = Slot.find(slot_id).planning_id
     @priority = 1 # for now
   end
 
@@ -28,15 +28,15 @@ class Slotgroup
   def determine_slotgroup_availability(user_instances)
     # sets nb available users + lists them
     nb_available_users = 0
-    array_available_users = []
+    array_available_users_ids = []
     user_instances.each do |user|
       if user.skilled_and_available?(start_at, end_at, role_id)
         nb_available_users += 1
-        array_available_users << user
+        array_available_users_ids << user.id
       end
     end
     self.nb_available = nb_available_users
-    self.list_available_users = array_available_users
+    self.list_available_users = array_available_users_ids
   end
 
   def determine_slotgroup_simulation_status
@@ -48,13 +48,13 @@ class Slotgroup
     nb_available >= nb_required ? nb_required : nb_available
   end
 
-  def make_user_unavailable(overlapping_user)
+  def make_user_unavailable(overlapping_user_id)
     # make unavailable in overlapped slotgroup
-    make_user_actually_unavailable(overlapping_user) if list_available_users.include?(overlapping_user)
+    make_user_actually_unavailable(overlapping_user_id) if list_available_users.include?(overlapping_user_id)
   end
 
-  def make_user_actually_unavailable(overlapping_user)
-    list_available_users.delete(overlapping_user)
+  def make_user_actually_unavailable(overlapping_user_id)
+    list_available_users.delete(overlapping_user_id)
     self.nb_available -= 1 if nb_available != 0
   end
 

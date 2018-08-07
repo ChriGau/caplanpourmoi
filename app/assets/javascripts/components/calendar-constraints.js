@@ -87,6 +87,7 @@ $('#calendar').fullCalendar({
   events: events,
   // what happens when we select a time period on the calendar
   select: function( start, end, jsEvent, view ) {
+    $('.category').removeClass("checked");
     var modalContent = document.querySelector(".modal-constraint");
     modalPosition(modalContent, jsEvent.clientY);
     $(".modal-constraint").modal('show');
@@ -95,20 +96,20 @@ $('#calendar').fullCalendar({
     $('.delete_constraint').hide();
     $('.days-list').show();
     // set default value of the date inputs (inside simple form)
-    $('#datetimepicker1 .form-control').val(new Date(start.format()).toLocaleDateString('fr-FR', {timezone: 'UTC', hour: '2-digit', minute: '2-digit'}));
     $('#datetimepicker1').datetimepicker({
       locale: 'FR'
      });
+    $('#datetimepicker1 .form-control').val(new Date(start.format()).toLocaleDateString('fr-FR', {timezone: 'UTC', hour: '2-digit', minute: '2-digit'}));
     $('#datetimepicker2 .form-control').val(new Date(end.format()).toLocaleDateString('fr-FR', {timezone: 'UTC', hour: '2-digit', minute: '2-digit'}));
     $('#datetimepicker2').datetimepicker({
       locale: 'FR'
      });
     // comportement lors de la sélection d'une catégorie
     $('.category').click( function (data){
-      $('#0').removeClass("checked");
-      $('#1').removeClass("checked");
-      $('#2').removeClass("checked");
-      $(this).addClass("checked");
+      $('#0').removeClass('checked');
+      $('#1').removeClass('checked');
+      $('#2').removeClass('checked');
+      $(this).toggleClass('checked');
     });
     //behavior of days sélection
     $("input:checkbox").click(function(){

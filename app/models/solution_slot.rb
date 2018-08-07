@@ -50,6 +50,11 @@ class SolutionSlot < ApplicationRecord
     return { nb_overlaps: nb_overlaps, overlaps_details: overlaps_details }
   end
 
+  def get_related_slot
+    # Slot instance related to this SolutionSlot
+    Slot.find(slot_id)
+  end
+
   private
 
   def no_solution_user_id
@@ -68,6 +73,13 @@ class SolutionSlot < ApplicationRecord
     self.solution.evaluate_nb_conflicts
     self.solution.evaluate_nb_overlaps
     self.solution.evaluate_relevance
+    self.solution.evaluate_nb_users_six_consec_days_fail
+    self.evaluate_nb_users_daily_hours_fail
+    self.evaluate_compactness
+    self.nb_users_in_overtime
+    self.evaluate_conflicts_percentage
+    self.evaluate_fitness
+    self.evaluate_grade
     # update planning status (maybe you resolved all conflicts)
     self.planning.set_status
     # update solution_slot (no attributes to update for now)

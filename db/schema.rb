@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180622103200) do
+ActiveRecord::Schema.define(version: 20180709084812) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -158,6 +158,9 @@ ActiveRecord::Schema.define(version: 20180622103200) do
     t.integer  "nb_users_daily_hours_fail"
     t.integer  "compactness"
     t.integer  "nb_users_in_overtime"
+    t.decimal  "conflicts_percentage"
+    t.decimal  "fitness"
+    t.decimal  "grade"
     t.index ["compute_solution_id"], name: "index_solutions_on_compute_solution_id", using: :btree
     t.index ["planning_id"], name: "index_solutions_on_planning_id", using: :btree
   end
