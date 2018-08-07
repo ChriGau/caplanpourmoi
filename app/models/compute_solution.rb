@@ -76,7 +76,8 @@ class ComputeSolution < ApplicationRecord
     self.nb_optimal_solutions = calculation_abstract[:nb_optimal_solutions]
     self.nb_iterations = calculation_abstract[:nb_iterations]
     self.nb_possibilities_theory = calculation_abstract[:nb_possibilities_theory]
-    self.calculation_length = calculation_abstract[:calculation_length]
+    # commented because = 'todo' at this stage
+    # self.calculation_length = calculation_abstract[:calculation_length]
     self.nb_cuts_within_tree = calculation_abstract[:nb_cuts_within_tree]
   end
 

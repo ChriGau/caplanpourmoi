@@ -30,8 +30,8 @@ class CreateSlotgroupsService
     determine_combinations_of_available_users # step 4.
     determine_ranking_algo # step 5.1.
     determine_calculation_interval # step 5.2.2.
-    save_calcul_items(calcul)
-    { slotgroups_array: slotgroups_array, slots_array: slots_array }
+    save_calcul_items(calcul, slotgroups_array)
+    # { slotgroups_array: slotgroups_array, slots_array: slots_array }
   end
 
   # rubocop:enable AbcSize
@@ -42,16 +42,16 @@ class CreateSlotgroupsService
     slots_array.each do |slot_hash|
       next unless slot_hash[:slotgroup_id].nil?
       cpt_slotgroup += 1
-      slotgroup = Slotgroup.new(cpt_slotgroup, slot_hash[:slot_instance])
+      slotgroup = Slotgroup.new(cpt_slotgroup, slot_hash[:slot_id])
       slotgroups_array << slotgroup
-      assign_slotgroup_to_slots(slot_hash[:slot_instance].similar_slots, slotgroup.id)
+      assign_slotgroup_to_slots(Slot.find(slot_hash[:slot_id]).similar_slots, slotgroup.id)
     end
     slotgroups_array
   end
 
   def assign_slotgroup_to_slots(similar_slots, slotgroup_id)
     similar_slots.each do |slot|
-      h = find_slot_instance_in_slots_array(slot)
+      h = find_slot_instance_in_slots_array(slot.id)
       h[:slotgroup_id] = slotgroup_id unless h.nil?
     end
   end
@@ -110,14 +110,14 @@ class CreateSlotgroupsService
     slotgroups_array.each do |slotgroup|
       slotgroup.overlaps.each do |slotgroup_overlaps_hash|
         next if slotgroup_overlaps_hash.nil?
-        slotgroup_overlaps_hash[:users].each do |overlapping_user|
+        slotgroup_overlaps_hash[:users].each do |overlapping_user_id|
           # user gets unavailable for overlapping slotgroups
           overlapped_slotgroup = find_slotgroup_by_id(slotgroup_overlaps_hash[:slotgroup_id])
           # check if changes already made for this overlap
-          unless list_changes_made.include?([overlapped_slotgroup.id, overlapping_user])
-            overlapped_slotgroup.make_user_unavailable(overlapping_user)
+          unless list_changes_made.include?([overlapped_slotgroup.id, overlapping_user_id])
+            overlapped_slotgroup.make_user_unavailable(overlapping_user_id)
           end
-          list_changes_made << [slotgroup.id, overlapping_user]
+          list_changes_made << [slotgroup.id, overlapping_user_id]
         end
       end
     end
@@ -161,7 +161,7 @@ class CreateSlotgroupsService
     end
   end
 
-  def save_calcul_items(calcul_solution_v1_instance)
+  def save_calcul_items(calcul_solution_v1_instance, slotgroups_array)
     calcul_solution_v1_instance.slotgroups_array = slotgroups_array
     calcul_solution_v1_instance.slots_array = slots_array
     calcul_solution_v1_instance.save
@@ -186,8 +186,8 @@ class CreateSlotgroupsService
     end
   end
 
-  def find_slot_instance_in_slots_array(slot_instance)
-    slots_array.find { |x| x[:slot_instance] == slot_instance }
+  def find_slot_instance_in_slots_array(slot_id)
+    slots_array.find { |x| x[:slot_id] == slot_id }
   end
 
   def find_slotgroup_by_id(slotgroup_id)
