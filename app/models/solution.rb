@@ -45,12 +45,12 @@ class Solution < ApplicationRecord
   enum effectivity: [:not_chosen, :chosen]
   enum relevance: [:optimal, :partial]
 
-  after_create :initialize
+  after_create :init
 
   # nb_overlaps already given as a parameter when algo creates a solution
 
   # Note: Solution gets updated when one of its SolutionSlot is updated
-  def initialize
+  def init
     # evaluate attributes and grade
     total_over_time
     evaluate_relevance

@@ -19,7 +19,7 @@ class SaveSolutionsAndSolutionSlotsService
     if !@list_of_solutions.nil?
       @list_of_solutions.each do |solution|
         # solution_instance = create_solution(@compute_solution, solution[:nb_overlaps])
-        solution_instance = create_solution(@compute_solution) # le'ts not store nb_overlaps car 'fixé' par go_through_plannings
+        solution_instance = create_solution # le'ts not store nb_overlaps car 'fixé' par go_through_plannings
         create_solution_slots(@slotgroups_array, solution, solution_instance)
         # calculate nb of conflicts now that the solution_lots have been created + determine relevance
         solution_instance.evaluate_relevance
@@ -39,8 +39,8 @@ class SaveSolutionsAndSolutionSlotsService
     @compute_solution.evaluate_statistics
   end
 
-  def create_solution(compute_solution, nb_overlaps = nil)
-    Solution.create(planning: @planning, compute_solution: compute_solution, nb_overlaps: nb_overlaps)
+  def create_solution
+    Solution.create(planning: @planning, compute_solution: @compute_solution)
     # TODO add after_create => nb conflicts
   end
 
