@@ -64,6 +64,12 @@ class GoFindSolutionsV1Service
     nb_cuts_within_tree = 0
     next_tree = nil
     next_branch = nil
+    # init for grading solutions
+    best_grade = 0
+    grade = 0
+    duration_per_sg_array = determine_duration_per_sg_array # [ :sg_id, length_sec ]
+    total_duration_sg = determine_total_duration_sg(duration_per_sg_array) # sum of previous (sec)
+    # let's HIT THE TREE
     for tree in 1..nb_trees
       for branch in 1..nb_branches
         planning_possibility = []
@@ -101,7 +107,13 @@ class GoFindSolutionsV1Service
           solution = planning_possibility_leaner_version(planning_possibility)
           #  où planning_possibility = [:sg_id, :combination = [id1, id2,...] ]
           # on enlèvera les doublons de solutions + tard car sinon la ligne ci-dessous est très consommatrice
-          solutions_array << solution # unless solutions_array.select{|x| x == solution}.count.positive?
+          # on note la solution
+
+          #  JE SUIS LA ---- Il faut grader les solutions
+
+          # grade = grade_solution( solution, @slotgroups_array, duration_per_sg_array, total_duration_sg )
+          # si note > best du moment, on stocke la solution
+          solutions_array << solution if grade > best_grade
 
                                # {
                                # solution_id: solution_id,
@@ -112,6 +124,7 @@ class GoFindSolutionsV1Service
                                # }
           # toutes les 1000 solutions, on enlève les doublons de solutions
           # (les doublons peuvent apparaître lorsque l'on résout les conflits)
+          # preferer uniq plutôt que stocker solution # unless solutions_array.select{|x| x == solution}.count.positive?
           solutions_array.uniq! if solution_id % 1000 == 0
         else
           # cut off all similar possibilities
@@ -122,7 +135,8 @@ class GoFindSolutionsV1Service
           nb_cuts_within_tree += 1
         end
         iteration_id += 1
-        puts '...... iteration ' + iteration_id.to_s
+        # n'afficher que toutes les 1000 iterations pour ne pas impacter la perf en affichage
+        puts '...... iteration ' + iteration_id.to_s if iteration_id % 1000 == 0
         # Let's not store all the possibilities to make this LEANER
         # test_possibilities << planning_possibility
       end
@@ -139,7 +153,17 @@ class GoFindSolutionsV1Service
 
   # rubocop:enable For
 
-def pick_best_solutions(solutions_array, how_many_solutions_do_we_store)
+  def grade_solution(solution, solutions_array, length_sg_array, total_duration_sg)
+    # grade solution
+      # conflicts_percentage
+      # nb_users_six_consec_days_fail
+      # nb_users_daily_hours_fail
+      # fitness
+      # compactness
+      # rate
+  end
+
+  def pick_best_solutions(solutions_array, how_many_solutions_do_we_store)
     # Selects X solutions from a collection of solutions.
     # several solutions with 0 conflicts? => pick the last X ones
     # else, we pick the last X ones
@@ -167,6 +191,24 @@ def pick_best_solutions(solutions_array, how_many_solutions_do_we_store)
   end
 
   # rubocop:enable GuardClause
+
+  def determine_duration_per_sg_array
+    # => [ {:sg_id, duration in sec} , {...} ]
+    # get duration of each slotgroup
+    # is then used to grade the solutions
+    result = []
+    slotgroups_array.each do |sg_hash|
+      result << { sg_id: sg_hash.id,
+                  duration: (sg_hash.end_at - sg_hash.start_at) }
+    end
+    result
+  end
+
+  def determine_total_duration_sg(duration_per_sg_array)
+    # length (sec) of all slotgroups
+    # = la durée de tous les slots du planning, car sg_array peut <> planning si certains sont sans solution d'entrée
+    @planning.slots_total_duration * 3600
+  end
 
   def determine_calculation_abstract(iteration_id, nb_cuts_within_tree)
     { nb_solutions: calculate_nb_solutions,
@@ -196,6 +238,7 @@ def pick_best_solutions(solutions_array, how_many_solutions_do_we_store)
     end
     return planning_possibility
   end
+
   private
 
 
