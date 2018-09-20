@@ -172,12 +172,6 @@ class Planning < ApplicationRecord
     return [start_time .. end_time]
   end
 
-  private
-
-  def seconds_in_hours(seconds)
-    [seconds / 3600, seconds / 60 % 60].map { |t| t.to_s.rjust(2,'0') }.join('h')
-  end
-
   def get_previous_week_planning
     # => id du planning de la semaine précédente
     if week_number == 1
@@ -195,6 +189,13 @@ class Planning < ApplicationRecord
       Planning.find_by(year: year, week_number: week_number + 1)
     end
   end
+
+  private
+
+  def seconds_in_hours(seconds)
+    [seconds / 3600, seconds / 60 % 60].map { |t| t.to_s.rjust(2,'0') }.join('h')
+  end
+
 
   def get_latest_week_number_of_a_year(year)
     Planning.where('year = ?', year).map(&:week_number).max

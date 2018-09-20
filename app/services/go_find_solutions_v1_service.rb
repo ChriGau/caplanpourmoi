@@ -15,6 +15,15 @@ class GoFindSolutionsV1Service
     @slotgroups_array = slotgroups_array
     @planning = planning
     @compute_solution = compute_solution_instance
+    @no_solution_user_id = determine_no_solution_user.id
+    @employees_involved = @planning.users # Array of users
+    # stocker plannings et solutions previous/next pour DRY - sert au grading
+    @previous_planning = @planning.get_previous_week_planning
+    @previous_planning_solution = @previous_planning.chosen_solution if !@previous_planning.nil?
+    @next_planning = @planning.get_next_week_planning
+    @next_planning_solution = @next_planning.chosen_solution if !@next_planning.nil?
+    @duration_per_sg_array = determine_duration_per_sg_array # [ {:sg_id = 1 , length_sec = 1, :dates = [d1 (,d2)] }, {...} ]
+    @total_duration_sg = determine_total_duration_sg # sum of previous (decimal, sec)
   end
 
   def perform
@@ -67,8 +76,7 @@ class GoFindSolutionsV1Service
     # init for grading solutions
     best_grade = 0
     grade = 0
-    duration_per_sg_array = determine_duration_per_sg_array # [ :sg_id, length_sec ]
-    total_duration_sg = determine_total_duration_sg(duration_per_sg_array) # sum of previous (sec)
+
     # let's HIT THE TREE
     for tree in 1..nb_trees
       for branch in 1..nb_branches
@@ -107,12 +115,11 @@ class GoFindSolutionsV1Service
           solution = planning_possibility_leaner_version(planning_possibility)
           #  où planning_possibility = [:sg_id, :combination = [id1, id2,...] ]
           # on enlèvera les doublons de solutions + tard car sinon la ligne ci-dessous est très consommatrice
+
           # on note la solution
-
-          #  JE SUIS LA ---- Il faut grader les solutions
-
-          # grade = grade_solution( solution, @slotgroups_array, duration_per_sg_array, total_duration_sg )
+          grade = grade_solution(solution)
           # si note > best du moment, on stocke la solution
+          binding.pry
           solutions_array << solution if grade > best_grade
 
                                # {
@@ -153,14 +160,63 @@ class GoFindSolutionsV1Service
 
   # rubocop:enable For
 
-  def grade_solution(solution, solutions_array, length_sg_array, total_duration_sg)
+  def grade_solution(solution)
     # grade solution
-      # conflicts_percentage
-      # nb_users_six_consec_days_fail
+      conflicts_percentage = grading_conflicts_percentage(solution)
+      nb_users_six_consec_days_fail = grading_nb_users_six_consec_days_fail(solution)
+      binding.pry
       # nb_users_daily_hours_fail
       # fitness
       # compactness
       # rate
+      conflicts_percentage
+  end
+
+  def grading_conflicts_percentage(solution)
+    # decimal => nb seconds where conflicts / total hours slotgroups to simulate
+    nb_seconds_conflicts = 0 #init
+    nb_hours_conflicts = solution.each do |solution_slotgroup_hash|
+      nb_conflicts = 0 # init
+      nb_conflicts = solution_slotgroup_hash[:combination].count(@no_solution_user_id)
+      if nb_conflicts.positive?
+        nb_seconds_conflicts +=  a * @duration_per_sg_array.select{ |x| x[:sg_id] == solution_slotgroup_hash[:sg_id] }[:duration]
+      end
+    end
+    nb_seconds_conflicts / @total_duration_sg
+  end
+
+  def grading_nb_users_six_consec_days_fail(solution)
+    # => number of users who work more than 6 consecutive days
+    timeframe = @planning.evaluate_timeframe_to_test_nb_users_six_consec_days_fail
+    nb_users = 0 # init
+    @employees_involved.each do |user|
+    array_of_consec_days = [] # init
+      timeframe.first.each do |date|
+        if works_at_this_date?(user, date, solution)
+          if date == timeframe.last # si on est à la dernière date et qu'il travaille
+             nb_users += 1 if array_of_consec_days.count > 6 && consecutive_days_intersect_planning_week?(array_of_consec_days, @planning)
+          else # pas la derniere date et il travaille
+            array_of_consec_days << date
+          end
+        else # ne travaille pas
+          nb_users += 1 if array_of_consec_days.count > 6 && consecutive_days_intersect_planning_week?(array_of_consec_days, @planning)
+          array_of_consec_days = [] # re init
+        end
+      end
+    end
+    nb_users
+  end
+
+  def grading_nb_users_daily_hours_fail
+
+  end
+
+  def grading_fitness
+
+  end
+
+  def grading_compactness
+
   end
 
   def pick_best_solutions(solutions_array, how_many_solutions_do_we_store)
@@ -193,18 +249,25 @@ class GoFindSolutionsV1Service
   # rubocop:enable GuardClause
 
   def determine_duration_per_sg_array
-    # => [ {:sg_id, duration in sec} , {...} ]
+    # => [ {:sg_id, :duration in sec, :dates = [d1 (,d2)] } , {...} ]
     # get duration of each slotgroup
     # is then used to grade the solutions
     result = []
     slotgroups_array.each do |sg_hash|
+      # mettre les dates auxquelles appartient le slotgroup pour pouvoir estimer ensuite le six_consec_days_fail
+      if sg_hash.start_at.to_date != sg_hash.end_at.to_date
+        dates = [ sg_hash.start_at.to_date, sg_hash.end_at.to_date]
+      else
+        dates = [sg_hash.start_at.to_date]
+      end
       result << { sg_id: sg_hash.id,
-                  duration: (sg_hash.end_at - sg_hash.start_at) }
+                  duration: (sg_hash.end_at - sg_hash.start_at),
+                  dates: dates }
     end
     result
   end
 
-  def determine_total_duration_sg(duration_per_sg_array)
+  def determine_total_duration_sg
     # length (sec) of all slotgroups
     # = la durée de tous les slots du planning, car sg_array peut <> planning si certains sont sans solution d'entrée
     @planning.slots_total_duration * 3600
@@ -463,6 +526,57 @@ class GoFindSolutionsV1Service
         csv << ['------------------------------------------------']
       end
     end
+  end
+
+  def get_planning_related_to_a_date(date)
+    Planning.find_by(year: date.year, week_number: date.cweek)
+  end
+
+  def works_at_this_date?(user, date, solution)
+    # true if user is working. 2 cas : date >> planning qui a 1 chosen solution
+    # ou date = solution generee via go_through_plannings mais non saved
+    solution_to_take_into_account = solution_to_take_into_account(date)
+    if !solution_to_take_into_account.nil? # si on est sur le previous ou next planning
+      works_today_binary = user.works_today?(date, solution_to_take_into_acount)
+    else
+      works_today_binary = works_today?(user, date, solution)
+    end
+  end
+
+  def solution_to_take_into_account(date)
+    if get_planning_related_to_a_date(date) == @previous_planning
+      @previous_planning_solution
+    elsif get_planning_related_to_a_date(date) == @next_planning
+      @next_planning_solution
+    else
+      nil
+    end
+  end
+
+  def works_today?(user, date, solution)
+    # true if in solution generated via go_through_planning, user works on date
+    # solution = [ {:sg_id = 1, :combination = [] }, {...} ]
+    list_of_sg_ids = []
+    list_of_combinations = []
+    # choper les id des slotgroups de cette date
+    a = @duration_per_sg_array.select{ |x| x[:dates].include?(date) }
+    a.each do |sg_hash|
+      list_of_sg_ids << sg_hash.fetch_values(:sg_id)
+    end
+    list_of_sg_ids.flatten
+    # récupérer les combinations correspondantes
+    sg_solution = solution.select{ |y| list_of_sg_ids.include?(y[:sg_id]) }
+    sg_solution.each do |solution_hash|
+      list_of_combinations << solution_hash.fetch_values(:combination)
+    end
+    list_of_combinations.flatten.uniq!
+    # user est dans combination?
+    return list_of_combinations.include?(user)
+  end
+
+  def consecutive_days_intersect_planning_week?(array_of_consec_days, planning)
+    start_time = get_first_date_of_a_week(planning.year, planning.week_number)
+    array_of_consec_days & [start_time .. start_time + 6].count.positive?
   end
 
 end
