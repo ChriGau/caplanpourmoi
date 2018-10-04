@@ -190,6 +190,8 @@ GEM
       pry (>= 0.10.4)
     public_suffix (3.0.2)
     puma (3.11.0)
+    pundit (1.1.0)
+      activesupport (>= 3.0.0)
     rack (2.0.3)
     rack-protection (2.0.0)
       rack
@@ -337,6 +339,7 @@ DEPENDENCIES
   pry-byebug
   pry-rails
   puma
+  pundit
   rails (= 5.0.5)
   rails-assets-classnames!
   rails-assets-sly!

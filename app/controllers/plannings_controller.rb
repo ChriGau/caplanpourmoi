@@ -1,11 +1,12 @@
 # rubocop:disable Metrics/ClassLength
 class PlanningsController < ApplicationController
-  before_action :set_planning, only: [:skeleton, :users, :conflicts, :events, :resultevents]
+  before_action :set_planning, only: [:skeleton, :users, :conflicts, :events, :resultevents, :update]
 
   # rubocop:disable AbcSize
 
   def index
     @plannings_list = plannings_list
+    authorize Planning
     @roles = Role.all
     @users = User.where.not(first_name: 'no solution').includes(:roles).sort do |a, b|
       a.roles.empty? || b.roles.empty? ? 1 : a.roles.first&.name <=> b.roles.first&.name
@@ -25,17 +26,17 @@ class PlanningsController < ApplicationController
   end
 
   def skeleton
-    @planning = Planning.find(params[:id])
     @slots = @planning.slots.order(:id)
     @slot = Slot.new
     @slot_templates = Slot.slot_templates # liste des roles (Array)
     # plannings qui ont des slots, utilisés pour use_template
     @plannings = Planning.select{ |p| p.slots.count.positive? }.sort_by{ |p| p.start_date }.reverse.last(30)
+    authorize @planning
   end
 
   # rubocop:disable AbcSize, BlockLength, LineLength, MethodLength
   def conflicts
-    @planning = Planning.find(params[:id])
+    autorize @planning
     @solution = @planning.solutions.chosen.first
     @slot_templates = Slot.slot_templates # liste des roles (Array)
     @url = 'conflicts'
@@ -53,6 +54,7 @@ class PlanningsController < ApplicationController
   # rubocop:enable MethodLength
 
   def users
+    authorize @planning
     # go back to skeleton if no slot created
     if @planning.slots.count.positive?
       @users = User.where.not(first_name: 'no solution').includes(:roles, :plannings, :teams).sort do |a, b|
@@ -71,7 +73,6 @@ class PlanningsController < ApplicationController
   # rubocop:enable AbcSize, BlockLength, LineLength
 
   def update
-    @planning = Planning.find(params[:id])
     # go back to skeleton if no slots created
     if !@planning.slots.count.positive?
       redirect_to planning_skeleton_path(@planning), alert: "Ajoutez des créneaux à votre planning"

@@ -1,5 +1,5 @@
 <div class="new-invite">
-  <%= link_to "Inviter un nouvel employé", new_user_path, class:"btn-primary btn-nav" %>
+    <%= link_to_if current_user.is_owner?, "Inviter un nouvel employé", new_user_path, class:"btn-primary btn-nav" %>
 </div>
 <div class="row equal">
   <% @users.each do |user| %>

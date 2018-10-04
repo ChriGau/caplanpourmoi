@@ -1,5 +1,6 @@
 class ConstraintsController < ApplicationController
-
+  before_action :set_user, only: [:create, :update]
+  before_action :set_constraint, only: [:destroy, :update]
 
   def show
   end
@@ -10,7 +11,7 @@ class ConstraintsController < ApplicationController
 
   # rubocop:disable AbcSize, MethodLength
   def create
-    @user = User.find(params[:user_id])
+    authorize Constraint
     constraint_model = Constraint.new(constraint_params)
     constraint_model.update(user_id: @user.id, category: params[:category].first.to_i)
     constraint_list = []
@@ -41,13 +42,14 @@ class ConstraintsController < ApplicationController
   end
 
   def update
-    @constraint = Constraint.find(params[:id])
-    @user = User.find(params[:user_id])
-    respond_to do |format|
-      if @constraint.update(constraint_params)
+    authorize @constraint
+    if @constraint.update(constraint_params)
+      respond_to do |format|
         format.js
         format.json { render json: @constraint }
-      else
+      end
+    else
+      respond_to do |format|
         format.js
         format.json { render json: @constraint.errors, status: :unprocessable_entity }
       end
@@ -55,13 +57,23 @@ class ConstraintsController < ApplicationController
   end
 
   def destroy
-    @constraint = Constraint.destroy(params[:id])
+    authorize @constraint
+    @constraint.destroy
     respond_to do |format|
       format.js  # <-- will render `app/views/constraints/destroy.js.erb`
     end
   end
 
   # rubocop:enable AbcSize, MethodLength
+  private
+
+  def set_user
+    @user = User.find(params[:user_id])
+  end
+
+  def set_constraint
+    @constraint = Constraint.find(params[:id])
+  end
 
   def constraint_params
     params.require(:constraint).permit(:start_at, :end_at, :user_id, :category)

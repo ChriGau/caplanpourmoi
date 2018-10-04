@@ -2,21 +2,17 @@
 #
 # Table name: solutions
 #
-#  id                            :integer          not null, primary key
-#  nb_overlaps                   :integer
-#  nb_extra_hours                :integer
-#  planning_id                   :integer
-#  compute_solution_id           :integer
-#  effectivity                   :integer          default("not_chosen")
-#  relevance                     :integer
-#  created_at                    :datetime         not null
-#  updated_at                    :datetime         not null
-#  nb_conflicts                  :integer
-#  nb_under_hours                :integer
-#  nb_users_six_consec_days_fail :integer
-#  nb_users_daily_hours_fail     :integer
-#  compactness                   :integer
-#  nb_users_in_overtime          :integer
+#  id                  :integer          not null, primary key
+#  nb_overlaps         :integer
+#  nb_extra_hours      :integer
+#  planning_id         :integer
+#  compute_solution_id :integer
+#  effectivity         :integer          default("not_chosen")
+#  relevance           :integer
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
+#  nb_conflicts        :integer
+#  nb_under_hours      :integer
 #
 # Indexes
 #

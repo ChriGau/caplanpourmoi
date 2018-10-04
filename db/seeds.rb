@@ -108,7 +108,7 @@ User.create!(email: "pierre@boutique.com",
             working_hours: 32,
             is_owner: false,
             first_name: "pierre",
-            last_name: "Last name",
+            last_name: "kimousse",
             password: "password",
             profile_picture: open_image("./images_seeds/avatar_2m.jpg")
   )
@@ -116,7 +116,7 @@ User.create!(email: "paul@boutique.com",
             working_hours: 37,
             is_owner: false,
             first_name: "paul",
-            last_name: "Last name",
+            last_name: "ochon",
             password: "password",
             profile_picture: open_image("./images_seeds/avatar_3m.jpg")
   )
@@ -124,7 +124,7 @@ User.create!(email: "jacques@boutique.com",
             working_hours: 32,
             is_owner: false,
             first_name: "jacques",
-            last_name: "Last name",
+            last_name: "leventreur",
             password: "password",
             profile_picture: open_image("./images_seeds/avatar_7m.jpg")
   )
@@ -132,7 +132,7 @@ User.create!(email: "jeannie@boutique.com",
             working_hours: 32,
             is_owner: false,
             first_name: "jeannie",
-            last_name: "Last name",
+            last_name: "ouininon",
             password: "password",
             profile_picture: open_image("./images_seeds/avatar_4f.jpg")
   )
@@ -140,7 +140,7 @@ User.create!(email: "nelson@boutique.com",
             working_hours: 32,
             is_owner: false,
             first_name: "nelson",
-            last_name: "Last name",
+            last_name: "monfaible",
             password: "password",
             profile_picture: open_image("./images_seeds/avatar_10m.jpeg")
   )
@@ -148,7 +148,7 @@ User.create!(email: "bob@boutique.com",
             working_hours: 32,
             is_owner: false,
             first_name: "bob",
-            last_name: "Last name",
+            last_name: "sponge",
             password: "password",
             profile_picture: open_image("./images_seeds/avatar_11m.jpg")
   )
@@ -156,7 +156,7 @@ User.create!(email: "michel@boutique.com",
             working_hours: 32,
             is_owner: false,
             first_name: "michel",
-            last_name: "Last name",
+            last_name: "jaxon",
             password: "password",
             profile_picture: open_image("./images_seeds/avatar_13m.jpg")
   )
@@ -164,7 +164,7 @@ User.create!(email: "axel@boutique.com",
             working_hours: 32,
             is_owner: false,
             first_name: "axel",
-            last_name: "Last name",
+            last_name: "rouge",
             password: "password",
             profile_picture: open_image("./images_seeds/avatar_15m.jpg")
   )
@@ -172,7 +172,7 @@ User.create!(email: "valentine@boutique.com",
             working_hours: 32,
             is_owner: false,
             first_name: "valentine",
-            last_name: "Last name",
+            last_name: "cupide",
             password: "password",
             profile_picture: open_image("./images_seeds/avatar_5f.jpg")
   )
@@ -180,7 +180,7 @@ User.create!(email: "emma@boutique.com",
             working_hours: 32,
             is_owner: false,
             first_name: "emma",
-            last_name: "Last name",
+            last_name: "reseille",
             password: "password",
             profile_picture: open_image("./images_seeds/avatar_6f.jpg")
   )
@@ -188,7 +188,7 @@ User.create!(email: "hortense@boutique.com",
             working_hours: 32,
             is_owner: false,
             first_name: "hortense",
-            last_name: "Last name",
+            last_name: "ia",
             password: "password",
             profile_picture: open_image("./images_seeds/avatar_8f.jpg")
   )
@@ -196,7 +196,7 @@ User.create!(email: "joseth@boutique.com",
             working_hours: 32,
             is_owner: false,
             first_name: "joseth",
-            last_name: "Last name",
+            last_name: "chaussette",
             password: "password",
             profile_picture: open_image("./images_seeds/avatar_9f.jpg")
   )
@@ -204,7 +204,7 @@ User.create!(email: "magalie@boutique.com",
             working_hours: 32,
             is_owner: false,
             first_name: "magalie",
-            last_name: "Last name",
+            last_name: "turgie",
             password: "password",
             profile_picture: open_image("./images_seeds/avatar_12f.jpeg")
   )
@@ -212,7 +212,7 @@ User.create!(email: "arielle@boutique.com",
             working_hours: 32,
             is_owner: false,
             first_name: "arielle",
-            last_name: "Last name",
+            last_name: "la petite sirene",
             password: "password",
             profile_picture: open_image("./images_seeds/avatar_14f.jpg")
   )
@@ -222,7 +222,7 @@ User.create!(email: "wtf@boutique.com",
             working_hours: 32,
             is_owner: false,
             first_name: "no solution",
-            last_name: "Last name",
+            last_name: "atol",
             password: "password",
             profile_picture: open_image("./images_seeds/avatar_no.jpg")
   )

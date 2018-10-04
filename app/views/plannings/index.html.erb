@@ -37,20 +37,28 @@
         <i class="fa fa-users" aria-hidden="true"></i>  Ressources
       </h2>
       <ul class="user-list list-inline">
-        <li >
-          <%= link_to new_user_invitation_path do  %>
-            <div class="plus-avatar">
-              <div class="plus-disc"></div>
-              <i class="fa fa-plus" aria-hidden="true"></i>
-            </div>
-          <% end %>
-        </li>
+        <% if current_user.is_owner %>
+          <li >
+            <%= link_to new_user_path do  %>
+              <div class="plus-avatar">
+                <div class="plus-disc"></div>
+                <i class="fa fa-plus" aria-hidden="true"></i>
+              </div>
+            <% end %>
+          </li>
+        <% end %>
         <% @users.each do |user| %>
         <li id="drag1" draggable="true" ondragstart="drag(event)" ondrop="" data-toggle="modal" data-target="#myModalHorizontal">
-          <%= link_to(user_path(user), class: "show-user-link") do %>
+          <% unless (current_user.is_owner || user == current_user) %>
             <%= avatar_with_border_color(user) %>
             <p><%= user.first_name.capitalize%></p>
+          <% else %>
+            <%= link_to user_path(user), class: "show-user-link" do %>
+                <%= avatar_with_border_color(user) %>
+                <p><%= user.first_name.capitalize%></p>
+            <% end %>
           <% end %>
+
         </li>
         <% end %>
       </ul>

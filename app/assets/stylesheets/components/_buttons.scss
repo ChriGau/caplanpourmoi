@@ -16,3 +16,34 @@ border-radius: 50px;
 border: none;
 padding: 5px;
 }
+
+.mybtn {
+  background-color: transparent;
+  border: solid 1px $myyellow;
+  color: $myyellow;
+  text-align:center;
+  transition: all 0.25s ease;
+
+  &:hover {
+    background-color:$myyellow;
+    border: solid 1px $myyellow;
+    color: white;
+  }
+  &--medium {
+    padding:5px;
+    font-size: 1.2em;
+    border-radius:30px;
+    letter-spacing: 1px;
+    font-weight: normal;
+  }
+  &--small {
+    padding:2px;
+    font-size: 0.9em;
+    border-radius:20px;
+    font-weight: lighter;
+  }
+}
+
+.pointer {
+  cursor:pointer;
+}

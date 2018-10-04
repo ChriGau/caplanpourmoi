@@ -4,6 +4,11 @@ fr:
       pending: "En Cours"
       ready: "Disponible"
       error: "Échoué"
+  navbar:
+    profile: "Profil"
+    homepage: "Page d'accueil"
+    sign_out: "Se déconnecter"
+    users: "Mes Employés"
 
   days:
     Sunday: "Dimanche"
