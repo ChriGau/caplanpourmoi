@@ -58,8 +58,10 @@ $('.edit-profile-picture').click(function(data){
 });
 
 // edit de working_hours
-$('.modify-working-hours').click(function(data){
+$('.modify-profile').click(function(data){
   $(".modal-edit-working-hours").modal('show');
+  var input = this.getAttribute("data-input");
+  $('#' + input).removeClass('hide');
   var modalContent = document.querySelector(".modal-edit-working-hours");
   modalPosition(modalContent, data.clientY + 300);
 });

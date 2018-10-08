@@ -19,10 +19,10 @@
           </div>
           <p></p>
           <div class="premier-plan">
-            <% if week[:planning].nil? %>
+            <% if week[:planning].nil? && current_user.is_owner %>
             <%= link_to "S#{week[:week_number]}", plannings_path(year_number: week[:year], week_number: week[:week_number]), method: :post %>
             <% else %>
-              <%= planning_link(week[:planning]) %>
+              <%= planning_link(week[:planning], week[:week_number]) %>
             <% end %>
           </div>
           <div><%= week[:planning].nil?? "(Aucun Planning)" : planning_status_label(week[:planning]) %></div>

@@ -64,7 +64,7 @@ class UsersController < ApplicationController
     # update working hours only
     authorize @user
     if params[:user].keys[0] == "working_hours"
-      if @user.update(working_hours: params[:user][:working_hours].to_i)
+      if @user.update(user_params)
         redirect_to user_path(@user)
       end
       # update profile_picture only

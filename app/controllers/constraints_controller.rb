@@ -11,11 +11,12 @@ class ConstraintsController < ApplicationController
 
   # rubocop:disable AbcSize, MethodLength
   def create
-    authorize Constraint
     constraint_model = Constraint.new(constraint_params)
-    constraint_model.update(user_id: @user.id, category: params[:category].first.to_i)
+    constraint_model.attributes = {user_id: @user.id, category: params[:category].first.to_i}
+    authorize constraint_model
+    constraint_model.save
     constraint_list = []
-    @constraints
+    # @constraints
     clicked_day = constraint_params[:start_at].to_datetime.strftime("%u").to_i
     if !params[:items].nil?
       params[:items].each do |day|

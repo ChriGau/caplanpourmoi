@@ -3,6 +3,7 @@ class ComputeSolutionsController < ApplicationController
   before_action :set_planning, only: [:index, :create]
 
   def index
+    authorize @planning
     @valid_compute_solutions = @planning.valid_compute_solutions
     @outdated_compute_solutions = @planning.outdated_compute_solutions
     @solution = @planning.solutions.chosen.first

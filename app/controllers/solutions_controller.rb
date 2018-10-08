@@ -4,10 +4,11 @@ class SolutionsController < ApplicationController
   before_action :set_solution, only: [:change_effectivity, :show]
 
   def show
-
+    authorize @solution
   end
 
   def change_effectivity
+    authorize @solution
     @planning.chosen_solution&.not_chosen!
     @solution.chosen!
     @planning.set_status

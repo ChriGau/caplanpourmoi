@@ -25,7 +25,7 @@ class UserPolicy < ApplicationPolicy
     if user.is_owner?
       [:profile_picture, :first_name, :last_name, :email, :working_hours, role_ids: []]
     elsif record == user
-      [:profile_picture]
+      [:profile_picture, :email, :first_name, :last_name]
     else
       false
     end

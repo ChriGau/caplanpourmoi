@@ -3,8 +3,8 @@ module PlanningHelper
     planning.status
   end
 
-  def planning_slide_label(planning)
-    "S#{planning.week_number}"
+  def planning_slide_label(week_number)
+    "S#{week_number}"
   end
 
   def planning_status_label(planning)
@@ -20,12 +20,23 @@ module PlanningHelper
     end
   end
 
-  def planning_link(planning)
-    case planning.status.to_sym
-    when :not_started, :in_progress
-      link_to planning_slide_label(planning), planning_skeleton_path(planning)
+  def planning_link(planning, week_number)
+    if planning.nil?
+      link_to planning_slide_label(week_number), plannings_path(alert: "Planning pas fini, Allez grouille toi patron")
     else
-      link_to planning_slide_label(planning), planning_conflicts_path(planning)
+      if current_user.is_owner
+        case planning.status.to_sym
+          when :not_started, :in_progress
+            link_to planning_slide_label(week_number), planning_skeleton_path(planning)
+          else
+          link_to planning_slide_label(week_number), planning_conflicts_path(planning)
+        end
+      elsif planning.chosen_solution.nil?
+        link_to planning_slide_label(week_number), "#"
+      else
+        link_to planning_slide_label(week_number), planning_solution_path(id: planning.chosen_solution.id, planning_id: planning.id)
+      end
+
     end
   end
 
