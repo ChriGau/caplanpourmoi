@@ -24,6 +24,7 @@ class GoFindSolutionsV1Service
     @next_planning_solution = @next_planning.chosen_solution if !@next_planning.nil?
     @duration_per_sg_array = determine_duration_per_sg_array # [ {:sg_id = 1 , length_sec = 1, :dates = [d1 (,d2)] }, {...} ]
     @total_duration_sg = determine_total_duration_sg # sum of previous (decimal, sec)
+    @total_availabilities = determine_total_availabilities # useful for grading fitness
   end
 
   def perform
@@ -119,7 +120,7 @@ class GoFindSolutionsV1Service
           # on note la solution
           grade = grade_solution(solution)
           # si note > best du moment, on stocke la solution
-          binding.pry
+
           solutions_array << solution if grade > best_grade
 
                                # {
@@ -163,10 +164,10 @@ class GoFindSolutionsV1Service
   def grade_solution(solution)
     # grade solution
       conflicts_percentage = grading_conflicts_percentage(solution)
-      nb_users_six_consec_days_fail = grading_nb_users_six_consec_days_fail(solution)
+      nb_users_six_consec_days_fail = grading_nb_users_six_consec_days_fail_and_nb_users_daily_hours_fail(solution)[:nb_users_six_consec_days]
+      nb_users_daily_hours_fail = grading_nb_users_six_consec_days_fail_and_nb_users_daily_hours_fail(solution)[:nb_users_daily_hours_fail]
+      fitness = grading_fitness(solution)
       binding.pry
-      # nb_users_daily_hours_fail
-      # fitness
       # compactness
       # rate
       conflicts_percentage
@@ -185,34 +186,52 @@ class GoFindSolutionsV1Service
     nb_seconds_conflicts / @total_duration_sg
   end
 
-  def grading_nb_users_six_consec_days_fail(solution)
+  def grading_nb_users_six_consec_days_fail_and_nb_users_daily_hours_fail(solution)
     # => number of users who work more than 6 consecutive days
     timeframe = @planning.evaluate_timeframe_to_test_nb_users_six_consec_days_fail
-    nb_users = 0 # init
+    nb_users_six_consec_days = 0
+    nb_users_daily_hours = 0
     @employees_involved.each do |user|
     array_of_consec_days = [] # init
       timeframe.first.each do |date|
-        if works_at_this_date?(user, date, solution)
+        # evaluate whether user works today, and if so how many seconds
+        # { works_today => true or false, nb_seconds => 1 }
+        result = works_at_this_date?(user, date, solution)
+        if result[:works_today]
+          # evaluation du nb de seconds_on_duty_today + incr si > 8
+          # TODO > prévoir la liste (user + date) des éléments en inconformité (lancer SSI solution choisie?)
+          nb_users_daily_hours += 1 if result[:nb_seconds]/3600 > 8
           if date == timeframe.last # si on est à la dernière date et qu'il travaille
-             nb_users += 1 if array_of_consec_days.count > 6 && consecutive_days_intersect_planning_week?(array_of_consec_days, @planning)
+             nb_users_six_consec_days += 1 if array_of_consec_days.count > 6 && consecutive_days_intersect_planning_week?(array_of_consec_days, @planning)
           else # pas la derniere date et il travaille
             array_of_consec_days << date
           end
         else # ne travaille pas
-          nb_users += 1 if array_of_consec_days.count > 6 && consecutive_days_intersect_planning_week?(array_of_consec_days, @planning)
+          nb_users_six_consec_days += 1 if array_of_consec_days.count > 6 && consecutive_days_intersect_planning_week?(array_of_consec_days, @planning)
           array_of_consec_days = [] # re init
         end
       end
     end
-    nb_users
+    { nb_users_six_consec_days: nb_users_six_consec_days,
+      nb_users_daily_hours: nb_users_daily_hours }
   end
 
-  def grading_nb_users_daily_hours_fail
+  def grading_fitness(solution)
+    # => % : (overtime + undertime)/hplanning
+    # TODO : affiner le cas où over/under >> hplanning
+      fitness =  calculate_over_under_time(solution) / (@total_duration_sg/3600)
+      puts "over_under_time => #{calculate_over_under_time(solution)}"
+      puts "total duration => #{@total_duration_sg/3600}"
+      puts "total availabilities => #{@total_availabilities}"
+      puts "fitness => #{fitness}"
+      puts "deviation => #{@total_availabilities / (@total_duration_sg/3600)}"
 
-  end
-
-  def grading_fitness
-
+    # get fitness score
+    if @total_duration_sg > @total_availabilities
+      get_grading_fitness_score(fitness, @total_availabilities / (@total_duration_sg/3600))
+    else
+      get_grading_fitness_score(fitness)
+    end
   end
 
   def grading_compactness
@@ -282,6 +301,27 @@ class GoFindSolutionsV1Service
     }
   end
 
+  def determine_total_availabilities
+    # => working hours of each employee - hard constraints if they have any
+    # opening hours = 9-20 by default but we need to implement it as a manager's parameter
+    result = 0
+    @employees_involved.each do |employee|
+      availability_user_hours = 11 * @planning.number_of_days
+      @planning.list_of_days.each do |date|
+        duration = 0
+        start_timeframe = DateTime.new(date.year, date.month, date.day, 9)
+        end_timeframe = DateTime.new(date.year, date.month, date.day, 20)
+        employee.constraints.where('start_at <= ? and end_at >= ? and category != ?',
+        end_timeframe, start_timeframe, Constraint.categories['preference']).each do |constraint|
+          duration = constraint_duration_according_to_timeframe(constraint, 9, 20)
+          availability_user_hours -= duration
+        end
+      end
+    result += availability_user_hours
+    end
+    result
+  end
+
   def go_to_next_knot(tree, branch, sg_ranking)
     nb_possibilities_below_this_knot = calculate_nb_possibilities_below_this_knot(sg_ranking)
     if sg_ranking == 1
@@ -304,6 +344,34 @@ class GoFindSolutionsV1Service
 
   private
 
+  def get_grading_fitness_score(fitness, deviation = 0)
+    case fitness
+      when 0..deviation + 0.02
+        3
+      when  deviation + 0.02..deviation + 0.04
+        2
+      when  deviation + 0.04..deviation + 0.06
+        1
+      else
+        0
+    end
+  end
+
+  def calculate_over_under_time(solution)
+    # evaluate (over/undertime for each user)
+    total = 0
+    @employees_involved.each do |employee|
+      # get number of seconds worked
+      seconds_worked = 0
+      solution.each do |solution_hash|
+        if solution_hash[:combination].include?(employee)
+          seconds_worked += get_sg_duration_from_sg_id(solution_hash[:sg_id])
+        end
+      end
+      total += (employee.working_hours - seconds_worked/3600).abs
+    end
+    total
+  end
 
   def init_overlaps_best_scoring
     # max of overlaps = all users are in overlap for all sg
@@ -554,7 +622,9 @@ class GoFindSolutionsV1Service
   end
 
   def works_today?(user, date, solution)
-    # true if in solution generated via go_through_planning, user works on date
+    # => { :result => true true if in solution generated via go_through_planning, user works on date,
+    # :nb_seconds => nb of seconds worked on this date }
+    #
     # solution = [ {:sg_id = 1, :combination = [] }, {...} ]
     list_of_sg_ids = []
     list_of_combinations = []
@@ -571,12 +641,29 @@ class GoFindSolutionsV1Service
     end
     list_of_combinations.flatten.uniq!
     # user est dans combination?
-    return list_of_combinations.include?(user)
+    if list_of_combinations.include?(user)
+      # si oui, on retourne true + son nombre de seconds travaillées
+      nb_seconds = 0
+      list_of_sg_ids.each do |sg_id|
+        nb_seconds += @duration_per_sg_array.select{ |x| x[:sg_id] == sg_id}[:length_sec]
+      end
+      @duration_per_sg_array.select{ |x| x[:sg_id] == sg_id}
+      { works_today: true,
+        nb_seconds:  nb_seconds
+      }
+    else
+      { works_today: false,
+        nb_seconds: 0 }
+    end
   end
 
   def consecutive_days_intersect_planning_week?(array_of_consec_days, planning)
     start_time = get_first_date_of_a_week(planning.year, planning.week_number)
     array_of_consec_days & [start_time .. start_time + 6].count.positive?
+  end
+
+  def get_sg_duration_from_sg_id(sg_id)
+    @duration_per_sg_array.select{ |x| x[:sg_id] == sg_id}[length_sec]
   end
 
 end

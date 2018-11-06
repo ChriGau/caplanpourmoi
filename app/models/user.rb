@@ -66,8 +66,9 @@ class User < ApplicationRecord
   end
 
   def availability_in_hours(planning)
-    # heures d'ouverture - contraintes. TODO : heures d'ouverture à renseigner par le manager VS actuellement 9h - 20h
-    availability_user_hours = 11 * planning.number_of_days # 11 = de 9h à 20h mais à modifier ensuite (propriété du planning)
+    # heures d'ouverture - contraintes.
+    # TODO : heures d'ouverture à renseigner par le manager VS actuellement 9h - 20h
+    availability_user_hours = 11 * planning.number_of_days
     planning.list_of_days.each do |date|
       duration = 0
       start_timeframe = DateTime.new(date.year, date.month, date.day, 9)
