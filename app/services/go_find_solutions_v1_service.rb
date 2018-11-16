@@ -163,14 +163,14 @@ class GoFindSolutionsV1Service
 
   def grade_solution(solution)
     # grade solution
+      # conflicts_percentage => %
       conflicts_percentage = grading_conflicts_percentage(solution)
       nb_users_six_consec_days_fail = grading_nb_users_six_consec_days_fail_and_nb_users_daily_hours_fail(solution)[:nb_users_six_consec_days]
       nb_users_daily_hours_fail = grading_nb_users_six_consec_days_fail_and_nb_users_daily_hours_fail(solution)[:nb_users_daily_hours_fail]
       fitness = grading_fitness(solution)
+      compactness = grading_compactness(solution, grading_nb_users_six_consec_days_fail_and_nb_users_daily_hours_fail(solution)[:nb_days_worked_per_users])
+      grade
       binding.pry
-      # compactness
-      # rate
-      conflicts_percentage
   end
 
   def grading_conflicts_percentage(solution)
@@ -191,13 +191,18 @@ class GoFindSolutionsV1Service
     timeframe = @planning.evaluate_timeframe_to_test_nb_users_six_consec_days_fail
     nb_users_six_consec_days = 0
     nb_users_daily_hours = 0
+    nb_days_worked_per_users = []
     @employees_involved.each do |user|
-    array_of_consec_days = [] # init
+      # initialize hash per user containing the number of days worked
+      # used later in the calculation of compactness
+      nb_days_worked_per_users << { user: user.id, nb_days_worked: 0 }
+      array_of_consec_days = [] # init
       timeframe.first.each do |date|
         # evaluate whether user works today, and if so how many seconds
         # { works_today => true or false, nb_seconds => 1 }
         result = works_at_this_date?(user, date, solution)
         if result[:works_today]
+          nb_days_worked_per_users.select{ |x| x[:user] == user.id }.first[:nb_days_worked] += 1
           # evaluation du nb de seconds_on_duty_today + incr si > 8
           # TODO > prévoir la liste (user + date) des éléments en inconformité (lancer SSI solution choisie?)
           nb_users_daily_hours += 1 if result[:nb_seconds]/3600 > 8
@@ -213,7 +218,8 @@ class GoFindSolutionsV1Service
       end
     end
     { nb_users_six_consec_days: nb_users_six_consec_days,
-      nb_users_daily_hours: nb_users_daily_hours }
+      nb_users_daily_hours: nb_users_daily_hours,
+      nb_days_worked_per_users: nb_days_worked_per_users }
   end
 
   def grading_fitness(solution)
@@ -234,8 +240,15 @@ class GoFindSolutionsV1Service
     end
   end
 
-  def grading_compactness
-
+  def grading_compactness(solution, nb_days_worked_per_users)
+    # nb_days_worked_per_users = [ {user: User, nb_days_worked: 1}, {...} ]
+    workers = get_list_of_workers_for_a_solution(solution) # [user id1, ...]
+    nb_users = 0 # init
+    workers.each do |worker_id|
+      days_real = nb_days_worked_per_users.select{ |x| x[:user] == worker_id }.first[:nb_days_worked]
+      nb_user +=1 if  days_real > (User.find(worker_id).working_hours / 8).round
+    end
+    nb_users
   end
 
   def pick_best_solutions(solutions_array, how_many_solutions_do_we_store)
@@ -528,7 +541,6 @@ class GoFindSolutionsV1Service
       @compute_solution.calcul_solution_v1.slotgroups_array.each do |slotgroup|
         slotgroup.overlaps.each do |overlaps| # overlaps => [ {}, {},... ]
           # mettre les users du sg overlappé en overlap à no solution
-          # binding.pry
           users_overlapped_sg = planning_possibility.select{ |h| h[:sg_id] == overlaps[:slotgroup_id] }.first[:combination] # => Array of users'ids
           users_initial_sg = planning_possibility.select{ |h| h[:sg_id] == slotgroup.id }.first[:combination]
           users_overlapped_sg.each do |user_id|
@@ -622,7 +634,7 @@ class GoFindSolutionsV1Service
   end
 
   def works_today?(user, date, solution)
-    # => { :result => true true if in solution generated via go_through_planning, user works on date,
+    # => { :result => true if in solution generated via go_through_planning, user works on date,
     # :nb_seconds => nb of seconds worked on this date }
     #
     # solution = [ {:sg_id = 1, :combination = [] }, {...} ]
@@ -633,21 +645,22 @@ class GoFindSolutionsV1Service
     a.each do |sg_hash|
       list_of_sg_ids << sg_hash.fetch_values(:sg_id)
     end
-    list_of_sg_ids.flatten
+    list_of_sg_ids.flatten!
     # récupérer les combinations correspondantes
     sg_solution = solution.select{ |y| list_of_sg_ids.include?(y[:sg_id]) }
     sg_solution.each do |solution_hash|
       list_of_combinations << solution_hash.fetch_values(:combination)
     end
-    list_of_combinations.flatten.uniq!
+    list_of_combinations.flatten!
     # user est dans combination?
-    if list_of_combinations.include?(user)
+    if list_of_combinations.include?(user) or list_of_combinations.include?(user.id)
+      # quand on vérifie sur une solution non saved, on a accès à un user_id, pas un User
       # si oui, on retourne true + son nombre de seconds travaillées
       nb_seconds = 0
       list_of_sg_ids.each do |sg_id|
-        nb_seconds += @duration_per_sg_array.select{ |x| x[:sg_id] == sg_id}[:length_sec]
+        nb_seconds += @duration_per_sg_array.select{ |x| x[:sg_id] == sg_id}.first[:duration]
       end
-      @duration_per_sg_array.select{ |x| x[:sg_id] == sg_id}
+      # @duration_per_sg_array.select{ |x| x[:sg_id] == sg_id}
       { works_today: true,
         nb_seconds:  nb_seconds
       }
@@ -664,6 +677,17 @@ class GoFindSolutionsV1Service
 
   def get_sg_duration_from_sg_id(sg_id)
     @duration_per_sg_array.select{ |x| x[:sg_id] == sg_id}[length_sec]
+  end
+
+  def get_list_of_workers_for_a_solution(solution)
+    # [ user id1, user id2,...]
+    list = []
+    solution.each do |solution_hash|
+      list << solution_hash[:combination]
+    end
+    list.flatten!
+    list.uniq! if list.count > 1
+    list
   end
 
 end
