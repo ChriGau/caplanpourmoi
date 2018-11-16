@@ -120,9 +120,10 @@ class GoFindSolutionsV1Service
           # on note la solution
           grade = grade_solution(solution)
           # si note > best du moment, on stocke la solution
-
-          solutions_array << solution if grade > best_grade
-
+          if grade > best_grade
+            solutions_array << solution
+            best_grade = grade
+          end
                                # {
                                # solution_id: solution_id,
                                # possibility_id: possibility_id,
@@ -152,8 +153,7 @@ class GoFindSolutionsV1Service
     # FOR TESTING --> storing the planning possibilities in a CSV
     store_planning_possibilities_to_csv(solutions_array) if Rails.env.test?
     calculation_abstract = determine_calculation_abstract(iteration_id, nb_cuts_within_tree)
-    {
-      # test_possibilities: test_possibilities,
+    { # test_possibilities: test_possibilities,
       solutions_array: solutions_array,
       # best_solution: nil,
       calculation_abstract: calculation_abstract }
@@ -168,9 +168,8 @@ class GoFindSolutionsV1Service
       nb_users_six_consec_days_fail = grading_nb_users_six_consec_days_fail_and_nb_users_daily_hours_fail(solution)[:nb_users_six_consec_days]
       nb_users_daily_hours_fail = grading_nb_users_six_consec_days_fail_and_nb_users_daily_hours_fail(solution)[:nb_users_daily_hours_fail]
       fitness = grading_fitness(solution)
-      compactness = grading_compactness(solution, grading_nb_users_six_consec_days_fail_and_nb_users_daily_hours_fail(solution)[:nb_days_worked_per_users])
-      grade
-      binding.pry
+      users_non_compact_solution = grading_compactness(solution, grading_nb_users_six_consec_days_fail_and_nb_users_daily_hours_fail(solution)[:nb_days_worked_per_users])
+      grade = get_final_grade(conflicts_percentage, nb_users_six_consec_days_fail, nb_users_daily_hours_fail, fitness, users_non_compact_solution)
   end
 
   def grading_conflicts_percentage(solution)
@@ -249,6 +248,15 @@ class GoFindSolutionsV1Service
       nb_user +=1 if  days_real > (User.find(worker_id).working_hours / 8).round
     end
     nb_users
+  end
+
+  def get_final_grade(conflicts_percentage, nb_users_six_consec_days_fail, nb_users_daily_hours_fail, fitness, compactness)
+    # transforme les valeurs des critères en points selon le bareme défini
+    # fitness is already a score
+    score_conflicts_percentage(conflicts_percentage) +
+    score_nb_users_six_consec_days_fail(nb_users_six_consec_days_fail) +
+    score_nb_users_daily_hours_fail(nb_users_daily_hours_fail) +
+    fitness + score_compactness(compactness) / 42*100
   end
 
   def pick_best_solutions(solutions_array, how_many_solutions_do_we_store)
@@ -690,4 +698,46 @@ class GoFindSolutionsV1Service
     list
   end
 
+  def score_conflicts_percentage(conflicts_percentage)
+    # turn conflicts_percentage value into a grade
+    case conflicts_percentage
+      when 0
+        10
+      when  (0.0..0.05)
+        5
+      when  (0.05..0.1)
+        3
+      else
+        0
+    end
+  end
+
+  def score_nb_users_six_consec_days_fail(nb_users_six_consec_days_fail)
+    case nb_users_six_consec_days_fail
+      when 0
+        10
+      else
+        0
+    end
+  end
+
+  def score_nb_users_daily_hours_fail(nb_users_daily_hours_fail)
+    case nb_users_daily_hours_fail
+      when 0
+        10
+      else
+        0
+    end
+  end
+
+  def score_compactness(users_non_compact_solution)
+    case users_non_compact_solution
+      when 0
+        2
+      when 1
+        1
+      else
+        0
+    end
+  end
 end
