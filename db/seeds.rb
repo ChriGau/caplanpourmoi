@@ -329,113 +329,135 @@ puts ""
 # pierre mercredi matin septembre octobre
 Constraint.create!(start_at: "2017-09-06 08:00",
                   end_at: "2017-09-06 12:00",
-                  user_id: User.find_by_first_name('pierre').id
+                  user_id: User.find_by_first_name('pierre').id,
+                  category: "preference"
                   )
 # pierre mercredi matin septembre octobre
 Constraint.create!(start_at: "2017-09-11 16:00",
                   end_at: "2017-09-11 22:00",
-                  user_id: User.find_by_first_name('pierre').id
+                  user_id: User.find_by_first_name('pierre').id,
+                  category: "preference"
                   )
 # pierre mercredi matin septembre octobre
 Constraint.create!(start_at: "2017-09-12 16:00",
                   end_at: "2017-09-12 22:00",
-                  user_id: User.find_by_first_name('pierre').id
+                  user_id: User.find_by_first_name('pierre').id,
+                  category: "preference"
                   )
 # pierre mercredi matin septembre octobre
 Constraint.create!(start_at: "2017-09-13 16:00",
                   end_at: "2017-09-13 22:00",
-                  user_id: User.find_by_first_name('pierre').id
+                  user_id: User.find_by_first_name('pierre').id,
+                  category: "preference"
                   )
 # pierre mercredi matin septembre octobre
 Constraint.create!(start_at: "2017-09-14 16:00",
                   end_at: "2017-09-14 22:00",
-                  user_id: User.find_by_first_name('pierre').id
+                  user_id: User.find_by_first_name('pierre').id,
+                  category: "preference"
                   )
 # pierre mercredi matin septembre octobre
 Constraint.create!(start_at: "2017-09-15 16:00",
                   end_at: "2017-09-15 22:00",
-                  user_id: User.find_by_first_name('pierre').id
+                  user_id: User.find_by_first_name('pierre').id,
+                  category: "preference"
                   )
 # pierre mercredi matin septembre octobre
 Constraint.create!(start_at: "2017-09-27 08:00",
                   end_at: "2017-09-27 12:00",
-                  user_id: User.find_by_first_name('pierre').id
+                  user_id: User.find_by_first_name('pierre').id,
+                  category: "preference"
                   )
 # pierre mercredi matin septembre octobre
 Constraint.create!(start_at: "2017-10-04 08:00",
                   end_at: "2017-10-04 12:00",
-                  user_id: User.find_by_first_name('pierre').id
+                  user_id: User.find_by_first_name('pierre').id,
+                  category: "preference"
                   )
 # pierre mercredi matin septembre octobre
 Constraint.create!(start_at: "2017-10-11 08:00",
                   end_at: "2017-10-11 12:00",
-                  user_id: User.find_by_first_name('pierre').id
+                  user_id: User.find_by_first_name('pierre').id,
+                  category: "preference"
                   )
 # pierre mercredi matin septembre octobre
 Constraint.create!(start_at: "2017-10-18 08:00",
                   end_at: "2017-10-18 12:00",
-                  user_id: User.find_by_first_name('pierre').id
+                  user_id: User.find_by_first_name('pierre').id,
+                  category: "preference"
                   )
 # pierre mercredi matin septembre octobre
 Constraint.create!(start_at: "2017-10-24 08:00",
                   end_at: "2017-10-24 12:00",
-                  user_id: User.find_by_first_name('pierre').id
+                  user_id: User.find_by_first_name('pierre').id,
+                  category: "preference"
                   )
 
 
 # pierre lundi matin
 Constraint.create!(start_at: "2017-09-11 16:00",
                   end_at: "2017-09-11 22:00",
-                  user_id: User.find_by_first_name('pierre').id
+                  user_id: User.find_by_first_name('pierre').id,
+                  category: "maladie"
                   )
 # pierre jeudi matin
 Constraint.create!(start_at: "2017-09-14 08:00",
                   end_at: "2017-09-14 12:00",
-                  user_id: User.find_by_first_name('pierre').id
+                  user_id: User.find_by_first_name('pierre').id,
+                  category: "maladie"
                   )
 
 # pierre vendredi matin
 Constraint.create!(start_at: "2017-09-15 08:00",
-                  end_at: "2017-09-15 12:00",
-                  user_id: User.find_by_first_name('pierre').id
+                  end_at: "2017-09-15 18:00",
+                  user_id: User.find_by_first_name('pierre').id,
+                  category: "conge_annuel"
                   )
 # emma lundi matin
 Constraint.create!(start_at: "2017-09-12 08:00",
                   end_at: "2017-09-12 12:00",
-                  user_id: User.find_by_first_name('emma').id
+                  user_id: User.find_by_first_name('emma').id,
+                  category: "maladie"
                   )
 # emma jeudi matin
 Constraint.create!(start_at: "2017-09-13 08:00",
                   end_at: "2017-09-13 12:00",
-                  user_id: User.find_by_first_name('emma').id
+                  user_id: User.find_by_first_name('emma').id,
+                  category: "maladie"
                   )
 # bob lundi matin
 Constraint.create!(start_at: "2017-09-11 08:00",
                   end_at: "2017-09-11 12:00",
-                  user_id: User.find_by_first_name('bob').id
+                  user_id: User.find_by_first_name('bob').id,
+                  category: "preference"
                   )
 # bob jeudi matin
 Constraint.create!(start_at: "2017-09-14 08:00",
                   end_at: "2017-09-14 12:00",
-                  user_id: User.find_by_first_name('bob').id
+                  user_id: User.find_by_first_name('bob').id,
+                  category: "preference"
                   )
 
 # bobvendredi matin
 Constraint.create!(start_at: "2017-09-15 08:00",
                   end_at: "2017-09-15 12:00",
-                  user_id: User.find_by_first_name('bob').id
+                  user_id: User.find_by_first_name('bob').id,
+                  category: "preference"
                   )
 Constraint.create!(start_at: "2017-09-03 08:00",
                   end_at: "2017-09-03 12:00",
-                  user_id: User.find_by_first_name('bob').id
+                  user_id: User.find_by_first_name('bob').id,
+                  category: "preference"
                   )
 Constraint.create!(start_at: "2017-09-05 08:00",
                   end_at: "2017-09-05 12:00",
-                  user_id: User.find_by_first_name('bob').id
+                  user_id: User.find_by_first_name('bob').id,
+                  category: "preference"
                   )
 Constraint.create!(start_at: "2017-09-01 08:00",
                   end_at: "2017-09-01 12:00",
-                  user_id: User.find_by_first_name('bob').id
+                  user_id: User.find_by_first_name('bob').id,
+                  category: "preference"
                   )
 
 
