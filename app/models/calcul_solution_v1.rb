@@ -22,6 +22,7 @@
 class CalculSolutionV1 < ApplicationRecord
   belongs_to :compute_solution
   serialize :slotgroups_array
+  serialize :slots_array
 
   attr_accessor :planning, :calcul_arrays, :build_solutions, :solution
 
@@ -41,8 +42,8 @@ class CalculSolutionV1 < ApplicationRecord
     best_solution = nil
     calculation_abstract = nil
     initialized_slots_array = initialize_slots_array(slots) # step 1
-    self.calcul_arrays = CreateSlotgroupsService.new(initialized_slots_array, planning, self).perform # step 2
-    to_simulate_slotgroups_array = select_slotgroups_to_simulate(calcul_arrays[:slotgroups_array]) # step 3
+    CreateSlotgroupsService.new(initialized_slots_array, planning, self).perform # step 2
+    to_simulate_slotgroups_array = select_slotgroups_to_simulate(self.slotgroups_array) # step 3
     need_a_calcul = to_simulate_slotgroups_array.empty? ? false : true
     if need_a_calcul # there are some sg to simulate (case 1)
       # step 4: go through plannings possibilities, assess them, select best solution. (2 cases)
@@ -50,26 +51,29 @@ class CalculSolutionV1 < ApplicationRecord
       build_solutions = GoFindSolutionsV1Service.new(planning,
                                                      to_simulate_slotgroups_array,
                                                      self.compute_solution).perform
+      # build_solutions = [ {calculation_abstract}, [ [:sg_id, :combination], [...] ] ]
       puts 'GoFindSolutionsV1Service --> done. --> storing best solution'
       # update return variables
-      test_possibilities = build_solutions[:test_possibilities]
-      solutions_array = build_solutions[:solutions_array]
-      best_solution = build_solutions[:best_solution]
-      calculation_abstract = build_solutions[:calculation_abstract]
+      # Let's not memorize this to make the Algo LEANER
+      # test_possibilities = build_solutions[:test_possibilities]
+      # Let's not memorize this to make the Algo LEANER
+      # solutions_array = build_solutions[:solutions_array]
+      # best_solution = build_solutions[1]
+      calculation_abstract = build_solutions[0]
       # save calculation abstract in ComputeSolution instance
       compute_solution.save_calculation_abstract(calculation_abstract)
     end
     # Créer Solutions et SolutionSlots associées
-    list_of_solutions = need_a_calcul ? build_solutions[:best_solution] : nil
-    SaveSolutionsAndSolutionSlotsService.new( calcul_arrays[:slotgroups_array],
-      calcul_arrays[:slots_array], planning, compute_solution, list_of_solutions ).perform
+    list_of_solutions = need_a_calcul ? build_solutions[1] : nil
+    SaveSolutionsAndSolutionSlotsService.new( self.slotgroups_array,
+      self.slots_array, planning, compute_solution, list_of_solutions ).perform
     puts 'SaveSolutionsAndSolutionSlotsService --> done'
-
-    { calcul_arrays: calcul_arrays,
-      test_possibilities: test_possibilities,
-      solutions_array: solutions_array,
-      best_solution: best_solution,
-      calculation_abstract: calculation_abstract }
+    # Let's not memorize this to make the Algo LEANER
+    # { calcul_arrays: calcul_arrays,
+    #   test_possibilities: test_possibilities,
+    #   solutions_array: solutions_array,
+    #   best_solution: best_solution,
+    #   calculation_abstract: calculation_abstract }
   end
 
   def initialize_slots_array(slots)

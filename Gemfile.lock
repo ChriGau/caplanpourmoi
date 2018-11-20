@@ -119,6 +119,8 @@ GEM
       momentjs-rails (>= 2.9.0)
     globalid (0.4.1)
       activesupport (>= 4.2.0)
+    google_charts (1.2.0)
+      actionpack (>= 3.x)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
     i18n (0.9.1)
@@ -326,6 +328,7 @@ DEPENDENCIES
   figaro
   font-awesome-sass
   fullcalendar-rails
+  google_charts
   jbuilder (~> 2.0)
   jquery-fileupload-rails
   jquery-rails

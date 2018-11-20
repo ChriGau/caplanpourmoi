@@ -62,7 +62,24 @@ class User < ApplicationRecord
   end
 
   def available?(start_at, end_at)
+    # true if user has no constraint during a given timeframe
     constraints.where('start_at <= ? and end_at >= ?', end_at, start_at).empty?
+  end
+
+  def availability_in_hours(planning)
+    # heures d'ouverture - contraintes. TODO : heures d'ouverture à renseigner par le manager VS actuellement 9h - 20h
+    availability_user_hours = 11 * planning.number_of_days # 11 = de 9h à 20h mais à modifier ensuite (propriété du planning)
+    planning.list_of_days.each do |date|
+      duration = 0
+      start_timeframe = DateTime.new(date.year, date.month, date.day, 9)
+      end_timeframe = DateTime.new(date.year, date.month, date.day, 20)
+      constraints.where('start_at <= ? and end_at >= ? and category != ?',
+        end_timeframe, start_timeframe, Constraint.categories['preference']).each do |constraint|
+        duration = constraint_duration_according_to_timeframe(constraint, 9, 20)
+        availability_user_hours -= duration
+      end
+    end
+    availability_user_hours
   end
 
   def skilled_and_available?(start_at, end_at, role_id)
@@ -101,8 +118,30 @@ class User < ApplicationRecord
 
   def is_on_duty?(planning, slot)
     # true if is assigned to another solution_slot intersecting this slot
-    planning.chosen_solution.solution_slots.select{ |s| s.start_at <= slot.end_at &&
-      s.end_at >= slot.start_at && s.user == self }.count.positive?
+    planning.chosen_solution.solution_slots.select{ |s| s.user == self &&
+      s.start_at <= slot.end_at && s.end_at >= slot.start_at }.count.positive?
+  end
+
+  def works_today?(date, solution)
+    # true if the user is on duty for a specific day and solution
+    solution.solution_slots.select{ |s| s.user == self && s.start_at <= date.to_datetime &&
+      s.end_at >= date.to_datetime + 1 }.count.positive?
+  end
+
+  def nb_seconds_on_duty_today(date, solution)
+    # number of seconds during which the user is on duty (for a given solution)
+    solution.solution_slots.select{ |s| s.user == self && s.start_at <= date.to_datetime + 1 &&
+      s.end_at >= date.to_datetime }.map{|ss| ss.slot.end_at - ss.slot.start_at}.reduce(:+).to_i
+  end
+
+  def nb_seconds_worked(solution, user)
+    solution.solution_slots.where(user: user).map{|ss| ss.slot.end_at - ss.slot.start_at}.reduce(:+).to_i
+  end
+
+  def overtime(solution)
+    # overtime for a user and a solution (integer, seconds)
+    seconds = nb_seconds_worked(solution, self)
+    seconds - (self.working_hours * 3600)
   end
 
   def is_on_duty_according_to_time_period?(start_at, end_at)
@@ -116,4 +155,25 @@ class User < ApplicationRecord
     # TODO => add attribute in user model
     on_duty_hours_decimal < 8 ? true : false
   end
+
+  def constraint_duration_according_to_timeframe(constraint, start_hour_f, end_hour_f)
+    # intersection in hours (float) between constraint & opening hours
+    constraint_start_hours = constraint.start_at.hour + constraint.start_at.strftime('%M').to_i/60.to_f
+    constraint_end_hours = constraint.end_at.hour + constraint.end_at.strftime('%M').to_i/60.to_f
+    if constraint_start_hours <= start_hour_f && constraint_end_hours >= end_hour_f
+      r = end_hour_f - start_hour_f
+    elsif constraint_start_hours < start_hour_f && constraint_end_hours <= end_hour_f
+      r = constraint_end_hours - start_hour_f
+    elsif constraint_end_hours > end_hour_f && contraint_start_hours >= start_hour_f
+      r = end_hour_f - constraint_start_hours
+    elsif constraint_start_hours >= start_hour_f && constraint_end_hours <= end_hour_f
+      r = constraint_end_hours - constraint_start_hours
+    else
+      r = "attention! cas non prévu!"
+    end
+    r
+  end
+
+  private
+
 end

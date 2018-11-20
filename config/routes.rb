@@ -90,6 +90,7 @@ Rails.application.routes.draw do
   get 'plannings/:id/users', to: 'plannings#users', as: 'planning_users'
   get 'plannings/:id/skeleton', to: 'plannings#skeleton', as: 'planning_skeleton'
   get 'plannings/:id/conflicts', to: 'plannings#conflicts', as: 'planning_conflicts'
+  get 'plannings/:planning_id/compute_solution/:compute_solution_id', to: 'compute_solutions#show_calculation_details', as: 'show_cs_details'
   get 'plannings/:id/use_template/:planning_id', to: 'plannings#use_template', as: 'planning_use_template'
 
   resources :users, only: [:index, :show, :create, :new, :update] do
@@ -103,6 +104,9 @@ Rails.application.routes.draw do
   post 'users/user_invite', to: 'users#user_invite', as: "users_invite"
   get 'users/:id/reinvite', to: 'users#reinvite', as: "user_reinvite"
   resources :colors, only: [:new, :create]
+
+  get 'statistics_algo', to: 'algo_stats#show_statistics_algo', as: 'statistics_algo'
+  get 'update_statistics_algo', to: 'algo_stats#reload_statistics', as: 'reload_statistics'
 
   # Sidekiq Web UI, only for admins.
   require "sidekiq/web"

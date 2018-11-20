@@ -83,3 +83,4 @@ production:
   database: caplanpourmoi_production
   username: caplanpourmoi
   password: <%= ENV['CAPLANPOURMOI_DATABASE_PASSWORD'] %>
+

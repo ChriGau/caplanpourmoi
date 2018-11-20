@@ -55,7 +55,7 @@ class Slot < ApplicationRecord
   def initialize_slot_hash
     { slotgroup_id: nil,
       simulation_status: false,
-      slot_instance: self }
+      slot_id: self.id }
   end
 
   def similar_slots
@@ -79,6 +79,11 @@ class Slot < ApplicationRecord
         # récupérer la liste des slots qui sont en overlap avec notre slot en overlap
       end
     end
+  end
+
+  def length
+    # slot duration in seconds
+    end_at - start_at
   end
 
   def get_infos_to_reaffect_slot

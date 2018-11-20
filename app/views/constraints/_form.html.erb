@@ -1,4 +1,4 @@
-<%= simple_form_for [@user], :url => user_constraints_path(@user), :method => :post do |f| %>
+<%= simple_form_for [@user], :url => user_constraints_path(@user), :method => :post, :html => {:remote => true } do |f| %>
   <%= f.error_notification %>
   <div class="row">
     <div class="col-xs-12">
@@ -24,7 +24,7 @@
   </div>
   <div class="form-group">
     <ul class="list-inline categories">
-      <% @constraint_categories.each do |type, number| %>
+      <% Constraint.categories.each do |type, number| %>
       <li>
         <div class="daysbox col-xs-3 category <%= type %>" id=<%= number %>>
           <label>
@@ -66,3 +66,10 @@
     </div>
   </div>
 <% end %>
+
+<script>
+  var errors = '<%= @errors %>';
+if (errors) {
+  $('.modal-body').prepend("<b class='errors' style='color: red;'>Can't create constraint because: " + errors+ "</b>");
+  }
+</script>

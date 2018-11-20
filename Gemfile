@@ -50,6 +50,9 @@ gem 'jquery-ui-rails'
 gem 'sidekiq'
 gem 'sidekiq-failures', '~> 1.0'
 
+# datavisualisation
+gem 'google_charts'
+
 # displaying validations errors messages
 gem 'dynamic_form'
 
