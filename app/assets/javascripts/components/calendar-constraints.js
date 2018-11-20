@@ -12,9 +12,14 @@ $('.fa-plus-square').click(function(data){
   $(".modal-role-user").modal('show');
   modalPosition(modalContent, data.clientY + 350);
 });
-  $('.metier').click( function (data){
-  var a = '#' + data.toElement.value;
-  $(a).toggleClass("checked");
+
+$('.metier').click( function (data){
+  this.classList.toggle("checked");
+  if ($(this).children("input").is(':checked')) {
+    $(this).children("input").prop("checked", false);
+  } else {
+    $(this).children("input").prop("checked", true);
+  }
 });
 
 // Suppression de roles au user

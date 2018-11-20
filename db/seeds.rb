@@ -35,7 +35,10 @@ User.create!(email: "boss@boutique.com",
             first_name: "jean",
             last_name: "patron",
             password: "password",
-            profile_picture: open_image("./images_seeds/avatar_1m.jpg")
+            profile_picture: open_image("./images_seeds/avatar_1m.jpg"),
+            invitation_created_at: time_with_zone,
+            invitation_sent_at: time_with_zone,
+            invitation_accepted_at: time_with_zone
   )
 
 puts "3 - Creating Planning"
@@ -104,13 +107,18 @@ Role.create!(name: "patron",
 puts "6 - Creating users (aka team members)"
 puts ""
 
+time_with_zone = Time.zone.now
+
 User.create!(email: "pierre@boutique.com",
             working_hours: 32,
             is_owner: false,
             first_name: "pierre",
             last_name: "kimousse",
             password: "password",
-            profile_picture: open_image("./images_seeds/avatar_2m.jpg")
+            profile_picture: open_image("./images_seeds/avatar_2m.jpg"),
+            invitation_created_at: time_with_zone,
+            invitation_sent_at: time_with_zone,
+            invitation_accepted_at: time_with_zone
   )
 User.create!(email: "paul@boutique.com",
             working_hours: 37,
@@ -118,7 +126,10 @@ User.create!(email: "paul@boutique.com",
             first_name: "paul",
             last_name: "ochon",
             password: "password",
-            profile_picture: open_image("./images_seeds/avatar_3m.jpg")
+            profile_picture: open_image("./images_seeds/avatar_3m.jpg"),
+            invitation_created_at: time_with_zone,
+            invitation_sent_at: time_with_zone,
+            invitation_accepted_at: time_with_zone
   )
 User.create!(email: "jacques@boutique.com",
             working_hours: 32,
@@ -126,7 +137,10 @@ User.create!(email: "jacques@boutique.com",
             first_name: "jacques",
             last_name: "leventreur",
             password: "password",
-            profile_picture: open_image("./images_seeds/avatar_7m.jpg")
+            profile_picture: open_image("./images_seeds/avatar_7m.jpg"),
+            invitation_created_at: time_with_zone,
+            invitation_sent_at: time_with_zone,
+            invitation_accepted_at: time_with_zone
   )
 User.create!(email: "jeannie@boutique.com",
             working_hours: 32,
@@ -134,7 +148,10 @@ User.create!(email: "jeannie@boutique.com",
             first_name: "jeannie",
             last_name: "ouininon",
             password: "password",
-            profile_picture: open_image("./images_seeds/avatar_4f.jpg")
+            profile_picture: open_image("./images_seeds/avatar_4f.jpg"),
+            invitation_created_at: time_with_zone,
+            invitation_sent_at: time_with_zone,
+            invitation_accepted_at: time_with_zone
   )
 User.create!(email: "nelson@boutique.com",
             working_hours: 32,
@@ -142,7 +159,10 @@ User.create!(email: "nelson@boutique.com",
             first_name: "nelson",
             last_name: "monfaible",
             password: "password",
-            profile_picture: open_image("./images_seeds/avatar_10m.jpeg")
+            profile_picture: open_image("./images_seeds/avatar_10m.jpeg"),
+            invitation_created_at: time_with_zone,
+            invitation_sent_at: time_with_zone,
+            invitation_accepted_at: time_with_zone
   )
 User.create!(email: "bob@boutique.com",
             working_hours: 32,
@@ -150,7 +170,10 @@ User.create!(email: "bob@boutique.com",
             first_name: "bob",
             last_name: "sponge",
             password: "password",
-            profile_picture: open_image("./images_seeds/avatar_11m.jpg")
+            profile_picture: open_image("./images_seeds/avatar_11m.jpg"),
+            invitation_created_at: time_with_zone,
+            invitation_sent_at: time_with_zone,
+            invitation_accepted_at: time_with_zone
   )
 User.create!(email: "michel@boutique.com",
             working_hours: 32,
@@ -158,7 +181,10 @@ User.create!(email: "michel@boutique.com",
             first_name: "michel",
             last_name: "jaxon",
             password: "password",
-            profile_picture: open_image("./images_seeds/avatar_13m.jpg")
+            profile_picture: open_image("./images_seeds/avatar_13m.jpg"),
+            invitation_created_at: time_with_zone,
+            invitation_sent_at: time_with_zone,
+            invitation_accepted_at: time_with_zone
   )
 User.create!(email: "axel@boutique.com",
             working_hours: 32,
@@ -166,7 +192,10 @@ User.create!(email: "axel@boutique.com",
             first_name: "axel",
             last_name: "rouge",
             password: "password",
-            profile_picture: open_image("./images_seeds/avatar_15m.jpg")
+            profile_picture: open_image("./images_seeds/avatar_15m.jpg"),
+            invitation_created_at: time_with_zone,
+            invitation_sent_at: time_with_zone,
+            invitation_accepted_at: time_with_zone
   )
 User.create!(email: "valentine@boutique.com",
             working_hours: 32,
@@ -174,7 +203,10 @@ User.create!(email: "valentine@boutique.com",
             first_name: "valentine",
             last_name: "cupide",
             password: "password",
-            profile_picture: open_image("./images_seeds/avatar_5f.jpg")
+            profile_picture: open_image("./images_seeds/avatar_5f.jpg"),
+            invitation_created_at: time_with_zone,
+            invitation_sent_at: time_with_zone,
+            invitation_accepted_at: time_with_zone
   )
 User.create!(email: "emma@boutique.com",
             working_hours: 32,
@@ -182,23 +214,32 @@ User.create!(email: "emma@boutique.com",
             first_name: "emma",
             last_name: "reseille",
             password: "password",
-            profile_picture: open_image("./images_seeds/avatar_6f.jpg")
+            profile_picture: open_image("./images_seeds/avatar_6f.jpg"),
+            invitation_created_at: time_with_zone,
+            invitation_sent_at: time_with_zone,
+            invitation_accepted_at: time_with_zone
   )
 User.create!(email: "hortense@boutique.com",
             working_hours: 32,
             is_owner: false,
             first_name: "hortense",
-            last_name: "ia",
+            last_name: "Ya",
             password: "password",
-            profile_picture: open_image("./images_seeds/avatar_8f.jpg")
+            profile_picture: open_image("./images_seeds/avatar_8f.jpg"),
+            invitation_created_at: time_with_zone,
+            invitation_sent_at: time_with_zone,
+            invitation_accepted_at: time_with_zone
   )
 User.create!(email: "joseth@boutique.com",
             working_hours: 32,
             is_owner: false,
             first_name: "joseth",
-            last_name: "chaussette",
+            last_name: "La Chaussette",
             password: "password",
-            profile_picture: open_image("./images_seeds/avatar_9f.jpg")
+            profile_picture: open_image("./images_seeds/avatar_9f.jpg"),
+            invitation_created_at: time_with_zone,
+            invitation_sent_at: time_with_zone,
+            invitation_accepted_at: time_with_zone
   )
 User.create!(email: "magalie@boutique.com",
             working_hours: 32,
@@ -206,7 +247,10 @@ User.create!(email: "magalie@boutique.com",
             first_name: "magalie",
             last_name: "turgie",
             password: "password",
-            profile_picture: open_image("./images_seeds/avatar_12f.jpeg")
+            profile_picture: open_image("./images_seeds/avatar_12f.jpeg"),
+            invitation_created_at: time_with_zone,
+            invitation_sent_at: time_with_zone,
+            invitation_accepted_at: time_with_zone
   )
 User.create!(email: "arielle@boutique.com",
             working_hours: 32,
@@ -214,7 +258,10 @@ User.create!(email: "arielle@boutique.com",
             first_name: "arielle",
             last_name: "la petite sirene",
             password: "password",
-            profile_picture: open_image("./images_seeds/avatar_14f.jpg")
+            profile_picture: open_image("./images_seeds/avatar_14f.jpg"),
+            invitation_created_at: time_with_zone,
+            invitation_sent_at: time_with_zone,
+            invitation_accepted_at: time_with_zone
   )
 
 # cree user "no solution" pour le cas où pas de solution pour le slot
@@ -224,7 +271,10 @@ User.create!(email: "wtf@boutique.com",
             first_name: "no solution",
             last_name: "atol",
             password: "password",
-            profile_picture: open_image("./images_seeds/avatar_no.jpg")
+            profile_picture: open_image("./images_seeds/avatar_no.jpg"),
+            invitation_created_at: time_with_zone,
+            invitation_sent_at: time_with_zone,
+            invitation_accepted_at: time_with_zone
   )
 
 

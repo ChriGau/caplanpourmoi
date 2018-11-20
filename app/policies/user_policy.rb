@@ -1,7 +1,7 @@
 class UserPolicy < ApplicationPolicy
   class Scope < Scope
     def resolve
-      scope
+      scope.active.where(is_owner: false)
     end
   end
 

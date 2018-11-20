@@ -51,6 +51,7 @@ class User < ApplicationRecord
   has_many :role_users # added back bcoz triggers 'association not found error'
   has_many :solution_slots
   has_attachment :profile_picture
+  scope :active, -> { where.not(first_name: "no solution").order(:first_name) }
 
   def concatenate_first_and_last_name
     first_name + ' ' + last_name

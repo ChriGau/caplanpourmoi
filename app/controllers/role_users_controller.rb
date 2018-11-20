@@ -12,12 +12,12 @@ class RoleUsersController < ApplicationController
   # rubocop:disable AbcSize, MethodLength
    def create
     roleuser_list = []
-    if params[:roles].length > 1
-      params[:roles].each do |role|
-        roleuser_list << RoleUser.new(user: @user, role: Role.find_by(name: role))
+    if params[:role_ids].length > 1
+      params[:role_ids].each do |id|
+        roleuser_list << RoleUser.new(user: @user, role: Role.find(id))
       end
     else
-      roleuser_list << RoleUser.new(user: @user, role: Role.find_by(name: params[:roles]))
+      roleuser_list << RoleUser.new(user: @user, role: Role.find(id))
     end
     authorize RoleUser
     if @user.role_users << roleuser_list

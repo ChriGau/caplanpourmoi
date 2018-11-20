@@ -4,6 +4,7 @@ class ComputeSolutionsController < ApplicationController
 
   def index
     authorize @planning
+    policy_scope(@planning.compute_solutions)
     @valid_compute_solutions = @planning.valid_compute_solutions
     @outdated_compute_solutions = @planning.outdated_compute_solutions
     @solution = @planning.solutions.chosen.first

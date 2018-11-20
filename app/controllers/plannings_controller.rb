@@ -6,10 +6,11 @@ class PlanningsController < ApplicationController
   # rubocop:disable AbcSize
 
   def index
-    @plannings_list = plannings_list
+    company_plannings = policy_scope(Planning)
+    @plannings_list = plannings_list(company_plannings)
     authorize Planning
     @roles = Role.all
-    @users = User.where.not(first_name: 'no solution').includes(:roles).sort do |a, b|
+    @users = User.active.includes(:roles).sort do |a, b|
       a.roles.empty? || b.roles.empty? ? 1 : a.roles.first&.name <=> b.roles.first&.name
     end
 
@@ -32,7 +33,8 @@ class PlanningsController < ApplicationController
   def skeleton
     @slots = @planning.slots.order(:id)
     @slot = Slot.new
-    @slot_templates = Slot.slot_templates # liste des roles (Array)
+    @roles = Role.all
+    # @slot_templates = Slot.slot_templates
     # plannings qui ont des slots, utilisés pour use_template
     @plannings = Planning.select{ |p| p.slots.count.positive? }.sort_by{ |p| p.start_date }.reverse.last(30)
     authorize @planning
@@ -42,7 +44,7 @@ class PlanningsController < ApplicationController
   def conflicts
     authorize @planning
     @solution = @planning.solutions.chosen.first
-    @slot_templates = Slot.slot_templates # liste des roles (Array)
+    @roles = Role.all
     @url = 'conflicts'
     # variables pour fullcalendar
 
@@ -124,7 +126,7 @@ class PlanningsController < ApplicationController
 
   private
 
-  def plannings_list
+  def plannings_list(company_plannings)
     current_week_number = Time.now.strftime('%U').to_i
     current_year_number = Date.today.strftime('%Y').to_i
     ((current_week_number - 49)..(current_week_number + 50)).to_a.map do |week_number|
@@ -138,7 +140,7 @@ class PlanningsController < ApplicationController
         year = current_year_number + 1
         week_number = (week_number - 52)
       end
-      planning = Planning.find_by(year: year, week_number: week_number)
+      planning = company_plannings.find_by(year: year, week_number: week_number)
       {year: year, week_number: week_number, planning: planning}
     end
   end

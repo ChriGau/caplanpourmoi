@@ -1,8 +1,8 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :infos, :dispos, :reinvite, :update ]
+  before_action :set_user, only: [:show, :infos, :dispos, :reinvite, :update]
 
   def index
-    @users = User.where.not(id: User.find_by(first_name: "no solution")).order(:first_name)
+    @users = policy_scope(User)
     authorize @users
   end
 
@@ -14,6 +14,7 @@ class UsersController < ApplicationController
     @constraints_array = get_constraints_array(@constraints)
     @role_user = RoleUser.new
     @constraint = Constraint.new
+    @unallocated_roles = Role.all - @user.roles
     respond_to do |format|
       format.js
       format.html

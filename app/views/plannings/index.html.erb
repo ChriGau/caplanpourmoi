@@ -73,9 +73,9 @@
               <i class="fa fa-plus" aria-hidden="true"></i>
           </div>
         <% end %>
-        <%  @slot_templates.each do |slot| %>
-          <%= link_to edit_role_path(slot.role.id), class: "edit-role-link" do %>
-            <div class="metier" style="background-color: <%= slot.role.color.hexadecimal_code%>; <%= background_text_color(slot) %>"> <%= slot.role.name.capitalize %>
+        <%  @roles.each do |role| %>
+          <%= link_to edit_role_path(role.id), class: "edit-role-link" do %>
+            <div class="metier" style="background-color: <%= role.color.hexadecimal_code%>; color: <%= role.color.dark?? "#f2f2f2" : "black" %>"> <%= role.name.capitalize %>
             </div>
           <% end %>
         <% end %>

@@ -7,6 +7,7 @@
   background-color: $mylightgrey;
   opacity:0.9;
   text-align:center;
+  cursor: pointer;
   i {
   position: absolute;
   left:45%;
@@ -22,7 +23,7 @@
 
 .metier.checked {
   background-color: $myyellow !important;
-  color: $myblue;
+  color: $myblue !important;
 }
 
 .metier {
