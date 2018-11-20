@@ -24,6 +24,7 @@ require 'uri'
 
   def show_calculation_details
     @compute_solution = ComputeSolution.find(params[:compute_solution_id])
+    authorize @compute_solution
     @timestamps = @compute_solution.timestamps_algo
     @timestamps_details = @compute_solution.get_timestamps_details
     @timestamps_length = get_timestamps_length(@timestamps)

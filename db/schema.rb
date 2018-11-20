@@ -76,15 +76,12 @@ ActiveRecord::Schema.define(version: 20180709084812) do
     t.text     "p_nb_hours_roles"
     t.text     "team"
     t.text     "p_list_of_slots_ids"
-<<<<<<< HEAD
-=======
     t.text     "timestamps_algo"
     t.float    "go_through_solutions_mean_time_per_slot"
     t.float    "solution_storing_mean_time_per_slot"
     t.float    "mean_time_per_slot"
     t.text     "fail_level"
     t.float    "percent_tree_covered"
->>>>>>> c0af8aaf318e2a8a200c70833a9e8cab28f43efc
     t.index ["planning_id"], name: "index_compute_solutions_on_planning_id", using: :btree
   end
 
@@ -151,14 +148,12 @@ ActiveRecord::Schema.define(version: 20180709084812) do
     t.integer  "nb_extra_hours"
     t.integer  "planning_id"
     t.integer  "compute_solution_id"
-    t.integer  "effectivity",         default: 0
+    t.integer  "effectivity",                   default: 0
     t.integer  "relevance"
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
+    t.datetime "created_at",                                null: false
+    t.datetime "updated_at",                                null: false
     t.integer  "nb_conflicts"
     t.integer  "nb_under_hours"
-<<<<<<< HEAD
-=======
     t.integer  "nb_users_six_consec_days_fail"
     t.integer  "nb_users_daily_hours_fail"
     t.integer  "compactness"
@@ -166,7 +161,6 @@ ActiveRecord::Schema.define(version: 20180709084812) do
     t.decimal  "conflicts_percentage"
     t.decimal  "fitness"
     t.decimal  "grade"
->>>>>>> c0af8aaf318e2a8a200c70833a9e8cab28f43efc
     t.index ["compute_solution_id"], name: "index_solutions_on_compute_solution_id", using: :btree
     t.index ["planning_id"], name: "index_solutions_on_planning_id", using: :btree
   end
