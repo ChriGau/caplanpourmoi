@@ -9,6 +9,7 @@ fr:
     homepage: "Page d'accueil"
     sign_out: "Se déconnecter"
     users: "Mes Employés"
+    statistics: "Stats"
   planning:
     no_planning_solution: "Ce planning n'est pas terminé"
 
