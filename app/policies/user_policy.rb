@@ -6,7 +6,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   def index?
-    true
+    user.is_owner
   end
 
   def show?
