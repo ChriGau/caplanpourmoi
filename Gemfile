@@ -31,6 +31,7 @@ gem 'faker'
 #Authentification Devise
 gem 'devise'
 gem 'devise_invitable'
+gem 'pundit'
 
 #Sly for sliders
 gem 'rails-assets-sly', source: 'https://rails-assets.org'

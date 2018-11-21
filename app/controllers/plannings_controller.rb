@@ -1,17 +1,22 @@
 # rubocop:disable Metrics/ClassLength
 class PlanningsController < ApplicationController
-  before_action :set_planning, only: [:skeleton, :users, :conflicts, :events, :resultevents]
+  before_action :set_planning, only: [:skeleton, :users, :conflicts, :events,
+                                      :resultevents, :update, :use_template]
 
   # rubocop:disable AbcSize
 
   def index
-    @plannings_list = plannings_list
+    company_plannings = policy_scope(Planning)
+    @plannings_list = plannings_list(company_plannings)
+    authorize Planning
     @roles = Role.all
-    @users = User.where.not(first_name: 'no solution').includes(:roles).sort do |a, b|
+    @users = User.active.includes(:roles).sort do |a, b|
       a.roles.empty? || b.roles.empty? ? 1 : a.roles.first&.name <=> b.roles.first&.name
     end
 
     @slot_templates = Slot.slot_templates # liste des roles
+    flash[:alert] = params[:alert] if params[:alert]
+
   end
   # rubocop:enable AbcSize
 
@@ -19,30 +24,33 @@ class PlanningsController < ApplicationController
 
   def create
     @planning = Planning.new(week_number: params[:week_number], year: params[:year_number])
+    authorize @planning
     if @planning.save
       redirect_to planning_skeleton_path(@planning)
     end
   end
 
   def skeleton
-    @planning = Planning.find(params[:id])
     @slots = @planning.slots.order(:id)
     @slot = Slot.new
-    @slot_templates = Slot.slot_templates # liste des roles (Array)
+    @roles = Role.all
+    # @slot_templates = Slot.slot_templates
     # plannings qui ont des slots, utilisés pour use_template
     @plannings = Planning.select{ |p| p.slots.count.positive? }.sort_by{ |p| p.start_date }.reverse.last(30)
+    authorize @planning
   end
 
   # rubocop:disable AbcSize, BlockLength, LineLength, MethodLength
   def conflicts
-    @planning = Planning.find(params[:id])
+    authorize @planning
     @solution = @planning.solutions.chosen.first
-    @slot_templates = Slot.slot_templates # liste des roles (Array)
+    @roles = Role.all
     @url = 'conflicts'
     # variables pour fullcalendar
 
     if !@planning.solutions.exists?
-      redirect_to planning_users_path(@planning)
+      flash[:alert] = I18n.t 'planning.no_planning_solution'
+      redirect_to planning_skeleton_path(@planning)
     elsif !@planning.solutions.chosen.exists?
       redirect_to planning_compute_solutions_path(@planning)
     end
@@ -53,6 +61,7 @@ class PlanningsController < ApplicationController
   # rubocop:enable MethodLength
 
   def users
+    authorize @planning
     # go back to skeleton if no slot created
     if @planning.slots.count.positive?
       @users = User.where.not(first_name: 'no solution').includes(:roles, :plannings, :teams).sort do |a, b|
@@ -71,7 +80,7 @@ class PlanningsController < ApplicationController
   # rubocop:enable AbcSize, BlockLength, LineLength
 
   def update
-    @planning = Planning.find(params[:id])
+    authorize @planning
     # go back to skeleton if no slots created
     if !@planning.slots.count.positive?
       redirect_to planning_skeleton_path(@planning), alert: "Ajoutez des créneaux à votre planning"
@@ -94,20 +103,22 @@ class PlanningsController < ApplicationController
   def events
     # json only request for fullcalendar
     # render events.json.jbuilder
+    authorize @planning
   end
 
   def resultevents
+    authorize @planning
     @solution = Solution.find(params[:solution_id])
     # renders resultevents.json.jbuilder
   end
 
   def use_template
+    authorize @planning
     template = Planning.find(params[:planning_id]) #planning_copied
-    planning = Planning.find(params[:id]) #planning receiving the copy
-    gap = gap_in_days_between_two_dates(planning.start_date, template.start_date)
+    gap = gap_in_days_between_two_dates(@planning.start_date, template.start_date)
     template.slots.each do |slot|
       Slot.create!(
-        planning_id: planning.id,
+        planning_id: @planning.id,
         start_at: slot.start_at += gap.days,
         end_at: slot.end_at += gap.days,
         role_id: slot.role.id,
@@ -118,7 +129,7 @@ class PlanningsController < ApplicationController
 
   private
 
-  def plannings_list
+  def plannings_list(company_plannings)
     current_week_number = Time.now.strftime('%U').to_i
     current_year_number = Date.today.strftime('%Y').to_i
     ((current_week_number - 49)..(current_week_number + 50)).to_a.map do |week_number|
@@ -132,7 +143,7 @@ class PlanningsController < ApplicationController
         year = current_year_number + 1
         week_number = (week_number - 52)
       end
-      planning = Planning.find_by(year: year, week_number: week_number)
+      planning = company_plannings.find_by(year: year, week_number: week_number)
       {year: year, week_number: week_number, planning: planning}
     end
   end

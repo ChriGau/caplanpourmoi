@@ -37,7 +37,6 @@
 }
 
 .navbar-wagon-item {
-  cursor: pointer;
   padding: 0 10vh;
 }
 /* Navbar link */
@@ -81,6 +80,14 @@
   transform: rotate(45deg);
   border-left: 1px solid #E6E6E6;
   border-top: 1px solid #E6E6E6;
+}
+
+.dropdown-toggle {
+  color: $myyellow;
+}
+
+.dropdown, .dropdown-toggle {
+  cursor: pointer;
 }
 
 .color-word {
