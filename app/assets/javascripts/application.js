@@ -17,6 +17,7 @@
 //= require slots
 //= require fr
 //= require roles
+//= require dynamic-pages
 
 
 
