@@ -8,18 +8,14 @@
 
  <!-- Right Navigation -->
   <div class="navbar-wagon-right hidden-xs hidden-sm">
-
-    <div>
-
-      <%= link_to statistics_algo_path, { :class=>"btn-primary btn-nav" } do  %>
-            <div class="glyphicon glyphicon-signal"></div>
-            Algo
-          <% end %>
-    </div>
-
     <% if user_signed_in? %>
       <!-- Avatar with dropdown menu -->
       <% if current_user.is_owner? %>
+        <%= link_to statistics_algo_path do  %>
+          <button class="btn-primary btn-nav mr-">
+            <i class="fa fa-bar-chart"></i> <%= t("navbar.statistics", default: "Statitics") %>
+          </button>
+        <% end %>
         <%= link_to users_path do %>
           <button class="btn-primary btn-nav">
             <i class="fa fa-users"></i>  <%= t("navbar.users", default: "Users") %>
@@ -35,13 +31,13 @@
             <% end %>
             <ul class="dropdown-menu dropdown-menu-right navbar-wagon-dropdown-menu">
               <li>
-                <%= link_to user_path(current_user)  do %>
-                  <i class="fa fa-user"></i> <%= t("navbar.profile", default: "Profil") %>
+                <%= link_to plannings_path do %>
+                  <i class="fa fa-home"></i>  <%= t("navbar.homepage", default: "Home") %>
                 <% end %>
               </li>
               <li>
-                <%= link_to plannings_path do %>
-                  <i class="fa fa-home"></i>  <%= t("navbar.homepage", default: "Home") %>
+                <%= link_to user_path(current_user)  do %>
+                  <i class="fa fa-user"></i> <%= t("navbar.profile", default: "Profil") %>
                 <% end %>
               </li>
               <li>
@@ -71,13 +67,7 @@
               <%= image_tag "http://placehold.it/30x30", class: "avatar dropdown-toggle", id: "navbar-wagon-menu", "data-toggle" => "dropdown" %>
             <% end %>
       <ul class="dropdown-menu dropdown-menu-right navbar-wagon-dropdown-menu">
-        <% if user_signed_in? && current_user.is_owner? %>
-          <li>
-            <%= link_to users_path do %>
-              <i class="fa fa-users"></i>  <%= t("navbar.users", default: "Users") %>
-            <% end %>
-          </li>
-        <% elsif user_signed_in? %>
+        <% if user_signed_in? %>
           <li>
             <%= link_to plannings_path do %>
               <i class="fa fa-home"></i>  <%= t("navbar.homepage", default: "Home") %>
@@ -88,6 +78,18 @@
               <i class="fa fa-user"></i> <%= t("navbar.profile", default: "Profile") %>
             <% end %>
           </li>
+          <% if current_user.is_owner? %>
+            <li>
+              <%= link_to users_path do %>
+                <i class="fa fa-users"></i>  <%= t("navbar.users", default: "Users") %>
+              <% end %>
+            </li>
+            <li>
+              <%= link_to statistics_algo_path do %>
+                <i class="fa fa-bar-chart"></i> <%= t("navbar.statistics", default: "Statitics") %>
+              <% end %>
+            </li>
+          <% end %>
           <li>
             <%= link_to destroy_user_session_path, method: :delete do %>
               <i class="fa fa-sign-out"></i>  <%= t("navbar.sign_out", default: "Log out") %>
