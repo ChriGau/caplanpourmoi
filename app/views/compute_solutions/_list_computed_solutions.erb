@@ -22,7 +22,8 @@
                   <%= computed_solution.p_nb_slots %> créneaux (<%= computed_solution.p_nb_hours %>heures)
                   <ul>
                   <% computed_solution.p_nb_hours_roles.each do |role_id_symbol, hours|%>
-                    <li><span class="role-name" style="background-color: <%= background_color_of_role(role_id_symbol.to_s.to_i) %>; <%= role_text_color(role_id_symbol.to_s.to_i) %>"> <%= Role.find(role_id_symbol.to_s.to_i).name %></span> : <%= hours %>h</li>
+                    <% role = Role.find(role_id_symbol) %>
+                    <li><span class="role-name" style="background-color:<%= role.color.hexadecimal_code %>; color: <%= role.color.dark?? "#f2f2f2" : "black" %>"> <%= role.name %></span> : <%= hours %>h</li>
                   <% end %>
                   </ul>
                   </footer>
@@ -35,7 +36,8 @@
                     <%= computed_solution.team.values.flatten.uniq.count %> équipiers :
                     <ul>
                       <% computed_solution.team.each do |role_id_symbol, team| %>
-                      <li> <span class="role-name" style="background-color: <%= background_color_of_role(role_id_symbol.to_s.to_i) %>; <%= role_text_color(role_id_symbol.to_s.to_i) %>"> <%= Role.find(role_id_symbol.to_s.to_i).name %></span> :
+                      <% role = Role.find(role_id_symbol.to_s.to_i) %>
+                      <li> <span class="role-name" style="background-color:<%= role.color.hexadecimal_code %>; color: <%= role.color.dark?? "#f2f2f2" : "black" %>"> <%= role.name %></span> :
                         <%= team.join(", ") %>
                       </li>
                       <% end %>

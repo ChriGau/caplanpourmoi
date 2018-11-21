@@ -34,7 +34,6 @@ $(document).ready(function() {
   });
 
   var modalContent = document.querySelector(".this");
-    console.log(modalContent);
     var modalPosition = function(modal, position) {
     modal.style.setProperty('--postop', position -100 + "px");
   }

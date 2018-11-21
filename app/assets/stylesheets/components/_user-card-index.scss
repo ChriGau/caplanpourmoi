@@ -3,11 +3,13 @@
   width: 100px;
   border-radius: 50%;
   opacity:0.9;
+}
+
+a > .user-avatar-index {
   &:hover {
     opacity: 1;
   }
 }
-
 
 .plus-avatar {
   width: 100px;

@@ -5,6 +5,7 @@ class SlotsController < ApplicationController
   # Too much assignment, condition and branching
   def create
     slot_model = Slot.new(slot_params)
+    authorize slot_model
     user_id = User.find_by(first_name: 'no solution').id
     slot_list = []
     params[:nbemployees].to_i.times {slot_list << slot_model.dup}

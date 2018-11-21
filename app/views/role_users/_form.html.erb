@@ -2,19 +2,14 @@
   <%= f.error_notification %>
 
   <div class="form-group">
-    <ul class="list-inline categories">
-      <% count = 0 %>
-      <% list_of_roles_ids = Role.all.map(&:id) - User.find(@user.id).role_users.map(&:role_id) %>
-      <% list_of_roles_ids.each do |role| %>
+    <ul style="list-style-type: none; padding: 0px;">
+      <% @unallocated_roles.each do |role| %>
       <li>
-        <div class="col-xs-3 role metier" id=<%= Role.find(role).name %> style="background-color: <%= Role.find(role).color.hexadecimal_code%>;">
-          <label>
-            <%= Role.find(role).name %>
-            <%= check_box_tag "roles[]", Role.find(role).name, false, class: "hide", required: true %>
-          </label>
+        <div class="col-xs-3 role metier" id=<%= role.id %> style="background-color: <%= role.color.hexadecimal_code%>; color: <%= role.color.dark?? "#f2f2f2" : "black" %>">
+            <%= role.name %>
+            <%= check_box_tag "role_ids[]", role.id, false, class:"hide", required: true %>
         </div>
       </li>
-      <%  count += 1 %>
       <% end %>
     </ul>
   </div>

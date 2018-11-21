@@ -11,8 +11,18 @@
 #
 
 class Color < ApplicationRecord
-
   has_many :roles
 
+  def brightness
+    rgb = hexadecimal_code.gsub("#", "").scan(/../).map {|color| color.hex}
+    Math.sqrt(
+      0.299 * rgb[0]**2 +
+      0.587 * rgb[1]**2 +
+      0.114 * rgb[2]**2
+    )
+  end
 
+  def dark?
+    brightness < 150
+  end
 end
