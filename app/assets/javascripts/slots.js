@@ -1,13 +1,15 @@
 $(document).ready(function() {
   var modal = $(".modal-events");
 
-  // make roles draggable
+  // Highlight selected user on click
   $("input:checkbox.user-select").click(function(){
-    $(this).parent().parent().toggleClass("checked");
+    console.log("rpout")
+    $(this).parent().parent().parent().toggleClass("checked");
   });
 
-
+  // ?????? sert problablement à rien
   $("input:checkbox.role-checkbox").click(function() {
+    console.log("prout2")
     $(this).next().toggleClass("checked");
   })
 

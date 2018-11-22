@@ -69,6 +69,7 @@ class SlotsController < ApplicationController
 
   def update
     @slot = Slot.find(params[:id])
+    authorize @slot
     respond_to do |format|
       if @slot.update(slot_params)
         # do not respond to html format pk sinon on a 2 PATCH requests quand on

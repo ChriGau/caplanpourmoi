@@ -21,14 +21,13 @@ a {
 .equal{
   display: flex;
   flex-wrap: wrap;
-  margin-bottom: 10px;
 }
 .users-card-list {
   margin-bottom: 30px;
   position: relative;
   box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
   flex-grow : 1;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
   .orange {
     background-color:$myorange;
   }
@@ -59,10 +58,10 @@ a {
       display:flex;
       justify-content:space-between;
       align-items:center;
-      background: white;
       .name {
         align-self:center;
         padding-left: 10px;
+        padding-bottom: 5px;
         flex: 1 1 auto;
         word-break: break-all;
         h2 {
@@ -77,6 +76,13 @@ a {
           margin-bottom: 0px;
         }
       }
+      .name.small {
+        word-break: normal ;
+        h2 {
+          width: calc(100% - 40px);
+          height: 2em;
+        }
+      }
       .avatar {
         width:100px;
         height:100px;
@@ -84,20 +90,36 @@ a {
         margin-top:10px;
         margin-bottom: 10px
       }
+      .avatar-small{
+        width:70px;
+        height:70px;
+        border-radius: 50%;
+        position: absolute;
+        right: -25px;
+        top: -25px;
+
+      }
     }
     .details {
       text-align: center;
-      font-size: 0.9em;
+      font-size: 0.8em;
       .time-contract {
         width: 100%;
         background-color: $mylightgrey;
         color: white;
       }
+      .time-contract.small {
+        font-size: 0.8em;
+      }
       .row {
         margin: 0px;
-        margin-bottom: 5px;
-        border-top: solid 4px white;
       }
+    }
+
+    .role-tag {
+      font-size: 0.9em;
+      opacity: 0.8;
+      padding: 3px 0px;
     }
 
     .link {
