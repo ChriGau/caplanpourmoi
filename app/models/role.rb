@@ -22,6 +22,7 @@ class Role < ApplicationRecord
   has_many :solution_slots, through: :slots
   has_many :role_users
   belongs_to :color
+  has_many :slots
 
 
   # rubocop:disable MethodLength

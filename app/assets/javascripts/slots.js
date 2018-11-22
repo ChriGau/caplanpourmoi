@@ -3,13 +3,12 @@ $(document).ready(function() {
 
   // Highlight selected user on click
   $("input:checkbox.user-select").click(function(){
-    console.log("rpout")
     $(this).parent().parent().parent().toggleClass("checked");
   });
 
   // ?????? sert problablement à rien
   $("input:checkbox.role-checkbox").click(function() {
-    console.log("prout2")
+    alert("22 nov 18 je crois que ça sert // enlever si ça apparait");
     $(this).next().toggleClass("checked");
   })
 

@@ -26,19 +26,21 @@
       </div>
     </div>
 
-    <div class="row" style="height: 60px;">
-      <span class="btn-action use_template">Dupliquer</span>
-    </div>
-    <div class="row spacing">
-      <ul class="list-inline dragndrop-metiers">
-        <% @roles.each do |role| %>
-        <li style="background-color: <%= role.color.hexadecimal_code %>; color: <%= role.color.dark?? "#f2f2f2" : "black" %>"> <%= role.name.capitalize %></li>
-        <% end %>
-      </ul>
-    </div>
 
     <div class="row">
-      <div class="col-xs-12 le_calendrier">
+      <div class="col-xs-2">
+        <h3>Actions :</h3>
+        <button class="mybtn">Dupliquer</button>
+        <h3>Légende</h3>
+        <div class="">
+          <% @roles.each do |role| %>
+          <div class="role-tag text-center" style="background-color: <%= role.color.hexadecimal_code %>; color: <%= role.color.dark?? "#f2f2f2" : "black" %>">
+            <%= role.name.capitalize %>
+          </div>
+          <% end %>
+        </div>
+      </div>
+      <div class="col-xs-10 le_calendrier">
         <div id = "calendar">
         </div>
       </div>

@@ -5,38 +5,34 @@
 </div>
 
 <% set_step_status %>
-<div class="row">
+<div class="row" style="margin:0">
   <div class="steps">
     <div class="col-xs-2 step <%= @set_status1 %>">
-        <div class="step-num text-center">Etape 1</div>
         <div class="progress"><div class="progress-bar"></div></div>
-        <%= link_to "", planning_skeleton_path(@planning), class: "dot" %>
-        <div class="comment text-center">Organisation de la semaine</div>
+        <%= link_to "", planning_skeleton_path(@planning), {class: "dot un", 'data-toggle': "tooltip", title:"Faire le squelette de votre planning"}  %>
+        <div class="comment text-center">Orga</div>
         <div class="triangle hide"></div>
     </div>
     <div class="col-xs-2 step <%= @set_status2 %>">
-        <div class="step-num text-center">Etape 2</div>
         <div class="progress"><div class="progress-bar"></div></div>
-        <%= link_to "", planning_users_path(@planning), class: "dot" %>
-        <div class="comment text-center">Votre équipe pour la semaine</div>
+        <%= link_to "", planning_users_path(@planning), {class: "dot deux", 'data-toggle': "tooltip", title:"Constituer l'équipe de la semaine"} %>
+        <div class="comment text-center">Equipe</div>
         <div class="triangle hide"></div>
     </div>
         <div class="col-xs-2 step <%= @set_status3 %>">
-        <div class="step-num text-center">Etape 3</div>
         <div class="progress"><div class="progress-bar"></div></div>
-        <%= link_to "", planning_compute_solutions_path(@planning), class: "dot" %>
-        <div class="comment text-center">Vos solutions</div>
+        <%= link_to "", planning_compute_solutions_path(@planning), {class: "dot trois", 'data-toggle': "tooltip", title:"Analyser les solutions proposées par CPPM"}  %>
+        <div class="comment text-center">Solutions</div>
         <div class="triangle hide"></div>
     </div>
     <div class="col-xs-2 step <%= @set_status4 %>">
-        <div class="step-num text-center">Etape 4</div>
         <div class="progress"><div class="progress-bar"></div></div>
-        <%= link_to "", planning_conflicts_path(@planning, solution_id: @solution), class: "dot" %>
-        <div class="comment text-center">Votre planning</div>
+        <%= link_to "", planning_conflicts_path(@planning, solution_id: @solution), {class: "dot quatre", 'data-toggle': "tooltip", title:"Voir le Planning"} %>
+        <div class="comment text-center">Planning</div>
         <div class="triangle hide"></div>
     </div>
   </div>
-  <div class="col-xs-3">
+  <div class="col-xs-4">
       <%= @button_link %>
   </div>
 

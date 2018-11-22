@@ -1,10 +1,19 @@
+.fc th, .fc td  {
+  border-style: none;
+  padding: 2px;
+  border-width: 3px;
+}
+.fc table {
+  font-size: 1em;
+}
+
 #calendar {
   /*override le theme par defaut*/
   /*noms des jours*/
 
   // ligne au-dessus des heures pleines
   .fc-minor{
-    border-bottom: dotted $mysuperlightgrey 3px;
+    border-bottom: dotted $mysuperlightgrey 1px;
   }
 
   // ligne au dessous des heures pleines
@@ -12,10 +21,17 @@
     border-top: dotted white 0px;
   }
 
+  .fc-left > h2 {
+    font-size: 1.1em;
+  }
+
+  .fc-toolbar.fc-header-toolbar {
+    margin-bottom: 0.5em;
+  }
+
   .fc-day-header {
     color: $mygrey;
-    font-family: "Oswald";
-    font-size: 18px;
+    font-size: 0.8em;
   }
   /* contenu des colonnes*/
   .fc th, .fc td  {
@@ -29,39 +45,59 @@
   }
   // right buttons
   .fc-button-group {
-  font-family: "Robot";
-  font-size: 13px;
-}
+  font-size: 0.8em;
+  }
   /* axe y*/
   .fc-axis .fc-time .fc-widget-content {
     color: $mygrey;
-    font-family: "Oswald";
     font-size : 18px;
   }
   /*nom du role dans l'event*/
   .fc-title{
-   font-family: "Oswald";
    font-size: 12px;
   }
   /* active week/day button*/
-.fc-state-active {
+  .fc-state-active {
   color: white;
-  font-family: "Oswald";
   background-color: $myblue;
   }
-  .fc-button-group {
-    font-family: "Oswald";
+
+  .fc-state-default {
+    text-shadow:none
   }
-}
 
-.fc-content {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
+  .fc-button {
+    height: 1.3em;
+    line-height: 1.1em;
+    &:focus {
+      outline: none;
+    }
+  }
+  .fc-button-group {
+    &:focus {
+      outline: none;
+    }
+  }
 
-.fc-time-grid .fc-slats td {
-  height: 0.3em !important;
+  .fc-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .fc-time-grid .fc-slats td {
+    height: 0.3em !important;
+  }
+
+  /* border des events*/
+  .fc-time-grid-event {
+      border-radius: 10px;
+      border-width:0px;
+      box-shadow: 0px 0px 3.5px -1px white inset;
+      padding:2px;
+      padding-top: 7px;
+      padding: 3px;
+  }
 }
 
 #plannings-skeleton #calendar .fc-title {

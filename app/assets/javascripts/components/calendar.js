@@ -12,7 +12,7 @@ $('#calendar').fullCalendar({
       allDaySlot: false,
       locale: "fr",
       minTime: "07:00:00", // starting time, even when scrolled all the way up
-      maxTime: "22:00:00",
+      maxTime: "20:00:00",
       defaultView: "agendaWeek",
       hiddenDays: [ 0], // hider dimanche
       height: "auto", // implique pas de scroll à l'intérieur du calendrier
@@ -36,8 +36,8 @@ var modifyCalendar = function(events, defaultDate) {
   $('#calendar').fullCalendar({
     //calendar attributes
     header: {
-      left: 'prev, next',
       center: '', //title
+      left: 'prev, next',
       right: 'agendaWeek,agendaDay',
     },
     themeSystem: 'bootstrap3',
@@ -47,7 +47,7 @@ var modifyCalendar = function(events, defaultDate) {
     droppable: true, // allows things to be dropped onto the calendar
     selectable: true,
     minTime: "07:00:00", // starting time, even when scrolled all the way up
-    maxTime: "22:00:00",
+    maxTime: "20:00:00",
     defaultView: "agendaWeek",
     hiddenDays: [ 0], // hider dimanche
     height: "auto", // implique pas de scroll à l'intérieur du calendrier
