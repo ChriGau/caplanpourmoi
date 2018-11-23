@@ -162,13 +162,17 @@ class GoFindSolutionsV1Service
   # rubocop:enable For
 
   def grade_solution(solution)
-    # grade solution
       # conflicts_percentage => %
       conflicts_percentage = grading_conflicts_percentage(solution)
+      # decimal => nb seconds where conflicts / total hours slotgroups to simulate
       nb_users_six_consec_days_fail = grading_nb_users_six_consec_days_fail_and_nb_users_daily_hours_fail(solution)[:nb_users_six_consec_days]
+      # number of users
       nb_users_daily_hours_fail = grading_nb_users_six_consec_days_fail_and_nb_users_daily_hours_fail(solution)[:nb_users_daily_hours_fail]
+      # grade
       fitness = grading_fitness(solution)
+      # nb of users
       users_non_compact_solution = grading_compactness(solution, grading_nb_users_six_consec_days_fail_and_nb_users_daily_hours_fail(solution)[:nb_days_worked_per_users])
+      # final grade (/100)
       grade = get_final_grade(conflicts_percentage, nb_users_six_consec_days_fail, nb_users_daily_hours_fail, fitness, users_non_compact_solution)
   end
 
