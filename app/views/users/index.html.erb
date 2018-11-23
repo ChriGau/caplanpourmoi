@@ -1,5 +1,5 @@
 <div class="new-invite">
-  <%= link_to "Inviter un nouvel employé", new_user_path, class:"btn-primary btn-nav" %>
+    <%= link_to_if current_user.is_owner?, "Inviter un nouvel employé", new_user_path, class:"btn-primary btn-nav" %>
 </div>
 <div class="row equal">
   <% @users.each do |user| %>
@@ -37,7 +37,7 @@
               </div>
               <div class="row">
                 <% user.roles.each do |role| %>
-                  <div class="col-xs-12 col-sm-6 col-md-6" style="background-color: <%= role.color.id %>; <%= role_text_color(role.id) %>">
+                  <div class="col-xs-12 col-sm-6 col-md-6" style="background-color: <%= role.color.hexadecimal_code %>; color: <%= role.color.dark?? "#f2f2f2" : "black" %>">
                     <%= role.name %>
                   </div>
                 <% end %>

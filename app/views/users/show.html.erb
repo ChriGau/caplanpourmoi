@@ -1,9 +1,19 @@
 <br>
-<div class="col-xs-2 edit-profile-picture">
-  <%= avatar_with_border_color(@user) %>
-</div>
-<div class="col-xs-10">
-  <h1> <%= @user.first_name.capitalize %> <%= @user.last_name.capitalize %></h1>
+<div class="row mb">
+  <div class="col-xs-2 edit-profile-picture pointer">
+    <%= avatar_with_border_color(@user) %>
+  </div>
+  <div class="col-xs-10 name">
+    <ul class="list-inline" style="text-align:left">
+      <li><h1> <%= @user.first_name&.capitalize %> </h1></li>
+      <li><span class="fa fa-pencil modify-profile pointer" data-input="user_first_name"></span></li>
+    </ul>
+
+    <ul class="list-inline" style="text-align:left">
+      <li><h1> <%= @user.last_name&.capitalize %></h1></li>
+      <li><span class="fa fa-pencil modify-profile pointer" data-input="user_last_name"></span></li>
+    </ul>
+  </div>
 </div>
 <%= render "user_infos" %>
 <%= render "html_constraints_cal" %>

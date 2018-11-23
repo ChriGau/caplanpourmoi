@@ -34,7 +34,7 @@
               <div class="roles">
                 <p class="user-role">
                   <% user.roles.each do |role|  %>
-                    <span class="role-name" style=" background-color:<%= role.color.hexadecimal_code %>; <%= background_text_color_role(role) %> " >
+                    <span class="role-name" style=" background-color:<%= role.color.hexadecimal_code %>; color: <%= role.color.dark?? "#f2f2f2" : "black" %>">
                       <%= role.name.capitalize %>
                     </span>
                   <% end %>

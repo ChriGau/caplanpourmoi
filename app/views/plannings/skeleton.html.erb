@@ -31,8 +31,8 @@
     </div>
     <div class="row spacing">
       <ul class="list-inline dragndrop-metiers">
-        <% @slot_templates.each do |slot| %>
-        <li style="background-color: <%= slot.role.color.hexadecimal_code %>; <%= background_text_color(slot) %>"> <%= slot.role.name.capitalize %></li>
+        <% @roles.each do |role| %>
+        <li style="background-color: <%= role.color.hexadecimal_code %>; color: <%= role.color.dark?? "#f2f2f2" : "black" %>"> <%= role.name.capitalize %></li>
         <% end %>
       </ul>
     </div>

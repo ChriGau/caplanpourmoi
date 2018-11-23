@@ -1,17 +1,20 @@
 class UsersController < ApplicationController
+  before_action :set_user, only: [:show, :infos, :dispos, :reinvite, :update]
 
   def index
-    @users = User.where.not(id: User.find_by(first_name: "no solution")).order(:first_name)
+    @users = policy_scope(User)
+    authorize @users
   end
 
   # rubocop:disable AbcSize, MethodLength
   def show
-    @user = User.find(params[:id])
+    authorize @user
     @constraints = @user.constraints
     @constraint_categories = Constraint.categories
     @constraints_array = get_constraints_array(@constraints)
     @role_user = RoleUser.new
     @constraint = Constraint.new
+    @unallocated_roles = Role.all - @user.roles
     respond_to do |format|
       format.js
       format.html
@@ -20,12 +23,10 @@ class UsersController < ApplicationController
   # rubocop:enable AbcSize, MethodLength
 
   def infos
-    @user = User.find(params[:id])
   end
 
   # rubocop:disable AbcSize, MethodLength
   def dispos
-    @user = User.find(params[:id])
     @planning = Planning.first
     @constraints = @user.constraints
     @constraints_array =  get_constraints_array(@constraints)
@@ -34,6 +35,7 @@ class UsersController < ApplicationController
 
   def new
     @user = User.new
+    authorize @user
     @roles = Role.all
   end
 
@@ -51,7 +53,6 @@ class UsersController < ApplicationController
   end
 
   def reinvite
-    @user = User.find(params[:id])
     if @user.invitation_token.nil?
       @user.invitation_token = "provional"
       @user.save
@@ -61,10 +62,10 @@ class UsersController < ApplicationController
   end
 
   def update
-    @user = User.find(params[:id])
     # update working hours only
+    authorize @user
     if params[:user].keys[0] == "working_hours"
-      if @user.update(working_hours: params[:user][:working_hours].to_i)
+      if @user.update(user_params)
         redirect_to user_path(@user)
       end
       # update profile_picture only
@@ -81,11 +82,11 @@ class UsersController < ApplicationController
   private
 
   def user_params
-    params.require(:user).permit(:first_name, :last_name, :email, :working_hours, role_ids: [])
+    params.require(:user).permit(policy(@user).permitted_attributes)
   end
 
   def photo_params
-    params.require(:user).permit(:profile_picture)
+    params.require(:user).permit(policy(@user).permitted_attributes)
   end
 
   def set_title
@@ -118,6 +119,10 @@ class UsersController < ApplicationController
       array << a
     end
     array
+  end
+
+  def set_user
+    @user = User.find(params[:id])
   end
 
 end

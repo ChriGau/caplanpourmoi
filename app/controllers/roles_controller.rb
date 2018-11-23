@@ -1,4 +1,5 @@
 class RolesController < ApplicationController
+  before_action :set_role, only: [:edit, :update, :destroy]
   def index
     @list = Role.all
     @role = Role.new
@@ -6,6 +7,7 @@ class RolesController < ApplicationController
 
   def new
     @role = Role.new
+    authorize @role
     # colors not yet chosen for a role
     @color_collection = Color.all.map(&:id) - Role.all.map(&:color_id).uniq
     @color = Color.new
@@ -13,12 +15,13 @@ class RolesController < ApplicationController
 
   def create
     # if colors does not exist
-    if Color.find_by(hexadecimal_code: params["hexadecimal_code"]).nil?
+    if Color.find_by(hexadecimal_code: params["hexadecimal_code"].upcase).nil?
       # /!\ not elegant, a controller should only instanciate 1 object :/
       @color = Color.create(hexadecimal_code: params["hexadecimal_code"].upcase)
     end
-    @color_id = Color.find_by(hexadecimal_code: params["hexadecimal_code"]).id
+    @color_id = Color.find_by(hexadecimal_code: params["hexadecimal_code"].upcase).id
     @role = Role.new(color_id: @color_id, name: params_role["name"])
+    authorize @role
     if @role.save
       redirect_to plannings_path
     else
@@ -27,12 +30,11 @@ class RolesController < ApplicationController
   end
 
   def edit
-    @role = Role.find(params[:id])
+    authorize @role
     @color_collection = Color.all.map(&:id) - Role.all.map(&:color_id).uniq
   end
 
   def update
-    @role = Role.find(params[:id])
     # create color if color does not exist
     if params["hexadecimal_code"] != "#000000" && Color.find_by(hexadecimal_code: params["hexadecimal_code"]).nil?
       @color = Color.create(hexadecimal_code: params["hexadecimal_code"].upcase)
@@ -50,7 +52,6 @@ class RolesController < ApplicationController
   end
 
   def destroy
-    @role = Role.find(params[:id])
     if !@role.role_users.count.positive?
       if @role.destroy
         redirect_to plannings_path
@@ -62,6 +63,11 @@ class RolesController < ApplicationController
   end
 
   private
+
+  def set_role
+    @role = Role.find(params[:id])
+    authorize @role
+  end
 
   def params_role
     params.require(:role).permit(:name, :intermediate, :color_id)

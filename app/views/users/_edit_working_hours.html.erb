@@ -1,6 +1,9 @@
 <%= simple_form_for(@user) do |f| %>
   <%= f.error_notification %>
-  <%= f.input :working_hours, label: false, required: true %>
+  <%= f.input :working_hours, label: false, required: true, input_html: { class: "hide" }  %>
+  <%= f.input :email, label: false, required: true, input_html: { class: "hide" } %>
+  <%= f.input :first_name, label: false, required: true, input_html: { class: "hide" } %>
+  <%= f.input :last_name, label: false, required: true, input_html: { class: "hide" } %>
 
   <div class="row">
     <div class="col-xs-12">

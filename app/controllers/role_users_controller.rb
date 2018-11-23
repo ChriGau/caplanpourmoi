@@ -1,5 +1,6 @@
 class RoleUsersController < ApplicationController
-
+  before_action :set_user, only: [:create, :destroy]
+  before_action :set_role_user, only: [:destroy]
 
   def show
   end
@@ -10,22 +11,15 @@ class RoleUsersController < ApplicationController
 
   # rubocop:disable AbcSize, MethodLength
    def create
-    @user = User.find(params[:user_id])
-    roleuser_model = RoleUser.new
-    roleuser_model.update(user_id: @user.id, role_id: Role.find_by(name: params[:roles].first).id)
     roleuser_list = []
-    if params[:roles].length > 1
-      a = params[:roles].delete_at(0)
-      a.each do |role|
-          new_roleuser = roleuser_model.dup
-          new_roleuser.user = @user
-          new_roleuser.role = role
-          roleuser_list << new_roleuser
+    if params[:role_ids].length > 1
+      params[:role_ids].each do |id|
+        roleuser_list << RoleUser.new(user: @user, role: Role.find(id))
       end
     else
-      roleuser_list << roleuser_model
+      roleuser_list << RoleUser.new(user: @user, role: Role.find(id))
     end
-    @roleusers = @user.role_users
+    authorize RoleUser
     if @user.role_users << roleuser_list
       respond_to do |format|
         format.html { redirect_to user_path(@user) }
@@ -40,14 +34,26 @@ class RoleUsersController < ApplicationController
   end
 
   def destroy
-    @user = User.find(params[:user_id])
-    RoleUser.destroy(params[:id])
-    respond_to do |format|
-      format.js {render inline: "location.reload();" }
+    authorize @role_user
+    if @role_user.destroy
+      respond_to do |format|
+        format.js {render inline: "location.reload();" }
+      end
+    else
+      redirect_to user_path(@user)
     end
   end
 
   # rubocop:enable AbcSize, MethodLength
+  private
+
+  def set_user
+    @user = User.find(params[:user_id])
+  end
+
+  def set_role_user
+    @role_user = RoleUser.find(params[:id])
+  end
 
   def role_users_params
     params.require(:role_users).permit(:user_id, :role_id)

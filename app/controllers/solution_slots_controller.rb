@@ -1,11 +1,12 @@
 class SolutionSlotsController < ApplicationController
 
   before_action :set_planning, only: [:edit, :update]
+  before_action :set_solution_slot, only: [:edit, :update]
   # TODO => after update... + after_create
 
   def edit
     @solution = @planning.chosen_solution
-    @solution_slot = SolutionSlot.find(params[:id])
+    authorize @solution_slot
     @users_infos = @solution_slot.slot.get_infos_to_reaffect_slot
     @slot = @solution_slot.slot
     @assigned_user = User.find(@solution_slot.user_id)
@@ -13,7 +14,7 @@ class SolutionSlotsController < ApplicationController
   end
 
   def update
-    @solution_slot = SolutionSlot.find(params[:id])
+    authorize @solution_slot
     respond_to do |format|
       if @solution_slot.update(user_id: params["user_id"])
           format.js
@@ -31,5 +32,9 @@ class SolutionSlotsController < ApplicationController
 
   def solution_slot_params
     params.require(:solution_slot).permit(:user_id)
+  end
+
+  def set_solution_slot
+    @solution_slot = SolutionSlot.find(params[:id])
   end
 end
