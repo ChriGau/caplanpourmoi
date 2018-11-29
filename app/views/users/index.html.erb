@@ -37,7 +37,7 @@
               </div>
               <div class="row">
                 <% user.roles.each do |role| %>
-                  <div class="col-xs-12 col-sm-6 col-md-6" style="background-color: <%= role.color.hexadecimal_code %>; color: <%= role.color.dark?? "#f2f2f2" : "black" %>">
+                  <div class="col-xs-12 col-sm-6 col-md-6 role-tag" style="background-color: <%= role.color.hexadecimal_code %>; color: <%= role.color.dark?? "#f2f2f2" : "black" %>">
                     <%= role.name %>
                   </div>
                 <% end %>

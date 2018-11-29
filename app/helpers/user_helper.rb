@@ -11,11 +11,12 @@ module UserHelper
     end
   end
 
-  def profile_picture(user)
+  def profile_picture(user, size = "")
+    avatar = (size == "small")? 'avatar-small' : 'avatar'
     if user.profile_picture?
-      cl_image_tag user.profile_picture.path, class: 'avatar'
+      cl_image_tag user.profile_picture.path, class: avatar
     else
-      image_tag 'https://placehold.it/30x30', class: 'avatar'
+      image_tag 'https://placehold.it/30x30', class: avatar
     end
   end
 

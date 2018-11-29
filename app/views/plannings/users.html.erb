@@ -1,58 +1,51 @@
 
 <%= render 'shared/planningsteps', locals: {planning: @planning, url: @url} %>
 
-<div class="wrap-plan" >
+<div class="wrap-plan" style="padding-top:40px; padding-right: 40px" >
   <div class="row">
     <div class="roles-decrement">
     </div>
   </div>
 
-  <div class="row users">
-    <%= simple_form_for(@planning, html: { id: "user-submit-form"}) do |f| %>
+  <%= simple_form_for(@planning, html: { id: "user-submit-form"}) do |f| %>
+    <div class="row equal">
       <% @users.each do |user| %>
-        <div class="col-xs-12 col-sm-6 col-md-2 col-lg-2">
-          <div
-          class="card choice <%= @planning.users.include?(user) ? "checked" : "" %> "
-          >
-            <label>
-              <input
-              class="checkbox user-select"
-              type="checkbox"
-              name="planning[user_ids][]"
-              value="<%= user.id %>"
-              <%= @planning.users.include?(user) ? "checked" : "" %>
-              />
-
-                <%= cl_image_tag user.profile_picture.path, class: "picture circle" %>
-
-              <div class="first-name">
-                <%= user.first_name.capitalize! %>
-              </div>
-              <div class="working-hours">
-                <%= user.working_hours %> h/semaine
-              </div>
-              <div class="roles">
-                <p class="user-role">
-                  <% user.roles.each do |role|  %>
-                    <span class="role-name" style=" background-color:<%= role.color.hexadecimal_code %>; color: <%= role.color.dark?? "#f2f2f2" : "black" %>">
-                      <%= role.name.capitalize %>
-                    </span>
-                  <% end %>
-                </p>
-              </div>
-            </label>
+        <div class="col-xs-6 col-sm-4 col-md-2 equal">
+          <div class="users-card-list <%= @planning.users.include?(user) ? "checked" : "" %>" style="background-color: white" >
+            <div class="content">
+              <label style="text-align: left">
+                <input class="checkbox user-select" type="checkbox" name="planning[user_ids][]" value="<%= user.id %>"<%= @planning.users.include?(user) ? "checked" : "" %>/>
+                <div class="title">
+                  <div class="name small">
+                    <h2><%= "#{user.first_name&.capitalize} #{user.last_name&.capitalize}" %></h2>
+                    <p><%= user.working_hours%>h/semaine</p>
+                  </div>
+                  <%= profile_picture(user, "small") %>
+                </div>
+                <div class="details">
+                  <div class="row">
+                    <% user.roles.each do |role| %>
+                      <div class="col-xs-12 role-tag" style="background-color: <%= role.color.hexadecimal_code %>; color: <%= role.color.dark?? "#f2f2f2" : "black" %>">
+                        <%= role.name %>
+                      </div>
+                    <% end %>
+                  </div>
+                </div>
+              </label>
+            </div>
           </div>
         </div>
       <% end %>
-    <% end %>
-  </div>
+    </div>
+  <% end %>
 </div>
+
+
 
 <%= content_for(:after_js) do %>
     <script>
         $("#user-submit-btn").click(function(event){
           event.preventDefault();
-
           document.getElementById("user-submit-form").submit();
         });
     </script>
