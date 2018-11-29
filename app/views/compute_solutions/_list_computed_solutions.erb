@@ -18,45 +18,44 @@
               <blockquote>
                 <p>Planning</p>
                 <footer>
-                <%= computed_solution.p_nb_slots %> créneaux (<%= computed_solution.p_nb_hours %>heures)
-                <ul>
-                  <% computed_solution.p_nb_hours_roles.each do |role_id_symbol, hours|%>
-                    <% role = Role.find(role_id_symbol) %>
-                    <li><span class="role-name" style="background-color:<%= role.color.hexadecimal_code %>; color: <%= role.color.dark?? "#f2f2f2" : "black" %>"> <%= role.name %></span> : <%= hours %>h</li>
-                  <% end %>
+                  <%= computed_solution.p_nb_slots %> créneaux (<%= computed_solution.p_nb_hours %>heures)
+                  <ul>
+                    <% computed_solution.p_nb_hours_roles.each do |role_id_symbol, hours|%>
+                      <% role = Role.find(role_id_symbol) %>
+                      <li><span class="role-name" style="background-color:<%= role.color.hexadecimal_code %>; color: <%= role.color.dark?? "#f2f2f2" : "black" %>"> <%= role.name %></span> : <%= hours %>h</li>
+                    <% end %>
                   </ul>
-                  </footer>
-                </blockquote>
-              </div>
-              <div class="infos">
-                <blockquote>
-                  <p>Users</p>
-                  <footer>
-                    <%= computed_solution.team.values.flatten.uniq.count %> équipiers :
-                    <ul>
-                      <% computed_solution.team.each do |role_id_symbol, team| %>
-                      <% role = Role.find(role_id_symbol.to_s.to_i) %>
-                      <li> <span class="role-name" style="background-color:<%= role.color.hexadecimal_code %>; color: <%= role.color.dark?? "#f2f2f2" : "black" %>"> <%= role.name %></span> :
-                        <%= team.join(", ") %>
-                      </li>
-                      <% end %>
-                    </ul>
-                  </footer>
-                </blockquote>
-              </div>
-              <div class="infos">
-                <blockquote>
-                  <p>Solutions</p>
-                  <footer>
-                    <%= computed_solution.nb_optimal_solutions %> bonnes solutions
-                    <ul>
-                      <li>combinaisons : <%= computed_solution.nb_possibilities_theory %></li>
-                      <li>itérations : <%= computed_solution.nb_iterations %></li>
-                      <li>solutions proches : <%= computed_solution.nb_solutions %></li>
-                    </ul>
-                  </footer>
-                </blockquote>
-              </div>
+                </footer>
+              </blockquote>
+            </div>
+            <div class="infos">
+              <blockquote>
+                <p>Users</p>
+                <footer>
+                  <%= computed_solution.team.values.flatten.uniq.count %> équipiers :
+                  <ul>
+                    <% computed_solution.team.each do |role_id_symbol, team| %>
+                    <% role = Role.find(role_id_symbol.to_s.to_i) %>
+                    <li> <span class="role-name" style="background-color:<%= role.color.hexadecimal_code %>; color: <%= role.color.dark?? "#f2f2f2" : "black" %>"> <%= role.name %></span> :
+                      <%= team.join(", ") %>
+                    </li>
+                    <% end %>
+                  </ul>
+                </footer>
+              </blockquote>
+            </div>
+            <div class="infos">
+              <blockquote>
+                <p>Solutions</p>
+                <footer>
+                  <%= computed_solution.nb_optimal_solutions %> bonnes solutions
+                  <ul>
+                    <li>combinaisons : <%= computed_solution.nb_possibilities_theory %></li>
+                    <li>itérations : <%= computed_solution.nb_iterations %></li>
+                    <li>solutions proches : <%= computed_solution.nb_solutions %></li>
+                  </ul>
+                </footer>
+              </blockquote>
             </div>
           </div>
           <% if computed_solution.pending? %>
@@ -104,7 +103,6 @@
                     <%= link_to planning_solution_path(id: solution) do %>
                       <i class="fa fa-eye"></i>
                     <% end %>
-
                 </div>
               </div>
             <% end %>
