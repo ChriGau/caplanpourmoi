@@ -13,11 +13,11 @@ class RoleUsersController < ApplicationController
    def create
     roleuser_list = []
     if params[:role_ids].length > 1
-      params[:role_ids].each do |id|
-        roleuser_list << RoleUser.new(user: @user, role: Role.find(id))
+      params[:role_ids].each do |role_id|
+        roleuser_list << RoleUser.new(user: @user, role: Role.find(role_id))
       end
     else
-      roleuser_list << RoleUser.new(user: @user, role: Role.find(id))
+      roleuser_list << RoleUser.new(user: @user, role: Role.find(params[:role_ids].first))
     end
     authorize RoleUser
     if @user.role_users << roleuser_list

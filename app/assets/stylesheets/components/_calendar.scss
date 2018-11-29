@@ -54,6 +54,16 @@
   }
 }
 
+.fc-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.fc-time-grid .fc-slats td {
+  height: 0.3em !important;
+}
+
 #plannings-skeleton #calendar .fc-title {
     // display:none;
 }

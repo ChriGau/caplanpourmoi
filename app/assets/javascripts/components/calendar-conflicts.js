@@ -67,7 +67,7 @@ var modifyCalendar = function(events, defaultDate) {
 
 
         eventRender: function(event, element) {
-          element.find('.fc-title').html("<br/>" + "<img src= "+event.picture+" alt='' style='border-radius:60px;' >");
+          element.find('.fc-title').html("<img src= "+event.picture+" alt='' style='border-radius:60px; height: 3em' >");
         }
 
       }); // fin fullcalendar
