@@ -2,6 +2,7 @@
 
 <div class="wrap-plan">
   <%= render partial: 'list_computed_solutions', locals: {computed_solutions: @valid_compute_solutions} %>
+</div>
 <div class="history">
   <h3>Historique de calcul</h3>
   <%= render partial: 'list_computed_solutions', locals: {computed_solutions: @outdated_compute_solutions} %>

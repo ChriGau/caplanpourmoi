@@ -21,17 +21,13 @@ h2 {
   position:relative;
   margin-bottom:20px;
   border-radius:4px;
-  margin-top: 20px
 }
 
 .triangle {
   height:0px;
   width:0px;
-  border-left: 70px solid transparent;
-  border-right: 70px solid transparent;
+  border-left: 30px solid transparent;
+  border-right: 30px solid transparent;
   border-bottom: 20px solid $background;
-  left: 17%;
-  position:absolute;
-
 
 }

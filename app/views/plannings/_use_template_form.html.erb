@@ -1,12 +1,14 @@
 <%= simple_form_for [@planning] do |f| %>
   <%= f.error_notification %>
-    <div class="row">
+    <div class="row mr0 ml0">
       <% @plannings.each do |planning| %>
         <%= link_to planning_use_template_path(@planning, planning.id), method: :get do %>
-          <div class="col-xs-3 boxes list-inline <%= planning.status %>">
-            <b><%= "S#{planning.week_number}" %></b>-<%= planning.year %><br>
-            <%= planning_status_label(planning) %>
-            <p><%= parse_week_number(planning.week_number, planning.year) %></p>
+          <div class="col-xs-3 pl- pr- mb">
+            <div class="boxes <%= planning.status %>">
+              <b><%= "S#{planning.week_number}" %></b>-<%= planning.year %><br>
+              <%= planning_status_label(planning) %>
+              <p><%= parse_week_number(planning.week_number, planning.year) %></p>
+            </div>
           </div>
         <% end %>
       <% end  %>

@@ -44,5 +44,4 @@ $(document).ready(function() {
       $(".modal-use-template").modal('show');
     });
 
-
 });

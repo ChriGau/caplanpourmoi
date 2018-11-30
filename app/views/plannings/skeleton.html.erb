@@ -20,7 +20,7 @@
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
           <h4 class="modal-title">Utiliser un template</h4>
         </div>
-        <div class="modal-body">
+        <div class="modal-body pl pr">
             <%= render 'use_template_form' %>
         </div>
       </div>
@@ -28,19 +28,19 @@
 
 
     <div class="row">
-      <div class="col-xs-2">
-        <h3>Actions :</h3>
-        <button class="mybtn">Dupliquer</button>
+      <div class="col-xs-12 col-sm-2 flex-col">
         <h3>Légende</h3>
-        <div class="">
+        <div class="mb++">
           <% @roles.each do |role| %>
           <div class="role-tag text-center" style="background-color: <%= role.color.hexadecimal_code %>; color: <%= role.color.dark?? "#f2f2f2" : "black" %>">
             <%= role.name.capitalize %>
           </div>
           <% end %>
         </div>
+        <h3>Actions</h3>
+        <button class="mybtn mybtn--small use_template">Dupliquer</button>
       </div>
-      <div class="col-xs-10 le_calendrier">
+      <div class="col-xs-12 col-sm-10 le_calendrier">
         <div id = "calendar">
         </div>
       </div>
@@ -57,7 +57,6 @@
     var events = '<%= events_planning_path(@planning.id, format: :json) %>';
     var defaultDate = "<%= @planning.start_date %>";
     modifyCalendar(events, defaultDate);
-
   </script>
 <% end %>
 
