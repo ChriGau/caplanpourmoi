@@ -74,6 +74,7 @@ class GoFindSolutionsV1Service
     nb_cuts_within_tree = 0
     next_tree = nil
     next_branch = nil
+    solutions_array = []
     # init for grading solutions
     best_grade = 0
     grade = 0
@@ -121,7 +122,7 @@ class GoFindSolutionsV1Service
           grade = grade_solution(solution)
           # si note > best du moment, on stocke la solution
           # puts "iteration ##{iteration_id} ---- grade => #{grade}"
-          if grade > best_grade
+          if grade >= best_grade
             solutions_array << solution
             best_grade = grade
           end
@@ -165,23 +166,22 @@ class GoFindSolutionsV1Service
   def grade_solution(solution)
       # conflicts_percentage => %
       conflicts_percentage = grading_conflicts_percentage(solution)
-      puts "conflicts_percentage = #{conflicts_percentage}"
+      # puts "conflicts_percentage = #{conflicts_percentage}"
       # decimal => nb seconds where conflicts / total hours slotgroups to simulate
       nb_users_six_consec_days_fail = grading_nb_users_six_consec_days_fail_and_nb_users_daily_hours_fail(solution)[:nb_users_six_consec_days]
-      puts "number of users = #{nb_users_six_consec_days_fail}"
+      # puts "number of users = #{nb_users_six_consec_days_fail}"
       # number of users
       nb_users_daily_hours_fail = grading_nb_users_six_consec_days_fail_and_nb_users_daily_hours_fail(solution)[:nb_users_daily_hours_fail]
-      puts "nb_users_daily_hours_fail = #{nb_users_daily_hours_fail}"
+      # puts "nb_users_daily_hours_fail = #{nb_users_daily_hours_fail}"
       # grade
       fitness = grading_fitness(solution)
-      puts "fitness = #{fitness}"
+      # puts "fitness = #{fitness}"
       # nb of users
       users_non_compact_solution = grading_compactness(solution, grading_nb_users_six_consec_days_fail_and_nb_users_daily_hours_fail(solution)[:nb_days_worked_per_users])
-      puts "users_non_compact_solution = #{users_non_compact_solution}"
-      puts "----------------------------------------"
+      # puts "users_non_compact_solution = #{users_non_compact_solution}"
       # final grade (/100)
       grade = get_final_grade(conflicts_percentage, nb_users_six_consec_days_fail, nb_users_daily_hours_fail, fitness, users_non_compact_solution)
-      puts "grade = #{grade}"
+      puts "grade  GO THROUGH PLANNINGS = #{grade}"
       grade
   end
 
@@ -238,15 +238,12 @@ class GoFindSolutionsV1Service
     # => % : (overtime + undertime)/hplanning
     # TODO : affiner le cas où over/under >> hplanning
       fitness =  calculate_over_under_time(solution) / (@total_duration_sg/3600)
-      # puts "over_under_time => #{calculate_over_under_time(solution)}"
-      # puts "total duration => #{@total_duration_sg/3600}"
-      # puts "total availabilities => #{@total_availabilities}"
-      # puts "fitness => #{fitness}"
-      # puts "deviation => #{@total_availabilities / (@total_duration_sg/3600)}"
-
+      puts "total availabilities => #{@total_availabilities}"
+      puts "fitness => #{fitness}"
+      puts "deviation => #{@total_availabilities / (@total_duration_sg/3600)}"
     # get fitness score
     if @total_duration_sg > @total_availabilities
-      get_grading_fitness_score(fitness, @total_availabilities / (@total_duration_sg/3600))
+      get_grading_fitness_score(fitness, (@total_availabilities / (@total_duration_sg/3600))*100)
     else
       get_grading_fitness_score(fitness)
     end
@@ -267,11 +264,16 @@ class GoFindSolutionsV1Service
   def get_final_grade(conflicts_percentage, nb_users_six_consec_days_fail, nb_users_daily_hours_fail, fitness, compactness)
     # transforme les valeurs des critères en points selon le bareme défini
     # fitness is already a score
-    # puts_get_final_grade_details(conflicts_percentage, nb_users_six_consec_days_fail, nb_users_daily_hours_fail, fitness, compactness)
-    (score_conflicts_percentage(conflicts_percentage) +
-    score_nb_users_six_consec_days_fail(nb_users_six_consec_days_fail) +
-    score_nb_users_daily_hours_fail(nb_users_daily_hours_fail) +
-    fitness + score_compactness(compactness)) / 42*100
+    # puts "conflicts = #{score_conflicts_percentage(conflicts_percentage) }"
+    # puts "6 days = #{score_nb_users_six_consec_days_fail(nb_users_six_consec_days_fail)}"
+    # puts "daily hours = #{score_nb_users_daily_hours_fail(nb_users_daily_hours_fail)}"
+    # puts "fitness = #{fitness}"
+    # puts "compactness = #{score_compactness(compactness)}"
+    sum = (score_conflicts_percentage(conflicts_percentage).to_f +
+    score_nb_users_six_consec_days_fail(nb_users_six_consec_days_fail).to_f +
+    score_nb_users_daily_hours_fail(nb_users_daily_hours_fail).to_f +
+    fitness.to_f + score_compactness(compactness).to_f)
+    sum / 42 * 100
   end
 
   def pick_best_solutions(solutions_array, how_many_solutions_do_we_store)
@@ -342,7 +344,7 @@ class GoFindSolutionsV1Service
     # opening hours = 9-20 by default but we need to implement it as a manager's parameter
     result = 0
     @employees_involved.each do |employee|
-      availability_user_hours = 11 * @planning.number_of_days
+      availability_user_hours = employee.working_hours
       @planning.list_of_days.each do |date|
         duration = 0
         start_timeframe = DateTime.new(date.year, date.month, date.day, 9)
@@ -383,11 +385,11 @@ class GoFindSolutionsV1Service
   def get_grading_fitness_score(fitness, deviation = 0)
     case fitness
       when 0..deviation + 0.02
-        3
+        10
       when  deviation + 0.02..deviation + 0.04
-        2
+        7
       when  deviation + 0.04..deviation + 0.06
-        1
+        4
       else
         0
     end
@@ -400,11 +402,15 @@ class GoFindSolutionsV1Service
       # get number of seconds worked
       seconds_worked = 0
       solution.each do |solution_hash|
-        if solution_hash[:combination].include?(employee)
+        if solution_hash[:combination].include?(employee.id)
           seconds_worked += get_sg_duration_from_sg_id(solution_hash[:sg_id])
         end
       end
-      total += (employee.working_hours - seconds_worked/3600).abs
+      if seconds_worked/3600 > employee.working_hours
+        total += seconds_worked/3600 - employee.working_hours
+      else
+        total += employee.working_hours - seconds_worked/3600
+      end
     end
     total
   end
@@ -659,31 +665,31 @@ class GoFindSolutionsV1Service
   def works_today?(user, date, solution)
     # => { :result => true if in solution generated via go_through_planning, user works on date,
     # :nb_seconds => nb of seconds worked on this date }
-    #
     # solution = [ {:sg_id = 1, :combination = [] }, {...} ]
     list_of_sg_ids = []
     list_of_combinations = []
+    list_slotgroups = []
     # choper les id des slotgroups de cette date
     a = @duration_per_sg_array.select{ |x| x[:dates].include?(date) }
     a.each do |sg_hash|
       list_of_sg_ids << sg_hash.fetch_values(:sg_id)
     end
     list_of_sg_ids.flatten!
-    # récupérer les combinations correspondantes
+    # récupérer les ids des slotgroups dans lesquels le user bosse
     sg_solution = solution.select{ |y| list_of_sg_ids.include?(y[:sg_id]) }
     sg_solution.each do |solution_hash|
-      list_of_combinations << solution_hash.fetch_values(:combination)
-    end
-    list_of_combinations.flatten!
-    # user est dans combination?
-    if list_of_combinations.include?(user) or list_of_combinations.include?(user.id)
       # quand on vérifie sur une solution non saved, on a accès à un user_id, pas un User
+      if solution_hash[:combination].include?(user) or solution_hash[:combination].include?(user.id) then
+        list_slotgroups << solution_hash[:sg_id]
+      end
+    end
+    # user est dans au moins 1 combination?
+    if list_slotgroups.count.positive?
       # si oui, on retourne true + son nombre de seconds travaillées
       nb_seconds = 0
-      list_of_sg_ids.each do |sg_id|
+      list_slotgroups.each do |sg_id|
         nb_seconds += @duration_per_sg_array.select{ |x| x[:sg_id] == sg_id}.first[:duration]
       end
-      # @duration_per_sg_array.select{ |x| x[:sg_id] == sg_id}
       { works_today: true,
         nb_seconds:  nb_seconds
       }
@@ -699,7 +705,7 @@ class GoFindSolutionsV1Service
   end
 
   def get_sg_duration_from_sg_id(sg_id)
-    @duration_per_sg_array.select{ |x| x[:sg_id] == sg_id}[length_sec]
+    @duration_per_sg_array.select{ |x| x[:sg_id] == sg_id}.first[:duration]
   end
 
   def get_list_of_workers_for_a_solution(solution)
@@ -754,9 +760,5 @@ class GoFindSolutionsV1Service
       else
         0
     end
-  end
-
-  def puts_get_final_grade_details(conflicts_percentage, nb_users_six_consec_days_fail, nb_users_daily_hours_fail, fitness, compactness)
-    puts "#{conflicts_percentage} + #{nb_users_six_consec_days_fail} + #{nb_users_daily_hours_fail} + #{fitness} + #{compactness}"
   end
 end

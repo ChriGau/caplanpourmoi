@@ -22,8 +22,7 @@ class SaveSolutionsAndSolutionSlotsService
         solution_instance = create_solution # le'ts not store nb_overlaps car 'fixé' par go_through_plannings
         create_solution_slots(@slotgroups_array, solution, solution_instance)
         # calculate nb of conflicts now that the solution_lots have been created + determine relevance
-        solution_instance.evaluate_relevance
-        solution_instance.total_over_time
+        solution_instance.init
       end
     else
       solution_instance = create_solution(@compute_solution)

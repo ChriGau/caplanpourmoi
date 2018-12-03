@@ -1,0 +1,114 @@
+<div class="panel-group" id="accordion">
+  <% computed_solutions.each do |computed_solution| %>
+    <div class="panel panel-default">
+      <div class="panel-heading sol-head" data-id="<%= computed_solution.id %>">
+        <div class="panel-title" id="sol-list">
+          <%= link_to show_cs_details_path(@planning, computed_solution) do %>
+            <i class="fa fa-info" style="padding-right:5px; z-index: 10"></i>
+          <% end %>
+          <div class="sol-status label label-<%= computed_solution.ready? ? "success" : computed_solution.error? ? "danger" : "info" %>">
+            <%= t("computed_solutionution.status.#{computed_solution.status}")%>
+            <span class="badge badge-white">
+              <%= computed_solution.nb_optimal_solutions %>
+            </span> <br>
+            <small><%= l computed_solution.created_at, format: :default_heure %></small>
+          </div>
+          <div class="compute-props">
+            <div class="infos">
+              <blockquote>
+                <p>Planning</p>
+                <footer>
+                  <%= computed_solution.p_nb_slots %> créneaux (<%= computed_solution.p_nb_hours %>heures)
+                  <ul>
+                    <% computed_solution.p_nb_hours_roles.each do |role_id_symbol, hours|%>
+                      <% role = Role.find(role_id_symbol) %>
+                      <li><span class="role-name" style="background-color:<%= role.color.hexadecimal_code %>; color: <%= role.color.dark?? "#f2f2f2" : "black" %>"> <%= role.name %></span> : <%= hours %>h</li>
+                    <% end %>
+                  </ul>
+                </footer>
+              </blockquote>
+            </div>
+            <div class="infos">
+              <blockquote>
+                <p>Users</p>
+                <footer>
+                  <%= computed_solution.team.values.flatten.uniq.count %> équipiers :
+                  <ul>
+                    <% computed_solution.team.each do |role_id_symbol, team| %>
+                    <% role = Role.find(role_id_symbol.to_s.to_i) %>
+                    <li> <span class="role-name" style="background-color:<%= role.color.hexadecimal_code %>; color: <%= role.color.dark?? "#f2f2f2" : "black" %>"> <%= role.name %></span> :
+                      <%= team.join(", ") %>
+                    </li>
+                    <% end %>
+                  </ul>
+                </footer>
+              </blockquote>
+            </div>
+            <div class="infos">
+              <blockquote>
+                <p>Solutions</p>
+                <footer>
+                  <%= computed_solution.nb_optimal_solutions %> bonnes solutions
+                  <ul>
+                    <li>combinaisons : <%= computed_solution.nb_possibilities_theory %></li>
+                    <li>itérations : <%= computed_solution.nb_iterations %></li>
+                    <li>solutions proches : <%= computed_solution.nb_solutions %></li>
+                  </ul>
+                </footer>
+              </blockquote>
+            </div>
+          </div>
+          <% if computed_solution.pending? %>
+            <div><i class="fa fa-spinner fa-pulse"></i></div>
+          <% end %>
+        </div>
+      </div>
+
+      <div id="<%= computed_solution.id %>" class="panel-collapse collapse">
+        <div class="panel-body">
+          <div class="list-group">
+            <% computed_solution.solutions.each_with_index do |solution, index| %>
+              <div class="list-group-item sol-item <%= "chosen" if solution.chosen? %>">
+                <div class="sol-status label label-caplan">#<%= index + 1 %></div>
+                <div class="sol-details">
+                  <% unless solution.grade.nil? %>
+                  <strong>Note: <span class="badge badge-red"><%= solution.grade %></span></strong>
+                  <% end %>
+                  <strong> Indice de pertinence <span class="badge badge-blue" ><%= solution.relevance %></span></strong>
+                  <% unless (solution.nb_conflicts.nil? || solution.nb_conflicts.zero?)  %>
+                    <span class="badge badge-orange"> <%= pluralize(solution.nb_conflicts, "créneau vide", "créneaux vides") %></span>
+                  <% end %>
+                  <span class="badge badge-blue">
+                    extra/under hours : <%= s_in_h(solution.nb_extra_hours) %> / <%= s_in_h(solution.nb_under_hours) %>
+                  </span>
+                  <% @employees_nb_days = solution.employees_nb_days %>
+                  <% solution.employees_overtime.each do |e, s| %>
+                    <% if e != 'No solution' %>
+                    <%= e %> (<%= s > 0 ? "extra #{s_in_h(s)}" : "manque #{s_in_h(-s)}" %> en <%= @employees_nb_days[e.downcase] %> jours)
+                    <% else  %>
+                    <span class="badge badge-orange">
+                      <%= "heures non allouées =  #{s_in_h(-s)}" %>
+                    </span>
+                      <% end  %>
+                  <% end %>
+                </div>
+                <div class="action-group">
+                    <%= link_to change_effectivity_planning_solution_path(id: solution) do %>
+                      <% if solution.chosen? %>
+                        <i class="fa fa-check-circle"></i>
+                      <% else %>
+                        <i class="fa fa-circle-o"></i>
+                      <% end %>
+                    <% end %>
+                    <%= link_to planning_solution_path(id: solution) do %>
+                      <i class="fa fa-eye"></i>
+                    <% end %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
