@@ -28,7 +28,7 @@ puts ""
 def open_image(path)
   File.open(Rails.root.join("db", path), "r")
 end
-
+time_with_zone = Time.zone.now
 User.create!(email: "boss@boutique.com",
             working_hours: 50,
             is_owner: true,
@@ -107,7 +107,7 @@ Role.create!(name: "patron",
 puts "6 - Creating users (aka team members)"
 puts ""
 
-time_with_zone = Time.zone.now
+
 
 User.create!(email: "pierre@boutique.com",
             working_hours: 32,

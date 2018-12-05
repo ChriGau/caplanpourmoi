@@ -1,56 +1,33 @@
-<h1></h1>
-
-<div id = "calendar">
-</div>
-
-<%= content_for(:after_js) do %>
-<script>
-    // hide slot form
-    $("#slot_form").hide();
-    // make roles draggable
-    $('#my-draggable').draggable({
-      revert: true,      // immediately snap back to original position
-      revertDuration: 0  //
-    });
-    // assign default event data to draggable elements
-    $('.draggable').data('duration', '03:00');
-  </script>
-  <!-- enable bootstrap in simple form -->
-  <script type="text/javascript">
-    $(function () {
-      $('#datetimepicker1').datetimepicker();
-      $('#datetimepicker2').datetimepicker();
-    });
-  </script>
-  <script>
-    $('#calendar').fullCalendar({
-      //calendar attributes
-      header: {
-        left: 'prev, next',
-        center: '', //title
-        right: 'agendaWeek,agendaDay',
-      },
-      themeSystem: 'bootstrap3',
-      allDaySlot: false,
-      locale: "fr",
-      editable: true, // events on the calendar can be modified
-      droppable: true, // allows things to be dropped onto the calendar
-      selectable: true,
-      minTime: "07:00:00", // starting time, even when scrolled all the way up
-      maxTime: "22:00:00",
-      defaultView: "agendaWeek",
-      defaultDate: '<%= Date.commercial(@planning.year, @planning.week_number, 1).beginning_of_week %>', // s'ouvre sur le 1e lundi de la semaine sélectionnée
-      hiddenDays: [ 0], // hider dimanche
-      height: "auto", // implique pas de scroll à l'intérieur du calendrier
-      aspectRatio: 4,
-      events: '<%= resultevents_planning_path(@planning.id, solution_id: @solution.id, format: :json) %>',
+<div class="wrap-plan mt+" >
 
 
-      eventRender: function(event, element) {
-        element.find('.fc-title').html("<img src= "+event.picture+" alt='' style='border-radius:60px; height: 3em' >");
-      }
-    });
-
-  </script>
+  <% unless @solution.nil? %>
+    <div class="row">
+      <div class="col-xs-12 col-sm-2 flex-col">
+        <h3>Légende</h3>
+        <div class="mb++">
+          <% @roles.each do |role| %>
+          <div class="role-tag text-center" style="background-color: <%= role.color.hexadecimal_code %>; color: <%= role.color.dark?? "#f2f2f2" : "black" %>">
+            <%= role.name.capitalize %>
+          </div>
+          <% end %>
+        </div>
+      </div>
+      <div class="col-xs-12 col-sm-10 le_calendrier">
+        <div id = "calendar">
+        </div>
+      </div>
+    </div>
   <% end %>
 
+</div>
+
+<%= javascript_include_tag "components/calendar-conflicts" %>
+<%= content_for(:after_js) do %>
+
+  <script>
+    var events = '<%= resultevents_planning_path(@planning.id, solution_id: @solution.id, format: :json) %>';
+    var defaultDate = "<%= Date.commercial(@planning.year, @planning.week_number, 1).beginning_of_week %>";
+    modifyCalendar(events, defaultDate);
+  </script>
+<% end %>

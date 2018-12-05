@@ -5,6 +5,7 @@ class SolutionsController < ApplicationController
 
   def show
     authorize @solution
+    @roles = Role.all
   end
 
   def change_effectivity

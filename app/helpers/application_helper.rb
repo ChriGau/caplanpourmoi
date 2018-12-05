@@ -34,23 +34,23 @@ module ApplicationHelper
       @set_status2 = 'active'
       @set_status3 = 'disabled'
       @set_status4 = 'disabled'
-      @button_link = content_tag "a", 'Calcul du Planning', class: 'button', id: 'user-submit-btn'
+      @button_link = content_tag "a", 'Calcul', class: 'button', id: 'user-submit-btn'
     when 'index'
       @set_status1 = 'completed'
       @set_status2 = 'completed'
       @set_status3 = 'active'
       @set_status4 = 'disabled'
       if @solution
-        @button_link = link_to 'Voir le Planning', planning_conflicts_path(@planning, solution_id: @solution), class: 'button'
+        @button_link = link_to 'Planning', planning_conflicts_path(@planning, solution_id: @solution), class: 'button'
       else
-        @button_link = link_to 'Voir le Planning', planning_conflicts_path(@planning), class: 'button'
+        @button_link = link_to 'Planning', planning_conflicts_path(@planning), class: 'button'
       end
     else
       @set_status1 = 'completed'
       @set_status2 = 'completed'
       @set_status3 = 'completed'
       @set_status4 = 'active'
-      @button_link = link_to 'Retour au dashboard', plannings_path(@planning), class: 'button'
+      @button_link = link_to 'Dashboard', plannings_path(@planning), class: 'button'
 
     end
   end
