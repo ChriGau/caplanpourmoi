@@ -25,7 +25,7 @@ class SaveSolutionsAndSolutionSlotsService
         solution_instance.init
       end
     else
-      solution_instance = create_solution(@compute_solution)
+      solution_xinstance = create_solution(@compute_solution)
       create_solution_slots_for_a_group_of_slots(@planning.slots.pluck(:id), solution_instance)
       # calculate nb of conflicts now that the slots have been created
       solution_instance.evaluate_relevance
