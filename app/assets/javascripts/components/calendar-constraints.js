@@ -85,9 +85,9 @@ $('#calendar').fullCalendar({
   droppable: true, // allows things to be dropped onto the calendar
   selectable: true,
   minTime: "07:00:00", // starting time, even when scrolled all the way up
-  maxTime: "22:00:00",
+  maxTime: "20:00:00",
   defaultView: "agendaWeek",
-  hiddenDays: [ 0], // hider dimanche
+  hiddenDays: [0], // hider dimanche
   height: "auto", // implique pas de scroll à l'intérieur du calendrier
   aspectRatio: 4,
   defaultDate: defaultDate,

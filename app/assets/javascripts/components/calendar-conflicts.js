@@ -68,10 +68,23 @@ var modifyCalendar = function(events, defaultDate) {
 
         eventRender: function(event, element) {
           element.find('.fc-title').html("<img src= "+event.picture+" alt='' style='border-radius:60px; height: 3em' >");
+        },
+
+        eventAfterAllRender: function(view) {
+          const slots = Array.from(document.querySelectorAll('.fc-event-container > a'));
+          slots.forEach(slot => {
+            const upperSlots = slots.filter(upperSlot =>
+              parseInt(slot.style.zIndex) < parseInt(upperSlot.style.zIndex)
+            );
+            const overlap = upperSlots.some(upperSlot =>
+              (slot.getBoundingClientRect().x + slot.offsetWidth - 40 > upperSlot.getBoundingClientRect().x)
+            )
+            overlap ? slot.firstElementChild.style.display = "block" : "" ;
+          })
         }
 
-      }); // fin fullcalendar
 
+      }); // fin fullcalendar
 
     function show_image(src, width, height, alt) {
         var img = document.createElement("img");
@@ -80,5 +93,7 @@ var modifyCalendar = function(events, defaultDate) {
         img.height = height;
         img.alt = alt;
       };
+
+
 }
 

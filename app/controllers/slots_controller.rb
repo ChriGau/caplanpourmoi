@@ -88,6 +88,7 @@ class SlotsController < ApplicationController
 
   def destroy
     @slot = Slot.destroy(params[:id])
+    authorize @slot
     respond_to do |format|
       format.js  # <-- will render `app/views/slots/destroy.js.erb`
     end

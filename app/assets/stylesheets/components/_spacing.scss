@@ -1,14 +1,34 @@
-.mb { margin-bottom: 10px }
-.mr { margin-right: 10px }
-.ml { margin-left: 10px }
-.mt { margin-top: 10px }
+.mb0 { margin-bottom: 0px }
+.mr0 { margin-right: 0px }
+.ml0 { margin-left: 0px }
+.mt0 { margin-top: 0px }
 
 .mb\- { margin-bottom: 5px }
 .mr\- { margin-right: 5px }
 .ml\- { margin-left: 5px }
 .mt\- { margin-top: 5px }
 
+.mb { margin-bottom: 10px }
+.mr { margin-right: 10px }
+.ml { margin-left: 10px }
+.mt { margin-top: 10px }
+
 .mb\+ { margin-bottom: 15px }
 .mr\+ { margin-right: 15px }
 .ml\+ { margin-left: 15px }
 .mt\+ { margin-top: 15px }
+
+.mb\+\+ { margin-bottom: 25px }
+.mr\+\+ { margin-right: 25px }
+.ml\+\+ { margin-left: 25px }
+.mt\+\+ { margin-top: 25px }
+
+.pb\- { padding-bottom: 5px }
+.pr\- { padding-right: 5px }
+.pl\- { padding-left: 5px }
+.pt\- { padding-top: 5px }
+
+.pb { padding-bottom: 10px }
+.pr { padding-right: 10px }
+.pl { padding-left: 10px }
+.pt { padding-top: 10px }

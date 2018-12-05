@@ -115,13 +115,6 @@ a {
         margin: 0px;
       }
     }
-
-    .role-tag {
-      font-size: 0.9em;
-      opacity: 0.8;
-      padding: 3px 0px;
-    }
-
     .link {
       position: absolute;
       top: 0;
@@ -130,4 +123,10 @@ a {
       width:100%;
     }
   }
+}
+
+.role-tag {
+  font-size: 0.8em;
+  opacity: 0.8;
+  padding: 3px 0px;
 }
