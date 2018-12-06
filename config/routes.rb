@@ -73,6 +73,9 @@ Rails.application.routes.draw do
   root to: 'pages#home'
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   resources :plannings, only: [:show, :index, :update, :create] do
+    collection do
+      get '/ical', to: 'plannings#ical', as: 'ical'
+    end
     resources :slots, only: [:create, :edit, :show, :update, :resolve, :new, :destroy]
     resources :compute_solutions, only: [:index, :create]
     resources :solution_slots, only: [:edit, :update]
@@ -92,6 +95,7 @@ Rails.application.routes.draw do
   get 'plannings/:id/conflicts', to: 'plannings#conflicts', as: 'planning_conflicts'
   get 'plannings/:planning_id/compute_solution/:compute_solution_id', to: 'compute_solutions#show_calculation_details', as: 'show_cs_details'
   get 'plannings/:id/use_template/:planning_id', to: 'plannings#use_template', as: 'planning_use_template'
+
 
   resources :users, only: [:index, :show, :create, :new, :update] do
     resources :constraints, only: [:new, :create, :edit, :update, :destroy]

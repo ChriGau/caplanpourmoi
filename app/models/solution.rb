@@ -188,7 +188,7 @@ class Solution < ApplicationRecord
     # number of users where weekly hours > contract
     result = 0
     employees_involved.each do |employee|
-      result += 1 if nb_seconds_worked(self, employee)/3600 > employee.working_hours
+      result += 1 if employee.nb_seconds_worked(self) /3600 > employee.working_hours
     end
     update(nb_users_in_overtime: nb)
   end

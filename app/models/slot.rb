@@ -49,7 +49,7 @@ class Slot < ApplicationRecord
   end
 
   def chosen_solution
-    solutions.find_by(effectivity: :chosen)
+    solutions.chosen.first
   end
 
   def initialize_slot_hash
