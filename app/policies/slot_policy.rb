@@ -12,4 +12,8 @@ class SlotPolicy < ApplicationPolicy
   def update?
     user.is_owner
   end
+
+  def destroy?
+    user.is_owner
+  end
 end

@@ -14,16 +14,19 @@
   </div>
 
   <% unless @solution.nil? %>
-      <div class="row spacing">
-      <ul class="list-inline dragndrop-metiers">
-        <% @roles.each do |role| %>
-          <li style="background-color: <%= role.color.hexadecimal_code %>; color: <%= role.color.dark?? "#f2f2f2" : "black" %>"> <%= role.name.capitalize %></li>
-        <% end %>
-      </ul>
-    </div>
     <div class="row">
-      <div class="col-xs-12 le_calendrier">
-          <div id = "calendar">
+      <div class="col-xs-12 col-sm-2 flex-col">
+        <h3>Légende</h3>
+        <div class="mb++">
+          <% @roles.each do |role| %>
+          <div class="role-tag text-center" style="background-color: <%= role.color.hexadecimal_code %>; color: <%= role.color.dark?? "#f2f2f2" : "black" %>">
+            <%= role.name.capitalize %>
+          </div>
+          <% end %>
+        </div>
+      </div>
+      <div class="col-xs-12 col-sm-10 le_calendrier">
+        <div id = "calendar">
         </div>
       </div>
     </div>

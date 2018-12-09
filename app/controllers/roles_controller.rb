@@ -52,13 +52,13 @@ class RolesController < ApplicationController
   end
 
   def destroy
-    if !@role.role_users.count.positive?
+    if @role.users.empty? && @role.slots.empty? && @role.solution_slots.empty?
       if @role.destroy
         redirect_to plannings_path
-      else
-        flash[:error] = 'Impossible de supprimer le role - dépendances'
-        redirect_to plannings_path
       end
+    else
+      flash[:notice] = 'Impossible de supprimer le role - dépendances'
+      redirect_to plannings_path
     end
   end
 
