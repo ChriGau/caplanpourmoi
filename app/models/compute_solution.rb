@@ -82,7 +82,8 @@ class ComputeSolution < ApplicationRecord
       b = (timestamps_algo[6][1] - timestamps_algo[5][1]) / nb_slots
       calculate_calculation_length
       c = calculation_length / nb_slots
-      d = nb_iterations / nb_possibilities_theory
+      # si need_a_calcul = false => d = 0
+      nb_iterations.nil? ? d = 0 : d = nb_iterations / nb_possibilities_theory
       update(solution_storing_mean_time_per_slot: a,
         go_through_solutions_mean_time_per_slot: b,
         mean_time_per_slot: c,

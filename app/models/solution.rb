@@ -69,6 +69,7 @@ class Solution < ApplicationRecord
     # puts "fitness = #{self.fitness}"
     # puts "**********************************"
     rate_solution(deviation_for_fitness)
+    self # renvoyer l'instance pour la récupérer dans SaveSolutionsAndSoltionSlotsService
   end
 
   def evaluate_relevance
