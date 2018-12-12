@@ -7,11 +7,11 @@
 class CreateSlotgroupsService
   attr_accessor :slots_array, :planning, :users, :calcul, :slotgroups_array
 
-  def initialize(slots_array, planning, calcul_solution_v1_instance)
-    @slots_array = slots_array # [ {} , {} ]
-    @planning = planning
+  def initialize( attributes = {} )
+    @slots_array = attributes[:slots_array] # [ {} , {} ]
+    @planning = attributes[:planning]
     @users = @planning.users
-    @calcul = calcul_solution_v1_instance
+    @calcul = attributes[:calcul_solution_v1_instance]
   end
 
   # rubocop:disable AbcSize
@@ -38,7 +38,7 @@ class CreateSlotgroupsService
     # timestamps t3
     t = @calcul.compute_solution.timestamps_algo << ["t3", Time.now]
     @calcul.compute_solution.update(timestamps_algo: t)
-    # { slotgroups_array: slotgroups_array, slots_array: slots_array }
+    # return les slotgroups qui ne sont pas à simuler
   end
 
   # rubocop:enable AbcSize

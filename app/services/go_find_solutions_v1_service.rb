@@ -11,10 +11,10 @@ class GoFindSolutionsV1Service
 
   require 'csv'
 
-  def initialize(planning, slotgroups_array, compute_solution_instance)
-    @slotgroups_array = slotgroups_array
-    @planning = planning
-    @compute_solution = compute_solution_instance
+  def initialize( attributes = {} )
+    @slotgroups_array = attributes[:slotgroups_array]
+    @planning = attributes[:planning]
+    @compute_solution = attributes[:compute_solution]
     @no_solution_user_id = determine_no_solution_user.id
     @employees_involved = @planning.users # Array of users
     # stocker plannings et solutions previous/next pour DRY - sert au grading

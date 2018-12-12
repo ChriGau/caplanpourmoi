@@ -2,14 +2,14 @@
 # output => creates instances of Solution and their associated SolutionSlots
 class SaveSolutionsAndSolutionSlotsService
 
-  def initialize(slotgroups_array,
-    slots_array, planning, compute_solution_instance = nil, list_of_solutions = nil)
-    @slotgroups_array = slotgroups_array # contains also slotgroups not simulated
-    @slots_array = slots_array # contains also slotgroups not simulated
-    @planning = planning
-    @compute_solution = compute_solution_instance
-    @list_of_solutions = list_of_solutions
+  def initialize(attributes = {})
+    @slotgroups_array = attributes[:slotgroups_array] # contains also slotgroups not simulated
+    @slots_array = attributes[:slots_array] # contains also slotgroups not simulated
+    @planning = attributes[:planning]
+    @compute_solution = attributes[:compute_solution] || nil
+    @list_of_solutions = attributes[:list_of_solutions] || nil
     @no_solution_user = [User.find_by(first_name: 'no solution').id]
+    @slots_not_to_simulate = attributes[:slots_not_to_simulate]
   end
 
   def perform
@@ -18,18 +18,16 @@ class SaveSolutionsAndSolutionSlotsService
     @compute_solution.update(timestamps_algo: t)
     if !@list_of_solutions.nil?
       @list_of_solutions.each do |solution|
-        # solution_instance = create_solution(@compute_solution, solution[:nb_overlaps])
-        solution_instance = create_solution # le'ts not store nb_overlaps car 'fixé' par go_through_plannings
+        solution_instance = create_solution
         create_solution_slots(@slotgroups_array, solution, solution_instance)
-        # calculate nb of conflicts now that the solution_lots have been created + determine relevance
+        create_no_solution_solution_slots(@slots_not_to_simulate, solution_instance)
         solution_instance.init
       end
     else
-      solution_xinstance = create_solution(@compute_solution)
+      # solution_instance = create_solution(@compute_solution)
       create_solution_slots_for_a_group_of_slots(@planning.slots.pluck(:id), solution_instance)
-      # calculate nb of conflicts now that the slots have been created
-      solution_instance.evaluate_relevance
-
+      create_no_solution_solution_slots(@slots_not_to_simulate, solution_instance)
+      solution_instance.init
     end
     # timestamp t7
     t = @compute_solution.timestamps_algo << ["t7", Time.now]
@@ -112,5 +110,13 @@ class SaveSolutionsAndSolutionSlotsService
   def create_solution_slot_instance(slot_id, user_id, solution_instance)
     s = SolutionSlot.create(solution: solution_instance, :slot_id => slot_id, user_id: user_id)
     # TODO, s.extra_hours
+  end
+
+  def create_no_solution_solution_slots(slots_not_to_simulate, solution_instance)
+    unless slots_not_to_simulate.empty?
+      slots_not_to_simulate.each do |slot_id|
+        SolutionSlot.create(solution: solution_instance, :slot_id => slot_id, user_id: @no_solution_user.first)
+      end
+    end
   end
 end
