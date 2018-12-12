@@ -15,6 +15,16 @@ class GoFindSolutionsV1Service
     @slotgroups_array = slotgroups_array
     @planning = planning
     @compute_solution = compute_solution_instance
+    @no_solution_user_id = determine_no_solution_user.id
+    @employees_involved = @planning.users # Array of users
+    # stocker plannings et solutions previous/next pour DRY - sert au grading
+    @previous_planning = @planning.get_previous_week_planning
+    @previous_planning_solution = @previous_planning.chosen_solution if !@previous_planning.nil?
+    @next_planning = @planning.get_next_week_planning
+    @next_planning_solution = @next_planning.chosen_solution if !@next_planning.nil?
+    @duration_per_sg_array = determine_duration_per_sg_array # [ {:sg_id = 1 , length_sec = 1, :dates = [d1 (,d2)] }, {...} ]
+    @total_duration_sg = determine_total_duration_sg # sum of previous (decimal, sec)
+    @total_availabilities = determine_total_availabilities # useful for grading fitness
   end
 
   def perform
@@ -64,6 +74,12 @@ class GoFindSolutionsV1Service
     nb_cuts_within_tree = 0
     next_tree = nil
     next_branch = nil
+    solutions_array = []
+    # init for grading solutions
+    best_grade = -1
+    grade = 0
+
+    # let's HIT THE TREE
     for tree in 1..nb_trees
       for branch in 1..nb_branches
         planning_possibility = []
@@ -101,8 +117,16 @@ class GoFindSolutionsV1Service
           solution = planning_possibility_leaner_version(planning_possibility)
           #  où planning_possibility = [:sg_id, :combination = [id1, id2,...] ]
           # on enlèvera les doublons de solutions + tard car sinon la ligne ci-dessous est très consommatrice
-          solutions_array << solution # unless solutions_array.select{|x| x == solution}.count.positive?
 
+          # on note la solution
+          grade =  GradeSolutionService.new(solution, @total_duration_sg,
+            @no_solution_user_id, @duration_per_sg_array, @planning,
+            @total_availabilities, @employees_involved).perform
+          # si note > best du moment, on stocke la solution
+          if grade > best_grade
+            solutions_array << solution
+            best_grade = grade
+          end
                                # {
                                # solution_id: solution_id,
                                # possibility_id: possibility_id,
@@ -112,6 +136,7 @@ class GoFindSolutionsV1Service
                                # }
           # toutes les 1000 solutions, on enlève les doublons de solutions
           # (les doublons peuvent apparaître lorsque l'on résout les conflits)
+          # preferer uniq plutôt que stocker solution # unless solutions_array.select{|x| x == solution}.count.positive?
           solutions_array.uniq! if solution_id % 1000 == 0
         else
           # cut off all similar possibilities
@@ -122,7 +147,8 @@ class GoFindSolutionsV1Service
           nb_cuts_within_tree += 1
         end
         iteration_id += 1
-        puts '...... iteration ' + iteration_id.to_s
+        # n'afficher que toutes les 1000 iterations pour ne pas impacter la perf en affichage
+        puts '...... iteration #{iteration_id.to_s}' if iteration_id % 1000 == 0
         # Let's not store all the possibilities to make this LEANER
         # test_possibilities << planning_possibility
       end
@@ -130,8 +156,7 @@ class GoFindSolutionsV1Service
     # FOR TESTING --> storing the planning possibilities in a CSV
     store_planning_possibilities_to_csv(solutions_array) if Rails.env.test?
     calculation_abstract = determine_calculation_abstract(iteration_id, nb_cuts_within_tree)
-    {
-      # test_possibilities: test_possibilities,
+    { # test_possibilities: test_possibilities,
       solutions_array: solutions_array,
       # best_solution: nil,
       calculation_abstract: calculation_abstract }
@@ -139,7 +164,7 @@ class GoFindSolutionsV1Service
 
   # rubocop:enable For
 
-def pick_best_solutions(solutions_array, how_many_solutions_do_we_store)
+  def pick_best_solutions(solutions_array, how_many_solutions_do_we_store)
     # Selects X solutions from a collection of solutions.
     # several solutions with 0 conflicts? => pick the last X ones
     # else, we pick the last X ones
@@ -168,6 +193,31 @@ def pick_best_solutions(solutions_array, how_many_solutions_do_we_store)
 
   # rubocop:enable GuardClause
 
+  def determine_duration_per_sg_array
+    # => [ {:sg_id, :duration in sec, :dates = [d1 (,d2)] } , {...} ]
+    # get duration of each slotgroup
+    # is then used to grade the solutions
+    result = []
+    slotgroups_array.each do |sg_hash|
+      # mettre les dates auxquelles appartient le slotgroup pour pouvoir estimer ensuite le six_consec_days_fail
+      if sg_hash.start_at.to_date != sg_hash.end_at.to_date
+        dates = [ sg_hash.start_at.to_date, sg_hash.end_at.to_date]
+      else
+        dates = [sg_hash.start_at.to_date]
+      end
+      result << { sg_id: sg_hash.id,
+                  duration: (sg_hash.end_at - sg_hash.start_at),
+                  dates: dates }
+    end
+    result
+  end
+
+  def determine_total_duration_sg
+    # length (sec) of all slotgroups
+    # = la durée de tous les slots du planning, car sg_array peut <> planning si certains sont sans solution d'entrée
+    @planning.slots_total_duration * 3600
+  end
+
   def determine_calculation_abstract(iteration_id, nb_cuts_within_tree)
     { nb_solutions: calculate_nb_solutions,
       nb_optimal_solutions: calculate_nb_optimal_solutions,
@@ -175,6 +225,27 @@ def pick_best_solutions(solutions_array, how_many_solutions_do_we_store)
       nb_possibilities_theory: nb_trees * nb_branches,
       nb_cuts_within_tree: nb_cuts_within_tree,
     }
+  end
+
+  def determine_total_availabilities
+    # => working hours of each employee - hard constraints if they have any
+    # opening hours = 9-20 by default but we need to implement it as a manager's parameter
+    result = 0
+    @employees_involved.each do |employee|
+      availability_user_hours = employee.working_hours
+      @planning.list_of_days.each do |date|
+        duration = 0
+        start_timeframe = DateTime.new(date.year, date.month, date.day, 9)
+        end_timeframe = DateTime.new(date.year, date.month, date.day, 20)
+        employee.constraints.where('start_at <= ? and end_at >= ? and category != ?',
+        end_timeframe, start_timeframe, Constraint.categories['preference']).each do |constraint|
+          duration = constraint_duration_according_to_timeframe(constraint, 9, 20)
+          availability_user_hours -= duration
+        end
+      end
+    result += availability_user_hours
+    end
+    result
   end
 
   def go_to_next_knot(tree, branch, sg_ranking)
@@ -196,8 +267,8 @@ def pick_best_solutions(solutions_array, how_many_solutions_do_we_store)
     end
     return planning_possibility
   end
-  private
 
+  private
 
   def init_overlaps_best_scoring
     # max of overlaps = all users are in overlap for all sg
@@ -354,7 +425,6 @@ def pick_best_solutions(solutions_array, how_many_solutions_do_we_store)
       @compute_solution.calcul_solution_v1.slotgroups_array.each do |slotgroup|
         slotgroup.overlaps.each do |overlaps| # overlaps => [ {}, {},... ]
           # mettre les users du sg overlappé en overlap à no solution
-          # binding.pry
           users_overlapped_sg = planning_possibility.select{ |h| h[:sg_id] == overlaps[:slotgroup_id] }.first[:combination] # => Array of users'ids
           users_initial_sg = planning_possibility.select{ |h| h[:sg_id] == slotgroup.id }.first[:combination]
           users_overlapped_sg.each do |user_id|
@@ -421,5 +491,4 @@ def pick_best_solutions(solutions_array, how_many_solutions_do_we_store)
       end
     end
   end
-
 end

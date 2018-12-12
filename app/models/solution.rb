@@ -45,12 +45,12 @@ class Solution < ApplicationRecord
   enum effectivity: [:not_chosen, :chosen]
   enum relevance: [:optimal, :partial]
 
-  after_create :init
-
   # nb_overlaps already given as a parameter when algo creates a solution
 
   # Note: Solution gets updated when one of its SolutionSlot is updated
   def init
+    # triggered when 1) Solution + its SolutionSlots have been created (=>inside
+    # SaveSolutionAndSolutionSlots Service) or 2)SolutionSlots gets updated
     # evaluate attributes and grade
     total_over_time
     evaluate_relevance
@@ -60,8 +60,15 @@ class Solution < ApplicationRecord
     evaluate_nb_users_daily_hours_fail
     evaluate_compactness
     evaluate_nb_users_in_overtime
-    evaluate_fitness
-    rate_solution
+    deviation_for_fitness = evaluate_fitness
+    # puts "**********************************"
+    # puts "conflicts_percentage = #{self.conflicts_percentage}"
+    # puts "nb_users_six_consec_days_fail = #{self.nb_users_six_consec_days_fail}"
+    # puts "nb_users_daily_hours_fail = #{self.nb_users_daily_hours_fail}"
+    # puts "compactness = #{self.compactness}"
+    # puts "fitness = #{self.fitness}"
+    # puts "**********************************"
+    rate_solution(deviation_for_fitness)
   end
 
   def evaluate_relevance
@@ -184,6 +191,7 @@ class Solution < ApplicationRecord
     update(nb_users_daily_hours_fail: nb_fails)
   end
 
+
   def evaluate_nb_users_in_overtime
     # number of users where weekly hours > contract
     result = 0
@@ -214,12 +222,20 @@ class Solution < ApplicationRecord
 
   def evaluate_fitness
     # |under + overtime| / hplanning, modulo deviation. ratio (295 <=> 295%)
-    working_hours = users.map(&:working_hours).inject(:+).to_f
-    nb_extra_hours.zero? && nb_under_hours.zero? ? fitness = 100 : fitness = ((nb_extra_hours/3600 + nb_under_hours.abs/3600) / working_hours)*100
-    update(fitness: fitness.round(1).to_f)
+    total_availabilities = employees_involved.map(&:working_hours).inject(:+).to_f
+    nb_hours_planning = planning.slots_total_duration #hours, decimal
+    nb_extra_hours.zero? && nb_under_hours.zero? ? fitness = 100 : fitness = ((nb_extra_hours/3600 + nb_under_hours.abs/3600) / nb_hours_planning)*100
+    # puts "nb under = #{nb_under_hours/3600}"
+    # puts "nb extra hours = #{nb_extra_hours/3600}"
+    # puts "over-under = #{nb_under_hours.abs/3600 + nb_extra_hours/3600}"
+    # puts "total_availabilities = #{total_availabilities}"
+    # puts "fitness = #{fitness}"
+    # puts "planning duration = #{planning.slots_total_duration}"
+    update(fitness: fitness.round(1)/100)
+    deviation = total_availabilities / planning.slots_total_duration
   end
 
-  def rate_solution
+  def rate_solution(deviation)
     points = 0
     # conflicts_percentage
     if conflicts_percentage == 0
@@ -232,23 +248,27 @@ class Solution < ApplicationRecord
     # 6 days rule
     points += 10 if nb_users_six_consec_days_fail == 0
     # daily hours respect
-    points += 10 if nb_users_daily_hours_fail
-    if fitness <= 0.02
-      points += 10
-    elsif fitness > 0.02 && fitness <= 0.04
-      points += 7
-    elsif fitness > 0.04 && fitness <= 0.06
-      points += 4
+    points += 10 if nb_users_daily_hours_fail.zero?
+    # fitness
+    case fitness
+      when 0..deviation + 0.02
+        points += 10
+      when  deviation + 0.02..deviation + 0.04
+        points += 7
+      when  deviation + 0.04..deviation + 0.06
+        points += 4
     end
     # compactness
     if compactness == 0
       points += 2
-    elsif compactness <= users.count
+    elsif compactness == 1
       points += 1
     end
     # turn points into grade /100
     total_points = 42.0 # points max étant doné le bareme actuel
     grade = (points / total_points * 100).round(0)
+    # puts "*** GRADE => #{points}"
+    # puts "real grade = #{points/total_points * 100}"
     update(grade: grade)
   end
 
