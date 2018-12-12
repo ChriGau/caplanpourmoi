@@ -21,9 +21,13 @@ class UserPolicy < ApplicationPolicy
     user.is_owner? || user == record
   end
 
+  def user_invite?
+    user.is_owner
+  end
+
   def permitted_attributes
     if user.is_owner?
-      [:profile_picture, :first_name, :last_name, :email, :working_hours, role_ids: []]
+      [:profile_picture, :first_name, :last_name, :email, :is_owner, :working_hours, role_ids: []]
     elsif record == user
       [:profile_picture, :email, :first_name, :last_name]
     else

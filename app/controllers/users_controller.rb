@@ -41,6 +41,7 @@ class UsersController < ApplicationController
 
   def user_invite
     @user = User.new(user_params)
+    authorize @user
     @roles = Role.all
     @user.password = Devise.friendly_token.first(8)
     if @user.valid?
@@ -82,7 +83,7 @@ class UsersController < ApplicationController
   private
 
   def user_params
-    params.require(:user).permit(policy(@user).permitted_attributes)
+    params.require(:user).permit(policy(User).permitted_attributes)
   end
 
   def photo_params
