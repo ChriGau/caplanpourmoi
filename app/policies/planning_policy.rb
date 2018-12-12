@@ -41,4 +41,8 @@ class PlanningPolicy < ApplicationPolicy
     user.is_owner
   end
 
+  def ical?
+    true
+  end
+
 end

@@ -125,6 +125,9 @@ GEM
       domain_name (~> 0.5)
     i18n (0.9.1)
       concurrent-ruby (~> 1.0)
+    icalendar (2.5.1)
+      ice_cube (~> 0.16)
+    ice_cube (0.16.3)
     jbuilder (2.7.0)
       activesupport (>= 4.2.0)
       multi_json (>= 1.2)
@@ -329,6 +332,7 @@ DEPENDENCIES
   font-awesome-sass
   fullcalendar-rails
   google_charts
+  icalendar
   jbuilder (~> 2.0)
   jquery-fileupload-rails
   jquery-rails
@@ -362,4 +366,4 @@ RUBY VERSION
    ruby 2.3.4p301
 
 BUNDLED WITH
-   1.16.0
+   1.17.1

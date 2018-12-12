@@ -2,6 +2,7 @@
 class PlanningsController < ApplicationController
   before_action :set_planning, only: [:skeleton, :users, :conflicts, :events,
                                       :resultevents, :update, :use_template]
+  skip_before_action :authenticate_user!, only: :ical
 
   # rubocop:disable AbcSize
 
@@ -125,6 +126,47 @@ class PlanningsController < ApplicationController
       )
     end
   redirect_to planning_skeleton_path
+  end
+
+  def ical
+    skip_authorization
+    @user = User.find_by(key: params[:key]) || false
+    raise Exception.new("this calendar doesn't exist") if !@user || params[:key].nil?
+
+    @slots = SolutionSlot.where(user_id: @user)
+                         .joins(:solution)
+                         .where(solutions: { effectivity: 'chosen' })
+                         .map(&:slot)
+                         .sort_by(&:start_at)
+
+    slots_month_groups = @slots.group_by { |slot| slot.start_at.strftime('%m') }
+    slots_week_groups = @slots.group_by { |slot| slot.start_at.strftime('%U') }
+
+    respond_to do |format|
+      format.ics do
+        cal = Icalendar::Calendar.new
+        name = "#{@user.first_name}"
+        cal.x_wr_calname = "Ecomotive de #{@user.first_name.capitalize}"
+        @slots.each_with_index do |slot, index|
+          month_slots = slots_month_groups[slot.start_at.strftime('%m')]
+          week_slots = slots_week_groups[slot.start_at.strftime('%U')]
+          total_month = month_slots.map(&:length).reduce(:+)
+          total_week = week_slots.map(&:length).reduce(:+)
+          index = month_slots.index(slot)
+          hours_worked = month_slots.slice(0, index + 1).map(&:length).reduce(:+)
+          cal.event do |e|
+            e.dtstart     = slot.start_at
+            e.dtend       = slot.end_at
+            e.summary     = "#{slot.role.name} ##{slot.length/3600}h/#{total_week/3600}h cette semaine"
+            e.description = "Ce moi ci:\nTotal travaillé / Total à travailler :\n#{hours_worked/3600}h / #{total_month/3600}h\n"
+          end
+        end
+        cal.publish
+        render plain: cal.to_ical
+      end
+      format.html do
+      end
+    end
   end
 
   private
