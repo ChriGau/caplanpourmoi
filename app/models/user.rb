@@ -27,6 +27,7 @@
 #  invited_by_type        :string
 #  invited_by_id          :integer
 #  invitations_count      :integer          default(0)
+#  key                    :string
 #
 # Indexes
 #
@@ -52,6 +53,7 @@ class User < ApplicationRecord
   has_many :solution_slots
   has_attachment :profile_picture
   scope :active, -> { where.not(first_name: "no solution").order(:first_name) }
+  before_create :set_key
 
   def concatenate_first_and_last_name
     first_name + ' ' + last_name
@@ -135,14 +137,13 @@ class User < ApplicationRecord
       s.end_at >= date.to_datetime }.map{|ss| ss.slot.end_at - ss.slot.start_at}.reduce(:+).to_i
   end
 
-  def nb_seconds_worked(solution, user)
-    solution.solution_slots.where(user: user).map{|ss| ss.slot.end_at - ss.slot.start_at}.reduce(:+).to_i
+  def nb_seconds_worked(solution)
+    solution.solution_slots.where(user: self).map{|ss| ss.slot.end_at - ss.slot.start_at}.reduce(:+).to_i
   end
 
   def overtime(solution)
     # overtime for a user and a solution (integer, seconds)
-    seconds = nb_seconds_worked(solution, self)
-    seconds - (self.working_hours * 3600)
+    nb_seconds_worked(solution) - working_hours * 3600
   end
 
   def is_on_duty_according_to_time_period?(start_at, end_at)
@@ -173,6 +174,10 @@ class User < ApplicationRecord
       r = "attention! cas non prévu!"
     end
     r
+  end
+
+  def set_key
+    self.key = SecureRandom.hex(20)
   end
 
   private

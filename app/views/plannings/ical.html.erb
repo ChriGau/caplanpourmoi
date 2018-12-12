@@ -1,0 +1,17 @@
+<h1>Ical Planning <%= @user.first_name %></h1>
+<div class="mb+" style="display:flex">
+
+  <%= link_to "Add to calendar", ical_plannings_url(protocol: :webcal, format: :ics, key: "#{current_user.key}"), class:"mybtn mr+"%>
+  <%= link_to "test", ical_plannings_url(key:   "#{current_user.key}"), class:"mybtn" %>
+</div>
+  <table class="table table-striped">
+      <% @slots.each do |slot| %>
+        <tr>
+          <td>start: <%= slot.start_at %></td>
+          <td>end: <%= slot.end_at %></td>
+          <td>role: <%= slot.role.name %></td>
+          <td>summary : <%= "#{slot.role.name} ##{slot.length / 3600}h" %></td>
+        </tr>
+      <% end %>
+
+  </table>

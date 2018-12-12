@@ -191,6 +191,16 @@ class Solution < ApplicationRecord
     update(nb_users_daily_hours_fail: nb_fails)
   end
 
+
+  def evaluate_nb_users_in_overtime
+    # number of users where weekly hours > contract
+    result = 0
+    employees_involved.each do |employee|
+      result += 1 if employee.nb_seconds_worked(self) /3600 > employee.working_hours
+    end
+    update(nb_users_in_overtime: nb)
+  end
+
   def evaluate_compactness
     # integer => pour chq user, sum (nb_days_real - nb_days_theory) if real > theory
     compactness = 0

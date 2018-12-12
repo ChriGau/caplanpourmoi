@@ -3,7 +3,7 @@
   <div class="col-xs-2 edit-profile-picture pointer">
     <%= avatar_with_border_color(@user) %>
   </div>
-  <div class="col-xs-10 name">
+  <div class="col-xs-8 name">
     <ul class="list-inline" style="text-align:left">
       <li><h1> <%= @user.first_name&.capitalize %> </h1></li>
       <li><span class="fa fa-pencil modify-profile pointer" data-input="user_first_name"></span></li>
@@ -13,6 +13,9 @@
       <li><h1> <%= @user.last_name&.capitalize %></h1></li>
       <li><span class="fa fa-pencil modify-profile pointer" data-input="user_last_name"></span></li>
     </ul>
+  </div>
+  <div class="col-xs-2">
+    <%= link_to "Add to calendar", ical_plannings_url(protocol: :webcal, format: :ics, key: "#{@user.key}"), class:"mybtn mybtn-medium"%>
   </div>
 </div>
 <%= render "user_infos" %>
