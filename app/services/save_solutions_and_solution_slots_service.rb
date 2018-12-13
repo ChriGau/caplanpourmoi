@@ -26,7 +26,7 @@ class SaveSolutionsAndSolutionSlotsService
     else
       solution_instance = create_solution
       create_solution_slots_for_a_group_of_slots(@planning.slots.pluck(:id), solution_instance)
-      create_no_solution_solution_slots(@slots_not_to_simulate, solution_instance)
+      # create_no_solution_solution_slots(@slots_not_to_simulate, solution_instance)
       solution_instance.init
     end
     # timestamp t7
