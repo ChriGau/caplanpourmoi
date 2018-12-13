@@ -3,6 +3,7 @@ class AlgoStatsController < ApplicationController
 
 def show_statistics_algo
   @algo_stat = AlgoStat.last
+  authorize @algo_stat
   @compute_solutions = ComputeSolution.last(50).select{|c| c.status != "pending"}.last(15)
   @table_rows = []
   @compute_solutions.each do |compute_solution|
@@ -14,6 +15,7 @@ end
 
 def reload_statistics
   algo_stat = AlgoStat.create!
+  authorize algo_stat
   UpdateAlgoStatsService.new().perform
   redirect_to statistics_algo_path
 end
