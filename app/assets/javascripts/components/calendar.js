@@ -1,4 +1,6 @@
 
+
+
 var displayCalendar = function(events, defaultDate) {
 
 $('#calendar').fullCalendar({
@@ -29,7 +31,9 @@ var modifyCalendar = function(events, defaultDate) {
     modal.style.setProperty('--postop', position -300 + "px");
   }
 
-
+  $("input:checkbox").click(function(){
+    $(this).parent().parent().toggleClass("checked");
+  });
   var mySlider = $("input#nb-employees").bootstrapSlider();
 
 
@@ -75,9 +79,7 @@ var modifyCalendar = function(events, defaultDate) {
         locale: 'FR'
        });
       //behavior of days sélection
-      $("input:checkbox").click(function(){
-        $(this).parent().parent().toggleClass("checked");
-      });
+
       $('input:checkbox').each(function(){
         $(this)[0].disabled= false;
         $(this)[0].checked= false;
