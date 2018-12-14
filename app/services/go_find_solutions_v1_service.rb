@@ -239,7 +239,7 @@ class GoFindSolutionsV1Service
         end_timeframe = DateTime.new(date.year, date.month, date.day, 20)
         employee.constraints.where('start_at <= ? and end_at >= ? and category != ?',
         end_timeframe, start_timeframe, Constraint.categories['preference']).each do |constraint|
-          duration = constraint_duration_according_to_timeframe(constraint, 9, 20)
+          duration = employee.constraint_duration_according_to_timeframe(constraint, 9, 20)
           availability_user_hours -= duration
         end
       end
