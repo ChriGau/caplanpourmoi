@@ -8,7 +8,7 @@ class SaveSolutionsAndSolutionSlotsService
     @planning = attributes[:planning]
     @compute_solution = attributes[:compute_solution] || nil
     @list_of_solutions = attributes[:list_of_solutions] || nil
-    @no_solution_user = [User.find_by(first_name: 'no solution').id]
+    @no_solution_user_id = User.find_by(first_name: 'no solution').id
     @slots_not_to_simulate = attributes[:slots_not_to_simulate]
   end
 
@@ -100,7 +100,7 @@ class SaveSolutionsAndSolutionSlotsService
     slots_array.select { |x| x[:slotgroup_id] == slotgroup_id && x[:simulation_status] == simulation_status }
   end
 
-  def create_solution_slots_for_a_group_of_slots(slots_id_array, solution_instance, users = @no_solution_user, sequence = 0)
+  def create_solution_slots_for_a_group_of_slots(slots_id_array, solution_instance, users = [@no_solution_user_id], sequence = 0)
       return if sequence == slots_id_array.length
       create_solution_slot_instance(slots_id_array[sequence], users[sequence], solution_instance)
       create_solution_slots_for_a_group_of_slots(slots_id_array, solution_instance, users, sequence +=1)
@@ -114,7 +114,7 @@ class SaveSolutionsAndSolutionSlotsService
   def create_no_solution_solution_slots(slots_not_to_simulate, solution_instance)
     unless slots_not_to_simulate.empty?
       slots_not_to_simulate.each do |slot_id|
-        SolutionSlot.create(solution: solution_instance, :slot_id => slot_id, user_id: @no_solution_user.first)
+        SolutionSlot.create(solution: solution_instance, :slot_id => slot_id, user_id: @no_solution_user_id)
       end
     end
   end
