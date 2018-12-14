@@ -13,7 +13,7 @@ class SolutionsController < ApplicationController
     @planning.chosen_solution&.not_chosen!
     @solution.chosen!
     @planning.set_status
-    redirect_back(fallback_location: planning_conflicts_path(@planning))
+    redirect_to planning_conflicts_path(@planning)
   end
 
   private
