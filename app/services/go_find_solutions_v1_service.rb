@@ -41,7 +41,7 @@ class GoFindSolutionsV1Service
     # timestamps t5 - begin pick best solutions
     t = @compute_solution.timestamps_algo << ["t5", Time.now]
     @compute_solution.update(timestamps_algo: t)
-    list_of_solutions = pick_best_solutions(build_solutions[:solutions_array], 20)
+    list_of_solutions = pick_best_solutions(20)
     # return
     [ build_solutions[:calculation_abstract], list_of_solutions ]
   end
@@ -74,7 +74,7 @@ class GoFindSolutionsV1Service
     nb_cuts_within_tree = 0
     next_tree = nil
     next_branch = nil
-    solutions_array = []
+    @solutions_array = []
     # init for grading solutions
     best_grade = -1
     grade = 0
@@ -124,7 +124,7 @@ class GoFindSolutionsV1Service
             @total_availabilities, @employees_involved).perform
           # si note > best du moment, on stocke la solution
           if grade > best_grade
-            solutions_array << solution
+            @solutions_array << solution
             best_grade = grade
           end
                                # {
@@ -137,7 +137,7 @@ class GoFindSolutionsV1Service
           # toutes les 1000 solutions, on enlève les doublons de solutions
           # (les doublons peuvent apparaître lorsque l'on résout les conflits)
           # preferer uniq plutôt que stocker solution # unless solutions_array.select{|x| x == solution}.count.positive?
-          solutions_array.uniq! if solution_id % 1000 == 0
+          @solutions_array.uniq! if solution_id % 1000 == 0
         else
           # cut off all similar possibilities
           next_knot_caracteristics = go_to_next_knot(tree, branch,
@@ -154,21 +154,21 @@ class GoFindSolutionsV1Service
       end
     end
     # FOR TESTING --> storing the planning possibilities in a CSV
-    store_planning_possibilities_to_csv(solutions_array) if Rails.env.test?
+    store_planning_possibilities_to_csv if Rails.env.test?
     calculation_abstract = determine_calculation_abstract(iteration_id, nb_cuts_within_tree)
     { # test_possibilities: test_possibilities,
-      solutions_array: solutions_array,
+      solutions_array: @solutions_array,
       # best_solution: nil,
       calculation_abstract: calculation_abstract }
   end
 
   # rubocop:enable For
 
-  def pick_best_solutions(solutions_array, how_many_solutions_do_we_store)
+  def pick_best_solutions(how_many_solutions_do_we_store)
     # Selects X solutions from a collection of solutions.
     # several solutions with 0 conflicts? => pick the last X ones
     # else, we pick the last X ones
-    collection_no_conflicts = collect_solutions_with_no_conflicts(solutions_array)
+    collection_no_conflicts = collect_solutions_with_no_conflicts
     if collection_no_conflicts.count.positive?
       # if more optimal solutions than size of our top => pick the last size_selection_solutions ones
       if collection_no_conflicts.count >= how_many_solutions_do_we_store
@@ -181,12 +181,12 @@ class GoFindSolutionsV1Service
       # TODO => classer solutions par ordre croissant de conflicts
       # solutions_array.sort_by!{ |x| x[:nb_conflicts] }
       # if more solutions than size of our top
-      if solutions_array.count >= how_many_solutions_do_we_store
+      if @solutions_array.count >= how_many_solutions_do_we_store
         # select the last X ones qui ont le moins de conflicts
-        return solutions_array.last(how_many_solutions_do_we_store)
+        return @solutions_array.last(how_many_solutions_do_we_store)
       else # less than 'size_selection_solutions' partial solutions
         # select as many solutions as there are
-        return solutions_array
+        return @solutions_array
       end
     end
   end
@@ -380,8 +380,8 @@ class GoFindSolutionsV1Service
     overlaps.zero? || overlaps <= overlaps_best_scoring
   end
 
-  def collect_solutions_with_no_conflicts(solutions_array)
-    solutions_array.select { |x| calculate_nb_conflicts(x).zero? }
+  def collect_solutions_with_no_conflicts
+    @solutions_array.select { |x| calculate_nb_conflicts(x).zero? }
   end
 
   def calculate_nb_conflicts_for_a_solution(solution_array)
@@ -389,13 +389,20 @@ class GoFindSolutionsV1Service
   end
 
   def calculate_nb_solutions
-    solutions_array.count
+    @solutions_array.count
   end
 
   def calculate_nb_optimal_solutions
     # count nb of solutions with no conflicts
-    # TODO, update this method when weekly hours check will be set up
-    solutions_array.select { |x| calculate_nb_conflicts(x).zero? }.count
+    calculate_nb_solutions - calculate_nb_solutions_with_conflicts
+  end
+
+  def calculate_nb_solutions_with_conflicts
+    r = 0
+    @solutions_array.each do |s|
+      r += 1 if calculate_nb_conflicts(s).positive?
+    end
+    return r
   end
 
   def calculate_nb_conflicts(solution_array)
@@ -471,14 +478,14 @@ class GoFindSolutionsV1Service
              sg_ranking_where_conflicts_evaluation_is_lower_than_best: sg_ranking }
   end
 
-  def store_planning_possibilities_to_csv(solutions_array)
+  def store_planning_possibilities_to_csv
     csv_options = { col_sep: ',', force_quotes: true, quote_char: '"' }
     time = Time.now
     filepath    = 'algo_test' + time.day.to_s + "-" + time.month.to_s + "-" +time.hour.to_s+"h "+ time.min.to_s+ '.csv'
 
     CSV.open(filepath, 'wb', csv_options) do |csv|
       csv << ['solution_id']
-      solutions_array.each do |solutions_array_hash|
+      @solutions_array.each do |solutions_array_hash|
         csv << [solutions_array_hash[:solution_id].to_s]
         csv << ['', 'sg_ranking', 'sg_id', 'combination', 'overlaps']
         solutions_array_hash[:planning_possibility].each do |planning_possibility_hash|
