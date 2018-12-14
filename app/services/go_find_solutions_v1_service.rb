@@ -425,15 +425,20 @@ class GoFindSolutionsV1Service
       @compute_solution.calcul_solution_v1.slotgroups_array.each do |slotgroup|
         slotgroup.overlaps.each do |overlaps| # overlaps => [ {}, {},... ]
           # mettre les users du sg overlappé en overlap à no solution
-          users_overlapped_sg = planning_possibility.select{ |h| h[:sg_id] == overlaps[:slotgroup_id] }.first[:combination] # => Array of users'ids
-          users_initial_sg = planning_possibility.select{ |h| h[:sg_id] == slotgroup.id }.first[:combination]
-          users_overlapped_sg.each do |user_id|
-            if users_initial_sg.include?(user_id) # ce user est en overlap
-              planning_possibility_hash = planning_possibility.select{ |h| h[:sg_id] == overlaps[:slotgroup_id] }.first
-              # get index of user in overlapped sg combination
-              index_user_to_replace = planning_possibility_hash[:combination].index(user_id)
-              replace_user_in_planning_possibility_hash(planning_possibility_hash, index_user_to_replace)
-              evaluate_overlaps_for_a_planning(planning_possibility, 0)
+          # SSI l'overlapped slotgroup ou l'initial slotgroup appartient bien aux slotgroups à simuler
+          unless planning_possibility.select{ |h| h[:sg_id] == overlaps[:slotgroup_id] }.empty?
+            unless planning_possibility.select{ |h| h[:sg_id] == slotgroup.id }.empty?
+              users_overlapped_sg = planning_possibility.select{ |h| h[:sg_id] == overlaps[:slotgroup_id] }.first[:combination] # => Array of users'ids
+              users_initial_sg = planning_possibility.select{ |h| h[:sg_id] == slotgroup.id }.first[:combination]
+              users_overlapped_sg.each do |user_id|
+                if users_initial_sg.include?(user_id) # ce user est en overlap
+                  planning_possibility_hash = planning_possibility.select{ |h| h[:sg_id] == overlaps[:slotgroup_id] }.first
+                  # get index of user in overlapped sg combination
+                  index_user_to_replace = planning_possibility_hash[:combination].index(user_id)
+                  replace_user_in_planning_possibility_hash(planning_possibility_hash, index_user_to_replace)
+                  evaluate_overlaps_for_a_planning(planning_possibility, 0)
+                end
+              end
             end
           end
         end
