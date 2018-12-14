@@ -16,7 +16,7 @@ class SolutionSlotsController < ApplicationController
   def update
     authorize @solution_slot
     respond_to do |format|
-      if @solution_slot.update(user_id: params["user_id"])
+      if @solution_slot.update(user_id: params["user_id"].to_i)
           format.js
       else
         render :edit
