@@ -21,6 +21,7 @@ Team.destroy_all
 Solution.destroy_all
 Planning.destroy_all
 User.destroy_all
+AlgoStat.destroy_all
 
 puts "2 - Creating owner"
 puts ""

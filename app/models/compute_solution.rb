@@ -37,7 +37,7 @@
 class ComputeSolution < ApplicationRecord
   belongs_to :planning
   has_one :calcul_solution_v1
-  has_many :solutions,  -> { order(nb_extra_hours: :asc, nb_under_hours: :desc) }, dependent: :destroy
+  has_many :solutions, -> { order(grade: :desc) }, dependent: :destroy
   serialize :p_nb_hours_roles
   serialize :team, Hash
   serialize :timestamps_algo, Array

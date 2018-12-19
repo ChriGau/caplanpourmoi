@@ -64,17 +64,7 @@ class SolutionSlot < ApplicationRecord
 
   def update_solution_and_solution_slot_attributes
     # update solution
-    self.solution.total_over_time
-    self.solution.evaluate_nb_conflicts
-    self.solution.evaluate_nb_overlaps
-    self.solution.evaluate_relevance
-    self.solution.evaluate_nb_users_six_consec_days_fail
-    self.evaluate_nb_users_daily_hours_fail
-    self.evaluate_compactness
-    self.nb_users_in_overtime
-    self.evaluate_conflicts_percentage
-    self.evaluate_fitness
-    self.evaluate_grade
+    self.solution.init
     # update planning status (maybe you resolved all conflicts)
     self.planning.set_status
     # update solution_slot (no attributes to update for now)
