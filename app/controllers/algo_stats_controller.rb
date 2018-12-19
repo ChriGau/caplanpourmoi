@@ -10,7 +10,7 @@ def show_statistics_algo
       @table_rows << compute_solution.build_row_for_statistics_display
     end
     @bar_chart_rows = @algo_stat.calculations_per_week(@compute_solutions, "01/06/2018".to_date)
-    @curve_chart_rows =
+    @curve_chart_rows = curve_chart_rows
   end
 end
 
