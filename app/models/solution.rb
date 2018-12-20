@@ -61,13 +61,13 @@ class Solution < ApplicationRecord
     evaluate_compactness
     evaluate_nb_users_in_overtime
     deviation_for_fitness = evaluate_fitness
-    puts "**********************************"
-    puts "conflicts_percentage = #{self.conflicts_percentage}"
-    puts "nb_users_six_consec_days_fail = #{self.nb_users_six_consec_days_fail}"
-    puts "nb_users_daily_hours_fail = #{self.nb_users_daily_hours_fail}"
-    puts "compactness = #{self.compactness}"
-    puts "fitness = #{self.fitness}"
-    puts "**********************************"
+    # puts "**********************************"
+    # puts "conflicts_percentage = #{self.conflicts_percentage}"
+    # puts "nb_users_six_consec_days_fail = #{self.nb_users_six_consec_days_fail}"
+    # puts "nb_users_daily_hours_fail = #{self.nb_users_daily_hours_fail}"
+    # puts "compactness = #{self.compactness}"
+    # puts "fitness = #{self.fitness}"
+    # puts "**********************************"
     rate_solution(deviation_for_fitness)
     self # renvoyer l'instance pour la récupérer dans SaveSolutionsAndSoltionSlotsService
   end

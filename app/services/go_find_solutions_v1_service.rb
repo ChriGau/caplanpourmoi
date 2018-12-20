@@ -148,7 +148,7 @@ class GoFindSolutionsV1Service
         end
         iteration_id += 1
         # n'afficher que toutes les 1000 iterations pour ne pas impacter la perf en affichage
-        puts '...... iteration #{iteration_id.to_s}' if iteration_id % 1000 == 0
+        puts "...... iteration #{iteration_id}" if iteration_id % 1000 == 0
         # Let's not store all the possibilities to make this LEANER
         # test_possibilities << planning_possibility
       end

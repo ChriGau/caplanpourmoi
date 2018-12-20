@@ -74,7 +74,7 @@ class ComputeSolution < ApplicationRecord
   def evaluate_statistics
     # go_through_solutions_mean_time_per_slot (seconds) => (T5 - T4) / nbslots
     # solution_storing_mean_time_per_slot (seconds) => (T7 - T6) / nbslots
-    # mean_time_per_slot (seconds) = (T7 - T1)/nbslots
+    # mean_time_per_slot (seconds) = (T7 - T1) / nbslots
     # %tree_covered (float) = nb_iterations / nb_possibilities_theory
     unless timestamps_algo.length < 7
       nb_slots = planning.slots.count
