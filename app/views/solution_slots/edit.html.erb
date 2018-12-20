@@ -69,7 +69,7 @@
               </div>
               <div class="col-xs-2">
                 <!-- reassign -->
-                <% unless User.find(hash.keys.first) == @assigned_user  %>
+                <% unless User.find(hash.keys.first) == @assigned_user  or hash.values[0][:status] == 'on duty' %>
                   <%= link_to "assign", planning_solution_slot_path(@planning, @solution_slot, user_id: User.find(hash.keys.first).id, format: :js), method: :patch, remote: true, class: "mybtn mybtn--medium reassign-solution_slot" %>
                 <% end %>
 
