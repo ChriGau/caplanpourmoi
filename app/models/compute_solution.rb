@@ -168,7 +168,7 @@ class ComputeSolution < ApplicationRecord
   def build_row_for_statistics_display
     row = [id, planning.week_number, self.planning.slots.count, self.planning.users.count]
     self.calculation_length.nil? ? row.insert(2, 0) : row.insert(2, self.calculation_length.to_f.round(4))
-    timestamps_algo.length == 7 ? row.insert(3, 10) : row.insert(3, 0)
+    timestamps_algo.length == 7 ? row.insert(3, 1) : row.insert(3, 0)
     nb_iterations.nil? ? row.insert(row.length, 0) : row.insert(row.length, nb_iterations)
     percent_tree_covered.nil? ? row.insert(row.length, 0) : row.insert(row.length, percent_tree_covered.round(3)*100)
   end

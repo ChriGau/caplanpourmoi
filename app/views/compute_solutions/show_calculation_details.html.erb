@@ -2,7 +2,7 @@
 
 <div class="row">
   <div class="col-xs-6">
-    <h3> <b>Number of possibilities - theory : </b><%= @compute_solution.nb_possibilities_theory %></h2>
+    <h3> <b>Number of possibilities - theory : </b><%= @compute_solution.nb_possibilities_theory %></h3>
     <% if @compute_solution.nb_iterations.nil? %>
       <h3>Number of iterations, number of cuts within tree, %tree covered ==> <b>Unable to calculate</b></h3>
     <% else %>
@@ -15,9 +15,12 @@
   <div class="col-xs-6">
     <div id="chart"></div>
   </div>
+
   <div class="col-xs-12">
     <div id="table_div"></div>
   </div>
+
+</div>
 
 <%= javascript_include_tag "dataviz/calculation_details" %>
 <%= content_for(:after_js) do %>
