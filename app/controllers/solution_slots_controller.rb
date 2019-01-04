@@ -8,6 +8,7 @@ class SolutionSlotsController < ApplicationController
     @solution = @planning.chosen_solution
     authorize @solution_slot
     @users_infos = @solution_slot.slot.get_infos_to_reaffect_slot(@planning.users)
+    @are_there_backups = are_there_backups?
     @other_users_infos = other_skilled_users_infos
     @slot = @solution_slot.slot
     @assigned_user = User.find(@solution_slot.user_id)
@@ -47,6 +48,11 @@ class SolutionSlotsController < ApplicationController
   def other_users_list
     # users non sélectionnés pour ce planning mais qui peuvent servir de backups
     User.where.not(first_name: 'no solution').includes(:roles, :plannings, :teams) - @planning.users
+  end
+
+  def are_there_backups?
+    # true if at least 1 backup skilled & available
+    @users_infos.select{|f| f.values[0][:skilled] == "a" && f.values[0][:status] == "available" }.count.positive?
   end
 
 end

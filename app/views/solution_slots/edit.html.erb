@@ -18,7 +18,8 @@
       </div>
     </div>
 
-    <!-- Liste des employés non sélectionnés dans l'équipe -->
+    <!-- Liste des employés non sélectionnés dans l'équipe SSI pas de solution dans l'équipe -->
+    <% if !@are_there_backups %>
     <div data-toggle="collapse" data-target="#other-users" class="section-header part2 mb mt">
       <b>Hors équipe</b>
     </div>
@@ -35,6 +36,7 @@
         </div>
       </div>
     </div>
+  <% end %>
 
  <% end %>
 
