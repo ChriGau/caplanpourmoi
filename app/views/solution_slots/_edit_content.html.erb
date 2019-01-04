@@ -1,0 +1,50 @@
+<% locals[:users].each do |hash| %>
+  <!-- set specific class for assigned user row -->
+  <% if User.find(hash.keys.first) == @assigned_user  %>
+    <div class="row assigned-user-row">
+  <!-- set specific class if available and skilled -->
+  <% elsif hash.values.first[:skilled] == "a" && hash.values.first[:status] == "available" %>
+    <div class="row potential-backup">
+  <% elsif hash.values.first[:status] == "available" %>
+    <div class="row available-unskilled">
+  <% else %>
+    <div class="row row-user">
+  <% end %>
+    <div class="col-xs-2">
+     <%= profile_picture(User.find(hash.keys.first)) %>
+    </div>
+    <div class="col-xs-2">
+      <% if hash.values.first[:skilled] == "a" %>
+        <i class="fa fa-check-circle" style="color: green;"></i>
+      <% else %>
+        <i class="fa fa-exclamation-triangle"></i>
+      <% end %>
+    </div>
+    <div class="col-xs-2" >
+      <!-- button -->
+      <%= hash.values.first[:status] %>
+    </div>
+    <div class="col-xs-2">
+      <!-- nb hours day -->
+      <% if hash.values.first[:nb_hours_day_status] == false %>
+        <i class="fa fa-exclamation-triangle"></i><br>
+      <% end %>
+      <%= hash.values.first[:nb_hours_day] %>
+    </div>
+    <div class="col-xs-2">
+      <!-- nb hours week -->
+      <% if hash.values.first[:nb_hours_planning_status] == false %>
+        <i class="fa fa-exclamation-triangle"></i><br>
+      <% end %>
+      <%= hash.values.first[:nb_hours_planning] %>
+    </div>
+    <div class="col-xs-2">
+      <!-- reassign -->
+      <% unless User.find(hash.keys.first) == @assigned_user  %>
+        <%= link_to "assign", planning_solution_slot_path(@planning, @solution_slot, user_id: User.find(hash.keys.first).id, format: :js), method: :patch, remote: true, class: "mybtn mybtn--medium reassign-solution_slot" %>
+      <% end %>
+
+
+    </div>
+  </div>
+<% end %>

@@ -4,81 +4,30 @@
     <div class="row">
       <div class="col-xs-12">
         <!-- creation du tableau -->
+        <b>Employés de l'équipe</b>
         <div class="col-xs-12">
         <!-- en-têtes -->
-          <div class="row">
-            <div class="col-xs-2">
-              <b>User</b>
-            </div>
-            <div class="col-xs-2">
-              <b>Skilled?</b>
-            </div>
-            <div class="col-xs-2">
-              <b>Status</b>
-            </div>
-            <div class="col-xs-2">
-              <b>h/day</b>
-            </div>
-            <div class="col-xs-2">
-              <b>h/week</b>
-            </div>
-            <div class="col-xs-2">
-              <b></b>
-            </div>
-          </div>
-
-          <% @users_infos.each do |hash| %>
-            <!-- set specific class for assigned user row -->
-            <% if User.find(hash.keys.first) == @assigned_user  %>
-              <div class="row assigned-user-row">
-            <!-- set specific class if available and skilled -->
-            <% elsif hash.values.first[:skilled] == true && hash.values.first[:status] == "available" %>
-              <div class="row potential-backup">
-            <% elsif hash.values.first[:status] == "available" %>
-              <div class="row available-unskilled">
-            <% else %>
-              <div class="row row-user">
-            <% end %>
-              <div class="col-xs-2">
-               <%= profile_picture(User.find(hash.keys.first)) %>
-              </div>
-              <div class="col-xs-2">
-                <% if hash.values.first[:skilled] == true %>
-                  <i class="fa fa-check-circle" style="color: green;"></i>
-                <% else %>
-                  <i class="fa fa-exclamation-triangle"></i>
-                <% end %>
-              </div>
-              <div class="col-xs-2" >
-                <!-- button -->
-                <%= hash.values.first[:status] %>
-              </div>
-              <div class="col-xs-2">
-                <!-- nb hours day -->
-                <% if hash.values.first[:nb_hours_day_status] == false %>
-                  <i class="fa fa-exclamation-triangle"></i><br>
-                <% end %>
-                <%= hash.values.first[:nb_hours_day] %>
-              </div>
-              <div class="col-xs-2">
-                <!-- nb hours week -->
-                <% if hash.values.first[:nb_hours_planning_status] == false %>
-                  <i class="fa fa-exclamation-triangle"></i><br>
-                <% end %>
-                <%= hash.values.first[:nb_hours_planning] %>
-              </div>
-              <div class="col-xs-2">
-                <!-- reassign -->
-                <% unless User.find(hash.keys.first) == @assigned_user  %>
-                  <%= link_to "assign", planning_solution_slot_path(@planning, @solution_slot, user_id: User.find(hash.keys.first).id, format: :js), method: :patch, remote: true, class: "mybtn mybtn--medium reassign-solution_slot" %>
-                <% end %>
-
-
-              </div>
-            </div>
-          <% end %>
+        <%= render 'solution_slots/edit_header'%>
+        <!-- block avec chaque user -->
+        <%= render 'solution_slots/edit_content', locals: { users: @users_infos, assigned_user: @assigned_user, planning: @planning, solution_slot: @solution_slot } %>
         </div>
+      </div>
+    </div>
 
+
+    <!-- Liste des employés non sélectionnés dans l'équipe -->
+    <div data-toggle="collapse" data-target="#demo"><b>Employés hors équipe</b></div>
+    <div id="demo" class="collapse">
+      <div class="row">
+        <div class="col-xs-12">
+          <!-- creation du tableau -->
+          <div class="col-xs-12">
+          <!-- en-têtes -->
+          <%= render 'solution_slots/edit_header'%>
+          <!-- block avec chaque user -->
+          <%= render 'solution_slots/edit_content', locals: { users: @other_users_infos, assigned_user: @assigned_user, planning: @planning, solution_slot: @solution_slot  } %>
+          </div>
+        </div>
       </div>
     </div>
 
