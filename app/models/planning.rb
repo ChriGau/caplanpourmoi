@@ -169,6 +169,7 @@ class Planning < ApplicationRecord
       start_time = get_first_date_of_a_week(year, week_number)
       end_time = get_last_date_of_a_week(year, week_number)
     end
+    p [start_time .. end_time]
     return [start_time .. end_time]
   end
 

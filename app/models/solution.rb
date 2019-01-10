@@ -61,13 +61,13 @@ class Solution < ApplicationRecord
     evaluate_compactness
     evaluate_nb_users_in_overtime
     deviation_for_fitness = evaluate_fitness
-    puts "**********************************"
-    puts "conflicts_percentage = #{self.conflicts_percentage}"
-    puts "nb_users_six_consec_days_fail = #{self.nb_users_six_consec_days_fail}"
-    puts "nb_users_daily_hours_fail = #{self.nb_users_daily_hours_fail}"
-    puts "compactness = #{self.compactness}"
-    puts "fitness = #{self.fitness}"
-    puts "**********************************"
+    # puts "**********************************"
+    # puts "conflicts_percentage = #{self.conflicts_percentage}"
+    # puts "nb_users_six_consec_days_fail = #{self.nb_users_six_consec_days_fail}"
+    # puts "nb_users_daily_hours_fail = #{self.nb_users_daily_hours_fail}"
+    # puts "compactness = #{self.compactness}"
+    # puts "fitness = #{self.fitness}"
+    # puts "**********************************"
     rate_solution(deviation_for_fitness)
     self # renvoyer l'instance pour la récupérer dans SaveSolutionsAndSoltionSlotsService
   end
@@ -288,12 +288,20 @@ class Solution < ApplicationRecord
     if get_planning_related_to_a_date(date) == planning_W
       self
     else
+      # si pas de chosen solution à cette date (soit)
+      p date
+      p get_planning_related_to_a_date(date)
       get_planning_related_to_a_date(date).chosen_solution
     end
   end
 
   def get_planning_related_to_a_date(date)
-    Planning.find_by(year: date.year, week_number: date.cweek)
+    if Planning.find_by(year: date.year, week_number: date.cweek).nil?
+      # cas du 31/12/2018 (year = 2018, week_number = 1) alors qu'il faudrait (year = 2019, week_number = 1)
+      return Planning.find_by(year: date.year + 1, week_number: date.cweek)
+    else
+      return Planning.find_by(year: date.year, week_number: date.cweek)
+    end
   end
 
 end

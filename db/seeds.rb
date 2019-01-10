@@ -378,11 +378,18 @@ puts "8 - assigning constraints to members"
 puts ""
 
 # pierre mercredi matin septembre octobre
+Constraint.create(start_at: "2017-09-06 08:00",
+                  end_at: "2017-09-06 12:00",
+                  user_id: User.find_by_first_name('pierre').id,
+                  category: "preference"
+                  )
+
 Constraint.create!(start_at: "2017-09-06 08:00",
                   end_at: "2017-09-06 12:00",
                   user_id: User.find_by_first_name('pierre').id,
                   category: "preference"
                   )
+
 # pierre mercredi matin septembre octobre
 Constraint.create!(start_at: "2017-09-11 16:00",
                   end_at: "2017-09-11 22:00",
