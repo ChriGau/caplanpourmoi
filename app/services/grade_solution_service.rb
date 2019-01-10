@@ -147,12 +147,12 @@ private
   def get_final_grade(conflicts_percentage, nb_users_six_consec_days_fail, nb_users_daily_hours_fail, fitness, compactness)
     # transforme les valeurs des critères en points selon le bareme défini
     # fitness is already a score
-    # puts "conflicts = #{score_conflicts_percentage(conflicts_percentage) }"
-    # puts "6 days = #{score_nb_users_six_consec_days_fail(nb_users_six_consec_days_fail)}"
-    # puts "daily hours = #{score_nb_users_daily_hours_fail(nb_users_daily_hours_fail)}"
-    # puts "fitness = #{fitness}"
-    # puts "compactness = #{score_compactness(compactness)}"
-    # puts "--------------------"
+    puts "conflicts = #{score_conflicts_percentage(conflicts_percentage) }"
+    puts "6 days = #{score_nb_users_six_consec_days_fail(nb_users_six_consec_days_fail)}"
+    puts "daily hours = #{score_nb_users_daily_hours_fail(nb_users_daily_hours_fail)}"
+    puts "fitness = #{fitness}"
+    puts "compactness = #{score_compactness(compactness)}"
+    puts "--------------------"
     sum = (score_conflicts_percentage(conflicts_percentage).to_f +
     score_nb_users_six_consec_days_fail(nb_users_six_consec_days_fail).to_f +
     score_nb_users_daily_hours_fail(nb_users_daily_hours_fail).to_f +
@@ -239,11 +239,11 @@ private
   end
 
   def score_nb_users_six_consec_days_fail(nb_users_six_consec_days_fail)
-    nb_users_six_consec_days_fail.zero? ? 10 : (nb_users_six_consec_days_fail / @employees_involved.count)*10
+    nb_users_six_consec_days_fail.zero? ? 10 : 1 - (nb_users_six_consec_days_fail / @employees_involved.count)*10
   end
 
   def score_nb_users_daily_hours_fail(nb_users_daily_hours_fail)
-    nb_users_daily_hours_fail.zero? ? 10 : (nb_users_daily_hours_fail / (@employees_involved.count * @planning.number_of_days ))*10
+    nb_users_daily_hours_fail.zero? ? 10 : 1 - (nb_users_daily_hours_fail / (@employees_involved.count * @planning.number_of_days ))*10
   end
 
   def score_compactness(users_non_compact_solution)
