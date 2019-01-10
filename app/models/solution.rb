@@ -289,8 +289,6 @@ class Solution < ApplicationRecord
       self
     else
       # si pas de chosen solution à cette date (soit)
-      p date
-      p get_planning_related_to_a_date(date)
       get_planning_related_to_a_date(date).chosen_solution
     end
   end
