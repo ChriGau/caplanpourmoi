@@ -128,16 +128,8 @@ private
   end
 
   def get_grading_fitness_score(fitness, deviation = 0)
-    case fitness
-      when 0..deviation + 0.02
-        10
-      when  deviation + 0.02..deviation + 0.04
-        7
-      when  deviation + 0.04..deviation + 0.06
-        4
-      else
-        0
-    end
+    # toutes les solutions auront la meme deviation donc pas besoin de la prendre en compte
+    fitness * 10
   end
 
   def grading_compactness(nb_days_worked_per_users)
@@ -243,34 +235,15 @@ private
 
   def score_conflicts_percentage(conflicts_percentage)
     # turn conflicts_percentage value into a grade
-    case conflicts_percentage
-      when 0
-        10
-      when  (0.0..0.05)
-        5
-      when  (0.05..0.1)
-        3
-      else
-        0
-    end
+    conflicts_percentage.zero? ? 10 : (1 - conflicts_percentage) * 10
   end
 
   def score_nb_users_six_consec_days_fail(nb_users_six_consec_days_fail)
-    case nb_users_six_consec_days_fail
-      when 0
-        10
-      else
-        0
-    end
+    nb_users_six_consec_days_fail.zero? ? 10 : (nb_users_six_consec_days_fail / @employees_involved.count)*10
   end
 
   def score_nb_users_daily_hours_fail(nb_users_daily_hours_fail)
-    case nb_users_daily_hours_fail
-      when 0
-        10
-      else
-        0
-    end
+    nb_users_daily_hours_fail.zero? ? 10 : (nb_users_daily_hours_fail / (@employees_involved.count * @planning.number_of_days ))*10
   end
 
   def score_compactness(users_non_compact_solution)
