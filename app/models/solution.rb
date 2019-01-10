@@ -160,11 +160,13 @@ class Solution < ApplicationRecord
     array_of_consec_days = [] # init
       timeframe.first.each do |date|
         solution = solution_to_take_into_account(date, planning, self)
-        if user.works_today?(date, solution)
-          array_of_consec_days << date
-        elsif array_of_consec_days.count > 6
-          nb_users += 1 if consecutive_days_intersect_planning_week?(array_of_consec_days, planning)
-          array_of_consec_days = [] # re init
+        unless solution.nil? # cas où pas de chosen solution pour ce planning
+          if user.works_today?(date, solution)
+            array_of_consec_days << date
+          elsif array_of_consec_days.count > 6
+            nb_users += 1 if consecutive_days_intersect_planning_week?(array_of_consec_days, planning)
+            array_of_consec_days = [] # re init
+          end
         end
       end # on a balayé toutes les dates pour ce user
       if array_of_consec_days.count > 6 && consecutive_days_intersect_planning_week?(array_of_consec_days, planning)
@@ -287,9 +289,10 @@ class Solution < ApplicationRecord
   def solution_to_take_into_account(date, planning_W, examined_solution)
     if get_planning_related_to_a_date(date) == planning_W
       self
-    else
-      # si pas de chosen solution à cette date (soit)
+    elsif !get_planning_related_to_a_date(date).chosen_solution.nil?
       get_planning_related_to_a_date(date).chosen_solution
+    else # pas de chosen solution pour ce planning
+      nil
     end
   end
 
