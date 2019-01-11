@@ -121,7 +121,7 @@ class GoFindSolutionsV1Service
           # on note la solution
           grade =  GradeSolutionService.new(solution, @total_duration_sg,
             @no_solution_user_id, @duration_per_sg_array, @planning,
-            @total_availabilities, @employees_involved).perform
+            @total_availabilities, @employees_involved, get_nb_slots_to_simulate).perform
           # si note > best du moment, on stocke la solution
           if grade > best_grade
             @solutions_array << solution
@@ -194,7 +194,7 @@ class GoFindSolutionsV1Service
   # rubocop:enable GuardClause
 
   def determine_duration_per_sg_array
-    # => [ {:sg_id, :duration in sec, :dates = [d1 (,d2)] } , {...} ]
+    # => [ {:sg_id, :duration in sec, :dates = [d1 (,d2)] } , start_end:  [datetime1, datetime2], {...} ]
     # get duration of each slotgroup
     # is then used to grade the solutions
     result = []
@@ -207,7 +207,8 @@ class GoFindSolutionsV1Service
       end
       result << { sg_id: sg_hash.id,
                   duration: (sg_hash.end_at - sg_hash.start_at),
-                  dates: dates }
+                  dates: dates,
+                  start_end: [ sg_hash.start_at, sg_hash.end_at ] }
     end
     result
   end
@@ -476,6 +477,10 @@ class GoFindSolutionsV1Service
     return { success: success,
              nb_conflicts: nb_conflicts,
              sg_ranking_where_conflicts_evaluation_is_lower_than_best: sg_ranking }
+  end
+
+  def get_nb_slots_to_simulate
+    @slotgroups_array.map{|s| s.slots_to_simulate.count}.reduce(&:+)
   end
 
   def store_planning_possibilities_to_csv

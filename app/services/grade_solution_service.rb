@@ -6,21 +6,22 @@
 class GradeSolutionService
   attr_accessor :slots_array, :planning, :users, :calcul, :slotgroups_array
 
-  def initialize(solution, total_duration_sg, no_solution_user_id, duration_per_sg_array, planning, total_availabilities, employees_involved)
+  def initialize(solution, total_duration_sg, no_solution_user_id, duration_per_sg_array, planning, total_availabilities, employees_involved, nb_slots)
     @solution = solution
     @total_duration_sg = total_duration_sg
     @no_solution_user_id = no_solution_user_id
-    @duration_per_sg_array = duration_per_sg_array
+    @duration_per_sg_array = duration_per_sg_array # => [ {:sg_id, :duration in sec, :dates = [d1 (,d2)] } , start_end:  [datetime1, datetime2], {...} ]
     @planning = planning
     @total_availabilities = total_availabilities
     @employees_involved = employees_involved
+    @nb_slots = nb_slots
   end
 
   # rubocop:disable AbcSize
 
   def perform
       # conflicts_percentage => %
-      conflicts_percentage = grading_conflicts_percentage
+      conflicts_percentage = grading_iterating_on_solution_array[:conflicts_percentage]
       # puts "conflicts_percentage = #{conflicts_percentage}"
       # decimal => nb seconds where conflicts / total hours slotgroups to simulate
       nb_users_six_consec_days_fail = grading_nb_users_six_consec_days_fail_and_nb_users_daily_hours_fail[:nb_users_six_consec_days]
@@ -34,26 +35,39 @@ class GradeSolutionService
       # nb of users
       users_non_compact_solution = grading_compactness(grading_nb_users_six_consec_days_fail_and_nb_users_daily_hours_fail[:nb_days_worked_per_users])
       # puts "users_non_compact_solution = #{users_non_compact_solution}"
+      # %slots qui respectent les contraintes personnelles
+      respect_preferences_percentage = grading_iterating_on_solution_array[:respect_preferences_percentage]
       # final grade (/100)
-      grade = get_final_grade(conflicts_percentage, nb_users_six_consec_days_fail, nb_users_daily_hours_fail, fitness, users_non_compact_solution)
+      grade = get_final_grade(conflicts_percentage, nb_users_six_consec_days_fail,
+                              nb_users_daily_hours_fail, fitness,
+                              users_non_compact_solution,
+                              respect_preferences_percentage)
       # puts "grade  GO THROUGH PLANNINGS = #{grade}"
       grade
   end
 
 private
 
-  def grading_conflicts_percentage
+  def grading_iterating_on_solution_array
     # decimal => nb seconds where conflicts / total hours slotgroups to simulate
     nb_seconds_conflicts = 0 #init
+    nb_slots_ok = 0 # init pour slots_respect_preferences
     nb_hours_conflicts = @solution.each do |solution_slotgroup_hash|
       nb_conflicts = 0 # init
       nb_conflicts = solution_slotgroup_hash[:combination].count(@no_solution_user_id)
       if nb_conflicts.positive?
         nb_seconds_conflicts +=  nb_conflicts * @duration_per_sg_array.select{ |x| x[:sg_id] == solution_slotgroup_hash[:sg_id] }.first[:duration]
       end
+      # count nb slots where ok
+      solution_slotgroup_hash[:combination].each do |user_id|
+        dates = get_start_and_end_dates_of_related_slot(solution_slotgroup_hash) # [ start datetime, end datetime ]
+        nb_slots_ok += 1 if !User.find(user_id).is_personnally_ok?(dates[0], dates[1])
+      end
     end
-    nb_seconds_conflicts / @total_duration_sg
+    { conflicts_percentage: nb_seconds_conflicts / @total_duration_sg ,
+      respect_preferences_percentage: (nb_slots_ok / @nb_slots.to_f) }
   end
+
 
   def grading_nb_users_six_consec_days_fail_and_nb_users_daily_hours_fail
     # => number of users who work more than 6 consecutive days
@@ -123,6 +137,10 @@ private
     total
   end
 
+  def get_start_and_end_dates_of_related_slot(solution_slotgroup_hash)
+    @duration_per_sg_array.select{ |x| x[:sg_id] == solution_slotgroup_hash[:sg_id] }.first[:start_end]
+  end
+
   def get_sg_duration_from_sg_id(sg_id)
     @duration_per_sg_array.select{ |x| x[:sg_id] == sg_id}.first[:duration]
   end
@@ -144,7 +162,7 @@ private
     nb_users
   end
 
-  def get_final_grade(conflicts_percentage, nb_users_six_consec_days_fail, nb_users_daily_hours_fail, fitness, compactness)
+  def get_final_grade(conflicts_percentage, nb_users_six_consec_days_fail, nb_users_daily_hours_fail, fitness, compactness, respect_preferences_percentage)
     # transforme les valeurs des critères en points selon le bareme défini
     # fitness is already a score
     puts "conflicts = #{score_conflicts_percentage(conflicts_percentage) }"
@@ -152,12 +170,14 @@ private
     puts "daily hours = #{score_nb_users_daily_hours_fail(nb_users_daily_hours_fail)}"
     puts "fitness = #{fitness}"
     puts "compactness = #{score_compactness(compactness)}"
+    puts "%respect preferences = #{score_respect_preferences_percentage(respect_preferences_percentage)}"
     puts "--------------------"
-    sum = (score_conflicts_percentage(conflicts_percentage).to_f +
-    score_nb_users_six_consec_days_fail(nb_users_six_consec_days_fail).to_f +
-    score_nb_users_daily_hours_fail(nb_users_daily_hours_fail).to_f +
-    fitness.to_f + score_compactness(compactness).to_f)
-    sum / 42 * 100
+    sum = (score_conflicts_percentage(conflicts_percentage).to_f + # /10
+    score_nb_users_six_consec_days_fail(nb_users_six_consec_days_fail).to_f + # /10
+    score_nb_users_daily_hours_fail(nb_users_daily_hours_fail).to_f + # /10
+    fitness.to_f + score_compactness(compactness).to_f +  # /10 + /2
+    score_respect_preferences_percentage(respect_preferences_percentage)) # /10
+    sum / 52 * 100
   end
 
   def works_today?(user, date, solution)
@@ -255,6 +275,10 @@ private
       else
         0
     end
+  end
+
+  def score_respect_preferences_percentage(respect_preferences_percentage)
+    respect_preferences_percentage == 1 ? 10 : (1 - respect_preferences_percentage) * 10
   end
 
   def consecutive_days_intersect_planning_week?(array_of_consec_days, planning)
