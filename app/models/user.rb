@@ -69,6 +69,7 @@ class User < ApplicationRecord
   end
 
   def is_personnally_ok?(start_at, end_at)
+    # => true if user has no preference constraint during this period
     constraints.where('start_at <= ? and end_at >= ? and category = ?', end_at, start_at, Constraint.categories['preference']).empty?
   end
 

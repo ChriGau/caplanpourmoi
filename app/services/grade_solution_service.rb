@@ -61,7 +61,7 @@ private
       # count nb slots where ok
       solution_slotgroup_hash[:combination].each do |user_id|
         dates = get_start_and_end_dates_of_related_slot(solution_slotgroup_hash) # [ start datetime, end datetime ]
-        nb_slots_ok += 1 if !User.find(user_id).is_personnally_ok?(dates[0], dates[1])
+        nb_slots_ok += 1 if User.find(user_id).is_personnally_ok?(dates[0], dates[1])
       end
     end
     { conflicts_percentage: nb_seconds_conflicts / @total_duration_sg ,
@@ -109,6 +109,7 @@ private
     # => % : (overtime + undertime)/hplanning
     # TODO : affiner le cas où over/under >> hplanning
       fitness =  calculate_over_under_time / (@total_duration_sg/3600)
+      puts "total duration = #{@total_duration_sg/3600}"
     # get fitness score
     if @total_duration_sg > @total_availabilities
       get_grading_fitness_score(fitness, (@total_availabilities / (@total_duration_sg/3600))*100)
@@ -134,6 +135,7 @@ private
         total += employee.working_hours - seconds_worked/3600
       end
     end
+    puts "total under/over time = #{total}"
     total
   end
 
@@ -172,6 +174,7 @@ private
     puts "compactness = #{score_compactness(compactness)}"
     puts "%respect preferences = #{score_respect_preferences_percentage(respect_preferences_percentage)}"
     puts "--------------------"
+    store_grading_to_csv(conflicts_percentage, nb_users_six_consec_days_fail, nb_users_daily_hours_fail, fitness, compactness, respect_preferences_percentage)
     sum = (score_conflicts_percentage(conflicts_percentage).to_f + # /10
     score_nb_users_six_consec_days_fail(nb_users_six_consec_days_fail).to_f + # /10
     score_nb_users_daily_hours_fail(nb_users_daily_hours_fail).to_f + # /10
@@ -285,4 +288,14 @@ private
     start_time = get_first_date_of_a_week(planning.year, planning.week_number)
     array_of_consec_days & [start_time .. start_time + 6].count.positive?
   end
+
+  def store_grading_to_csv(conflicts_percentage, nb_users_six_consec_days_fail, nb_users_daily_hours_fail, fitness, compactness, respect_preferences_percentage)
+    csv_options = { col_sep: ',', force_quotes: true, quote_char: '"' }
+    filepath    = 'grading_test.csv'
+
+    CSV.open(filepath, 'a', csv_options) do |csv|
+      csv << [Time.now, @planning.id, conflicts_percentage, nb_users_six_consec_days_fail, nb_users_daily_hours_fail, fitness, compactness, respect_preferences_percentage]
+    end
+  end
+
 end
