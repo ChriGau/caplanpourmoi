@@ -30,7 +30,14 @@ class GradeSolutionService
       nb_users_daily_hours_fail = grading_nb_users_six_consec_days_fail_and_nb_users_daily_hours_fail[:nb_users_daily_hours_fail]
       # puts "nb_users_daily_hours_fail = #{nb_users_daily_hours_fail}"
       # grade
-      fitness = grading_fitness
+      fitness = grading_fitness[:score]
+      overtime = grading_fitness[:overtime]
+      undertime = grading_fitness[:undertime]
+      mean_over_under_times = mean(grading_fitness[:array_times])
+      variance_over_under_times = variance(grading_fitness[:array_times])
+      standard_deviation_over_under_times = standard_deviation(grading_fitness[:array_times])
+      max_over_under_times = grading_fitness[:array_times].max
+      min_over_under_times = grading_fitness[:array_times].min
       # puts "fitness = #{fitness}"
       # nb of users
       users_non_compact_solution = grading_compactness(grading_nb_users_six_consec_days_fail_and_nb_users_daily_hours_fail[:nb_days_worked_per_users])
@@ -38,6 +45,7 @@ class GradeSolutionService
       # %slots qui respectent les contraintes personnelles
       respect_preferences_percentage = grading_iterating_on_solution_array[:respect_preferences_percentage]
       # final grade (/100)
+      store_grading_to_csv(conflicts_percentage, nb_users_six_consec_days_fail, nb_users_daily_hours_fail, fitness, users_non_compact_solution, respect_preferences_percentage, undertime, overtime)
       grade = get_final_grade(conflicts_percentage, nb_users_six_consec_days_fail,
                               nb_users_daily_hours_fail, fitness,
                               users_non_compact_solution,
@@ -108,19 +116,23 @@ private
   def grading_fitness
     # => % : (overtime + undertime)/hplanning
     # TODO : affiner le cas où over/under >> hplanning
-      fitness =  calculate_over_under_time / (@total_duration_sg/3600)
-      puts "total duration = #{@total_duration_sg/3600}"
+    overtime = calculate_over_under_time[:overtime]
+    undertime = calculate_over_under_time[:undertime]
+    fitness =  calculate_over_under_time[:total] / (@total_duration_sg/3600)
+      # puts "total duration = #{@total_duration_sg/3600}"
     # get fitness score
     if @total_duration_sg > @total_availabilities
-      get_grading_fitness_score(fitness, (@total_availabilities / (@total_duration_sg/3600))*100)
+      score = get_grading_fitness_score(fitness, (@total_availabilities / (@total_duration_sg/3600))*100)
     else
-      get_grading_fitness_score(fitness)
+      score = get_grading_fitness_score(fitness)
     end
+    { score: score, overtime: overtime, undertime: undertime }
   end
 
   def calculate_over_under_time
     # evaluate (over/undertime for each user)
-    total = 0
+    total, overtime, undertime = 0, 0, 0
+    array_times = [] # Values of over|undertimes for each employee
     @employees_involved.each do |employee|
       # get number of seconds worked
       seconds_worked = 0
@@ -130,13 +142,17 @@ private
         end
       end
       if seconds_worked/3600 > employee.working_hours
+        overtime += seconds_worked/3600 - employee.working_hours
         total += seconds_worked/3600 - employee.working_hours
+        array_times << seconds_worked/3600 - employee.working_hours
       else
+        undertime += employee.working_hours - seconds_worked/3600
         total += employee.working_hours - seconds_worked/3600
+        array_times << -(employee.working_hours - seconds_worked/3600)
       end
     end
-    puts "total under/over time = #{total}"
-    total
+    # puts "total under/over time = #{total}"
+    { total: total, undertime: undertime, overtime: overtime, array_times: array_times }
   end
 
   def get_start_and_end_dates_of_related_slot(solution_slotgroup_hash)
@@ -174,7 +190,6 @@ private
     puts "compactness = #{score_compactness(compactness)}"
     puts "%respect preferences = #{score_respect_preferences_percentage(respect_preferences_percentage)}"
     puts "--------------------"
-    store_grading_to_csv(conflicts_percentage, nb_users_six_consec_days_fail, nb_users_daily_hours_fail, fitness, compactness, respect_preferences_percentage)
     sum = (score_conflicts_percentage(conflicts_percentage).to_f + # /10
     score_nb_users_six_consec_days_fail(nb_users_six_consec_days_fail).to_f + # /10
     score_nb_users_daily_hours_fail(nb_users_daily_hours_fail).to_f + # /10
@@ -289,13 +304,25 @@ private
     array_of_consec_days & [start_time .. start_time + 6].count.positive?
   end
 
-  def store_grading_to_csv(conflicts_percentage, nb_users_six_consec_days_fail, nb_users_daily_hours_fail, fitness, compactness, respect_preferences_percentage)
+  def store_grading_to_csv(conflicts_percentage, nb_users_six_consec_days_fail, nb_users_daily_hours_fail, fitness, compactness, respect_preferences_percentage, undertime, overtime)
     csv_options = { col_sep: ',', force_quotes: true, quote_char: '"' }
     filepath    = 'grading_test.csv'
 
     CSV.open(filepath, 'a', csv_options) do |csv|
-      csv << [Time.now, @planning.id, conflicts_percentage, nb_users_six_consec_days_fail, nb_users_daily_hours_fail, fitness, compactness, respect_preferences_percentage]
+      csv << [Time.now, @planning.id, conflicts_percentage, nb_users_six_consec_days_fail, nb_users_daily_hours_fail, fitness, compactness, respect_preferences_percentage, undertime, overtime]
     end
+  end
+
+  def mean(array)
+     array.inject(0) { |sum, x| sum += x } / array.size.to_f
+  end
+
+  def variance(array)
+    array.inject(0) { |variance, x| variance += (x - m) ** 2 }
+  end
+
+  def standard_deviation(array)
+    Math.sqrt(variance(array) / (array.size-1))
   end
 
 end
