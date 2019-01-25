@@ -134,10 +134,10 @@ class GoFindSolutionsV1Service
                                # planning_possibility: planning_possibility,
                                # nb_conflicts: nb_conflicts_best_scoring
                                # }
-          # toutes les 1000 solutions, on enlève les doublons de solutions
+          # toutes les 100 solutions, on enlève les doublons de solutions
           # (les doublons peuvent apparaître lorsque l'on résout les conflits)
           # preferer uniq plutôt que stocker solution # unless solutions_array.select{|x| x == solution}.count.positive?
-          @solutions_array.uniq! if solution_id % 1000 == 0
+          @solutions_array.uniq! if solution_id % 100 == 0
         else
           # cut off all similar possibilities
           next_knot_caracteristics = go_to_next_knot(tree, branch,
