@@ -36,7 +36,7 @@ class GradeSolutionService
       # critères statistiques pour limiter la dispersion des |over-under_times|
       mean_over_under_times = mean(calculate_over_under_time[:array_times])
       variance_over_under_times = variance(calculate_over_under_time[:array_times], mean_over_under_times)
-      standard_deviation_over_under_times = standard_deviation(calculate_over_under_time[:array_times], mean_over_under_times)
+      standard_deviation_over_under_times_percentage = standard_deviation_percentage(calculate_over_under_time[:array_times], mean_over_under_times)
       max_over_under_times = calculate_over_under_time[:array_times].max
       min_over_under_times = calculate_over_under_time[:array_times].min
       # puts "fitness = #{fitness}"
@@ -51,11 +51,18 @@ class GradeSolutionService
       store_grading_to_csv(conflicts_percentage,
         nb_users_six_consec_days_fail, nb_users_daily_hours_fail,
         fitness, users_non_compact_solution, respect_preferences_percentage,
-        undertime, overtime, mean_over_under_times, variance_over_under_times, standard_deviation_over_under_times, max_over_under_times, min_over_under_times)
+        undertime, overtime, mean_over_under_times, variance_over_under_times,
+        standard_deviation_over_under_times, max_over_under_times,
+        min_over_under_times)
       grade = get_final_grade(conflicts_percentage, nb_users_six_consec_days_fail,
                               nb_users_daily_hours_fail, fitness,
                               users_non_compact_solution,
-                              respect_preferences_percentage)
+                              respect_preferences_percentage,
+                              min_over_under_times/35,
+                              max_over_under_times_percentage/35,
+                              mean_over_under_times_percentage/35,
+                              standard_deviation_over_under_times_percentage
+                              )
       # puts "grade  GO THROUGH PLANNINGS = #{grade}"
       grade
   end
@@ -166,7 +173,7 @@ private
 
   def get_grading_fitness_score(fitness)
     # toutes les solutions auront la meme deviation donc pas besoin de la prendre en compte
-    fitness > 1 ? (fitness/100)*10 : (1 - fitness)*10
+    fitness >= 1 ? (fitness/100)*10 : (1 - fitness)*10
   end
 
   def grading_compactness(nb_days_worked_per_users)
@@ -181,7 +188,19 @@ private
     nb_users
   end
 
-  def get_final_grade(conflicts_percentage, nb_users_six_consec_days_fail, nb_users_daily_hours_fail, fitness, compactness, respect_preferences_percentage)
+  def score_standard(value, nb_points)
+    if value.zero?
+      nb_points
+    else
+      value < 1 ? (1-value)*nb_points : (value/100)*nb_points
+    end
+  end
+
+  def score_standard_deviation(std_dev_percentage, nb_points)
+    (1 - std_dev_percentage)*nb_points
+  end
+
+  def get_final_grade(conflicts_percentage, nb_users_six_consec_days_fail, nb_users_daily_hours_fail, fitness, compactness, respect_preferences_percentage, min_over_under_times_percentage, max_over_under_times_percentage, mean_over_under_times_percentage, standard_deviation_over_under_times_percentage)
     # transforme les valeurs des critères en points selon le bareme défini
     # fitness is already a score
     puts "conflicts = #{score_conflicts_percentage(conflicts_percentage) }"
@@ -190,13 +209,21 @@ private
     puts "fitness = #{fitness}"
     puts "compactness = #{score_compactness(compactness)}"
     puts "%respect preferences = #{score_respect_preferences_percentage(respect_preferences_percentage)}"
+    puts "Min over-under_times 35H = #{score_standard(min_over_under_times_percentage, 4) }"
+    puts "MAX over-under_times 35H = #{score_standard(max_over_under_times_percentage, 4) }"
+    puts "MEAN over-under_times 35H = #{score_standard(mean_over_under_times_percentage, 5) }"
+    puts "Standard Deviation = #{score_standard_deviation(standard_deviation_over_under_times_percentage, 10) }"
     puts "--------------------"
     sum = (score_conflicts_percentage(conflicts_percentage).to_f + # /10
     score_nb_users_six_consec_days_fail(nb_users_six_consec_days_fail).to_f + # /10
     score_nb_users_daily_hours_fail(nb_users_daily_hours_fail).to_f + # /10
     fitness.to_f + score_compactness(compactness).to_f +  # /10 + /2
-    score_respect_preferences_percentage(respect_preferences_percentage)) # /10
-    sum / 52 * 100
+    score_respect_preferences_percentage(respect_preferences_percentage)) + # /10
+    score_standard(min_over_under_times_percentage, 4) +
+    score_standard(max_over_under_times_percentage, 4) +
+    score_standard(mean_over_under_times_percentage, 5) +
+    score_standard_deviation(standard_deviation_over_under_times_percentage, 10)
+    sum / 71 * 100
   end
 
   def works_today?(user, date, solution)
@@ -310,7 +337,13 @@ private
     filepath    = 'grading_test.csv'
 
     CSV.open(filepath, 'a', csv_options) do |csv|
-      csv << [Time.now, @planning.id, conflicts_percentage, nb_users_six_consec_days_fail, nb_users_daily_hours_fail, fitness, compactness, respect_preferences_percentage, undertime, overtime, mean_over_under_times, variance_over_under_times, standard_deviation_over_under_times, max_over_under_times, min_over_under_times]
+      csv << [Time.now, @planning.id, conflicts_percentage,
+            nb_users_six_consec_days_fail,
+            nb_users_daily_hours_fail, fitness, compactness,
+            respect_preferences_percentage, undertime, overtime,
+            mean_over_under_times, variance_over_under_times,
+            standard_deviation_over_under_times, max_over_under_times,
+            min_over_under_times]
     end
   end
 
@@ -322,7 +355,12 @@ private
     array.inject(0) { |variance, x| variance += (x - mean) ** 2 }
   end
 
-  def standard_deviation(array, mean)
-    Math.sqrt(variance(array, mean) / (array.size-1))
+  def standard_deviation_percentage(array, mean)
+    # std dev(%) = std dev / étendue. # if min=max alors std dev(%) = std dev/max
+    if (array.max - array.min).zero?
+      (Math.sqrt(variance(array, mean) / (array.size-1))) / array.max
+    else
+      Math.sqrt(variance(array, mean) / (array.size-1)) / (array.max - array.min)
+    end
   end
 end

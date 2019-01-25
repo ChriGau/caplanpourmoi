@@ -61,7 +61,6 @@ class CalculSolutionV1 < ApplicationRecord
       # save calculation abstract in ComputeSolution instance
       compute_solution.save_calculation_abstract(calculation_abstract)
     end
-    binding.pry
     # Créer Solutions et SolutionSlots associées
     list_of_solutions = need_a_calcul ? build_solutions[1] : nil
     SaveSolutionsAndSolutionSlotsService.new( slotgroups_array: self.slotgroups_array,
