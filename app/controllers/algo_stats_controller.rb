@@ -2,10 +2,10 @@
 class AlgoStatsController < ApplicationController
 
 def show_statistics_algo
-  @success = true # init
+  @success = 0 # init
+  authorize AlgoStat
   unless AlgoStat.count.zero?
     @algo_stat = AlgoStat.last
-    authorize @algo_stat
     @compute_solutions = ComputeSolution.last(50).select{|c| c.status != "pending"}.last(15)
     @table_rows = []
     @compute_solutions.each do |compute_solution|
@@ -14,8 +14,9 @@ def show_statistics_algo
     @bar_chart_rows = @algo_stat.calculations_per_week(@compute_solutions, "01/06/2018".to_date)
     @curve_chart_rows = curve_chart_rows
   else
-    # pas d'algostat présent => mettre à jour les statistiques
-    @success = reload_statistics
+    # pas d'algostat présent mais des ComputeSolution => mettre à jour les statistiques
+    @success = reload_statistics if ComputeSolution.count.positive?
+    # sinon, @success = 0
   end
 end
 
