@@ -8,6 +8,7 @@ class SaveSolutionsAndSolutionSlotsService
     @planning = attributes[:planning]
     @compute_solution = attributes[:compute_solution] || nil
     @list_of_solutions = attributes[:list_of_solutions] || nil
+    # list_of_solutions = [ { planning_possibility: [{sg_id: 1, combination: [1, 2]}, {...}], grade: 1}, {...} ]
     @no_solution_user_id = User.find_by(first_name: 'no solution').id
     @slots_not_to_simulate = attributes[:slots_not_to_simulate]
   end
@@ -17,14 +18,18 @@ class SaveSolutionsAndSolutionSlotsService
     t = @compute_solution.timestamps_algo << ["t6", Time.now]
     @compute_solution.update(timestamps_algo: t)
     if !@list_of_solutions.nil?
-      @list_of_solutions.each do |solution|
-        solution_instance = create_solution
-        create_solution_slots(@slotgroups_array, solution, solution_instance)
-        create_no_solution_solution_slots(@slots_not_to_simulate, solution_instance)
-        solution_instance.init
+      @list_of_solutions.each do |solution_hash|
+        # solution_hash = { planning_possibility: [{sg_id: 1, combination: [1, 2]}, {...}], grade: 1}
+        solution_instance = create_solution(solution_hash[:grade])
+        solution_hash[:planning_possibility].each do |solution_sg_hash|
+          # solution_sg_hash = { sg_id: 1, combination: [1, 2] }
+          create_solution_slots(@slotgroups_array, solution_hash, solution_instance)
+          create_no_solution_solution_slots(@slots_not_to_simulate, solution_instance)
+          solution_instance.init
+        end
       end
     else
-      solution_instance = create_solution
+      solution_instance = create_solution(solution.last)
       create_solution_slots_for_a_group_of_slots(@planning.slots.pluck(:id), solution_instance)
       solution_instance.init
     end
@@ -35,13 +40,14 @@ class SaveSolutionsAndSolutionSlotsService
     @compute_solution.evaluate_statistics
   end
 
-  def create_solution
-    Solution.create(planning: @planning, compute_solution: @compute_solution)
+  def create_solution(grade)
+    Solution.create(planning: @planning, compute_solution: @compute_solution, grade: grade.round(3))
     # TODO add after_create => nb conflicts
   end
 
-  def create_solution_slots(slotgroups_array, solution, solution_instance)
+  def create_solution_slots(slotgroups_array, solution_hash, solution_instance)
     # on reprend tous les slotgroups (même à ne pas simuler)
+    # solution_hash = { planning_possibility: [{sg_id: 1, combination: [1, 2]}, {...}], grade: 1}
     slotgroups_array.each do |slotgroup_instance|
       # si simulation_status = false, user = no solution
       if slotgroup_instance.simulation_status == false
@@ -52,7 +58,7 @@ class SaveSolutionsAndSolutionSlotsService
       # si required >= available => affecter à chacun des slots les users de la combination
       elsif slotgroup_instance.nb_available >= slotgroup_instance.nb_required
         slots_id_array = get_array_of_ids_of_slots_related_to_a_slotgroup(slotgroup_instance.id, slotgroups_array)
-        combination = get_slotgroup_combination(solution, slotgroup_instance)
+        combination = get_slotgroup_combination(solution_hash, slotgroup_instance)
         create_solution_slots_for_a_group_of_slots(slots_id_array, solution_instance, combination)
       # sinon (il y a des slots à simuler et d'autres non)
       else
@@ -60,7 +66,7 @@ class SaveSolutionsAndSolutionSlotsService
         slots_id_array_false = get_array_of_slots_ids_related_to_slotgroup_id_according_to_simulation_status(false, slotgroup_instance.id, @slots_array)
         slots_id_array_true = get_array_of_slots_ids_related_to_slotgroup_id_according_to_simulation_status(true, slotgroup_instance.id, @slots_array)
         # leur affecter les users de la combination
-        combination = get_slotgroup_combination(solution, slotgroup_instance)
+        combination = get_slotgroup_combination(solution_hash, slotgroup_instance)
         create_solution_slots_for_a_group_of_slots(slots_id_array_true, solution_instance, combination)
         create_solution_slots_for_a_group_of_slots(slots_id_array_false, solution_instance)
       end
@@ -88,8 +94,10 @@ class SaveSolutionsAndSolutionSlotsService
     slots_array.select { |x| x[:slotgroup_id] == slotgroup_id }
   end
 
-  def get_slotgroup_combination(solution, slotgroup_instance)
-    solution.select { |x| x[:sg_id] == slotgroup_instance.id }.first[:combination]
+  def get_slotgroup_combination(solution_hash, slotgroup_instance)
+    # => Array of users' ids
+    # solution_hash = { planning_possibility: [{sg_id: 1, combination: [1, 2]}, {...}], grade: 1}
+    solution_hash[:planning_possibility].select { |x| x[:sg_id] == slotgroup_instance.id }.first[:combination]
   end
 
   def get_array_of_slots_ids_related_to_slotgroup_id_according_to_simulation_status(simulation_status, slotgroup_id, slots_array)

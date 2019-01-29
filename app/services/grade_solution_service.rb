@@ -6,7 +6,9 @@
 class GradeSolutionService
   attr_accessor :slots_array, :planning, :users, :calcul, :slotgroups_array
 
-  def initialize(solution, total_duration_sg, no_solution_user_id, duration_per_sg_array, planning, total_availabilities, employees_involved, nb_slots)
+  def initialize(
+    solution, total_duration_sg, no_solution_user_id, duration_per_sg_array,
+    planning, total_availabilities, employees_involved, nb_slots)
     @solution = solution
     @total_duration_sg = total_duration_sg
     @no_solution_user_id = no_solution_user_id
@@ -48,21 +50,16 @@ class GradeSolutionService
       # %slots qui respectent les contraintes personnelles
       respect_preferences_percentage = grading_iterating_on_solution_array[:respect_preferences_percentage]
       # final grade (/100)
-      store_grading_to_csv(conflicts_percentage,
-        nb_users_six_consec_days_fail, nb_users_daily_hours_fail,
-        fitness, users_non_compact_solution, respect_preferences_percentage,
-        undertime, overtime, mean_over_under_times, variance_over_under_times,
-        standard_deviation_over_under_times, max_over_under_times,
-        min_over_under_times)
       grade = get_final_grade(conflicts_percentage, nb_users_six_consec_days_fail,
                               nb_users_daily_hours_fail, fitness,
                               users_non_compact_solution,
                               respect_preferences_percentage,
-                              min_over_under_times/35,
-                              max_over_under_times_percentage/35,
-                              mean_over_under_times_percentage/35,
                               standard_deviation_over_under_times_percentage
                               )
+      store_grading_to_csv(conflicts_percentage,
+        nb_users_six_consec_days_fail, nb_users_daily_hours_fail,
+        fitness, users_non_compact_solution, respect_preferences_percentage,
+        undertime, overtime, standard_deviation_over_under_times_percentage, grade)
       # puts "grade  GO THROUGH PLANNINGS = #{grade}"
       grade
   end
@@ -200,30 +197,32 @@ private
     (1 - std_dev_percentage)*nb_points
   end
 
-  def get_final_grade(conflicts_percentage, nb_users_six_consec_days_fail, nb_users_daily_hours_fail, fitness, compactness, respect_preferences_percentage, min_over_under_times_percentage, max_over_under_times_percentage, mean_over_under_times_percentage, standard_deviation_over_under_times_percentage)
+  def get_final_grade(
+    conflicts_percentage, nb_users_six_consec_days_fail, nb_users_daily_hours_fail,
+     fitness, compactness, respect_preferences_percentage,
+     standard_deviation_over_under_times_percentage)
     # transforme les valeurs des critères en points selon le bareme défini
     # fitness is already a score
-    puts "conflicts = #{score_conflicts_percentage(conflicts_percentage) }"
-    puts "6 days = #{score_nb_users_six_consec_days_fail(nb_users_six_consec_days_fail)}"
-    puts "daily hours = #{score_nb_users_daily_hours_fail(nb_users_daily_hours_fail)}"
-    puts "fitness = #{fitness}"
-    puts "compactness = #{score_compactness(compactness)}"
-    puts "%respect preferences = #{score_respect_preferences_percentage(respect_preferences_percentage)}"
-    puts "Min over-under_times 35H = #{score_standard(min_over_under_times_percentage, 4) }"
-    puts "MAX over-under_times 35H = #{score_standard(max_over_under_times_percentage, 4) }"
-    puts "MEAN over-under_times 35H = #{score_standard(mean_over_under_times_percentage, 5) }"
-    puts "Standard Deviation = #{score_standard_deviation(standard_deviation_over_under_times_percentage, 10) }"
-    puts "--------------------"
+    # puts "conflicts = #{score_conflicts_percentage(conflicts_percentage) }"
+    # puts "6 days = #{score_nb_users_six_consec_days_fail(nb_users_six_consec_days_fail)}"
+    # puts "daily hours = #{score_nb_users_daily_hours_fail(nb_users_daily_hours_fail)}"
+    # puts "fitness = #{fitness}"
+    # puts "compactness = #{score_compactness(compactness)}"
+    # puts "%respect preferences = #{score_respect_preferences_percentage(respect_preferences_percentage)}"
+    # puts "Min over-under_times 35H = #{score_standard(min_over_under_times_percentage, 4) }"
+    # puts "MAX over-under_times 35H = #{score_standard(max_over_under_times_percentage, 4) }"
+    # puts "MEAN over-under_times 35H = #{score_standard(mean_over_under_times_percentage, 5) }"
+    # puts "Standard Deviation = #{score_standard_deviation(standard_deviation_over_under_times_percentage, 10) }"
+    # puts "--------------------"
     sum = (score_conflicts_percentage(conflicts_percentage).to_f + # /10
     score_nb_users_six_consec_days_fail(nb_users_six_consec_days_fail).to_f + # /10
     score_nb_users_daily_hours_fail(nb_users_daily_hours_fail).to_f + # /10
     fitness.to_f + score_compactness(compactness).to_f +  # /10 + /2
     score_respect_preferences_percentage(respect_preferences_percentage)) + # /10
-    score_standard(min_over_under_times_percentage, 4) +
-    score_standard(max_over_under_times_percentage, 4) +
-    score_standard(mean_over_under_times_percentage, 5) +
-    score_standard_deviation(standard_deviation_over_under_times_percentage, 10)
-    sum / 71 * 100
+    # score_standard(min_over_under_times_percentage, 2) +
+    # score_standard(max_over_under_times_percentage, 2) +
+    score_standard_deviation(standard_deviation_over_under_times_percentage, 4)
+    sum / 62 * 100
   end
 
   def works_today?(user, date, solution)
@@ -332,7 +331,14 @@ private
     array_of_consec_days & [start_time .. start_time + 6].count.positive?
   end
 
-  def store_grading_to_csv(conflicts_percentage, nb_users_six_consec_days_fail, nb_users_daily_hours_fail, fitness, compactness, respect_preferences_percentage, undertime, overtime, mean_over_under_times, variance_over_under_times, standard_deviation_over_under_times, max_over_under_times, min_over_under_times)
+  def store_grading_to_csv(
+    conflicts_percentage,
+    nb_users_six_consec_days_fail,
+    nb_users_daily_hours_fail,
+    fitness, compactness, respect_preferences_percentage,
+    undertime, overtime,
+    standard_deviation_over_under_times, grade
+    )
     csv_options = { col_sep: ',', force_quotes: true, quote_char: '"' }
     filepath    = 'grading_test.csv'
 
@@ -341,9 +347,7 @@ private
             nb_users_six_consec_days_fail,
             nb_users_daily_hours_fail, fitness, compactness,
             respect_preferences_percentage, undertime, overtime,
-            mean_over_under_times, variance_over_under_times,
-            standard_deviation_over_under_times, max_over_under_times,
-            min_over_under_times]
+            standard_deviation_over_under_times, grade]
     end
   end
 
