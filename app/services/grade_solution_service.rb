@@ -56,10 +56,11 @@ class GradeSolutionService
                               respect_preferences_percentage,
                               standard_deviation_over_under_times_percentage
                               )
-      store_grading_to_csv(conflicts_percentage,
-        nb_users_six_consec_days_fail, nb_users_daily_hours_fail,
-        fitness, users_non_compact_solution, respect_preferences_percentage,
-        undertime, overtime, standard_deviation_over_under_times_percentage, grade)
+      # Pour les tests :
+      # store_grading_to_csv(conflicts_percentage,
+      #   nb_users_six_consec_days_fail, nb_users_daily_hours_fail,
+      #   fitness, users_non_compact_solution, respect_preferences_percentage,
+      #   undertime, overtime, standard_deviation_over_under_times_percentage, grade)
       # puts "grade  GO THROUGH PLANNINGS = #{grade}"
       grade
   end
