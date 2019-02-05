@@ -6,7 +6,12 @@ def show_statistics_algo
   authorize AlgoStat
   unless AlgoStat.count.zero?
     @algo_stat = AlgoStat.last
-    @compute_solutions = ComputeSolution.last(50).select{|c| c.status != "pending"}.last(15)
+    nb_elligible_compute_solutions = ComputeSolution.select{ |c| c.status != "pending"}.count
+    if nb_elligible_compute_solutions > 15
+      @compute_solutions = ComputeSolution.select{|c| c.status != "pending"}.last(15)
+    else
+      @compute_solutions = ComputeSolution.select{|c| c.status != "pending"}
+    end
     @table_rows = []
     @compute_solutions.each do |compute_solution|
       @table_rows << compute_solution.build_row_for_statistics_display
@@ -15,7 +20,10 @@ def show_statistics_algo
     @curve_chart_rows = curve_chart_rows
   else
     # pas d'algostat présent mais des ComputeSolution => mettre à jour les statistiques
-    @success = reload_statistics if ComputeSolution.count.positive?
+    if ComputeSolution.count.positive?
+      @success = 1
+      reload_statistics
+    end
     # sinon, @success = 0
   end
 end
