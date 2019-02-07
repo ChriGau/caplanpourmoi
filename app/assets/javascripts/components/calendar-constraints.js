@@ -5,6 +5,13 @@ var modalPosition = function(modal, position) {
   modal.style.setProperty('--postop', position -300 + "px");
 }
 
+  $('.category').click( function (data){
+      $('#0').removeClass('checked');
+      $('#1').removeClass('checked');
+      $('#2').removeClass('checked');
+      $(this).toggleClass('checked');
+    });
+
 var mySlider = $("input#nb-employees").bootstrapSlider();
 
 // Ajout de roles au user
@@ -71,6 +78,7 @@ $('.modify-profile').click(function(data){
   modalPosition(modalContent, data.clientY + 300);
 });
 
+
 $('#calendar').fullCalendar({
   //calendar attributes
   header: {
@@ -111,13 +119,7 @@ $('#calendar').fullCalendar({
     $('#datetimepicker2').datetimepicker({
       locale: 'FR'
      });
-    // comportement lors de la sélection d'une catégorie
-    $('.category').click( function (data){
-      $('#0').removeClass('checked');
-      $('#1').removeClass('checked');
-      $('#2').removeClass('checked');
-      $(this).toggleClass('checked');
-    });
+
     //behavior of days sélection
     $("input:checkbox").click(function(){
       $(this).parent().parent().toggleClass("checked");
@@ -166,7 +168,6 @@ $('#calendar').fullCalendar({
       // initializations
       $('.update_constraint').unbind();
       $('.delete_constraint').unbind();
-      $('.category').removeClass("checked");
       var modalContent = document.querySelector(".modal-update-constraint");
       modalPosition(modalContent, jsEvent.clientY);
       $(this).css('border-color', 'red');
@@ -184,13 +185,6 @@ $('#calendar').fullCalendar({
       var start_date = new Date(start_date.setHours(start_date.getHours() ));
       var end_date = new Date(calEvent.end.format());
       var end_date = new Date(end_date.setHours(end_date.getHours() ));
-      // comportement lors de la sélection d'une catégorie
-      $('.category').click( function (data){
-        $('#0').removeClass("checked");
-        $('#1').removeClass("checked");
-        $('#2').removeClass("checked");
-        $(this).addClass("checked");
-      });
       // set default values to the form
       $('#datetimepicker1 .form-control').val(start_date.toLocaleDateString('fr-FR', {timezone: 'UTC', hour: '2-digit', minute: '2-digit'}));
       $("#datetimepicker1").datetimepicker({
@@ -200,7 +194,6 @@ $('#calendar').fullCalendar({
       $("#datetimepicker2").datetimepicker({
         locale: 'FR'
       });
-
 
       $('.update_constraint').off('click', function() {
       });
