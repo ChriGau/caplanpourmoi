@@ -110,6 +110,7 @@ Rails.application.routes.draw do
   resources :colors, only: [:new, :create]
 
   get 'statistics_algo', to: 'algo_stats#show_statistics_algo', as: 'statistics_algo'
+  get 'inbox', to: 'algo_stats#read_emails', as: 'rinbox'
   get 'update_statistics_algo', to: 'algo_stats#reload_statistics', as: 'reload_statistics'
 
   # Sidekiq Web UI, only for admins.

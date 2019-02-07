@@ -1,83 +1,86 @@
 <br>
-<div class="row maj">
-    <%= link_to "Mettre à jour les statistiques", reload_statistics_path, { :class=>"btn-danger" } %>
-</div>
-<div class="row">
-  <div class="statistics-header accordion">
-    <h1>Statistiques générales</h1>
+
+<% unless @algo_stat.nb_compute_solutions.nil? %>
+  <div class="row maj">
+      <%= link_to "Mettre à jour les statistiques", reload_statistics_path, { :class=>"btn-danger" } %>
   </div>
-  <div class="panel">
-  <br>
-    <div class="row">
-      <div class="col-xs-3">
-        <div class="card-statistics">
-          <b>Nombre de calculs mesurés</b><br>
-          <h1><b><%= @algo_stat.nb_compute_solutions %></b></h1>
+  <div class="row">
+    <div class="statistics-header accordion">
+      <h1>Statistiques générales</h1>
+    </div>
+    <div class="panel">
+    <br>
+      <div class="row">
+        <div class="col-xs-3">
+          <div class="card-statistics">
+            <b>Nombre de calculs mesurés</b><br>
+            <h1><b><%= @algo_stat.nb_compute_solutions %></b></h1>
+          </div>
+        </div>
+        <div class="col-xs-3">
+          <div class="card-statistics">
+            <b>Nombre de solutions stockées</b>
+            <h1><b><%= @algo_stat.nb_solutions %></b></h1>
+          </div>
+        </div>
+        <div class="col-xs-6">
+          <div class="card-statistics">
+            <b>Taux de réussite</b>
+            <br>
+            <h1><b><%= number_to_percentage((@algo_stat.nb_compute_solutions - @algo_stat.nb_fail).to_f / @algo_stat.nb_compute_solutions*100).to_f  %>%</b></  h1>
+          </div>
         </div>
       </div>
-      <div class="col-xs-3">
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="statistics-header accordion">
+      <h1>Temps d'exécution</h1>
+    </div>
+    <div class="panel">
+      <br>
+      <div class="row">
+        <div class="col-xs-4">
+          <div class="card-statistics">
+            <b>Temps total</b>
+            <h1><b><%= @algo_stat.total_mean_time.round(4) %>"</b></h1>
+          </div>
+        </div>
+        <div class="col-xs-4">
+          <div class="card-statistics">
+            <b>Temps de recherche de solutions:</b>
+            <h1><b><%= @algo_stat.go_through_solutions_mean_time_per_slot.round(4) %>"/slot</b></h1>
+          </div>
+        </div>
+        <div class="col-xs-4">
+          <div class="card-statistics">
+            <b>Balayage du champs des solutions:</b>
+            <h1><b><%= @algo_stat.tree_covered_mean.round(4) %>%</b></h1>
+          </div>
+        </div>
+      </div>
+    <br>
+    <div class="row">
+      <div class="col-xs-6">
         <div class="card-statistics">
-          <b>Nombre de solutions stockées</b>
-          <h1><b><%= @algo_stat.nb_solutions %></b></h1>
+          <b>Stockage des solutions</b>
+          <h1><b><%= @algo_stat.solutions_storing_mean_time.round(4) %>"/slot</b></h1>
         </div>
       </div>
       <div class="col-xs-6">
-        <div class="card-statistics">
-          <b>Taux de réussite</b>
-          <br>
-          <h1><b><%= number_to_percentage((@algo_stat.nb_compute_solutions - @algo_stat.nb_fail).to_f / @algo_stat.nb_compute_solutions*100).to_f  %>%</b></h1>
-        </div>
+        <b>Simulateur de durée: </b><br>
+        Entrer le nombre de slots <br>
+        <input type="text" name="nb_slots" id="name">
+        <button class="btn-action">Simuler</button>
+      <div class="result" style="color: green;">
       </div>
+      <i>(temps de recherche de solutions * nb slots * %tree_covered) + temps de stockage * nb slots</i>
+      </div>
+    </div>
     </div>
   </div>
-</div>
-
-<div class="row">
-  <div class="statistics-header accordion">
-    <h1>Temps d'exécution</h1>
-  </div>
-  <div class="panel">
-    <br>
-    <div class="row">
-      <div class="col-xs-4">
-        <div class="card-statistics">
-          <b>Temps total</b>
-          <h1><b><%= @algo_stat.total_mean_time.round(4) %>"</b></h1>
-        </div>
-      </div>
-      <div class="col-xs-4">
-        <div class="card-statistics">
-          <b>Temps de recherche de solutions:</b>
-          <h1><b><%= @algo_stat.go_through_solutions_mean_time_per_slot.round(4) %>"/slot</b></h1>
-        </div>
-      </div>
-      <div class="col-xs-4">
-        <div class="card-statistics">
-          <b>Balayage du champs des solutions:</b>
-          <h1><b><%= @algo_stat.tree_covered_mean.round(4) %>%</b></h1>
-        </div>
-      </div>
-    </div>
-  <br>
-  <div class="row">
-    <div class="col-xs-6">
-      <div class="card-statistics">
-        <b>Stockage des solutions</b>
-        <h1><b><%= @algo_stat.solutions_storing_mean_time.round(4) %>"/slot</b></h1>
-      </div>
-    </div>
-    <div class="col-xs-6">
-      <b>Simulateur de durée: </b><br>
-      Entrer le nombre de slots <br>
-      <input type="text" name="nb_slots" id="name">
-      <button class="btn-action">Simuler</button>
-    <div class="result" style="color: green;">
-    </div>
-    <i>(temps de recherche de solutions * nb slots * %tree_covered) + temps de stockage * nb slots</i>
-    </div>
-  </div>
-  </div>
-</div>
+<% end %>
 
 <div class="row">
   <div class="statistics-header accordion">
@@ -107,6 +110,18 @@
       </div>
     </div>
   </div>
+</div>
+
+
+<div class="row">
+  <h3><%= @a[0] %> messages non lus</h3>
+</div>
+
+<div>
+
+  <% @a[1].each do |content| %>
+    <li><%= content %></li>
+  <% end %>
 </div>
 
 <%= javascript_include_tag "dataviz/algo_statistics" %>
