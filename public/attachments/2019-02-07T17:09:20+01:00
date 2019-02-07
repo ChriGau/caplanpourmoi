@@ -1,0 +1,50 @@
+Mise à jour du Ranking
+
+- exprimer tous les critères en %
+- leur attribuer une note = % * nb de points
+- on sort une note /100
+
+- pour les tests : 
+les notes obtenues sont stockées dans grading_test.csv, grâce à la méthode store_grading_to_csv.
+L'appel à la méthod (depuis perform) est à décommenter lors des tests.
+
+Observations :
+1) avec les critères initiaux (jusqu'à la fitness), on progresse par palliers.
+Puis dans le dernier pallier toutes les solutions ont la même fitness.
+
+2) Il a donc fallu ajouter des critères pour être + fins.
+- min des hsupp, max des hsupp, mean des hsupp, ecartype des h en + ou en -.
+Il faut ajuster le poids de ces critères pour que l'on identifie rapidement les solutions correspondant au dernier pallier, puis que l'on puisse être + précis sur celles-ci.
+=> + ce sont des critères discriminants, + le poids attribué est faible.
+
+=> j'ai décidé d'attribuer un poids de 5 à l'ecartype et de supprimer
+- min (over-under time), max(over-under time), mean
+car on juge des attributs qui sont reprise dans la mesure de l'ecart type.
+
+
+- le mean des over|under times est inutile car toujours la meme valeur!
+
+jusqu'à maintenant, dans la boucle d'itération des solutions : 
+- on calcule le nombre de conflicts
+- nombre > score actuel => on coupe
+
+Maintenant, il faudrait couper à partir du moment où la note est moins bonne.
+Mais comment déterminer le sg_ranking qui correspond à cet endroit???
+sg_ranking à partir duquel on peut couper ??????
+
+
+
+N.B. la note est mise en mémoire dans Solution via Solution.init
+La note est obtenue en recalculant tous les paramètres.
+J'ai commenté ça, pour l'instant on crée des solutions en reprenant la note obtenue via GradeService.
+
+
+ a.each do |x| p x[:planning_possibility] end
+
+############################"
+
+j'en suis à =
+1) ajouter la grade dans @solutions_array et régler les pbs.
+on dirait que build_solutions perd une partie des données
+2) déterminer le sg_ranking où ça pète pour pouvoir + couper.
+

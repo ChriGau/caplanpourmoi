@@ -39,6 +39,7 @@ def read_emails
       # récupérer la structure du message
       envelope = imap.fetch(message_id, "ENVELOPE")[0].attr["ENVELOPE"]
       mail_structure = imap.fetch(message_id, 'RFC822')[0].attr['RFC822']
+      binding.pry
       mail = Mail.new(mail_structure)
       # si PJ
       unless mail.attachments.blank?
@@ -53,8 +54,13 @@ def read_emails
           end
           nb_PJ = 1
         end
-        # placer dans /traité, supprimer de l'inbox
+        # placer dans /achieved, supprimer de l'inbox
         imap.copy(message_id, 'Inbox/achieved')
+        imap.store(message_id, "+FLAGS", [:Deleted])
+        imap.expunge
+      else # pas d'attachment
+        # placer dans /failed, supprimer de l'inbox
+        imap.copy(message_id, 'Inbox/failed')
         imap.store(message_id, "+FLAGS", [:Deleted])
         imap.expunge
       end
