@@ -1,4 +1,8 @@
 var modifyConstraintsCalendar = function(events, defaultDate) {
+  console.log("constraints calendar gets fetched in calendar-constraints.js");
+  console.log("**** events by calendar-constraints.js = ");
+  console.log(events);
+  $('#calendar').fullCalendar( 'rerenderEvents');
 
 var modalContent = document.querySelector(".modal-content");
 var modalPosition = function(modal, position) {

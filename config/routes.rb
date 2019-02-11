@@ -104,7 +104,7 @@ Rails.application.routes.draw do
   resources :roles, only: [:index, :new, :create, :show, :edit, :update, :destroy]
   resources :colors, only: [:new, :create]
   get 'users/:id/infos', to: 'users#infos', as: 'user_infos'
-  get 'users/:id/dispos', to: 'users#dispos', as: 'user_dispos'
+  get 'users/:id/personnal_constraints', to: 'users#personnal_constraints', as: 'user_personnal_constraints'
   post 'users/user_invite', to: 'users#user_invite', as: "users_invite"
   get 'users/:id/reinvite', to: 'users#reinvite', as: "user_reinvite"
   resources :colors, only: [:new, :create]

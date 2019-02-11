@@ -1,3 +1,6 @@
+json.array! @planning.slots do |slot|
+  json.partial! 'plannings/event', planning: @planning, slot: slot
+end
 # rubocop:disable Metrics/ClassLength
 class PlanningsController < ApplicationController
   before_action :set_planning, only: [:skeleton, :users, :conflicts, :events,

@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :infos, :dispos, :reinvite, :update]
+  before_action :set_user, only: [:show, :infos, :personnal_constraints, :reinvite, :update]
 
   def index
     @users = policy_scope(User)
@@ -26,10 +26,12 @@ class UsersController < ApplicationController
   end
 
   # rubocop:disable AbcSize, MethodLength
-  def dispos
+  def personnal_constraints
+    authorize @user
     @planning = Planning.first
     @constraints = @user.constraints
     @constraints_array =  get_constraints_array(@constraints)
+    # renders users/personnal_constraints.json.jbuilder
   end
   # rubocop:enable AbcSize, MethodLength
 

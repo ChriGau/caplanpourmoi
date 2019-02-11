@@ -6,7 +6,8 @@
 <%= javascript_include_tag "components/calendar-constraints" %>
 <%= content_for(:after_js) do %>
   <script>
-    var events = <%= raw @constraints_array.to_json %> ;
+    // var events = <%= raw @constraints_array.to_json %> ;
+    var events = '<%= user_personnal_constraints_path(@user, format: :json) %>';
     var defaultDate = "<%= Date.today %>" ;
 
     modifyConstraintsCalendar(events, defaultDate);

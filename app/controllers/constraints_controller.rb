@@ -1,5 +1,5 @@
 class ConstraintsController < ApplicationController
-  before_action :set_user, only: [:create, :update]
+  before_action :set_user, only: [:create, :update, :events]
   before_action :set_constraint, only: [:destroy, :update]
 
   def show
@@ -31,8 +31,8 @@ class ConstraintsController < ApplicationController
     @constraints = @user.constraints
     if @user.constraints << constraint_list
       respond_to do |format|
+        format.js { @constraints }
         format.html { redirect_to user_path(@user) }
-        format.js
       end
     else
       respond_to do |format|
