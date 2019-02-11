@@ -1,5 +1,5 @@
 class ConstraintsController < ApplicationController
-  before_action :set_user, only: [:create, :update, :events]
+  before_action :set_user, only: [:create, :events]
   before_action :set_constraint, only: [:destroy, :update]
 
   def show

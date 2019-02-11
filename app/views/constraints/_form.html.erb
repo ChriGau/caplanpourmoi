@@ -26,12 +26,12 @@
     <ul class="list-inline categories">
       <% Constraint.categories.each do |type, number| %>
       <li>
-        <div class="daysbox col-xs-3 category <%= type %>" id=<%= number %>>
-          <label>
+        <label>
+          <div class="category-box col-xs-3 category <%= type %>" id=<%= number %>>
             <%= type %>
             <%= radio_button_tag "category[]", number, false, class: "hide", required: true %>
-          </label>
-        </div>
+          </div>
+        </label>
       </li>
       <% end %>
     </ul>

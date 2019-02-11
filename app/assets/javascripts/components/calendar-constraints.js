@@ -1,20 +1,34 @@
 var modifyConstraintsCalendar = function(events, defaultDate) {
-  console.log("constraints calendar gets fetched in calendar-constraints.js");
-  console.log("**** events by calendar-constraints.js = ");
-  console.log(events);
-  $('#calendar').fullCalendar( 'rerenderEvents');
 
 var modalContent = document.querySelector(".modal-content");
 var modalPosition = function(modal, position) {
   modal.style.setProperty('--postop', position -300 + "px");
 }
 
-  $('.category').click( function (data){
-      $('#0').removeClass('checked');
-      $('#1').removeClass('checked');
-      $('#2').removeClass('checked');
-      $(this).toggleClass('checked');
-    });
+// comportement des boutons de catégories
+$('.category').click( function (data){
+  $('.category').each(function(){
+    $(this).removeClass('checked');
+  });
+    $(this).toggleClass('checked');
+});
+
+// comportement du clic sur le bouton 'Cancel' du form
+$('.cancel-button').click(function(data){
+  $('.category').each(function(){
+    $(this).removeClass('checked');
+  });
+});
+
+//behavior of days sélection
+$("input:checkbox").click(function(){
+  $(this).parent().parent().toggleClass("checked");
+});
+$('input:checkbox').each(function(){
+  $(this)[0].disabled= false;
+  $(this)[0].checked= false;
+});
+$('.daysbox').removeClass('checked unselectable');
 
 var mySlider = $("input#nb-employees").bootstrapSlider();
 
@@ -49,7 +63,6 @@ $('.delete-role').click(function(data){
               }
     };
   var build_url = "/users/" + user_id + "/role_users/" + roleuser_id;
-  console.log("URL => " + build_url);
 
     $.ajax({
       url: build_url,
@@ -106,7 +119,21 @@ $('#calendar').fullCalendar({
   events: events,
   // what happens when we select a time period on the calendar
   select: function( start, end, jsEvent, view ) {
-    $('.category').removeClass("checked");
+    // cacher le bouton valider
+    $('.create_constraint').hide();
+    // aucune catégorie sélectionnée
+    $('.category').each(function(){
+      $(this).removeClass('checked');
+    });
+    // aucun jour sélectionné
+    $('input:checkbox').each(function(){
+      $(this)[0].disabled= false;
+      $(this)[0].checked= false;
+    });
+    // lorsque l'on en sélectionne une, le bouton valider apparaît
+    $('.category').click( function (data){
+      $('.create_constraint').show();
+    });
     var modalContent = document.querySelector(".modal-constraint");
     modalPosition(modalContent, jsEvent.clientY);
     $(".modal-constraint").modal('show');
@@ -124,15 +151,6 @@ $('#calendar').fullCalendar({
       locale: 'FR'
      });
 
-    //behavior of days sélection
-    $("input:checkbox").click(function(){
-      $(this).parent().parent().toggleClass("checked");
-    });
-    $('input:checkbox').each(function(){
-      $(this)[0].disabled= false;
-      $(this)[0].checked= false;
-    });
-    $('.daysbox').removeClass('checked unselectable');
     var date = (new Date(end.format()).getDay());
     $('input:checkbox[value='+date+']')[0].disabled= true;
     $('input:checkbox[value='+date+']').parent().parent().addClass('unselectable');
@@ -140,7 +158,6 @@ $('#calendar').fullCalendar({
 
   eventResize: function( event, delta, revertFunc, jsEvent, ui, view ) {
     var constraint_id = event.id;
-    console.log(event);
     var user_id = event.user_id;
     var build_url = "/users/" + user_id + "/constraints/" + constraint_id;
      constraint_data = {
@@ -226,7 +243,8 @@ $('#calendar').fullCalendar({
           format: 'js',
           type: 'PATCH',
           success: function(data) {
-            location.reload();
+            // location.reload();
+            $('#calendar').fullCalendar( 'refetchEvents');
           },
           error: function(jqXHR) {
             console.log("ajax echec - PATCH de Constraint");
@@ -251,7 +269,8 @@ $('#calendar').fullCalendar({
           format: 'js',
           type: 'DELETE',
           success: function(data) {
-            location.reload();
+            // location.reload();
+            $('#calendar').fullCalendar( 'refetchEvents');
           },
           error: function(jqXHR) {
             console.log("ajax echec - PATCH de Constraint");

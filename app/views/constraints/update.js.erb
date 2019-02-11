@@ -1,3 +1,8 @@
 $(".modal-update-constraint").modal('hide');
 $('#calendar').fullCalendar( 'refetchEvents');
 $('#calendar').fullCalendar( 'unselect');
+
+// réinitialiser les catégories
+  $('.category').each(function(){
+    $(this).removeClass('checked');
+  });

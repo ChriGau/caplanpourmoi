@@ -49,7 +49,7 @@ class UsersController < ApplicationController
     if @user.valid?
       u = User.invite!(user_params)
       u.update(profile_picture: photo_params[:profile_picture]) if !photo_params[:profile_picture].nil?
-      redirect_to users_path, notice: "#{@user.first_name} fait parti de votre entreprise"
+      redirect_to users_path, notice: "#{@user.first_name} fait partie de votre entreprise"
     else
       render :new, user: @user, roles: @roles
     end

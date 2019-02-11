@@ -22,6 +22,21 @@ ul.list-inline {
   color: $myblue;
 }
 
+.category-box {
+  border: 1px solid $myblue;
+  background-color: $myblue;
+  color: $myyellow;
+  width: 100px;
+  height: 30px;
+  margin-top: 10px;
+  padding:0px;
+}
+
+.category-box.checked {
+  background-color: $myyellow;
+  color: $myblue;
+}
+
 .unselectable {
   background-color: $mygrey;
   opacity: 0.5;
