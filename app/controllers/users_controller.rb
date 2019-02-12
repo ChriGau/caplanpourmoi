@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :infos, :personnal_constraints, :reinvite, :update]
+  before_action :set_user, only: [:show, :infos, :personnal_constraints, :reinvite, :update, :personnal_constraints_and_working_hours]
 
   def index
     @users = policy_scope(User)
@@ -34,6 +34,13 @@ class UsersController < ApplicationController
     # renders users/personnal_constraints.json.jbuilder
   end
   # rubocop:enable AbcSize, MethodLength
+
+  def personnal_constraints_and_working_hours
+    authorize @user
+    personnal_constraints
+    @slots = @user.get_assigned_slots
+    # renders users/personnal_constraints_and_working_hours.json.jbuilder
+  end
 
   def new
     @user = User.new

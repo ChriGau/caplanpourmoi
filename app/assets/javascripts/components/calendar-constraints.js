@@ -1,4 +1,43 @@
-var modifyConstraintsCalendar = function(events, defaultDate) {
+
+
+var displayConstraintsAndWorkingHours = function(events, defaultDate, user_id) {
+  // clic sur "Horaires de travail"
+  var btn = document.getElementsByClassName('show_working_hours');
+    btn[0].addEventListener("click", function(){
+    // modifyConstraintsCalendar(events_constraints_and_wh, defaultDate, user_id);
+        var a = user_id;
+        var build_url = "/users/" + a + "/personnal_c_and_wh.json";
+        var events_complete2 =  '/users/' + a + '/personnal_constraints_and_working_hours.json'
+        $.ajax({
+          url: build_url,
+          format: 'js',
+          type: 'GET',
+          success: function(data) {
+            // modifyConstraintsCalendar(JSON.stringify(data), defaultDate, user_id);
+            modifyConstraintsCalendar(events_complete2, defaultDate, a);
+            $('#calendar').fullCalendar( 'refetchEvents');
+            // data.forEach(function(element) {
+            //   console.log(element);
+            //   console.log(typeof 'element');
+            // });
+            // var b = JSON.stringify(data);
+            // console.log(typeof 'b');
+            // modifyConstraintsCalendar(b, defaultDate, user_id);
+          },
+          error: function(jqXHR) {
+            console.log("ajax echec - get de personnal_c_and_wh");
+            console.log(event_data);
+            console.log(jqXHR.responseText);
+          }
+        });
+  })
+
+  }; // fin de displayConstraintsAndWorkingHours
+
+var modifyConstraintsCalendar = function(events, defaultDate, user_id) {
+
+console.log("back here");
+console.log(events);
 
 var modalContent = document.querySelector(".modal-content");
 var modalPosition = function(modal, position) {
@@ -117,6 +156,7 @@ $('#calendar').fullCalendar({
   aspectRatio: 4,
   defaultDate: defaultDate,
   events: events,
+
   // what happens when we select a time period on the calendar
   select: function( start, end, jsEvent, view ) {
     // cacher le bouton valider
@@ -243,7 +283,6 @@ $('#calendar').fullCalendar({
           format: 'js',
           type: 'PATCH',
           success: function(data) {
-            // location.reload();
             $('#calendar').fullCalendar( 'refetchEvents');
           },
           error: function(jqXHR) {

@@ -29,6 +29,10 @@ class UserPolicy < ApplicationPolicy
     user.is_owner? || user == record
   end
 
+  def personnal_constraints_and_working_hours?
+    user.is_owner? || user == record
+  end
+
   def permitted_attributes
     if user.is_owner?
       [:profile_picture, :first_name, :last_name, :email, :is_owner, :working_hours, role_ids: []]

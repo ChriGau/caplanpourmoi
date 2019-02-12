@@ -100,6 +100,10 @@ class Planning < ApplicationRecord
     r
   end
 
+  def get_planning_id_according_to_a_date(date)
+    Planning.find_by(week_number: date.cweek, year: date.cwyear).id
+  end
+
   def slots_total_duration
     # sum of duration of all slots of the planning (hours, decimal)
     slots.map(&:length).inject(:+)/3600

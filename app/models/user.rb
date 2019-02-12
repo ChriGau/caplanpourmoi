@@ -180,6 +180,14 @@ class User < ApplicationRecord
     self.key = SecureRandom.hex(20)
   end
 
+  def get_assigned_slots
+    # Array of slots where user is officially working (solution has been chosen)
+    # period = from monday of current week) or else the Array is too large
+    self.solution_slots.select{ |ss| ss.solution.effectivity == 'chosen' &&
+      ss.planning.week_number >= Date.today.cweek &&
+      ss.planning.year >= Date.today.cwyear }.map(&:slot)
+  end
+
   private
 
 end

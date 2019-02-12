@@ -107,6 +107,7 @@ Rails.application.routes.draw do
   get 'users/:id/personnal_constraints', to: 'users#personnal_constraints', as: 'user_personnal_constraints'
   post 'users/user_invite', to: 'users#user_invite', as: "users_invite"
   get 'users/:id/reinvite', to: 'users#reinvite', as: "user_reinvite"
+  get 'users/:id/personnal_c_and_wh', to: 'users#personnal_constraints_and_working_hours', as: "user_c_and_wh"
   resources :colors, only: [:new, :create]
 
   get 'statistics_algo', to: 'algo_stats#show_statistics_algo', as: 'statistics_algo'

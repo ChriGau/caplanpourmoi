@@ -1,4 +1,12 @@
-<div id = "calendar">
+<div class="row">
+  <div class="col-xs-12 col-sm-2 flex-col">
+    <h3>Actions</h3>
+    <button class="mybtn mybtn--small show_working_hours">Horaires de travail</button>
+  </div>
+  <div class="col-xs-12 col-sm-10 le_calendrier">
+    <div id = "calendar">
+    </div>
+  </div>
 </div>
 
 
@@ -6,11 +14,14 @@
 <%= javascript_include_tag "components/calendar-constraints" %>
 <%= content_for(:after_js) do %>
   <script>
-    // var events = <%= raw @constraints_array.to_json %> ;
+
+    var events_constraints_and_wh = '<%= user_c_and_wh_path(@user, format: :json) %>';
     var events = '<%= user_personnal_constraints_path(@user, format: :json) %>';
     var defaultDate = "<%= Date.today %>" ;
+    var user_id = "<%= @user.id %>" ;
 
-    modifyConstraintsCalendar(events, defaultDate);
+    modifyConstraintsCalendar(events, defaultDate, user_id);
+    displayConstraintsAndWorkingHours(events_constraints_and_wh, defaultDate, user_id);
 
   </script>
 <% end %>
