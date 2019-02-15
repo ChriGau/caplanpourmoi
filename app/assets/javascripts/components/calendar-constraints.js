@@ -1,119 +1,107 @@
-
-
-var displayConstraintsAndWorkingHours = function(events, defaultDate, user_id) {
-  // clic sur "Horaires de travail"
-  var btn = document.getElementsByClassName('show_working_hours');
-    btn[0].addEventListener("click", function(){
-
-    $('.fc-title').each(function(){
-      if ( $(this)['context'].innerText == 'working_hours') return $(this).parent().parent().parent().toggle();
-    });
-
-});
-
-  }; // fin de displayConstraintsAndWorkingHours
-
 var modifyConstraintsCalendar = function(events, defaultDate, user_id) {
 
-console.log("back here");
-console.log(events);
-
-var modalContent = document.querySelector(".modal-content");
-var modalPosition = function(modal, position) {
-  modal.style.setProperty('--postop', position -300 + "px");
-}
-
-
-// comportement des boutons de catégories
-$('.category').click( function (data){
-  $('.category').each(function(){
-    $(this).removeClass('checked');
-  });
-    $(this).toggleClass('checked');
-});
-
-// comportement du clic sur le bouton 'Cancel' du form
-$('.cancel-button').click(function(data){
-  $('.category').each(function(){
-    $(this).removeClass('checked');
-  });
-});
-
-//behavior of days sélection
-$("input:checkbox").click(function(){
-  $(this).parent().parent().toggleClass("checked");
-});
-$('input:checkbox').each(function(){
-  $(this)[0].disabled= false;
-  $(this)[0].checked= false;
-});
-$('.daysbox').removeClass('checked unselectable');
-
-var mySlider = $("input#nb-employees").bootstrapSlider();
-
-// Ajout de roles au user
-$('.fa-plus-square').click(function(data){
-  $(".modal-role-user").modal('show');
-  modalPosition(modalContent, data.clientY + 350);
-});
-
-$('.metier').click( function (data){
-  this.classList.toggle("checked");
-  if ($(this).children("input").is(':checked')) {
-    $(this).children("input").prop("checked", false);
-  } else {
-    $(this).children("input").prop("checked", true);
+  var modalContent = document.querySelector(".modal-content");
+  var modalPosition = function(modal, position) {
+    modal.style.setProperty('--postop', position -300 + "px");
   }
-});
 
-// Suppression de roles au user
-$('.delete-role').click(function(data){
-  var role_id = data.toElement.id;
-  var list_of_classes = data.toElement.classList;
-  var user_id = list_of_classes[3].substring(4);
-  var roleuser_id = list_of_classes[4].substring(8);
-  var role_id = list_of_classes[5].substring(4);
-
-  var role_user_data = {
-    role_user: {
-      id: roleuser_id,
-      role_id: role_id,
-      user_id: user_id
-              }
-    };
-  var build_url = "/users/" + user_id + "/role_users/" + roleuser_id;
-
-    $.ajax({
-      url: build_url,
-      data: role_user_data,
-      format: 'js',
-      type: "DELETE",
-      success: function(data) {
-        console.log(Event);
-      },
-      error: function(jqXHR) {
-        console.log("ajax echec");
-        console.log(jqXHR.responseText);
-      }
+    // clic sur "Horaires de travail"
+  var btn = document.getElementsByClassName('show_working_hours');
+  btn[0].addEventListener("click", function(){
+    $('.fc-title').each(function(){
+      if ( $(this)['context'].innerText == 'working_hours') return $(this).parent().parent().toggle();
+    });
   });
-});
 
-// update de la profile picture
-$('.edit-profile-picture').click(function(data){
-  $(".modal-update-profile-picture").modal('show');
-  var modalContent = document.querySelector(".modal-update-profile-picture");
-  modalPosition(modalContent, data.clientY + 300);
-});
+  // comportement des boutons de catégories
+  $('.category').click( function (data){
+    $('.category').each(function(){
+      $(this).removeClass('checked');
+    });
+      $(this).toggleClass('checked');
+  });
 
-// edit de working_hours
-$('.modify-profile').click(function(data){
-  $(".modal-edit-working-hours").modal('show');
-  var input = this.getAttribute("data-input");
-  $('#' + input).removeClass('hide');
-  var modalContent = document.querySelector(".modal-edit-working-hours");
-  modalPosition(modalContent, data.clientY + 300);
-});
+  // comportement du clic sur le bouton 'Cancel' du form
+  $('.cancel-button').click(function(data){
+    $('.category').each(function(){
+      $(this).removeClass('checked');
+    });
+  });
 
+  //behavior of days sélection
+  $("input:checkbox").click(function(){
+    $(this).parent().parent().toggleClass("checked");
+  });
+  $('input:checkbox').each(function(){
+    $(this)[0].disabled= false;
+    $(this)[0].checked= false;
+  });
+  $('.daysbox').removeClass('checked unselectable');
+
+  var mySlider = $("input#nb-employees").bootstrapSlider();
+
+  // Ajout de roles au user
+  $('.fa-plus-square').click(function(data){
+    $(".modal-role-user").modal('show');
+    modalPosition(modalContent, data.clientY + 350);
+  });
+
+  $('.metier').click( function (data){
+    this.classList.toggle("checked");
+    if ($(this).children("input").is(':checked')) {
+      $(this).children("input").prop("checked", false);
+    } else {
+      $(this).children("input").prop("checked", true);
+    }
+  });
+
+  // Suppression de roles au user
+  $('.delete-role').click(function(data){
+    var role_id = data.toElement.id;
+    var list_of_classes = data.toElement.classList;
+    var user_id = list_of_classes[3].substring(4);
+    var roleuser_id = list_of_classes[4].substring(8);
+    var role_id = list_of_classes[5].substring(4);
+
+    var role_user_data = {
+      role_user: {
+        id: roleuser_id,
+        role_id: role_id,
+        user_id: user_id
+                }
+      };
+    var build_url = "/users/" + user_id + "/role_users/" + roleuser_id;
+
+      $.ajax({
+        url: build_url,
+        data: role_user_data,
+        format: 'js',
+        type: "DELETE",
+        success: function(data) {
+          console.log(Event);
+        },
+        error: function(jqXHR) {
+          console.log("ajax echec");
+          console.log(jqXHR.responseText);
+        }
+      }); // fin ajax
+    }); // fin delete-role
+
+  // update de la profile picture
+  $('.edit-profile-picture').click(function(data){
+    $(".modal-update-profile-picture").modal('show');
+    var modalContent = document.querySelector(".modal-update-profile-picture");
+    modalPosition(modalContent, data.clientY + 300);
+  });
+
+  // edit de working_hours
+  $('.modify-profile').click(function(data){
+    $(".modal-edit-working-hours").modal('show');
+    var input = this.getAttribute("data-input");
+    $('#' + input).removeClass('hide');
+    var modalContent = document.querySelector(".modal-edit-working-hours");
+    modalPosition(modalContent, data.clientY + 300);
+  });
 
 $('#calendar').fullCalendar({
   //calendar attributes
@@ -332,4 +320,9 @@ $('#calendar').fullCalendar({
 
 
   });
+}
+
+var hidestuff = function() {
+  var btn = document.getElementsByClassName('show_working_hours');
+  btn[0].click();
 }
