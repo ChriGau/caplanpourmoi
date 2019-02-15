@@ -4,33 +4,12 @@ var displayConstraintsAndWorkingHours = function(events, defaultDate, user_id) {
   // clic sur "Horaires de travail"
   var btn = document.getElementsByClassName('show_working_hours');
     btn[0].addEventListener("click", function(){
-    // modifyConstraintsCalendar(events_constraints_and_wh, defaultDate, user_id);
-        var a = user_id;
-        var build_url = "/users/" + a + "/personnal_c_and_wh.json";
-        var events_complete2 =  '/users/' + a + '/personnal_constraints_and_working_hours.json'
-        $.ajax({
-          url: build_url,
-          format: 'js',
-          type: 'GET',
-          success: function(data) {
-            // modifyConstraintsCalendar(JSON.stringify(data), defaultDate, user_id);
-            modifyConstraintsCalendar(events_complete2, defaultDate, a);
-            $('#calendar').fullCalendar( 'refetchEvents');
-            // data.forEach(function(element) {
-            //   console.log(element);
-            //   console.log(typeof 'element');
-            // });
-            // var b = JSON.stringify(data);
-            // console.log(typeof 'b');
-            // modifyConstraintsCalendar(b, defaultDate, user_id);
-          },
-          error: function(jqXHR) {
-            console.log("ajax echec - get de personnal_c_and_wh");
-            console.log(event_data);
-            console.log(jqXHR.responseText);
-          }
-        });
-  })
+
+    $('.fc-title').each(function(){
+      if ( $(this)['context'].innerText == 'working_hours') return $(this).parent().parent().parent().toggle();
+    });
+
+});
 
   }; // fin de displayConstraintsAndWorkingHours
 
@@ -43,6 +22,7 @@ var modalContent = document.querySelector(".modal-content");
 var modalPosition = function(modal, position) {
   modal.style.setProperty('--postop', position -300 + "px");
 }
+
 
 // comportement des boutons de catégories
 $('.category').click( function (data){
