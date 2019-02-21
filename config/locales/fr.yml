@@ -134,7 +134,7 @@ fr:
     format: "%{attribute} %{message}"
     messages:
       accepted: doit être accepté(e)
-      blank: doit être rempli(e)
+      blank: doit être renseigné
       present: doit être vide
       confirmation: ne concorde pas avec %{attribute}
       empty: doit être rempli(e)
