@@ -41,12 +41,14 @@ class UsersController < ApplicationController
 
   def user_invite
     @user = User.new(user_params)
+      # raise
     authorize @user
     @roles = Role.all
     @user.password = Devise.friendly_token.first(8)
     if @user.valid?
-      u = User.invite!(user_params)
-      u.update(profile_picture: photo_params[:profile_picture]) if !photo_params[:profile_picture].nil?
+      @user.save
+      User.invite!(email: @user.email)
+      # u.update(profile_picture: photo_params[:profile_picture]) if !photo_params[:profile_picture].nil?
       redirect_to users_path, notice: "#{@user.first_name} fait partie de votre entreprise"
     else
       render :new, user: @user, roles: @roles
