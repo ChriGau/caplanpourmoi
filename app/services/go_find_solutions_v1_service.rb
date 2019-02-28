@@ -36,6 +36,7 @@ class GoFindSolutionsV1Service
     self.nb_branches = determine_number_of_branches
     self.nb_slotgroups = @slotgroups_array.count
     # iterate through planning possibilities to extract solutions
+    # => [:solutions_array, :calculation_abstract ]
     build_solutions = go_through_plannings
     # select the best solutions
     # timestamps t5 - begin pick best solutions
@@ -43,7 +44,7 @@ class GoFindSolutionsV1Service
     @compute_solution.update(timestamps_algo: t)
     list_of_solutions = pick_best_solutions(20)
     # return
-    [ build_solutions[:calculation_abstract], list_of_solutions ]
+    [ build_solutions[:calculation_abstract], build_solutions[:solutions_array] ]
   end
 
   def determine_number_of_trees
@@ -121,23 +122,16 @@ class GoFindSolutionsV1Service
           # on note la solution
           grade =  GradeSolutionService.new(solution, @total_duration_sg,
             @no_solution_user_id, @duration_per_sg_array, @planning,
-            @total_availabilities, @employees_involved).perform
+            @total_availabilities, @employees_involved, get_nb_slots_to_simulate).perform
           # si note > best du moment, on stocke la solution
           if grade > best_grade
-            @solutions_array << solution
+            @solutions_array << { planning_possibility: solution, grade: grade }
             best_grade = grade
           end
-                               # {
-                               # solution_id: solution_id,
-                               # possibility_id: possibility_id,
-                               # nb_overlaps: overlaps_best_scoring,
-                               # planning_possibility: planning_possibility,
-                               # nb_conflicts: nb_conflicts_best_scoring
-                               # }
-          # toutes les 1000 solutions, on enlève les doublons de solutions
+          # toutes les 100 solutions, on enlève les doublons de solutions
           # (les doublons peuvent apparaître lorsque l'on résout les conflits)
           # preferer uniq plutôt que stocker solution # unless solutions_array.select{|x| x == solution}.count.positive?
-          @solutions_array.uniq! if solution_id % 1000 == 0
+          @solutions_array.uniq! if solution_id % 100 == 0
         else
           # cut off all similar possibilities
           next_knot_caracteristics = go_to_next_knot(tree, branch,
@@ -158,6 +152,7 @@ class GoFindSolutionsV1Service
     calculation_abstract = determine_calculation_abstract(iteration_id, nb_cuts_within_tree)
     { # test_possibilities: test_possibilities,
       solutions_array: @solutions_array,
+      # @solutions_array = [ { planning_possibility: [{sg_id: 1, combination: [1, 2]}, {...}], grade: 1}, {...} ]
       # best_solution: nil,
       calculation_abstract: calculation_abstract }
   end
@@ -194,7 +189,7 @@ class GoFindSolutionsV1Service
   # rubocop:enable GuardClause
 
   def determine_duration_per_sg_array
-    # => [ {:sg_id, :duration in sec, :dates = [d1 (,d2)] } , {...} ]
+    # => [ {:sg_id, :duration in sec, :dates = [d1 (,d2)] } , start_end:  [datetime1, datetime2], {...} ]
     # get duration of each slotgroup
     # is then used to grade the solutions
     result = []
@@ -207,7 +202,8 @@ class GoFindSolutionsV1Service
       end
       result << { sg_id: sg_hash.id,
                   duration: (sg_hash.end_at - sg_hash.start_at),
-                  dates: dates }
+                  dates: dates,
+                  start_end: [ sg_hash.start_at, sg_hash.end_at ] }
     end
     result
   end
@@ -381,7 +377,7 @@ class GoFindSolutionsV1Service
   end
 
   def collect_solutions_with_no_conflicts
-    @solutions_array.select { |x| calculate_nb_conflicts(x).zero? }
+    get_planning_possibilities_array(@solutions_array).select { |x| calculate_nb_conflicts(x).zero? }
   end
 
   def calculate_nb_conflicts_for_a_solution(solution_array)
@@ -399,7 +395,7 @@ class GoFindSolutionsV1Service
 
   def calculate_nb_solutions_with_conflicts
     r = 0
-    @solutions_array.each do |s|
+    get_planning_possibilities_array(@solutions_array).each do |s|
       r += 1 if calculate_nb_conflicts(s).positive?
     end
     return r
@@ -408,6 +404,13 @@ class GoFindSolutionsV1Service
   def calculate_nb_conflicts(solution_array)
     # => nombre de conflicts pour 1 solution
     solution_array.map{ |x| x[:combination] }.flatten.count(determine_no_solution_user.id)
+  end
+
+  def get_planning_possibilities_array(solution_array)
+    # ne garder que les :planning_possibilities de @solutions_array
+    a = []
+    solution_array.each do |x| a << x[:planning_possibility] end
+    a
   end
 
   def calculate_nb_possibilities_below_this_knot(sg_ranking)
@@ -476,6 +479,10 @@ class GoFindSolutionsV1Service
     return { success: success,
              nb_conflicts: nb_conflicts,
              sg_ranking_where_conflicts_evaluation_is_lower_than_best: sg_ranking }
+  end
+
+  def get_nb_slots_to_simulate
+    @slotgroups_array.map{|s| s.slots_to_simulate.count}.reduce(&:+)
   end
 
   def store_planning_possibilities_to_csv

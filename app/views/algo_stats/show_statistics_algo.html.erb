@@ -1,3 +1,4 @@
+
 <% if @success.zero? %>
 
   <% flash.now[:alert] = "Veuillez effectuer au moins 1 calcul pour disposer de stats." %>
@@ -117,6 +118,7 @@
       </div>
     </div>
   </div>
+ <% end %>
 
   <%= javascript_include_tag "dataviz/algo_statistics" %>
   <%= content_for(:after_js) do %>

@@ -41,13 +41,15 @@ class UsersController < ApplicationController
 
   def user_invite
     @user = User.new(user_params)
+      # raise
     authorize @user
     @roles = Role.all
     @user.password = Devise.friendly_token.first(8)
     if @user.valid?
-      u = User.invite!(user_params)
-      u.update(profile_picture: photo_params[:profile_picture]) if !photo_params[:profile_picture].nil?
-      redirect_to users_path, notice: "#{@user.first_name} fait parti de votre entreprise"
+      @user.save
+      User.invite!(email: @user.email)
+      # u.update(profile_picture: photo_params[:profile_picture]) if !photo_params[:profile_picture].nil?
+      redirect_to users_path, notice: "#{@user.first_name} fait partie de votre entreprise"
     else
       render :new, user: @user, roles: @roles
     end
@@ -59,7 +61,7 @@ class UsersController < ApplicationController
       @user.save
     end
     User.invite!(email: @user.email)
-    redirect_to users_path, notice: "Une nième invitation a été envoyée à #{@user.first_name} !"
+    redirect_to users_path, notice: "Une Nième invitation a été envoyée à #{@user.first_name} !"
   end
 
   def update
