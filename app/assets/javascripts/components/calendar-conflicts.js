@@ -93,7 +93,5 @@ var modifyCalendar = function(events, defaultDate) {
         img.height = height;
         img.alt = alt;
       };
-
-
 }
 

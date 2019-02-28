@@ -1,30 +1,18 @@
 <%= simple_form_for [@planning, @solution_slot] do |f| %>
   <%= f.error_notification %>
 
-    <div class="row">
-      <div class="col-xs-12">
-        <!-- creation du tableau -->
+    <!-- Liste des employés de l'équipe -->
+    <div data-toggle="collapse" data-target="#users" class="section-header part1 mb mt">
+      <b>Equipe</b>
+    </div>
+    <div id="users" class="part1-content collapse">
+      <div class="row">
         <div class="col-xs-12">
-        <!-- en-têtes -->
-          <div class="row">
-            <div class="col-xs-2">
-              <b>User</b>
-            </div>
-            <div class="col-xs-2">
-              <b>Skilled?</b>
-            </div>
-            <div class="col-xs-2">
-              <b>Status</b>
-            </div>
-            <div class="col-xs-2">
-              <b>h/day</b>
-            </div>
-            <div class="col-xs-2">
-              <b>h/week</b>
-            </div>
-            <div class="col-xs-2">
-              <b></b>
-            </div>
+          <div class="col-xs-12">
+            <!-- en-têtes -->
+            <%= render 'solution_slots/edit_header'%>
+            <!-- block avec chaque user -->
+            <%= render 'solution_slots/edit_content', locals: { users: @users_infos, assigned_user: @assigned_user, planning: @planning, solution_slot: @solution_slot } %>
           </div>
 
           <% @users_infos.each do |hash| %>
@@ -78,8 +66,37 @@
             </div>
           <% end %>
         </div>
-
       </div>
     </div>
 
+    <!-- Liste des employés non sélectionnés dans l'équipe SSI pas de solution dans l'équipe -->
+    <% if !@are_there_backups %>
+    <div data-toggle="collapse" data-target="#other-users" class="section-header part2 mb mt">
+      <b>Hors équipe</b>
+    </div>
+    <div id="other-users" class="collapse">
+      <div class="row">
+        <div class="col-xs-12">
+          <!-- creation du tableau -->
+          <div class="col-xs-12">
+          <!-- en-têtes -->
+          <%= render 'solution_slots/edit_header'%>
+          <!-- block avec chaque user -->
+          <%= render 'solution_slots/edit_content', locals: { users: @other_users_infos, assigned_user: @assigned_user, planning: @planning, solution_slot: @solution_slot  } %>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
  <% end %>
+
+<script>
+  var a = document.getElementsByClassName("part1-content");
+  a[0].classList.add('in');
+  // reajust the modal's position if its height changes
+  $('.section-header').onclick = function(){
+    $('.modal-reassignment').modal('handleUpdate');
+    console.log("on fait un reajustement");
+  };
+</script>

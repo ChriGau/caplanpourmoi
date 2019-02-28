@@ -86,11 +86,10 @@ class Slot < ApplicationRecord
     end_at - start_at
   end
 
-  def get_infos_to_reaffect_slot
+  def get_infos_to_reaffect_slot(users_array)
     # => get infos to display in modal-reassignment
     result = []
-    users = planning.users
-    users.each do |user|
+    users_array.each do |user|
       sub_result = {}
       status = nil #init
       # compute status
@@ -101,7 +100,7 @@ class Slot < ApplicationRecord
       else
         status = "not available" # <=> has constraints
       end
-      skilled = user.skilled?(role_id)
+      user.skilled?(role_id) ? skilled = "a" : skilled = "b"
       a = user.nb_hours_planning(planning, self) # compute nb of hours
       sub_result[user.id] = { status: status,
                               skilled: skilled,
@@ -112,7 +111,7 @@ class Slot < ApplicationRecord
       result << sub_result
     end
     # tri ordre alphabétique du status (assigned < available < not available < on duty)
-    result.sort_by!{ |h| h.values[0][:status] }
+    result.sort_by!{ |h| [h.values[0][:status].to_s, h.values[0][:skilled].to_s]  }
     return result
   end
 

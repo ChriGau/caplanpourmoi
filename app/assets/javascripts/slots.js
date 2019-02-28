@@ -6,9 +6,8 @@ $(document).ready(function() {
     $(this).parent().parent().parent().toggleClass("checked");
   });
 
-  // ?????? sert problablement à rien
+  // selects the role in the users#new form
   $("input:checkbox.role-checkbox").click(function() {
-    alert("22 nov 18 je crois que ça sert // enlever si ça apparait");
     $(this).next().toggleClass("checked");
   })
 

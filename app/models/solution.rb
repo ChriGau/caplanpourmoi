@@ -61,14 +61,14 @@ class Solution < ApplicationRecord
     evaluate_compactness
     evaluate_nb_users_in_overtime
     deviation_for_fitness = evaluate_fitness
-    puts "**********************************"
-    puts "conflicts_percentage = #{self.conflicts_percentage}"
-    puts "nb_users_six_consec_days_fail = #{self.nb_users_six_consec_days_fail}"
-    puts "nb_users_daily_hours_fail = #{self.nb_users_daily_hours_fail}"
-    puts "compactness = #{self.compactness}"
-    puts "fitness = #{self.fitness}"
-    puts "**********************************"
-    rate_solution(deviation_for_fitness)
+    # puts "**********************************"
+    # puts "conflicts_percentage = #{self.conflicts_percentage}"
+    # puts "nb_users_six_consec_days_fail = #{self.nb_users_six_consec_days_fail}"
+    # puts "nb_users_daily_hours_fail = #{self.nb_users_daily_hours_fail}"
+    # puts "compactness = #{self.compactness}"
+    # puts "fitness = #{self.fitness}"
+    # puts "**********************************"
+    # rate_solution(deviation_for_fitness) => attention pour l'instant la note est seulement obtenue via GoThroughPlanning
     self # renvoyer l'instance pour la récupérer dans SaveSolutionsAndSoltionSlotsService
   end
 
@@ -160,11 +160,13 @@ class Solution < ApplicationRecord
     array_of_consec_days = [] # init
       timeframe.first.each do |date|
         solution = solution_to_take_into_account(date, planning, self)
-        if user.works_today?(date, solution)
-          array_of_consec_days << date
-        elsif array_of_consec_days.count > 6
-          nb_users += 1 if consecutive_days_intersect_planning_week?(array_of_consec_days, planning)
-          array_of_consec_days = [] # re init
+        unless solution.nil? # cas où pas de chosen solution pour ce planning
+          if user.works_today?(date, solution)
+            array_of_consec_days << date
+          elsif array_of_consec_days.count > 6
+            nb_users += 1 if consecutive_days_intersect_planning_week?(array_of_consec_days, planning)
+            array_of_consec_days = [] # re init
+          end
         end
       end # on a balayé toutes les dates pour ce user
       if array_of_consec_days.count > 6 && consecutive_days_intersect_planning_week?(array_of_consec_days, planning)
@@ -287,13 +289,20 @@ class Solution < ApplicationRecord
   def solution_to_take_into_account(date, planning_W, examined_solution)
     if get_planning_related_to_a_date(date) == planning_W
       self
-    else
+    elsif !get_planning_related_to_a_date(date).chosen_solution.nil?
       get_planning_related_to_a_date(date).chosen_solution
+    else # pas de chosen solution pour ce planning
+      nil
     end
   end
 
   def get_planning_related_to_a_date(date)
-    Planning.find_by(year: date.year, week_number: date.cweek)
+    if Planning.find_by(year: date.year, week_number: date.cweek).nil?
+      # cas du 31/12/2018 (year = 2018, week_number = 1) alors qu'il faudrait (year = 2019, week_number = 1)
+      return Planning.find_by(year: date.year + 1, week_number: date.cweek)
+    else
+      return Planning.find_by(year: date.year, week_number: date.cweek)
+    end
   end
 
 end
