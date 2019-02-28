@@ -6,10 +6,11 @@
     <%= f.error_notification %>
     <%= f.input :first_name, placeholder: "Prénom", label: false %>
     <%= f.input :last_name, placeholder: "Nom", label: false %>
-    <%= f.input :working_hours, placeholder:"nombre heures semaines", label: false %>
-    <%= f.input :email, placeholder: "email", label: false %>
+    <%= f.input :working_hours, placeholder:"Nombre d'heures hebdomadaires", label: false %>
+    <%= f.input :email, placeholder: "Email", label: false %>
     <%= f.hidden_field :is_owner, value: false  %>
     <div class="row">
+
       <% @roles.each do |role|%>
         <div class="col-xs-3" id="select-role">
             <input id="<%= role.id %>" class="role-checkbox" type="checkbox", name="user[role_ids][]" value="<%= role.id %>"/>
@@ -17,8 +18,7 @@
         </div>
       <% end %>
     </div>
-
-    <%= f.input :profile_picture, as: :attachinary, label: false %>
+    <%= f.input :profile_picture, as: :attachinary, label: false, placeholder: "Choose a profile picture" %>
 
     <div class="btn-group">
       <%= f.submit "Valider", class: "btn-primary btn-nav" %>

@@ -54,6 +54,9 @@ class User < ApplicationRecord
   has_attachment :profile_picture
   scope :active, -> { where.not(first_name: "no solution").order(:first_name) }
   before_create :set_key
+  validates_associated :role_users
+  validates :email, :first_name, :last_name, :role_users, :profile_picture, presence: true
+
 
   def concatenate_first_and_last_name
     first_name + ' ' + last_name
