@@ -36,7 +36,7 @@ class SaveSolutionsAndSolutionSlotsService
     # timestamp t7
     t = @compute_solution.timestamps_algo << ["t7", Time.now]
     @compute_solution.update(timestamps_algo: t)
-    # evaluate calculation_length
+    # evaluate metrics for algo statistics
     @compute_solution.evaluate_statistics
   end
 

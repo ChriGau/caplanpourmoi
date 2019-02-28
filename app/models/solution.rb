@@ -68,7 +68,7 @@ class Solution < ApplicationRecord
     # puts "compactness = #{self.compactness}"
     # puts "fitness = #{self.fitness}"
     # puts "**********************************"
-    # rate_solution(deviation_for_fitness) => attention pour l'instant la note est seulement obtenue via GoThroughPlanning
+    rate_solution(deviation_for_fitness)
     self # renvoyer l'instance pour la récupérer dans SaveSolutionsAndSoltionSlotsService
   end
 
