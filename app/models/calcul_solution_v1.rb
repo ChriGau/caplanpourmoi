@@ -63,6 +63,7 @@ class CalculSolutionV1 < ApplicationRecord
     end
     # Créer Solutions et SolutionSlots associées
     list_of_solutions = need_a_calcul ? build_solutions[1] : nil
+    # list_of_solutions = [ { planning_possibility: [{sg_id: 1, combination: [1, 2]}, {...}], grade: 1}, {...} ]
     SaveSolutionsAndSolutionSlotsService.new( slotgroups_array: self.slotgroups_array,
                                               slots_array: self.slots_array,
                                               planning: planning,

@@ -67,8 +67,13 @@ class User < ApplicationRecord
   end
 
   def available?(start_at, end_at)
-    # true if user has no constraint during a given timeframe
-    constraints.where('start_at <= ? and end_at >= ?', end_at, start_at).empty?
+    # true if user has no constraint (sauf preference) during a given timeframe
+    constraints.where('start_at <= ? and end_at >= ? and category <> ?', end_at, start_at, Constraint.categories['preference']).empty?
+  end
+
+  def is_personnally_ok?(start_at, end_at)
+    # => true if user has no preference constraint during this period
+    constraints.where('start_at <= ? and end_at >= ? and category = ?', end_at, start_at, Constraint.categories['preference']).empty?
   end
 
   def availability_in_hours(planning)
