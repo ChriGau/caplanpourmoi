@@ -28,7 +28,7 @@ def read_emails
   # connexion au server
   imap = Net::IMAP.new('mail.gandi.net')
   # login
-  imap.login('hello@caplanpourmoi.org', 'Passworddelamort')
+  imap.login('hello@caplanpourmoi.org', ENV["PASSWORD_EMAIL"])
   # nombre de messages total de l'inbox
   number_messages = imap.status("inbox", ["UNSEEN"])["UNSEEN"]
   # Si messages non lus, se placer sur l'inbox, itérer sur chacun des emails reçus d'une adresse x
@@ -39,7 +39,7 @@ def read_emails
       # récupérer la structure du message
       envelope = imap.fetch(message_id, "ENVELOPE")[0].attr["ENVELOPE"]
       mail_structure = imap.fetch(message_id, 'RFC822')[0].attr['RFC822']
-      binding.pry
+      # binding.pry
       mail = Mail.new(mail_structure)
       # si PJ
       unless mail.attachments.blank?
